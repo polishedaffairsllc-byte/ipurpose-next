@@ -22,10 +22,8 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    console.log("handleLogin called", { email, password });
 
     try {
-      console.log("calling signInWithEmailAndPassword");
       await signInWithEmailAndPassword(auth, email, password);
       console.log("signInWithEmailAndPassword resolved");
       router.push("/dashboard");
