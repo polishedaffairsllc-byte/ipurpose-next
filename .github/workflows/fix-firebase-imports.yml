@@ -1,0 +1,75 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  fix-firebase-imports:
+    name: Fix and open PR (replace "@/app/lib/firebase" -> "@/lib/firebase")
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run replacement, type-check and build, push branch
+        env:
+          BRANCH: fix/firebase-imports
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # create branch from default branch
+          git fetch origin
+          git checkout -b "$BRANCH"
+
+          echo "Files that will be changed (if any):"
+          git grep -n --no-show-function "@/app/lib/firebase" || true
+
+          # perform the replacement (only if files found)
+          git grep -l "@/app/lib/firebase" | xargs -r -n1 perl -pi -e 's#@/app/lib/firebase#@/lib/firebase#g' || true
+
+          # run type-check (fail the job if type errors)
+          npx tsc --noEmit
+
+          # try build to verify bundling (capture exit code)
+          set +e
+          npx next build
+          BUILD_EXIT=$?
+          set -e
+          if [ "$BUILD_EXIT" -ne 0 ]; then
+            echo "Warning: next build failed with code $BUILD_EXIT (check logs). The PR will still be created so you can inspect changes."
+          else
+            echo "Build succeeded."
+          fi
+
+          # commit & push (only if changes)
+          if ! git diff --quiet; then
+            git add -A
+            git commit -m "fix: normalize firebase client import aliases (@/lib/firebase)"
+            git push --set-upstream origin "$BRANCH"
+          else
+            echo "No changes detected. Creating branch on remote for PR workflow step."
+            git push --set-upstream origin "$BRANCH" || true
+          fi
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: fix/firebase-imports
+          title: "fix: normalize firebase client import aliases (@/lib/firebase)"
+          body: |
+            Automated change to replace incorrect import alias `@/app/lib/firebase` with `@/lib/firebase`.
+            - Runs `npx tsc --noEmit` and attempts `npx next build`.
+            - If build failed the logs above will show details; please inspect before merging.
+          labels: automated, easy-fix
