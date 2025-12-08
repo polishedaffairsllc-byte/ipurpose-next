@@ -1,0 +1,8 @@
+.card {
+  background: #ffffff;
+  border-radius: var(--ip-radius-xl);
+  border: 1px solid #e5e5ea;
+  padding: 32px;
+  box-shadow: var(--ip-shadow-soft);
+}
+

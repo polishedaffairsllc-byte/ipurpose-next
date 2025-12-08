@@ -3,7 +3,7 @@ on:
 
 jobs:
   fix-firebase-imports:
-    name: Fix and open PR (replace "@/app/lib/firebase" -> "@/lib/firebase")
+    name: Fix and open PR (replace "@/lib/firebase" -> "@/lib/firebase")
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,10 +33,10 @@ jobs:
           git checkout -b "$BRANCH"
 
           echo "Files that will be changed (if any):"
-          git grep -n --no-show-function "@/app/lib/firebase" || true
+          git grep -n --no-show-function "@/lib/firebase" || true
 
           # perform the replacement (only if files found)
-          git grep -l "@/app/lib/firebase" | xargs -r -n1 perl -pi -e 's#@/app/lib/firebase#@/lib/firebase#g' || true
+          git grep -l "@/lib/firebase" | xargs -r -n1 perl -pi -e 's#@/lib/firebase#@/lib/firebase#g' || true
 
           # run type-check (fail the job if type errors)
           npx tsc --noEmit
@@ -69,7 +69,7 @@ jobs:
           branch: fix/firebase-imports
           title: "fix: normalize firebase client import aliases (@/lib/firebase)"
           body: |
-            Automated change to replace incorrect import alias `@/app/lib/firebase` with `@/lib/firebase`.
+            Automated change to replace incorrect import alias `@/lib/firebase` with `@/lib/firebase`.
             - Runs `npx tsc --noEmit` and attempts `npx next build`.
             - If build failed the logs above will show details; please inspect before merging.
           labels: automated, easy-fix

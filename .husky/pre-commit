@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Prevent committing .env.local or serviceAccountKey.json
+if git diff --cached --name-only | grep -E "(^|/)\.env.local$|(^|/)serviceAccountKey.json$" > /dev/null; then
+  echo "Error: Attempt to commit .env.local or serviceAccountKey.json. Remove them before committing.";
+  exit 1;
+fi
+
+exit 0

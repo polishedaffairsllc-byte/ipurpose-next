@@ -1,0 +1,52 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.cardWrapper {
+  max-width: 420px;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ip-deep);
+}
+
+.input {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #d4d4dd;
+  background: #ffffff;
+  font-size: 0.95rem;
+}
+
+.helper {
+  font-size: 0.85rem;
+  color: #66667a;
+  margin-top: 4px;
+}
+
+.error {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #b00020;
+}
+

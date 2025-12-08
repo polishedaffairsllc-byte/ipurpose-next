@@ -1,0 +1,49 @@
+:root {
+  --ip-indigo: #4B4E6D;
+  --ip-lavender: #9C88FF;
+  --ip-peach: #FCC4B7;
+  --ip-deep: #1F1F2E;
+  --ip-cream: #F8F5F2;
+
+  --ip-font-heading: "Italiana", serif;
+  --ip-font-body: "Montserrat", sans-serif;
+
+  --ip-radius-xl: 24px;
+  --ip-shadow-soft: 0px 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--ip-font-body);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(156, 136, 255, 0.35), transparent 65%),
+    radial-gradient(circle at 80% 80%, rgba(252, 196, 183, 0.45), transparent 65%),
+    var(--ip-cream);
+  color: var(--ip-deep);
+}
+  font-family: var(--ip-font-body);
+  background: radial-gradient(circle at top left, #9C88FF15, transparent 55%),
+              radial-gradient(circle at bottom right, #FCC4B720, transparent 55%),
+              var(--ip-cream);
+  color: var(--ip-deep);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+

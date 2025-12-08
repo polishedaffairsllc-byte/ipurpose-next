@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Scan for accidentally committed secrets
+        run: |
+          set -e
+          if git ls-files --error-unmatch .env.local > /dev/null 2>&1; then
+            echo "Error: .env.local is committed."; exit 1;
+          fi
+          if git ls-files --error-unmatch serviceAccountKey.json > /dev/null 2>&1; then
+            echo "Error: serviceAccountKey.json is committed."; exit 1;
+          fi
+          if git grep -n "\"private_key\"" -- ':!*node_modules*' || true; then
+            echo "Error: Found literal 'private_key'."; exit 1;
+          fi
+
+      - name: Ensure Firebase Admin secret is configured
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+        run: |
+          set -e
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT set."; exit 0;
+          fi
+          if [ -n "$FIREBASE_PROJECT_ID" ] && [ -n "$FIREBASE_CLIENT_EMAIL" ] && [ -n "$FIREBASE_PRIVATE_KEY" ]; then
+            echo "Individual FIREBASE_* secrets set."; exit 0;
+          fi
+          echo "Firebase Admin credentials not configured."; exit 1
+

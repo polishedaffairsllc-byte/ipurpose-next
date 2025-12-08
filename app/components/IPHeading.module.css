@@ -1,0 +1,30 @@
+.headingXL {
+  font-family: var(--ip-font-heading);
+  font-size: 2.75rem; /* ~44px */
+  line-height: 1.1;
+  color: var(--ip-indigo);
+  letter-spacing: -0.03em;
+}
+
+.headingLG {
+  font-family: var(--ip-font-heading);
+  font-size: 2.25rem; /* ~36px */
+  line-height: 1.15;
+  color: var(--ip-indigo);
+  letter-spacing: -0.02em;
+}
+
+.headingMD {
+  font-family: var(--ip-font-heading);
+  font-size: 1.75rem; /* ~28px */
+  line-height: 1.2;
+  color: var(--ip-indigo);
+}
+
+.headingSM {
+  font-family: var(--ip-font-heading);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--ip-indigo);
+}
+
