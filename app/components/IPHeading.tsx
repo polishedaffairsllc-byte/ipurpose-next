@@ -1,21 +1,30 @@
-"use client";
-
 import React from "react";
 import styles from "./IPHeading.module.css";
 
-interface IPHeadingProps {
-  children: React.ReactNode;
-  size?: "xl" | "lg" | "md" | "sm";
+export type IPHeadingProps = React.HTMLAttributes<HTMLHeadingElement> & {
+  children?: React.ReactNode;
+  size?: "sm" | "md" | "lg" | "xl";
+  className?: string;
+};
+
+export default function IPHeading({
+  children,
+  size = "md",
+  className = "",
+  ...rest
+}: IPHeadingProps) {
+  const sizeClass =
+    size === "xl"
+      ? styles.xl
+      : size === "lg"
+      ? styles.lg
+      : size === "sm"
+      ? styles.sm
+      : styles.md;
+
+  return (
+    <h2 className={`${styles.heading ?? ""} ${sizeClass ?? ""} ${className}`.trim()} {...rest}>
+      {children}
+    </h2>
+  );
 }
-
-export default function IPHeading({ children, size = "xl" }: IPHeadingProps) {
-  const map = {
-    xl: styles.headingXL,
-    lg: styles.headingLG,
-    md: styles.headingMD,
-    sm: styles.headingSM,
-  };
-
-  return <h1 className={map[size]}>{children}</h1>;
-}
-
