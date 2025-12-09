@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     // Use `any` here to be tolerant to different export shapes and avoid TS errors about `.default`.
     let adminModule: any;
     try {
-      adminModule = await import("@/lib/firebaseadmin");
+      adminModule = await import("@/lib/firebaseAdmin");
     } catch (err) {
       console.error("Firebase admin module failed to load:", err);
       return NextResponse.json(

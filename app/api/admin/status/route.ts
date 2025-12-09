@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     // Dynamically import server-only admin initializer
-    const adminModule = await import('@/lib/firebaseadmin');
+    const adminModule = await import('@/lib/firebaseAdmin');
 
-    // If adminAuth was exported, we assume initialization succeeded
-    const ok = !!adminModule && !!adminModule.adminAuth;
+    // If firebaseAdmin was exported, we assume initialization succeeded
+    const ok = !!adminModule && !!adminModule.firebaseAdmin;
 
     return NextResponse.json({ adminInitialized: ok, message: ok ? 'Firebase Admin initialized' : 'Firebase Admin not initialized' }, { status: 200 });
   } catch (err: any) {

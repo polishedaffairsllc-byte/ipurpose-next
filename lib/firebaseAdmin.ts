@@ -1,18 +1,30 @@
-import admin from 'firebase-admin';
+import admin from "firebase-admin";
+
+function parseServiceAccount(): any | undefined {
+  const raw = process.env.FIREBASE_ADMIN_CREDENTIALS || "";
+  if (!raw) return undefined;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error(
+      "FIREBASE_ADMIN_CREDENTIALS is set but is not valid JSON. Check your Vercel env variable."
+    );
+  }
+}
 
 if (!admin.apps.length) {
-  const raw = process.env.FIREBASE_ADMIN_CREDENTIALS || '';
-  let cred;
-  try {
-    cred = JSON.parse(raw);
-  } catch (e) {
-    // If parsing fails, allow admin.initializeApp to throw a clearer error for environment troubleshooting.
-    cred = undefined;
+  const cred = parseServiceAccount();
+  if (cred) {
+    try {
+      admin.initializeApp({ credential: admin.credential.cert(cred as any) });
+    } catch (err) {
+      console.warn("Firebase Admin initialization failed (expected during build):", (err as { message?: string })?.message);
+    }
+  } else {
+    console.warn(
+      "Missing FIREBASE_ADMIN_CREDENTIALS env var. Firebase Admin not initialized (expected during build/dev without credentials)."
+    );
   }
-
-  admin.initializeApp({
-    credential: admin.credential.cert(cred as any),
-  });
 }
 
 export const firebaseAdmin = admin;
