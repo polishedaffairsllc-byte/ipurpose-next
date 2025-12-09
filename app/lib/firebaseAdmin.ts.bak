@@ -1,0 +1,31 @@
+import admin from "firebase-admin";
+
+function initAdmin() {
+  if (!admin.apps.length) {
+    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+      // Use Application Default Credentials (service account JSON path)
+      admin.initializeApp();
+    } else if (
+      process.env.FIREBASE_ADMIN_PRIVATE_KEY &&
+      process.env.FIREBASE_ADMIN_CLIENT_EMAIL &&
+      process.env.FIREBASE_ADMIN_PROJECT_ID
+    ) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+          privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, "\n"),
+        }),
+      });
+    } else {
+      throw new Error(
+        "Firebase Admin not configured. Set GOOGLE_APPLICATION_CREDENTIALS or FIREBASE_ADMIN_* env vars."
+      );
+    }
+  }
+  return admin;
+}
+
+const adminInstance = initAdmin();
+
+export default adminInstance;

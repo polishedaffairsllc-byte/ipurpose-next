@@ -1,71 +1,62 @@
-"use client";
+import NavBar from "../components/NavBar";
+import { cookies } from "next/headers";
+import { firebaseAdmin } from "../../lib/firebaseAdmin";
+import { redirect } from "next/navigation";
 
-import ProtectedRoute from "@/app/components/ProtectedRoute";
-import IPHeading from "@/app/components/IPHeading";
-import IPSection from "@/app/components/IPSection";
-import IPCard from "@/app/components/IPCard";
-import IPButton from "@/app/components/IPButton";
-import LogoutButton from "@/app/components/LogoutButton";
+export default async function DashboardPage() {
+  const cookieStore = cookies();
+  const session = cookieStore.get("FirebaseSession")?.value ?? null;
 
-export default function DashboardPage() {
-  return (
-    <ProtectedRoute>
-      <div className="min-h-screen w-full bg-white text-ip-heading flex flex-col">
+  if (!session) return redirect("/login");
 
-        {/* HEADER */}
-        <header className="w-full border-b border-ip-border px-6 py-4 flex justify-between items-center">
-          <IPHeading size="lg">Dashboard</IPHeading>
-          <LogoutButton />
-        </header>
+  try {
+    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const user = await firebaseAdmin.auth().getUser(decoded.uid);
+    const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
 
-        {/* MAIN */}
-        <main className="flex-1 px-6 py-10 space-y-12">
+    return (
+      <>
+        <NavBar />
+        <main className="container">
+          <section className="dashboard-hero">
+            <div>
+              <h1 style={{ fontFamily: "Italiana, serif", margin: 0 }}>Welcome, {name}</h1>
+              <h2 style={{ fontFamily: "Marcellus, serif", marginTop: 6 }}>Your iPurpose Portal</h2>
+              <p style={{ marginTop: 12 }}>Daily affirmation: "I create space for what matters."</p>
+            </div>
 
-          {/* Intro */}
-          <IPSection>
-            <IPHeading size="md">Your iPurpose Home Base</IPHeading>
-            <p className="mt-4 text-lg text-ip-text">
-              Track your progress, navigate your program, and see your next aligned steps.
-            </p>
-          </IPSection>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <a className="tile" href="/ai">AI Mentor</a>
+              <a className="tile" href="/soul">Soul</a>
+              <a className="tile" href="/systems">Systems</a>
+              <a className="tile" href="/settings">Settings</a>
 
-          {/* Modules */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <form action="/api/auth/logout" method="post" style={{ margin: 0 }}>
+                <button className="tile" type="submit" style={{ background: "transparent", border: "none", textAlign: "left", padding: 12 }}>Logout</button>
+              </form>
+            </div>
+          </section>
 
-            {/* Soul */}
-            <IPCard>
-              <IPHeading size="sm">Soul Alignment</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Your foundational soulwork, clarity prompts, and reflection practices.
-              </p>
-              <IPButton className="mt-4">Go to Soul</IPButton>
-            </IPCard>
+          <div className="tile-grid">
+            <div className="tile">
+              <div className="title">Quick Links</div>
+              <div className="desc">AI • Soul • Systems • Settings</div>
+            </div>
 
-            {/* Systems */}
-            <IPCard>
-              <IPHeading size="sm">Systems</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Structure your workflows, offers, and priority systems.
-              </p>
-              <IPButton className="mt-4" variant="secondary">
-                Go to Systems
-              </IPButton>
-            </IPCard>
+            <div className="tile">
+              <div className="title">Mood</div>
+              <div className="desc">Maybe your daily affirmation or mood tile</div>
+            </div>
 
-            {/* AI */}
-            <IPCard>
-              <IPHeading size="sm">AI Tools</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Automate aligned tasks, build prompts, and expand your capacity.
-              </p>
-              <IPButton className="mt-4" variant="champagne">
-                Go to AI
-              </IPButton>
-            </IPCard>
-
+            <div className="tile">
+              <div className="title">Actions</div>
+              <div className="desc">Shortcuts for your most used tools</div>
+            </div>
           </div>
         </main>
-      </div>
-    </ProtectedRoute>
-  );
+      </>
+    );
+  } catch {
+    return redirect("/login");
+  }
 }
