@@ -22,7 +22,6 @@ export async function POST(req: Request) {
     }
 
     // Dynamically import server-only admin initializer at request time.
-    // Use `any` here to be tolerant to different export shapes and avoid TS errors about `.default`.
     let adminModule: any;
     try {
       adminModule = await import("@/lib/firebaseAdmin");
@@ -34,18 +33,18 @@ export async function POST(req: Request) {
       );
     }
 
-    // Resolve an adminAuth object from the imported module in a tolerant way.
-    const adminAuth = adminModule?.adminAuth ?? adminModule?.admin ?? adminModule;
-    if (!adminAuth || typeof adminAuth.createSessionCookie !== "function") {
-      console.error("Firebase admin export does not expose createSessionCookie:", adminModule);
+    // Get the firebaseAdmin instance from the module
+    const firebaseAdmin = adminModule?.firebaseAdmin ?? adminModule?.default;
+    if (!firebaseAdmin || !firebaseAdmin.auth) {
+      console.error("Firebase admin not properly initialized:", adminModule);
       return NextResponse.json(
-        { success: false, error: "Server Firebase Admin missing createSessionCookie." },
+        { success: false, error: "Server Firebase Admin not configured." },
         { status: 500 }
       );
     }
 
-    // Create session cookie
-    const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
+    // Create session cookie using auth().createSessionCookie()
+    const sessionCookie = await firebaseAdmin.auth().createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
 
     // Get cookie store and set cookie. `await cookies()` ensures we have the store with `.set`.
     const cookieStore = await cookies();
