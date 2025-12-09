@@ -21,22 +21,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "missing-idToken" }, { status: 400 });
     }
 
-    // Dynamically import server-only admin initializer at request time.
-    let adminModule: any;
-    try {
-      adminModule = await import("@/lib/firebaseAdmin");
-    } catch (err) {
-      console.error("Firebase admin module failed to load:", err);
-      return NextResponse.json(
-        { success: false, error: "Server Firebase Admin not configured." },
-        { status: 500 }
-      );
-    }
-
-    // Get the firebaseAdmin instance from the module
-    const firebaseAdmin = adminModule?.firebaseAdmin ?? adminModule?.default;
+    // Import the firebaseAdmin instance
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
+    
     if (!firebaseAdmin || !firebaseAdmin.auth) {
-      console.error("Firebase admin not properly initialized:", adminModule);
+      console.error("Firebase admin not properly initialized");
       return NextResponse.json(
         { success: false, error: "Server Firebase Admin not configured." },
         { status: 500 }
