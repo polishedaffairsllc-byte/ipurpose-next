@@ -1,17 +1,34 @@
-"use client";
-
 import React from "react";
 import styles from "./IPButton.module.css";
 
-interface IPButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
+export type IPButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children?: React.ReactNode;
+  className?: string;
+  variant?: "primary" | "secondary" | "champagne" | "ghost";
+};
 
-export default function IPButton({ children, ...props }: IPButtonProps) {
+export default function IPButton({
+  children,
+  className = "",
+  variant = "primary",
+  ...rest
+}: IPButtonProps) {
+  const variantClass =
+    variant === "secondary"
+      ? styles.secondary
+      : variant === "champagne"
+      ? styles.champagne
+      : variant === "ghost"
+      ? styles.ghost
+      : styles.primary;
+
   return (
-    <button className={styles.button} {...props}>
+    <button
+      type={rest.type ?? "button"}
+      className={`${styles.button} ${variantClass} ${className}`.trim()}
+      {...rest}
+    >
       {children}
     </button>
   );
 }
-
