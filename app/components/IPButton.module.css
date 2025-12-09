@@ -1,0 +1,14 @@
+/* app/components/IPButton.module.css - minimal button styles */
+
+.root {
+  display: inline-block;
+}
+
+.primary {
+  padding: 8px 12px;
+  background: #111827;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}

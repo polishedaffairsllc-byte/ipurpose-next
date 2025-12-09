@@ -1,0 +1,84 @@
+
+> ipurpose-next@0.1.0 dev
+> next dev
+
+ ⚠ turbopack.root should be absolute, using: /Users/renita.hamilton/Desktop/ipurpose-next
+   ▲ Next.js 16.0.6 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.1.225:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1047ms
+ GET /dashboard 200 in 2.7s (compile: 2.3s, proxy.ts: 50ms, render: 277ms)
+ GET /dashboard 200 in 42ms (compile: 3ms, proxy.ts: 4ms, render: 34ms)
+ GET /dashboard 200 in 21ms (compile: 4ms, proxy.ts: 3ms, render: 14ms)
+WARNING: DEV_FALLBACK is enabled. Using an INSECURE development-only Firebase Admin fallback. Do NOT enable in CI/production.
+ GET /api/admin/status 200 in 499ms (compile: 401ms, render: 98ms)
+ POST /api/auth/login 200 in 112ms (compile: 103ms, render: 9ms)
+ GET /dashboard 200 in 73ms (compile: 19ms, proxy.ts: 17ms, render: 37ms)
+ GET /dashboard 200 in 25ms (compile: 2ms, proxy.ts: 3ms, render: 20ms)
+ GET /dashboard 200 in 13ms (compile: 1643µs, proxy.ts: 2ms, render: 9ms)
+ GET /dashboard 200 in 31ms (compile: 2ms, proxy.ts: 4ms, render: 25ms)
+ GET /dashboard 200 in 34ms (compile: 2ms, proxy.ts: 4ms, render: 28ms)
+ GET /dashboard 200 in 27ms (compile: 4ms, proxy.ts: 3ms, render: 21ms)
+ GET /dashboard 200 in 29ms (compile: 3ms, proxy.ts: 3ms, render: 22ms)
+ GET /dashboard 200 in 24ms (compile: 1632µs, proxy.ts: 4ms, render: 18ms)
+ GET /dashboard 200 in 11ms (compile: 1492µs, proxy.ts: 1386µs, render: 8ms)
+ GET /dashboard 200 in 36ms (compile: 1570µs, proxy.ts: 1882µs, render: 33ms)
+ GET /dashboard 200 in 41ms (compile: 4ms, proxy.ts: 8ms, render: 29ms)
+ GET /dashboard 200 in 18ms (compile: 4ms, proxy.ts: 3ms, render: 11ms)
+ GET /dashboard 200 in 51ms (compile: 6ms, proxy.ts: 1889µs, render: 43ms)
+ GET /dashboard 200 in 49ms (compile: 2ms, proxy.ts: 3ms, render: 44ms)
+ GET /dashboard 200 in 28ms (compile: 8ms, proxy.ts: 2ms, render: 17ms)
+ ✓ Compiled in 67ms
+ GET /dashboard 200 in 317ms (compile: 247ms, proxy.ts: 9ms, render: 61ms)
+ ✓ Compiled in 0ms
+ GET /dashboard 200 in 226ms (compile: 10ms, proxy.ts: 3ms, render: 213ms)
+ GET /dashboard 200 in 38ms (compile: 5ms, proxy.ts: 8ms, render: 24ms)
+ GET /dashboard 200 in 14ms (compile: 2ms, proxy.ts: 1849µs, render: 10ms)
+ GET /api/_dev/fallback 404 in 488ms (compile: 409ms, render: 79ms)
+ GET /api/_dev/fallback 404 in 35ms (compile: 4ms, render: 32ms)
+ GET /dashboard 200 in 81ms (compile: 20ms, proxy.ts: 22ms, render: 39ms)
+ GET /dashboard 200 in 58ms (compile: 8ms, proxy.ts: 24ms, render: 27ms)
+ GET /dashboard 200 in 40ms (compile: 5ms, proxy.ts: 2ms, render: 33ms)
+ GET /api/_dev/fallback 404 in 88ms (compile: 8ms, render: 80ms)
+ GET /api/_dev/fallback 404 in 38ms (compile: 16ms, render: 23ms)
+ GET /dashboard 200 in 69ms (compile: 12ms, proxy.ts: 15ms, render: 42ms)
+ GET /dashboard 200 in 56ms (compile: 4ms, proxy.ts: 2ms, render: 50ms)
+ GET /dashboard 200 in 81ms (compile: 6ms, proxy.ts: 20ms, render: 55ms)
+ GET /api/_dev/fallback 404 in 44ms (compile: 18ms, render: 26ms)
+ GET /api/_dev/fallback 404 in 98ms (compile: 16ms, render: 81ms)
+ GET /dashboard 200 in 60ms (compile: 4ms, proxy.ts: 1656µs, render: 55ms)
+ GET /dashboard 200 in 52ms (compile: 3ms, proxy.ts: 2ms, render: 47ms)
+ GET /dashboard 200 in 21ms (compile: 4ms, proxy.ts: 4ms, render: 13ms)
+ GET /api/_dev/fallback 404 in 78ms (compile: 12ms, render: 65ms)
+ GET /api/_dev/fallback 404 in 31ms (compile: 6ms, render: 25ms)
+ GET /dashboard 200 in 74ms (compile: 12ms, proxy.ts: 14ms, render: 48ms)
+ GET /dashboard 200 in 108ms (compile: 3ms, proxy.ts: 4ms, render: 101ms)
+ GET /dashboard 200 in 115ms (compile: 11ms, proxy.ts: 40ms, render: 65ms)
+ GET /api/_dev/fallback 404 in 132ms (compile: 17ms, render: 115ms)
+ GET /api/_dev/fallback 404 in 53ms (compile: 24ms, render: 29ms)
+ GET /dashboard 200 in 26ms (compile: 2ms, proxy.ts: 4ms, render: 20ms)
+ GET /dashboard 200 in 48ms (compile: 2ms, proxy.ts: 3ms, render: 42ms)
+ GET /dashboard 200 in 35ms (compile: 8ms, proxy.ts: 16ms, render: 11ms)
+ GET /api/_dev/fallback 404 in 47ms (compile: 11ms, render: 36ms)
+ GET /api/_dev/fallback 404 in 25ms (compile: 5ms, render: 20ms)
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /var/folders/g_/qqhgm5qn6bq431j_pcc4j5m40000gp/T/next-panic-82a824e6685dda6406e29f1576c70109.log.
+
+To help make Turbopack better, report this error by ]8;;https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Next.js%20package%20not%20found&body=Turbopack%20version%3A%20%60v16.0.4%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0ANext.js%20package%20not%20found%0A%0ADebug%20info%3A%0A-%20Execution%20of%20subscribe_issues_and_diags_operation%20failed%0A-%20Execution%20of%20endpoint_server_changed_operation%20failed%0A-%20Execution%20of%20pick_endpoint%20failed%0A-%20Execution%20of%20entrypoints_without_collectibles_operation%20failed%0A-%20Execution%20of%20Project%3A%3Aentrypoints%20failed%0A-%20Execution%20of%20AppProject%3A%3Aroutes%20failed%0A-%20Execution%20of%20directory_tree_to_entrypoints_internal%20failed%0A-%20Execution%20of%20directory_tree_to_loader_tree%20failed%0A-%20Next.js%20package%20not%20found%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace\clicking here.]8;;\
+-----
+
+Error: Turbopack build failed with 1 errors:
+./app
+Error: Next.js inferred your workspace root, but it may not be correct.
+    We couldn't find the Next.js package (next/package.json) from the project directory: /Users/renita.hamilton/Desktop/ipurpose-next/app
+     To fix this, set turbopack.root in your Next.js config, or ensure the Next.js package is resolvable from this directory.
+    Note: For security and performance reasons, files outside of the project directory will not be compiled.
+    See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+
+    at ignore-listed frames
+[?25h

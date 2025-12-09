@@ -1,0 +1,8 @@
+/* app/components/IPHeading.module.css - minimal heading styles */
+
+.heading {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
