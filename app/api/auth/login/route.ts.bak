@@ -1,0 +1,30 @@
+// app/api/auth/login/route.ts
+import { NextResponse } from "next/server";
+import admin from "@/lib/firebaseAdmin";
+
+export async function POST(req: Request) {
+  try {
+    const { idToken } = await req.json();
+    const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
+
+    const sessionCookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
+
+    const res = NextResponse.json({ success: true }, { status: 200 });
+
+    res.cookies.set("FirebaseSession", sessionCookie, {
+      maxAge: Math.floor(expiresIn / 1000),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      sameSite: "lax",
+    });
+
+    return res;
+  } catch (error: any) {
+    console.error("API Error creating session:", error);
+    return NextResponse.json(
+      { success: false, error: error.message ?? "Failed to create session." },
+      { status: 500 }
+    );
+  }
+}
