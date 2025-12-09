@@ -24,6 +24,15 @@ export async function POST(req: Request) {
     // Import the firebaseAdmin instance
     const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     
+    // Debug logs to diagnose the issue
+    console.log("firebaseAdmin:", !!firebaseAdmin);
+    console.log("admin.auth exists:", typeof firebaseAdmin.auth === "function");
+    try {
+      console.log("createSessionCookie:", typeof firebaseAdmin.auth().createSessionCookie);
+    } catch (err) {
+      console.error("admin.auth() threw:", err);
+    }
+    
     if (!firebaseAdmin || !firebaseAdmin.auth) {
       console.error("Firebase admin not properly initialized");
       return NextResponse.json(
