@@ -4,8 +4,7 @@ import styles from "./IPButton.module.css";
 export type IPButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode;
   className?: string;
-  // add optional variant prop to support existing calls that pass variant="secondary"
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "champagne";
 };
 
 export default function IPButton({
@@ -14,7 +13,12 @@ export default function IPButton({
   variant = "primary",
   ...rest
 }: IPButtonProps) {
-  const variantClass = variant === "secondary" ? styles.secondary : styles.primary;
+  const variantClass =
+    variant === "secondary"
+      ? styles.secondary
+      : variant === "champagne"
+      ? styles.champagne
+      : styles.primary;
 
   return (
     <button
