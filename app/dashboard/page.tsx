@@ -1,10 +1,10 @@
 import NavBar from "../components/NavBar";
 import { cookies } from "next/headers";
-import { firebaseAdmin } from "../../lib/firebaseAdmin";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
 
   if (!session) return redirect("/login");

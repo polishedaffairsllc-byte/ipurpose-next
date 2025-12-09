@@ -1,11 +1,11 @@
 "use server";
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { firebaseAdmin } from "../../lib/firebaseAdmin";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import React from "react";
 
 export default async function NavBar() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
   let displayName = "Guest";
 

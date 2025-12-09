@@ -1,13 +1,11 @@
 import NavBar from "../components/NavBar";
 import { cookies } from "next/headers";
-import { firebaseAdmin } from "../../lib/firebaseAdmin";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
-import dynamic from "next/dynamic";
-
-const AIClient = dynamic(() => import("./AIClient"), { ssr: false });
+import AIClient from "./AIClient";
 
 export default async function AIPage() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
   if (!session) return redirect("/login");
 
@@ -27,7 +25,7 @@ export default async function AIPage() {
         </main>
       </>
     );
-  } catch {
+  } catch (e) {
     return redirect("/login");
   }
 }
