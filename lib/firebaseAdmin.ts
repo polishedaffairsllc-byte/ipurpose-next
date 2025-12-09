@@ -1,4 +1,4 @@
-import admin from "firebase-admin";
+import * as admin from "firebase-admin";
 
 function parseServiceAccount(): any | undefined {
   const raw = process.env.FIREBASE_ADMIN_CREDENTIALS || "";

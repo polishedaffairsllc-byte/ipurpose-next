@@ -21,31 +21,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "missing-idToken" }, { status: 400 });
     }
 
-    // Dynamically import server-only admin initializer at request time.
-    // Use `any` here to be tolerant to different export shapes and avoid TS errors about `.default`.
-    let adminModule: any;
+    // Import the firebaseAdmin instance
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
+    
+    // Debug logs to diagnose the issue
+    console.log("firebaseAdmin:", !!firebaseAdmin);
+    console.log("admin.auth exists:", typeof firebaseAdmin.auth === "function");
     try {
-      adminModule = await import("@/lib/firebaseAdmin");
+      console.log("createSessionCookie:", typeof firebaseAdmin.auth().createSessionCookie);
     } catch (err) {
-      console.error("Firebase admin module failed to load:", err);
+      console.error("admin.auth() threw:", err);
+    }
+    
+    if (!firebaseAdmin || !firebaseAdmin.auth) {
+      console.error("Firebase admin not properly initialized");
       return NextResponse.json(
         { success: false, error: "Server Firebase Admin not configured." },
         { status: 500 }
       );
     }
 
-    // Resolve an adminAuth object from the imported module in a tolerant way.
-    const adminAuth = adminModule?.adminAuth ?? adminModule?.admin ?? adminModule;
-    if (!adminAuth || typeof adminAuth.createSessionCookie !== "function") {
-      console.error("Firebase admin export does not expose createSessionCookie:", adminModule);
-      return NextResponse.json(
-        { success: false, error: "Server Firebase Admin missing createSessionCookie." },
-        { status: 500 }
-      );
-    }
-
-    // Create session cookie
-    const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
+    // Create session cookie using auth().createSessionCookie()
+    const sessionCookie = await firebaseAdmin.auth().createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
 
     // Get cookie store and set cookie. `await cookies()` ensures we have the store with `.set`.
     const cookieStore = await cookies();
