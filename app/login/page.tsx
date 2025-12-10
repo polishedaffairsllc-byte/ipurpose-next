@@ -5,10 +5,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 
-import IPHeading from "../components/IPHeading";
-import IPCard from "../components/IPCard";
-import IPButton from "../components/IPButton";
-
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
@@ -24,31 +20,27 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Sign in with Firebase client SDK
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("signInWithEmailAndPassword resolved");
-
-      // Obtain the idToken from the signed-in user
       const idToken = await credential.user.getIdToken();
 
-      // Send idToken to the server so the server can create a secure HttpOnly session cookie
+      // send idToken to server to create HttpOnly session cookie
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // not required for Set-Cookie but useful for subsequent fetches
+        credentials: "include",
         body: JSON.stringify({ idToken }),
       });
 
       if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json?.error || `Server responded with ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j?.error || `Server returned ${res.status}`);
       }
 
-      // Redirect to dashboard (server-side will now see the session cookie)
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message ?? "Login failed. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Login failed. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,51 +48,73 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.cardWrapper}>
-        <IPCard>
-          <IPHeading size="lg">Welcome to iPurpose</IPHeading>
-
-          <p className={styles.helper}>
-            Log in to access your dashboard and AI tools.
-          </p>
-
-          <form onSubmit={handleLogin} className={styles.form}>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="email">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                className={styles.input}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+      <div className={styles.center}>
+        <div className={styles.visual}>
+          <div className={styles.brand}>
+            <div className={styles.logo}></div>
+            <div className={styles.brandText}>
+              <div className={styles.brandTitle}>iPurpose</div>
+              <div className={styles.brandTag}>Focus your work. Amplify your impact.</div>
             </div>
+          </div>
+        </div>
 
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="password">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                className={styles.input}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+        <div className={styles.cardWrapper}>
+          <div className={styles.card}>
+            <h1 className={styles.title}>Welcome Back</h1>
+            <p className={styles.subtitle}>Sign in to continue to your dashboard</p>
 
-            {error && <div className={styles.error}>{error}</div>}
+            <form onSubmit={handleLogin} className={styles.form}>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="email">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  className={styles.input}
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-            <IPButton type="submit" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </IPButton>
-          </form>
-        </IPCard>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="password">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  className={styles.input}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {error && <div className={styles.error}>{error}</div>}
+
+              <button type="submit" disabled={loading} className={styles.submit}>
+                {loading ? "Signing in..." : "Sign In"}
+              </button>
+
+              <div className={styles.row}>
+                <a href="/signup" className={styles.link}>
+                  Create an account
+                </a>
+                <a href="/forgot-password" className={styles.secondary}>
+                  Forgot password?
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
+
+      <footer className={styles.footer}>© 2024 iPurpose. All rights reserved.</footer>
     </div>
   );
 }

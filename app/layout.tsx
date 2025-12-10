@@ -1,13 +1,6 @@
 import type { Metadata } from 'next';
-import { Italiana } from 'next/font/google';
 import './tailwind.css';
 import { AuthContextProvider } from './context/AuthContext';
-
-const italiana = Italiana({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-italiana',
-});
 
 export const metadata: Metadata = {
   title: 'iPurpose Platform',
@@ -20,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={italiana.variable}>
+    <html lang="en">
       {/* 🔥 IMPORTANT: Apply Tailwind font + brand background + brand text */}
       <body className="font-italiana bg-ip-surface text-ip-text">
         <AuthContextProvider>
