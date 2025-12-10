@@ -130,9 +130,3 @@ export default function LoginPage() {
     </div>
   );
 }
-          </form>
-        </IPCard>
-      </div>
-    </div>
-  );
-}
