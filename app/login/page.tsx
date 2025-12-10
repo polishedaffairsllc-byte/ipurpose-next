@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/lib/firebase";
 
 import styles from "./LoginPage.module.css";
@@ -102,12 +103,12 @@ export default function LoginPage() {
               </button>
 
               <div className={styles.row}>
-                <a href="/signup" className={styles.link}>
+                <Link href="/signup" className={styles.link}>
                   Create an account
-                </a>
-                <a href="/forgot-password" className={styles.secondary}>
+                </Link>
+                <Link href="/forgot-password" className={styles.secondary}>
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </form>
           </div>
