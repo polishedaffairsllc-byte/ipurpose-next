@@ -21,6 +21,12 @@ module.exports = {
         marcellus: ["Marcellus", "serif"],
         montserrat: ["Montserrat", "sans-serif"],
       },
+      boxShadow: {
+        soft: "0 18px 45px rgba(34, 22, 68, 0.16)",
+      },
+      borderRadius: {
+        "2xl": "1.25rem",
+      },
       container: {
         center: true,
         padding: "1.5rem",
