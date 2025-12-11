@@ -5,7 +5,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth"; // Renamed signOut to firebaseSignOut to avoid conflict
 import { doc, onSnapshot, DocumentData } from 'firebase/firestore'; 
-import { auth, db } from "@/lib/firebase"; // Use project alias to reference root lib
+import { getFirebaseAuth, getFirebaseFirestore } from "@/lib/firebaseClient";
 
 // -----------------------------
 // 1. TYPES
@@ -51,7 +51,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
         // ⭐️ FIX: Explicitly set local state to null FIRST to signal immediate log out.
-        setUser(null); 
+        setUser(null);
+        const auth = getFirebaseAuth();
         await firebaseSignOut(auth);
     } finally {
         // CRITICAL FIX: Explicitly clear the session cookie set by middleware
@@ -67,7 +68,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       // allow components to handle a timed-out state by clearing the loading flag
       setLoading(false);
     }, 8000); // 8s
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(getFirebaseAuth(), (firebaseUser) => {
       setUser(firebaseUser); 
       setLoading(false);
       // clear timeout if auth resolves in time
@@ -82,7 +83,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     let unsubscribeFromFirestore: () => void;
 
     if (user) {
-      const userDocRef = doc(db, 'users', user.uid);
+      const userDocRef = doc(getFirebaseFirestore(), 'users', user.uid);
 
       unsubscribeFromFirestore = onSnapshot(userDocRef, (docSnap) => {
         if (docSnap.exists()) {

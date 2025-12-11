@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebaseClient";
 import { useRouter } from "next/navigation";
 
 import IPHeading from "@/app/components/IPHeading";
@@ -17,6 +17,7 @@ export default function SignupPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const auth = getFirebaseAuth();
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/dashboard");
     } catch (error) {
