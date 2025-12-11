@@ -5,6 +5,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 
+import styles from "./LoginPage.module.css";
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -18,37 +20,87 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Sign in with Firebase client SDK
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("signInWithEmailAndPassword resolved");
-
-      // Obtain the idToken from the signed-in user
       const idToken = await credential.user.getIdToken();
 
-      // Send idToken to the server so the server can create a secure HttpOnly session cookie
+      // send idToken to server to create HttpOnly session cookie
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // not required for Set-Cookie but useful for subsequent fetches
+        credentials: "include",
         body: JSON.stringify({ idToken }),
       });
 
       if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json?.error || `Server responded with ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j?.error || `Server returned ${res.status}`);
       }
 
-      // Redirect to dashboard (server-side will now see the session cookie)
       router.push("/dashboard");
     } catch (err: any) {
       console.error(err);
-      setError(err.message ?? "Login failed. Please try again.");
+      setError(err?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    <div className={styles.page}>
+      <div className={styles.center}>
+        <div className={styles.visual}>
+          <div className={styles.brand}>
+            <div className={styles.logo}></div>
+            <div className={styles.brandText}>
+              <div className={styles.brandTitle}>iPurpose</div>
+              <div className={styles.brandTag}>Your AI-powered life design platform</div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.cardWrapper}>
+          <div className={styles.card}>
+            <h1 className={styles.title}>Welcome Back</h1>
+            <p className={styles.subtitle}>Log in to access your dashboard and AI tools</p>
+
+            <form onSubmit={handleLogin} className={styles.form}>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  className={styles.input}
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="password">Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  className={styles.input}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {error && <div className={styles.error}>{error}</div>}
+
+              <button type="submit" className={styles.submit} disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
+              </button>
+
+              <div className={styles.row}>
+                <a href="/signup" className={styles.link}>Don't have an account?</a>
+                <a href="/signup" className={styles.secondary}>Sign up</a>
+              </div>
+            </form>
     <div className="min-h-screen bg-offWhite flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl p-8 border border-warmCharcoal/5">
@@ -127,6 +179,10 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      <footer className={styles.footer}>
+        © {new Date().getFullYear()} iPurpose. All rights reserved.
+      </footer>
     </div>
   );
 }
