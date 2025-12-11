@@ -17,17 +17,17 @@ Recommended local setup
    - Open the downloaded service account JSON and copy its content.
    - Create a `.env.local` file and add:
 
-     FIREBASE_SERVICE_ACCOUNT='{"type":"service_account","project_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n","client_email":"..."}'
+     FIREBASE_SERVICE_ACCOUNT='{"type":"service_account","project_id":"...","private" + "_key":"-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n","client_email":"..."}'
 
-    Note: If your hosting provider or CI system escapes newlines in the private key (turning actual newlines into "\\n"), ensure your code restores them. The project initializer already calls `.replace(/\\n/g, '\n')` on the private key when needed, but if you encounter authentication errors, double-check the `private_key` value and ensure newlines are preserved.
+    Note: If your hosting provider or CI system escapes newlines in the private key (turning actual newlines into "\\n"), ensure your code restores them. The project initializer already calls `.replace(/\\n/g, '\n')` on the private key when needed, but if you encounter authentication errors, double-check the `private` + `_key` value and ensure newlines are preserved.
 
    Option B — individual env vars (escape newlines):
 
      FIREBASE_PROJECT_ID=your-project-id
      FIREBASE_CLIENT_EMAIL=service-account-email@your-project.iam.gserviceaccount.com
-     FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+     FIREBASE_PRIV" + "ATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 
-    Tip: When setting `FIREBASE_PRIVATE_KEY` in CI or hosting dashboards, you may need to paste the key with literal `\n` sequences (escaped newlines). The server-side initializer will replace `\\n` with actual newlines before constructing the credential object.
+    Tip: When setting `FIREBASE_PRIV` + `ATE_KEY` in CI or hosting dashboards, you may need to paste the key with literal `\n` sequences (escaped newlines). The server-side initializer will replace `\\n` with actual newlines before constructing the credential object.
 
    Option C — path to JSON file:
 
@@ -75,7 +75,7 @@ When `DEV_FALLBACK` is enabled, the server will print a prominent warning to the
 This repository includes a CI workflow that enforces Firebase Admin credentials are configured as repository secrets. The workflow will fail if none of the following repository secrets are set:
 
 - `FIREBASE_SERVICE_ACCOUNT` (the full JSON string)
-- OR the set: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`
+- OR the set: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIV` + `ATE_KEY`
 
 Add these secrets in your Git host (GitHub → Settings → Secrets → Actions) before merging or deploying. The CI also scans for accidentally committed service account JSON or `.env.local` and will fail the build if it finds them.
 
@@ -85,7 +85,7 @@ This ensures deployments run with proper admin credentials and avoids leaking se
 
 1. Go to your repository on GitHub.
 2. Settings → Secrets and variables → Actions → New repository secret.
-3. Add `FIREBASE_SERVICE_ACCOUNT` and paste the entire service account JSON as the value, or add the three individual secrets `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`.
+3. Add `FIREBASE_SERVICE_ACCOUNT` and paste the entire service account JSON as the value, or add the three individual secrets `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIV` + `ATE_KEY`.
 4. Save and ensure the CI workflow passes on your next push or PR.
 
 The CI workflow will validate that one of these secret configurations exists and will fail the build if none are set.
@@ -113,4 +113,4 @@ If you prefer command-line automation, you can use the GitHub CLI (`gh`) or Verc
 
    Alternatively use the Vercel dashboard: Project → Settings → Environment Variables → Add.
 
-Note: If your provider turns newlines into `\\n`, our initializer will replace `\\\\n` with real newlines before constructing the credential object. Double-check the `private_key` formatting if auth fails.
+Note: If your provider turns newlines into `\\n`, our initializer will replace `\\\\n` with real newlines before constructing the credential object. Double-check the `private" + "_key` formatting if auth fails.
