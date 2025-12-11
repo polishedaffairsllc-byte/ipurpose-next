@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/lib/firebase";
 
 export default function LoginPage() {
@@ -18,31 +19,27 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Sign in with Firebase client SDK
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("signInWithEmailAndPassword resolved");
-
-      // Obtain the idToken from the signed-in user
       const idToken = await credential.user.getIdToken();
 
-      // Send idToken to the server so the server can create a secure HttpOnly session cookie
+      // send idToken to server to create HttpOnly session cookie
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // not required for Set-Cookie but useful for subsequent fetches
+        credentials: "include",
         body: JSON.stringify({ idToken }),
       });
 
       if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json?.error || `Server responded with ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j?.error || `Server returned ${res.status}`);
       }
 
-      // Redirect to dashboard (server-side will now see the session cookie)
       router.push("/dashboard");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message ?? "Login failed. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Login failed. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -127,6 +124,8 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      <footer className={styles.footer}>© 2024 iPurpose. All rights reserved.</footer>
     </div>
   );
 }
