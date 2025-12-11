@@ -1,81 +1,77 @@
-"use client";
+import { cookies } from "next/headers";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { redirect } from "next/navigation";
+import Navigation from "../components/Navigation";
+import PageTitle from "../components/PageTitle";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import SectionHeading from "../components/SectionHeading";
 
-import ProtectedRoute from "@/app/components/ProtectedRoute";
-import IPHeading from "@/app/components/IPHeading";
-import IPSection from "@/app/components/IPSection";
-import IPCard from "@/app/components/IPCard";
-import IPButton from "@/app/components/IPButton";
-import LogoutButton from "@/app/components/LogoutButton";
+export default async function SettingsPage() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("FirebaseSession")?.value ?? null;
+  if (!session) return redirect("/login");
 
-export default function SettingsPage() {
-  return (
-    <ProtectedRoute>
-      <div className="min-h-screen w-full bg-white text-ip-heading flex flex-col">
+  try {
+    await firebaseAdmin.auth().verifySessionCookie(session, true);
 
-        {/* Header */}
-        <header className="w-full border-b border-ip-border px-6 py-4 flex justify-between items-center">
-          <IPHeading size="lg">Settings</IPHeading>
-          <LogoutButton />
-        </header>
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#2b2d4a_0,#0f1017_42%,#050509_100%)]">
+          <div className="container max-w-4xl mx-auto px-6 md:px-10 py-12 md:py-16">
+            
+            <PageTitle subtitle="Update your personal settings, preferences, and account details.">
+              Account Settings
+            </PageTitle>
 
-        {/* MAIN */}
-        <main className="flex-1 px-6 py-10 space-y-12">
+            <div className="grid md:grid-cols-2 gap-5 mb-12">
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Profile Info</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Update your name, photo, and identity settings.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Edit Profile →
+                </Button>
+              </Card>
 
-          {/* ACCOUNT SETTINGS */}
-          <IPSection>
-            <IPHeading size="md">Account Preferences</IPHeading>
-            <p className="mt-4 text-lg text-ip-text">
-              Update your personal settings, preferences, and account details.
-            </p>
-          </IPSection>
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Security</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Manage your password, login methods, and session access.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Update Security →
+                </Button>
+              </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Notifications</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Set preferences for email and in-app communication.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Notification Settings →
+                </Button>
+              </Card>
 
-            {/* Card 1 */}
-            <IPCard>
-              <IPHeading size="sm">Profile Info</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Update your name, photo, and identity settings.
-              </p>
-              <IPButton className="mt-4">Edit Profile</IPButton>
-            </IPCard>
-
-            {/* Card 2 */}
-            <IPCard>
-              <IPHeading size="sm">Security</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Manage your password, login methods, and session access.
-              </p>
-              <IPButton className="mt-4" variant="secondary">
-                Update Security
-              </IPButton>
-            </IPCard>
-
-            {/* Card 3 */}
-            <IPCard>
-              <IPHeading size="sm">Notifications</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Set preferences for email and in-app communication.
-              </p>
-              <IPButton className="mt-4" variant="champagne">
-                Notification Settings
-              </IPButton>
-            </IPCard>
-
-            {/* Card 4 */}
-            <IPCard>
-              <IPHeading size="sm">Billing</IPHeading>
-              <p className="mt-2 text-ip-text">
-                View invoices, payment methods, and subscription options.
-              </p>
-              <IPButton className="mt-4" variant="ghost">
-                View Billing
-              </IPButton>
-            </IPCard>
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Billing</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  View invoices, payment methods, and subscription options.
+                </p>
+                <Button variant="ghost" size="sm">
+                  View Billing →
+                </Button>
+              </Card>
+            </div>
 
           </div>
         </main>
-      </div>
-    </ProtectedRoute>
-  );
+      </>
+    );
+  } catch (e) {
+    return redirect("/login");
+  }
 }

@@ -1,84 +1,91 @@
-"use client";
+import { cookies } from "next/headers";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { redirect } from "next/navigation";
+import Navigation from "../components/Navigation";
+import PageTitle from "../components/PageTitle";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import SectionHeading from "../components/SectionHeading";
 
-import ProtectedRoute from "@/app/components/ProtectedRoute";
-import IPHeading from "@/app/components/IPHeading";
-import IPSection from "@/app/components/IPSection";
-import IPCard from "@/app/components/IPCard";
-import IPButton from "@/app/components/IPButton";
-import LogoutButton from "@/app/components/LogoutButton";
+export default async function SystemsPage() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("FirebaseSession")?.value ?? null;
+  if (!session) return redirect("/login");
 
-export default function SystemsPage() {
-  return (
-    <ProtectedRoute>
-      <div className="min-h-screen w-full bg-white text-ip-heading flex flex-col">
+  try {
+    await firebaseAdmin.auth().verifySessionCookie(session, true);
 
-        {/* Header */}
-        <header className="w-full border-b border-ip-border px-6 py-4 flex justify-between items-center">
-          <IPHeading size="lg">Systems</IPHeading>
-          <LogoutButton />
-        </header>
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#2b2d4a_0,#0f1017_42%,#050509_100%)]">
+          <div className="container max-w-4xl mx-auto px-6 md:px-10 py-12 md:py-16">
+            
+            <PageTitle subtitle="Build the structures that carry your purpose. Organize, automate, and streamline your flow.">
+              Systems
+            </PageTitle>
 
-        {/* Main */}
-        <main className="flex-1 px-6 py-10 space-y-12">
-
-          {/* Intro Section */}
-          <IPSection>
-            <IPHeading size="md">Build the Structures That Carry Your Purpose</IPHeading>
-            <p className="mt-4 text-lg text-ip-text leading-relaxed">
-              Systems turn your purpose into momentum.  
-              These tools help you organize, automate, and streamline every part of your flow  
-              so your energy stays aligned, efficient, and powerful.
-            </p>
-          </IPSection>
-
-          {/* Systems Tools Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            {/* Card 1 */}
-            <IPCard>
-              <IPHeading size="sm">Workflow Builder</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Create simple, repeatable workflows that keep your operations smooth and confident.
+            <Card accent="gold" className="mb-10">
+              <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase mb-2">
+                SYSTEMS PHILOSOPHY
               </p>
-              <IPButton className="mt-4">Open Workflow Builder</IPButton>
-            </IPCard>
-
-            {/* Card 2 */}
-            <IPCard>
-              <IPHeading size="sm">Content Engine</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Plan, organize, and document your content ideas with aligned strategy.
+              <p className="text-sm text-white/75 leading-relaxed">
+                Systems turn your purpose into momentum. These tools help you organize every part
+                of your flow so your energy stays aligned, efficient, and powerful.
               </p>
-              <IPButton className="mt-4" variant="secondary">
-                Launch Content Engine
-              </IPButton>
-            </IPCard>
+            </Card>
 
-            {/* Card 3 */}
-            <IPCard>
-              <IPHeading size="sm">Offer Architecture</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Structure your offers, pricing, and delivery so everything feels clean and scalable.
-              </p>
-              <IPButton className="mt-4" variant="champagne">
-                Build Your Offers
-              </IPButton>
-            </IPCard>
+            <SectionHeading level="h2" className="mb-6">
+              Systems Tools
+            </SectionHeading>
 
-            {/* Card 4 */}
-            <IPCard>
-              <IPHeading size="sm">Task Orchestration</IPHeading>
-              <p className="mt-2 text-ip-text">
-                Organize priorities, commitments, and daily tasks with clarity and ease.
-              </p>
-              <IPButton className="mt-4" variant="ghost">
-                Start Organizing
-              </IPButton>
-            </IPCard>
+            <div className="grid md:grid-cols-2 gap-5 mb-12">
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Workflow Builder</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Create simple, repeatable workflows that keep your operations smooth and confident.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Open Workflow Builder →
+                </Button>
+              </Card>
+
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Content Engine</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Plan, organize, and document your content ideas with aligned strategy.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Launch Content Engine →
+                </Button>
+              </Card>
+
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Offer Architecture</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Structure your offers, pricing, and delivery so everything feels clean and scalable.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Build Your Offers →
+                </Button>
+              </Card>
+
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Task Orchestration</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Organize priorities, commitments, and daily tasks with clarity and ease.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Start Organizing →
+                </Button>
+              </Card>
+            </div>
 
           </div>
         </main>
-      </div>
-    </ProtectedRoute>
-  );
+      </>
+    );
+  } catch (e) {
+    return redirect("/login");
+  }
 }

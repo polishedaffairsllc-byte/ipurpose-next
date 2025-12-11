@@ -1,62 +1,77 @@
-"use client";
+import { cookies } from "next/headers";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { redirect } from "next/navigation";
+import Navigation from "../components/Navigation";
+import PageTitle from "../components/PageTitle";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import SectionHeading from "../components/SectionHeading";
 
-import ProtectedRoute from "@/app/components/ProtectedRoute";
-import IPHeading from "@/app/components/IPHeading";
-import IPSection from "@/app/components/IPSection";
-import IPCard from "@/app/components/IPCard";
-import IPButton from "@/app/components/IPButton";
-import LogoutButton from "@/app/components/LogoutButton";
+export default async function InsightsPage() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get("FirebaseSession")?.value ?? null;
+  if (!session) return redirect("/login");
 
-export default function InsightsPage() {
-  return (
-    <ProtectedRoute>
-      <div className="min-h-screen w-full bg-white text-ip-heading flex flex-col">
+  try {
+    await firebaseAdmin.auth().verifySessionCookie(session, true);
 
-        {/* HEADER */}
-        <header className="w-full border-b border-ip-border px-6 py-4 flex justify-between items-center">
-          <IPHeading size="lg">Insights</IPHeading>
-          <LogoutButton />
-        </header>
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#2b2d4a_0,#0f1017_42%,#050509_100%)]">
+          <div className="container max-w-4xl mx-auto px-6 md:px-10 py-12 md:py-16">
+            
+            <PageTitle subtitle="Explore reflective insights, trends, and clarity reports that support your growth.">
+              Your Aligned Insights
+            </PageTitle>
 
-        {/* MAIN */}
-        <main className="flex-1 px-6 py-10 space-y-12">
+            <div className="grid md:grid-cols-2 gap-5 mb-12">
+              <Card hover accent="lavender">
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Daily Reflection</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Track your emotional and energetic patterns over time.
+                </p>
+                <Button variant="ghost" size="sm">
+                  Open Reflection →
+                </Button>
+              </Card>
 
-          <IPSection>
-            <IPHeading size="md">Your Aligned Insights</IPHeading>
-            <p className="mt-4 text-lg text-ip-text">
-              Explore reflective insights, trends, and clarity reports that support your growth.
-            </p>
-          </IPSection>
+              <Card hover accent="salmon">
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Clarity Trends</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  See the patterns emerging in your priorities and decisions.
+                </p>
+                <Button variant="ghost" size="sm">
+                  View Trends →
+                </Button>
+              </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Card hover accent="gold">
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Progress Summary</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Review your progress across Soul, Systems, and AI.
+                </p>
+                <Button variant="ghost" size="sm">
+                  View Summary →
+                </Button>
+              </Card>
 
-            <IPCard>
-              <IPHeading size="sm">Daily Reflection</IPHeading>
-              <p className="mt-2 text-ip-text">Track your emotional and energetic patterns.</p>
-              <IPButton className="mt-4">Open Reflection</IPButton>
-            </IPCard>
-
-            <IPCard>
-              <IPHeading size="sm">Clarity Trends</IPHeading>
-              <p className="mt-2 text-ip-text">See the patterns emerging in your priorities.</p>
-              <IPButton className="mt-4" variant="secondary">View Trends</IPButton>
-            </IPCard>
-
-            <IPCard>
-              <IPHeading size="sm">Progress Summary</IPHeading>
-              <p className="mt-2 text-ip-text">Review your progress across Soul, Systems, and AI.</p>
-              <IPButton className="mt-4" variant="champagne">View Summary</IPButton>
-            </IPCard>
-
-            <IPCard>
-              <IPHeading size="sm">Alignment Report</IPHeading>
-              <p className="mt-2 text-ip-text">Receive personalized guidance based on your activity.</p>
-              <IPButton className="mt-4" variant="ghost">View Report</IPButton>
-            </IPCard>
+              <Card hover>
+                <h3 className="font-marcellus text-lg text-offWhite mb-2">Alignment Report</h3>
+                <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                  Receive personalized guidance based on your activity and patterns.
+                </p>
+                <Button variant="ghost" size="sm">
+                  View Report →
+                </Button>
+              </Card>
+            </div>
 
           </div>
         </main>
-      </div>
-    </ProtectedRoute>
-  );
+      </>
+    );
+  } catch (e) {
+    return redirect("/login");
+  }
 }
