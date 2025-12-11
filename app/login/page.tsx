@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "../../lib/firebaseClient";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,11 +19,13 @@ export default function LoginPage() {
 
     try {
       // Sign in with Firebase client SDK
+      const auth = getFirebaseAuth();
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("signInWithEmailAndPassword resolved");
+      console.log("✅ signInWithEmailAndPassword resolved");
 
       // Obtain the idToken from the signed-in user
       const idToken = await credential.user.getIdToken();
+      console.log("✅ Got idToken");
 
       // Send idToken to the server so the server can create a secure HttpOnly session cookie
       const res = await fetch("/api/auth/login", {
@@ -33,12 +35,18 @@ export default function LoginPage() {
         body: JSON.stringify({ idToken }),
       });
 
+      console.log("✅ API response:", res.status, res.ok);
+
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
         throw new Error(json?.error || `Server responded with ${res.status}`);
       }
 
+      const data = await res.json().catch(() => ({}));
+      console.log("✅ API response data:", data);
+
       // Redirect to dashboard (server-side will now see the session cookie)
+      console.log("✅ Redirecting to dashboard...");
       router.push("/dashboard");
     } catch (err: any) {
       console.error(err);
