@@ -12,14 +12,20 @@ export default function DashboardHeader() {
         {/* Right side: Profile + Actions */}
         <div className="flex items-center gap-4">
           {/* Notifications */}
-          <button className="w-10 h-10 rounded-full bg-lavenderViolet/10 hover:bg-lavenderViolet/20 flex items-center justify-center transition-colors">
+          <button 
+            className="w-10 h-10 rounded-full bg-lavenderViolet/10 hover:bg-lavenderViolet/20 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-indigoDeep/40"
+            aria-label="Notifications"
+          >
             <span className="text-lg">🔔</span>
           </button>
           
           {/* Profile Avatar */}
-          <div className="w-10 h-10 bg-gradient-to-br from-salmonPeach to-lavenderViolet rounded-full flex items-center justify-center text-warmCharcoal font-semibold cursor-pointer hover:ring-2 hover:ring-lavenderViolet/40 transition-all shadow-md">
+          <button 
+            className="w-10 h-10 bg-gradient-to-br from-salmonPeach to-lavenderViolet rounded-full flex items-center justify-center text-warmCharcoal font-semibold cursor-pointer hover:ring-2 hover:ring-lavenderViolet/40 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-indigoDeep/40"
+            aria-label="User profile"
+          >
             U
-          </div>
+          </button>
         </div>
       </div>
     </header>

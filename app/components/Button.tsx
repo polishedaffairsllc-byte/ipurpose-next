@@ -22,13 +22,13 @@ export default function Button({
   disabled = false,
   className = '',
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center rounded-full font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center rounded-full font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-indigoDeep/40 focus:ring-offset-2';
   
   const variants = {
-    primary: 'bg-lavenderViolet text-[#0f1017] shadow-soft hover:brightness-110',
-    secondary: 'border border-white/15 text-offWhite bg-white/5 hover:bg-white/10',
-    ghost: 'text-lavenderViolet hover:text-offWhite hover:bg-lavenderViolet/10',
-    accent: 'bg-salmonPeach text-warmCharcoal hover:bg-salmonPeach/90',
+    primary: 'bg-lavenderViolet text-white shadow-soft hover:bg-indigoDeep',
+    secondary: 'bg-indigoDeep/10 text-indigoDeep hover:bg-indigoDeep/20 border border-indigoDeep/20',
+    ghost: 'text-indigoDeep hover:bg-indigoDeep/10',
+    accent: 'bg-salmonPeach text-warmCharcoal hover:bg-salmonPeach/90 shadow-soft',
   };
   
   const sizes = {

@@ -16,7 +16,7 @@ export default function SectionHeading({ children, level = 'h2', className = '' 
   const Component = level;
   
   return (
-    <Component className={`${sizes[level]} font-marcellus text-offWhite font-semibold tracking-tight ${className}`}>
+    <Component className={`${sizes[level]} font-marcellus text-warmCharcoal font-semibold tracking-tight ${className}`}>
       {children}
     </Component>
   );

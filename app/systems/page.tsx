@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
-import Navigation from "../components/Navigation";
 import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -16,74 +15,193 @@ export default async function SystemsPage() {
     await firebaseAdmin.auth().verifySessionCookie(session, true);
 
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#2b2d4a_0,#0f1017_42%,#050509_100%)]">
-          <div className="container max-w-4xl mx-auto px-6 md:px-10 py-12 md:py-16">
-            
-            <PageTitle subtitle="Build the structures that carry your purpose. Organize, automate, and streamline your flow.">
-              Systems
-            </PageTitle>
+      <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
+        
+        <PageTitle subtitle="Build the structures that carry your purpose. Organize, automate, and streamline your flow.">
+          Systems
+        </PageTitle>
 
-            <Card accent="gold" className="mb-10">
-              <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase mb-2">
-                SYSTEMS PHILOSOPHY
+        {/* Philosophy Card */}
+        <Card accent="gold" className="mb-12">
+          <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-montserrat">
+            SYSTEMS PHILOSOPHY
+          </p>
+          <p className="text-sm text-warmCharcoal/75 leading-relaxed font-montserrat">
+            Systems turn your purpose into momentum. These tools help you organize every part
+            of your flow so your energy stays aligned, efficient, and powerful.
+          </p>
+        </Card>
+
+        {/* Core System Modules */}
+        <div className="mb-16">
+          <SectionHeading level="h2" className="mb-6">
+            Core System Modules
+          </SectionHeading>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card hover accent="lavender">
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-3xl">📋</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-lavenderViolet/10 text-indigoDeep font-montserrat">
+                  Essential
+                </span>
+              </div>
+              <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Offer Architecture</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+                Structure your offers, pricing, and delivery systems. Create scalable packages that reflect your value and serve your clients powerfully.
               </p>
-              <p className="text-sm text-white/75 leading-relaxed">
-                Systems turn your purpose into momentum. These tools help you organize every part
-                of your flow so your energy stays aligned, efficient, and powerful.
-              </p>
+              <div className="space-y-2 mb-6">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
+                  Offer templates & frameworks
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
+                  Pricing calculators
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
+                  Delivery workflows
+                </div>
+              </div>
+              <Button variant="primary" size="sm" className="w-full">
+                Build Your Offers
+              </Button>
             </Card>
 
-            <SectionHeading level="h2" className="mb-6">
-              Systems Tools
-            </SectionHeading>
+            <Card hover accent="salmon">
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-3xl">⚡</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-salmonPeach/20 text-warmCharcoal font-montserrat">
+                  Essential
+                </span>
+              </div>
+              <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Workflow Builder</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+                Create simple, repeatable workflows that keep your operations smooth and confident. Automate the routine, focus on the strategic.
+              </p>
+              <div className="space-y-2 mb-6">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-salmonPeach rounded-full"></span>
+                  Visual workflow designer
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-salmonPeach rounded-full"></span>
+                  Task automation
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-salmonPeach rounded-full"></span>
+                  Integration library
+                </div>
+              </div>
+              <Button variant="primary" size="sm" className="w-full">
+                Open Workflow Builder
+              </Button>
+            </Card>
 
-            <div className="grid md:grid-cols-2 gap-5 mb-12">
-              <Card hover>
-                <h3 className="font-marcellus text-lg text-offWhite mb-2">Workflow Builder</h3>
-                <p className="text-sm text-white/65 mb-4 leading-relaxed">
-                  Create simple, repeatable workflows that keep your operations smooth and confident.
-                </p>
-                <Button variant="ghost" size="sm">
-                  Open Workflow Builder →
-                </Button>
-              </Card>
+            <Card hover accent="gold">
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-3xl">💰</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-softGold/30 text-warmCharcoal font-montserrat">
+                  Growth
+                </span>
+              </div>
+              <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Monetization Mode</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+                Track revenue streams, payment systems, and financial flows. Gain clarity on what's working and where to focus your energy.
+              </p>
+              <div className="space-y-2 mb-6">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-softGold rounded-full"></span>
+                  Revenue analytics
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-softGold rounded-full"></span>
+                  Payment integrations
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-softGold rounded-full"></span>
+                  Financial projections
+                </div>
+              </div>
+              <Button variant="primary" size="sm" className="w-full">
+                View Monetization
+              </Button>
+            </Card>
 
-              <Card hover>
-                <h3 className="font-marcellus text-lg text-offWhite mb-2">Content Engine</h3>
-                <p className="text-sm text-white/65 mb-4 leading-relaxed">
-                  Plan, organize, and document your content ideas with aligned strategy.
-                </p>
-                <Button variant="ghost" size="sm">
-                  Launch Content Engine →
-                </Button>
-              </Card>
-
-              <Card hover>
-                <h3 className="font-marcellus text-lg text-offWhite mb-2">Offer Architecture</h3>
-                <p className="text-sm text-white/65 mb-4 leading-relaxed">
-                  Structure your offers, pricing, and delivery so everything feels clean and scalable.
-                </p>
-                <Button variant="ghost" size="sm">
-                  Build Your Offers →
-                </Button>
-              </Card>
-
-              <Card hover>
-                <h3 className="font-marcellus text-lg text-offWhite mb-2">Task Orchestration</h3>
-                <p className="text-sm text-white/65 mb-4 leading-relaxed">
-                  Organize priorities, commitments, and daily tasks with clarity and ease.
-                </p>
-                <Button variant="ghost" size="sm">
-                  Start Organizing →
-                </Button>
-              </Card>
-            </div>
-
+            <Card hover accent="lavender">
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-3xl">📅</span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-lavenderViolet/10 text-indigoDeep font-montserrat">
+                  Integration
+                </span>
+              </div>
+              <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Calendar Sync</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+                Connect your scheduling systems and ensure your time reflects your priorities. Protect your energy and honor your rhythm.
+              </p>
+              <div className="space-y-2 mb-6">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
+                  Multi-calendar sync
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
+                  Booking automation
+                </div>
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                  <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
+                  Time blocking
+                </div>
+              </div>
+              <Button variant="primary" size="sm" className="w-full">
+                Connect Calendar
+              </Button>
+            </Card>
           </div>
-        </main>
-      </>
+        </div>
+
+        {/* Content & Communication */}
+        <div>
+          <SectionHeading level="h2" className="mb-6">
+            Content & Communication
+          </SectionHeading>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card hover>
+              <span className="text-2xl mb-3 block">📝</span>
+              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Content Engine</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
+                Plan, organize, and document your content ideas with aligned strategy.
+              </p>
+              <Button variant="ghost" size="sm">
+                Launch Engine →
+              </Button>
+            </Card>
+
+            <Card hover>
+              <span className="text-2xl mb-3 block">📧</span>
+              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Email Sequences</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
+                Craft nurturing sequences that serve your audience authentically.
+              </p>
+              <Button variant="ghost" size="sm">
+                Build Sequences →
+              </Button>
+            </Card>
+
+            <Card hover>
+              <span className="text-2xl mb-3 block">🎨</span>
+              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Brand Assets</h3>
+              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
+                Organize your visual identity, templates, and brand guidelines.
+              </p>
+              <Button variant="ghost" size="sm">
+                View Assets →
+              </Button>
+            </Card>
+          </div>
+        </div>
+
+      </div>
     );
   } catch (e) {
     return redirect("/login");

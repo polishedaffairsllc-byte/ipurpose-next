@@ -8,7 +8,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-gradient-to-br from-offWhite via-lavenderViolet/5 to-indigoDeep/10 overflow-hidden">
+    <div className="flex h-screen bg-dashboard overflow-hidden">
       {/* Left Sidebar */}
       <DashboardSidebar />
 

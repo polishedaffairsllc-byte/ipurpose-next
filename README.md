@@ -2,16 +2,45 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ and npm
+- Firebase project with Authentication enabled
+- OpenAI API account with API key
+
+### Environment Setup
+
+1. Copy the environment template:
+```bash
+cp .env.local.example .env.local
+```
+
+2. Fill in your Firebase credentials in `.env.local`:
+```bash
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+# ... other Firebase config
+```
+
+3. Add your Firebase Admin SDK service account key:
+```bash
+FIREBASE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"..."}
+```
+
+4. Add your OpenAI API key (get from https://platform.openai.com/api-keys):
+```bash
+OPENAI_API_KEY=sk-your_openai_api_key_here
+```
+
+### Installation
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

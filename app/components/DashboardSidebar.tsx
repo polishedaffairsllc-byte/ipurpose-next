@@ -20,8 +20,8 @@ export default function DashboardSidebar() {
       {/* Logo Section */}
       <div className="px-6 py-8 border-b border-lavenderViolet/10">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 bg-gradient-to-br from-lavenderViolet to-indigoDeep rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <span className="text-2xl font-italiana text-offWhite">iP</span>
+          <div className="w-12 h-12 bg-sidebar-gradient rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+            <span className="text-2xl font-italiana text-white">iP</span>
           </div>
           <div>
             <h1 className="text-xl font-italiana text-warmCharcoal">iPurpose</h1>
@@ -40,10 +40,10 @@ export default function DashboardSidebar() {
               href={item.href}
               className={`
                 flex items-center gap-3 px-4 py-3 rounded-xl font-montserrat text-sm font-medium
-                transition-all duration-200
+                transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigoDeep/40
                 ${
                   isActive
-                    ? 'bg-gradient-to-r from-lavenderViolet/20 to-indigoDeep/10 text-indigoDeep shadow-sm border border-lavenderViolet/20'
+                    ? 'bg-nav-active text-indigoDeep shadow-sm border border-lavenderViolet/20'
                     : 'text-warmCharcoal/70 hover:bg-lavenderViolet/5 hover:text-indigoDeep'
                 }
               `}
