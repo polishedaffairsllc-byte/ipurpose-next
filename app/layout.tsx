@@ -20,8 +20,10 @@ export default function RootLayout({
             <main className="flex-1">
               {children}
             </main>
-            <footer className="border-t border-white/5 py-4 text-center text-xs text-white/50">
-              © {new Date().getFullYear()} iPurpose. Alignment looks good on you.
+            <footer className="border-t border-white/5 py-6 text-center">
+              <p className="text-xs text-white/40 font-montserrat">
+                © {new Date().getFullYear()} iPurpose. Alignment looks good on you.
+              </p>
             </footer>
           </div>
         </AuthContextProvider>
