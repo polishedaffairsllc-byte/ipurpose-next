@@ -13,9 +13,10 @@ module.exports = {
         indigoDeep: "#4B4E6D",
         lavenderViolet: "#9C88FF",
         salmonPeach: "#FCC4B7",
-        warmCharcoal: "#2C2D33",
+        warmCharcoal: "#2A2A2A",
         offWhite: "#FAFAFA",
         softGold: "#F5E8C7",
+        midnight: "#0B0B14",
       },
       fontFamily: {
         italiana: ["Italiana", "serif"],
