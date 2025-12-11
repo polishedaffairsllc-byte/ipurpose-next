@@ -65,7 +65,7 @@ Example (local only — DO NOT COMMIT):
 ```bash
 # .env.local
 NODE_ENV=development
-DEV_FALLBACK=true
+# DEV_FALLBACK=true  # Uncomment to enable insecure dev fallback
 ```
 
 When `DEV_FALLBACK` is enabled, the server will print a prominent warning to the console. Prefer supplying the real `FIREBASE_SERVICE_ACCOUNT` instead.
