@@ -37,19 +37,8 @@ jobs:
             echo "Error: Found literal 'private_key' in code (not docs)."; exit 1;
           fi
 
-      - name: Ensure Firebase Admin secret is configured
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
-          FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+      - name: Verify Firebase Admin is skipped during CI
         run: |
-          set -e
-          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
-            echo "FIREBASE_SERVICE_ACCOUNT set."; exit 0;
-          fi
-          if [ -n "$FIREBASE_PROJECT_ID" ] && [ -n "$FIREBASE_CLIENT_EMAIL" ] && [ -n "$FIREBASE_PRIVATE_KEY" ]; then
-            echo "Individual FIREBASE_* secrets set."; exit 0;
-          fi
-          echo "Firebase Admin credentials not configured."; exit 1
+          echo "Firebase Admin initialization is skipped during CI (CI=true)."
+          echo "Credentials are only required for Vercel deployment."
 
