@@ -1,7 +1,11 @@
-import NavBar from "../components/NavBar";
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
+import Navigation from "../components/Navigation";
+import PageTitle from "../components/PageTitle";
+import Card from "../components/Card";
+import Button from "../components/Button";
+import SectionHeading from "../components/SectionHeading";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -16,47 +20,131 @@ export default async function DashboardPage() {
 
     return (
       <>
-        <NavBar />
-        <main className="container">
-          <section className="dashboard-hero">
-            <div>
-              <h1 style={{ fontFamily: "Italiana, serif", margin: 0 }}>Welcome, {name}</h1>
-              <h2 style={{ fontFamily: "Marcellus, serif", marginTop: 6 }}>Your iPurpose Portal</h2>
-              <p style={{ marginTop: 12 }}>Daily affirmation: "I create space for what matters."</p>
+        <Navigation />
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#2b2d4a_0,#0f1017_42%,#050509_100%)]">
+          <div className="container max-w-4xl mx-auto px-6 md:px-10 py-12 md:py-16">
+            
+            {/* Welcome Banner */}
+            <div className="mb-12 md:mb-16">
+              <h1 className="text-4xl md:text-5xl font-italiana text-offWhite mb-2">
+                Welcome back, <span className="text-lavenderViolet">{name}</span>
+              </h1>
+              <p className="text-base md:text-lg text-white/70 font-marcellus mt-3">
+                Your iPurpose Portal
+              </p>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <a className="tile" href="/ai">AI Mentor</a>
-              <a className="tile" href="/soul">Soul</a>
-              <a className="tile" href="/systems">Systems</a>
-              <a className="tile" href="/settings">Settings</a>
+            {/* Daily Affirmation */}
+            <Card accent="lavender" className="mb-10">
+              <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase mb-3">
+                TODAY'S AFFIRMATION
+              </p>
+              <p className="text-lg md:text-xl font-marcellus text-white/90 leading-relaxed">
+                "I create space for what matters."
+              </p>
+            </Card>
 
-              <form action="/api/auth/logout" method="post" style={{ margin: 0 }}>
-                <button className="tile" type="submit" style={{ background: "transparent", border: "none", textAlign: "left", padding: 12 }}>Logout</button>
-              </form>
-            </div>
-          </section>
+            {/* Quick Links Section */}
+            <div className="mb-12">
+              <SectionHeading level="h2" className="mb-6">
+                Quick Access
+              </SectionHeading>
+              
+              <div className="grid md:grid-cols-2 gap-5">
+                <Card hover>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-lavenderViolet/20 flex items-center justify-center">
+                      <span className="text-lavenderViolet text-lg">🧠</span>
+                    </div>
+                    <h3 className="font-marcellus text-lg text-offWhite">Soul Alignment</h3>
+                  </div>
+                  <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                    Continue your inner clarity work and purpose alignment.
+                  </p>
+                  <Button href="/soul" variant="ghost" size="sm">
+                    Go to Soul →
+                  </Button>
+                </Card>
 
-          <div className="tile-grid">
-            <div className="tile">
-              <div className="title">Quick Links</div>
-              <div className="desc">AI • Soul • Systems • Settings</div>
+                <Card hover>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-softGold/20 flex items-center justify-center">
+                      <span className="text-softGold text-lg">⚙️</span>
+                    </div>
+                    <h3 className="font-marcellus text-lg text-offWhite">Systems</h3>
+                  </div>
+                  <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                    Structure your workflows, offers, and strategic foundation.
+                  </p>
+                  <Button href="/systems" variant="ghost" size="sm">
+                    Go to Systems →
+                  </Button>
+                </Card>
+
+                <Card hover>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-salmonPeach/20 flex items-center justify-center">
+                      <span className="text-salmonPeach text-lg">🤖</span>
+                    </div>
+                    <h3 className="font-marcellus text-lg text-offWhite">AI Mentor</h3>
+                  </div>
+                  <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                    Expand your capacity with aligned automation and prompts.
+                  </p>
+                  <Button href="/ai" variant="ghost" size="sm">
+                    Go to AI Tools →
+                  </Button>
+                </Card>
+
+                <Card hover>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-lavenderViolet/20 flex items-center justify-center">
+                      <span className="text-lavenderViolet text-lg">📊</span>
+                    </div>
+                    <h3 className="font-marcellus text-lg text-offWhite">Insights</h3>
+                  </div>
+                  <p className="text-sm text-white/65 mb-4 leading-relaxed">
+                    Review reflections, trends, and alignment reports.
+                  </p>
+                  <Button href="/insights" variant="ghost" size="sm">
+                    Go to Insights →
+                  </Button>
+                </Card>
+              </div>
             </div>
 
-            <div className="tile">
-              <div className="title">Mood</div>
-              <div className="desc">Maybe your daily affirmation or mood tile</div>
+            {/* Mood/Intention Panel */}
+            <div className="grid md:grid-cols-2 gap-5">
+              <Card accent="salmon">
+                <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase mb-3">
+                  INTENTION SETTING
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed mb-4">
+                  What is your primary focus today?
+                </p>
+                <Button variant="secondary" size="sm">
+                  Set Intention
+                </Button>
+              </Card>
+
+              <Card accent="gold">
+                <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase mb-3">
+                  RECENT ACTIVITY
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed mb-2">
+                  • Completed Soul Reflection
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed">
+                  • Updated Systems Framework
+                </p>
+              </Card>
             </div>
 
-            <div className="tile">
-              <div className="title">Actions</div>
-              <div className="desc">Shortcuts for your most used tools</div>
-            </div>
           </div>
         </main>
       </>
     );
-  } catch {
+  } catch (e) {
     return redirect("/login");
   }
 }
