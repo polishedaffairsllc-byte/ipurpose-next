@@ -45,43 +45,40 @@ const sections = [
 
 export default function HomePage() {
   return (
-    <div className="container max-w-6xl py-10 md:py-14 lg:py-16">
+    <div className="container max-w-6xl py-12 md:py-16 lg:py-20 px-6 md:px-8">
       {/* Top pill */}
-      <div className="flex justify-between items-center gap-4 mb-6">
+      <div className="flex justify-between items-center gap-4 mb-8 md:mb-10">
         <span className="ipurpose-pill">
-          <span className="h-1.5 w-1.5 rounded-full bg-lavenderViolet" />
+          <span className="h-1.5 w-1.5 rounded-full bg-lavenderViolet animate-pulse" />
           Soul → Systems → AI
-        </span>
-        <span className="hidden sm:inline-flex text-[11px] text-white/50 uppercase tracking-[0.2em]">
-          TAILWIND TEST · NOW ACTUALLY LAVENDER
         </span>
       </div>
 
       {/* Hero */}
-      <section className="grid md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-8 md:gap-10 items-start mb-10 md:mb-12">
-        <div className="space-y-5">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-offWhite">
+      <section className="grid md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-8 md:gap-12 items-start mb-14 md:mb-16 lg:mb-20">
+        <div className="space-y-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-offWhite leading-tight">
             Welcome to{" "}
             <span className="font-italiana text-lavenderViolet drop-shadow-[0_0_22px_rgba(156,136,255,0.6)]">
               iPurpose
             </span>
           </h1>
-          <p className="text-sm md:text-base text-white/75 max-w-xl leading-relaxed">
+          <p className="text-base md:text-lg text-white/75 max-w-xl leading-relaxed">
             Align your <span className="font-semibold text-salmonPeach">Soul</span>.
             Empower your <span className="font-semibold text-softGold">Systems</span>.
             Expand through <span className="font-semibold text-lavenderViolet">AI</span>.
           </p>
 
-          <div className="flex flex-wrap gap-3 mt-4">
+          <div className="flex flex-wrap gap-4 mt-6 pt-2">
             <Link
               href="/login"
-              className="inline-flex items-center justify-center rounded-full bg-lavenderViolet px-5 py-2.5 text-sm font-semibold text-[#0f1017] shadow-soft hover:brightness-110 transition"
+              className="inline-flex items-center justify-center rounded-full bg-lavenderViolet px-6 py-3 text-sm font-semibold text-[#0f1017] shadow-soft hover:brightness-110 transition-all"
             >
               Log In
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-offWhite bg-white/5 hover:bg-white/10 transition"
+              className="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-offWhite bg-white/5 hover:bg-white/10 transition-all"
             >
               Create Account
             </Link>
@@ -93,11 +90,11 @@ export default function HomePage() {
           <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase">
             YOUR ALIGNMENT HUB
           </p>
-          <p className="mt-3 text-sm text-white/80">
+          <p className="mt-4 text-sm text-white/80 leading-relaxed">
             This is your control center for building a soul-aligned business
             that's supported by systems and amplified by AI.
           </p>
-          <ul className="mt-4 space-y-2 text-xs text-white/65">
+          <ul className="mt-5 space-y-2.5 text-xs text-white/65 leading-relaxed">
             <li>• Centralize your offers, clients, and content.</li>
             <li>• Track progress in one calming dashboard.</li>
             <li>• Let AI handle the busywork, you hold the vision.</li>
@@ -106,16 +103,16 @@ export default function HomePage() {
       </section>
 
       {/* Framework tiles */}
-      <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+      <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
         {sections.map((section) => (
-          <div key={section.id} className="ipurpose-card">
+          <div key={section.id} className="ipurpose-card hover:border-white/10 transition-all">
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium border ${section.tone}`}
             >
               {section.label}
             </span>
-            <p className="text-xs text-white/75">{section.description}</p>
-            <div className="mt-3">
+            <p className="text-xs text-white/75 leading-relaxed mt-1">{section.description}</p>
+            <div className="mt-4">
               <Link
                 href={section.href}
                 className="inline-flex text-xs font-semibold text-lavenderViolet hover:text-[#C8BCFF] transition"
