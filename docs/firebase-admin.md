@@ -58,7 +58,7 @@ Security notes
 - Never use the Admin private key in a client bundle.
 - For production, use your hosting platform's secrets manager (Vercel/Netlify/GCP) rather than `.env.local`.
 
-Note: The project no longer enables a development fallback by default. If you need to iterate on UI flows without valid admin credentials, you can opt-in locally by setting `DEV_FALLBACK=true` in `.env.local` and ensuring `NODE_ENV=development`. This enables a temporary, insecure fallback (the server will approximate session cookies) and should NEVER be enabled in CI or production.
+Note: The project no longer enables a development fallback by default. If you need to iterate on UI flows without valid admin credentials, you can opt-in locally by setting `DEV_FALLBACK` to `true` in `.env.local` and ensuring `NODE_ENV=development`. This enables a temporary, insecure fallback (the server will approximate session cookies) and should NEVER be enabled in CI or production.
 
 Example (local only — DO NOT COMMIT):
 
