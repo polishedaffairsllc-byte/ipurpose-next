@@ -3,6 +3,7 @@ import ParallaxImage from './components/ParallaxImage';
 import PhotoCard from './components/PhotoCard';
 import ScrollReveal from './components/ScrollReveal';
 import Button from './components/Button';
+import Card from './components/Card';
 
 const sections = [
   {
@@ -11,7 +12,6 @@ const sections = [
     description: "Begin your inner alignment journey and uncover your clarity.",
     cta: "Go to Soul",
     href: "/soul",
-    tone: "bg-lavenderViolet/10 text-lavenderViolet border-lavenderViolet/30",
   },
   {
     id: "systems",
@@ -19,7 +19,6 @@ const sections = [
     description: "Structure your workflows, offers, and strategic foundation.",
     cta: "Go to Systems",
     href: "/systems",
-    tone: "bg-indigoDeep/20 text-offWhite border-indigoDeep/50",
   },
   {
     id: "ai",
@@ -27,23 +26,6 @@ const sections = [
     description: "Expand your capacity with aligned automation and powerful prompts.",
     cta: "Go to AI",
     href: "/ai",
-    tone: "bg-salmonPeach/15 text-salmonPeach border-salmonPeach/40",
-  },
-  {
-    id: "dashboard",
-    label: "Dashboard",
-    description: "Access your home base and track your aligned progress.",
-    cta: "Go to Dashboard",
-    href: "/dashboard",
-    tone: "bg-softGold/10 text-softGold border-softGold/40",
-  },
-  {
-    id: "insights",
-    label: "Insights",
-    description: "Review reflections, trends, and alignment reports.",
-    cta: "Go to Insights",
-    href: "/insights",
-    tone: "bg-white/5 text-white border-white/10",
   },
 ];
 
@@ -134,25 +116,28 @@ export default function HomePage() {
         {/* Quick Access Links */}
         <ScrollReveal delay={200}>
           <div className="grid md:grid-cols-3 gap-6">
-            {sections.slice(0, 3).map((section, index) => (
+            {sections.map((section) => (
               <Link
                 key={section.id}
                 href={section.href}
-                className="ipurpose-card hover group transition-all"
+                className="group"
               >
-                <h3 className="font-marcellus text-xl mb-3 text-warmCharcoal group-hover:text-lavenderViolet transition-colors">
-                  {section.label}
-                </h3>
-                <p className="text-sm text-warmCharcoal/70 leading-relaxed mb-4">
-                  {section.description}
-                </p>
-                <span className="text-sm font-semibold text-lavenderViolet">
-                  {section.cta} →
-                </span>
+                <Card hover className="h-full transition-all">
+                  <h3 className="font-marcellus text-xl mb-3 text-warmCharcoal group-hover:text-lavenderViolet transition-colors">
+                    {section.label}
+                  </h3>
+                  <p className="text-sm text-warmCharcoal/70 leading-relaxed mb-4">
+                    {section.description}
+                  </p>
+                  <span className="text-sm font-semibold text-lavenderViolet">
+                    {section.cta} →
+                  </span>
+                </Card>
               </Link>
             ))}
           </div>
         </ScrollReveal>
+      </div>
       </div>
     </div>
   );
