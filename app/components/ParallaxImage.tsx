@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
 
 interface ParallaxImageProps {
   src: string;
@@ -19,9 +18,12 @@ export default function ParallaxImage({
   overlay = true
 }: ParallaxImageProps) {
   const [offset, setOffset] = useState(0);
+  const [isClient, setIsClient] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setIsClient(true);
+    
     const handleScroll = () => {
       if (!containerRef.current) return;
       
@@ -42,31 +44,29 @@ export default function ParallaxImage({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [speed]);
 
+  if (!isClient) {
+    return <div className={`relative overflow-hidden ${className} bg-gradient-to-br from-lavenderViolet/20 to-salmonPeach/20`} />;
+  }
+
   return (
     <div 
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
+      style={{ minHeight: '100vh' }}
     >
-      <div
+      <img
+        src={src}
+        alt={alt}
+        className="absolute inset-0 w-full h-full object-cover"
         style={{
           transform: `translateY(${offset}px)`,
           transition: 'transform 0.1s linear',
         }}
-        className="relative w-full h-full scale-110" // Scale up to prevent gaps
-      >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover"
-          sizes="100vw"
-          priority
-        />
-      </div>
+      />
 
       {overlay && (
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 z-10"
           style={{
             background: 'linear-gradient(to bottom, rgba(250, 245, 255, 0.3) 0%, rgba(250, 245, 255, 0.7) 100%)'
           }}

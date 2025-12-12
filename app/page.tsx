@@ -33,72 +33,61 @@ export default function HomePage() {
   return (
     <div className="relative">
       {/* Hero Section with Parallax */}
-      <div className="relative h-screen flex items-center justify-center overflow-hidden">
-        <ParallaxImage
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-lavenderViolet/20 via-softGold/10 to-salmonPeach/20">
+        <img
           src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80"
           alt="Serene landscape"
-          speed={0.3}
-          className="absolute inset-0"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
-          <ScrollReveal direction="scale">
-            <h1 className="heading-hero mb-6 text-white drop-shadow-2xl">
-              Align Your Soul.<br />Empower Your Systems.<br />Expand Through AI.
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 font-marcellus mb-8 drop-shadow-lg">
-              The transformation platform for visionary entrepreneurs
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Button href="/signup" size="lg">
-                Begin Your Journey
-              </Button>
-              <Button href="/login" variant="secondary" size="lg">
-                Sign In
-              </Button>
-            </div>
-          </ScrollReveal>
+          <h1 className="heading-hero mb-6 text-warmCharcoal drop-shadow-2xl">
+            Align Your Soul.<br />Empower Your Systems.<br />Expand Through AI.
+          </h1>
+          <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus mb-8 drop-shadow-lg">
+            The transformation platform for visionary entrepreneurs
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Button href="/signup" size="lg">
+              Begin Your Journey
+            </Button>
+            <Button href="/login" variant="secondary" size="lg">
+              Sign In
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Three Pillars Section */}
       <div className="max-w-7xl mx-auto px-4 py-24">
-        <ScrollReveal>
-          <h2 className="heading-section text-center mb-16">
-            Three Pillars of Transformation
-          </h2>
-        </ScrollReveal>
+        <h2 className="heading-section text-center mb-16">
+          Three Pillars of Transformation
+        </h2>
 
         <div className="grid md:grid-cols-3 gap-8 mb-24">
-          <ScrollReveal delay={100}>
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"
-              alt="Soul - Inner clarity"
-              title="Soul"
-              description="Discover your authentic purpose and align with your deepest values"
-              aspectRatio="portrait"
-            />
-          </ScrollReveal>
+          <PhotoCard
+            src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"
+            alt="Soul - Inner clarity"
+            title="Soul"
+            description="Discover your authentic purpose and align with your deepest values"
+            aspectRatio="portrait"
+          />
 
-          <ScrollReveal delay={200}>
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80"
-              alt="Systems - Strategic foundation"
-              title="Systems"
-              description="Build sustainable workflows and strategic frameworks"
-              aspectRatio="portrait"
-            />
-          </ScrollReveal>
+          <PhotoCard
+            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80"
+            alt="Systems - Strategic foundation"
+            title="Systems"
+            description="Build sustainable workflows and strategic frameworks"
+            aspectRatio="portrait"
+          />
 
-          <ScrollReveal delay={300}>
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
-              alt="AI - Exponential growth"
-              title="AI"
-              description="Leverage intelligent automation to amplify your impact"
-              aspectRatio="portrait"
-            />
-          </ScrollReveal>
+          <PhotoCard
+            src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
+            alt="AI - Exponential growth"
+            title="AI"
+            description="Leverage intelligent automation to amplify your impact"
+            aspectRatio="portrait"
+          />
         </div>
 
         {/* Connection Section */}

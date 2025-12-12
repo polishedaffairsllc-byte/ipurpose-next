@@ -17,11 +17,23 @@ export default async function AIPage() {
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
 
     return (
-      <div className="container max-w-4xl mx-auto px-6 md:px-10 py-8 md:py-12">
+      <div className="relative">
+        {/* Hero Section */}
+        <div className="relative h-[50vh] flex items-center justify-center overflow-hidden mb-12">
+          <img
+            src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80"
+            alt="AI and technology"
+            className="absolute inset-0 w-full h-full object-cover opacity-30"
+          />
+          <div className="relative z-10 text-center px-4 max-w-4xl">
+            <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">iPurpose Mentor</h1>
+            <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
+              Your aligned AI assistant for clarity, strategy, and expansion.
+            </p>
+          </div>
+        </div>
         
-        <PageTitle subtitle="Your aligned AI assistant for clarity, strategy, and expansion.">
-          iPurpose Mentor
-        </PageTitle>
+        <div className="container max-w-4xl mx-auto px-6 md:px-10 py-8 md:py-12">
 
         <Card accent="salmon" className="mb-8">
           <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/55 uppercase mb-2">

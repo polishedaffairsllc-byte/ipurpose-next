@@ -20,21 +20,25 @@ export default async function DashboardPage() {
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
 
     return (
-      <>
-        {/* Welcome Banner */}
-        <ScrollReveal direction="scale">
-          <div className="ipurpose-glow-container mb-16 animate-fade-in-scale">
-            <div className="relative">
-              <h1 className="heading-hero mb-6">
-                Welcome back, {name}
-              </h1>
-              <p className="text-xl md:text-2xl text-warmCharcoal/70 font-marcellus">
-                Your iPurpose Portal
-              </p>
-            </div>
+      <div className="relative">
+        {/* Hero Background */}
+        <div className="relative h-[40vh] mb-12 overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80"
+            alt="Dashboard background"
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+          />
+          <div className="relative z-10 container max-w-6xl mx-auto px-6 h-full flex flex-col justify-center">
+            <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">
+              Welcome back, {name}
+            </h1>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 font-marcellus drop-shadow-lg">
+              Your iPurpose Portal
+            </p>
           </div>
-        </ScrollReveal>
+        </div>
 
+        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8">
         {/* Daily Affirmation */}
         <ScrollReveal delay={200}>
           <div className="ipurpose-glow-container mb-16 animate-fade-in-up stagger-2">
@@ -146,7 +150,8 @@ export default async function DashboardPage() {
             </p>
           </Card>
         </div>
-      </>
+        </div>
+      </div>
     );
   } catch (e) {
     return redirect("/login");

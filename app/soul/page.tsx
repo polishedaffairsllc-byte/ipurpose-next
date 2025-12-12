@@ -5,6 +5,7 @@ import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
+import PhotoCard from "../components/PhotoCard";
 
 export default async function SoulPage() {
   const cookieStore = await cookies();
@@ -15,15 +16,23 @@ export default async function SoulPage() {
     await firebaseAdmin.auth().verifySessionCookie(session, true);
 
     return (
-      <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
-        
-        <div className="ipurpose-glow-container mb-10">
-          <div className="relative">
-            <PageTitle subtitle="Explore the inner work that aligns your purpose and illuminates your path forward.">
-              Soul Alignment
-            </PageTitle>
+      <div className="relative">
+        {/* Hero Section */}
+        <div className="relative h-[60vh] flex items-center justify-center overflow-hidden mb-12">
+          <img
+            src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1920&q=80"
+            alt="Soul journey"
+            className="absolute inset-0 w-full h-full object-cover opacity-30"
+          />
+          <div className="relative z-10 text-center px-4 max-w-4xl">
+            <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">Soul Alignment</h1>
+            <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
+              Explore the inner work that aligns your purpose and illuminates your path forward.
+            </p>
           </div>
         </div>
+
+        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
 
         {/* Philosophy Card */}
         <div className="ipurpose-glow-container mb-12">
@@ -40,9 +49,32 @@ export default async function SoulPage() {
 
         {/* Archetypes Section */}
         <div className="mb-16">
-          <SectionHeading level="h2" className="mb-6">
+          <SectionHeading level="h2" className="mb-8">
             iPurpose Archetypes
           </SectionHeading>
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <PhotoCard
+              src="https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=800&q=80"
+              alt="The Visionary Guide"
+              title="Visionary"
+              description="You see possibilities others don't. Your strength is in strategic clarity and long-term vision."
+              aspectRatio="portrait"
+            />
+            <PhotoCard
+              src="https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80"
+              alt="The Strategic Builder"
+              title="Builder"
+              description="You create systems and structures that scale. Your gift is turning ideas into reality."
+              aspectRatio="portrait"
+            />
+            <PhotoCard
+              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80"
+              alt="The Transformational Healer"
+              title="Healer"
+              description="You hold space for deep transformation. Your power is in intuitive guidance and healing."
+              aspectRatio="portrait"
+            />
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card hover accent="lavender" className="group">
               <div className="flex items-start justify-between mb-4">

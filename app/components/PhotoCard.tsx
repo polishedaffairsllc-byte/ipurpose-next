@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 interface PhotoCardProps {
   src: string;
@@ -21,12 +20,31 @@ export default function PhotoCard({
   aspectRatio = 'landscape'
 }: PhotoCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const aspectClasses = {
     square: 'aspect-square',
     landscape: 'aspect-[16/9]',
     portrait: 'aspect-[3/4]'
   };
+
+  if (!isClient) {
+    return (
+      <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-lavenderViolet/10 to-salmonPeach/10 ${aspectClasses[aspectRatio]} ${className}`}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center p-6">
+            {title && <h3 className="font-marcellus text-2xl mb-2 text-warmCharcoal">{title}</h3>}
+            {description && <p className="text-sm text-warmCharcoal/70">{description}</p>}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -36,20 +54,25 @@ export default function PhotoCard({
     >
       <div className={`relative ${aspectClasses[aspectRatio]} overflow-hidden`}>
         {/* Image with zoom effect */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-out"
-          style={{
-            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-          }}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </div>
+        {!imageError ? (
+          <div
+            className="absolute inset-0 transition-transform duration-700 ease-out"
+            style={{
+              transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+            }}
+          >
+            <img
+              src={src}
+              alt={alt}
+              className="w-full h-full object-cover"
+              onError={() => setImageError(true)}
+            />
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-lavenderViolet/20 to-salmonPeach/20 flex items-center justify-center">
+            <div className="text-6xl">{title === 'Soul' ? '🧠' : title === 'Systems' ? '⚙️' : '✨'}</div>
+          </div>
+        )}
 
         {/* Gradient overlay */}
         <div 
