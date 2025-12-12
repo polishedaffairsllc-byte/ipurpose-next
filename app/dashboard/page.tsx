@@ -3,6 +3,8 @@ import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
 import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
+import TiltCard from "../components/TiltCard";
+import ScrollReveal from "../components/ScrollReveal";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
 
@@ -20,97 +22,103 @@ export default async function DashboardPage() {
     return (
       <>
         {/* Welcome Banner */}
-        <div className="ipurpose-glow-container mb-16 animate-fade-in-scale">
-          <div className="relative">
-            <h1 className="heading-hero mb-6">
-              Welcome back, {name}
-            </h1>
-            <p className="text-xl md:text-2xl text-warmCharcoal/70 font-marcellus">
-              Your iPurpose Portal
-            </p>
+        <ScrollReveal direction="scale">
+          <div className="ipurpose-glow-container mb-16 animate-fade-in-scale">
+            <div className="relative">
+              <h1 className="heading-hero mb-6">
+                Welcome back, {name}
+              </h1>
+              <p className="text-xl md:text-2xl text-warmCharcoal/70 font-marcellus">
+                Your iPurpose Portal
+              </p>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Daily Affirmation */}
-        <div className="ipurpose-glow-container mb-16 animate-fade-in-up stagger-2">
-          <Card accent="lavender" className="relative">
-            <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
-              TODAY'S AFFIRMATION
-            </p>
-            <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed">
-              "I create space for what matters."
-            </p>
-          </Card>
-        </div>
-
-        {/* Quick Links Section */}
-        <div className="mb-16 animate-fade-in-up stagger-3">
-          <SectionHeading level="h2" className="mb-8">
-            Quick Access
-          </SectionHeading>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card hover className="group animate-fade-in-up stagger-4">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="ipurpose-icon-bubble group-hover:scale-110">
-                  <span className="text-3xl">🧠</span>
-                </div>
-                <h3 className="font-marcellus text-2xl text-warmCharcoal">Soul Alignment</h3>
-              </div>
-              <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                Continue your inner clarity work and purpose alignment.
+        <ScrollReveal delay={200}>
+          <div className="ipurpose-glow-container mb-16 animate-fade-in-up stagger-2">
+            <Card accent="lavender" className="relative">
+              <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
+                TODAY'S AFFIRMATION
               </p>
-              <Button href="/soul" variant="ghost" size="sm">
-                Go to Soul →
-              </Button>
-            </Card>
-
-            <Card hover className="group animate-fade-in-up stagger-5">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="ipurpose-icon-bubble-gold group-hover:scale-110">
-                  <span className="text-3xl">⚙️</span>
-                </div>
-                <h3 className="font-marcellus text-2xl text-warmCharcoal">Systems</h3>
-              </div>
-              <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                Structure your workflows, offers, and strategic foundation.
+              <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed">
+                "I create space for what matters."
               </p>
-              <Button href="/systems" variant="ghost" size="sm">
-                Go to Systems →
-              </Button>
-            </Card>
-
-            <Card hover className="group animate-fade-in-up stagger-6">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="ipurpose-icon-bubble-salmon group-hover:scale-110">
-                  <span className="text-3xl">🤖</span>
-                </div>
-                <h3 className="font-marcellus text-2xl text-warmCharcoal">AI Mentor</h3>
-              </div>
-              <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                Expand your capacity with aligned automation and prompts.
-              </p>
-              <Button href="/ai" variant="ghost" size="sm">
-                Go to AI Tools →
-              </Button>
-            </Card>
-
-            <Card hover className="group animate-fade-in-up" data-stagger="7">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="ipurpose-icon-bubble group-hover:scale-110">
-                  <span className="text-3xl">📊</span>
-                </div>
-                <h3 className="font-marcellus text-2xl text-warmCharcoal">Insights</h3>
-              </div>
-              <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                Review reflections, trends, and alignment reports.
-              </p>
-              <Button href="/insights" variant="ghost" size="sm">
-                Go to Insights →
-              </Button>
             </Card>
           </div>
-        </div>
+        </ScrollReveal>
+
+        {/* Quick Links Section */}
+        <ScrollReveal delay={300}>
+          <div className="mb-16 animate-fade-in-up stagger-3">
+            <SectionHeading level="h2" className="mb-8">
+              Quick Access
+            </SectionHeading>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <TiltCard hover className="group animate-fade-in-up stagger-4">
+                <div className="flex items-center gap-5 mb-5">
+                  <div className="ipurpose-icon-bubble group-hover:scale-110">
+                    <span className="text-3xl">🧠</span>
+                  </div>
+                  <h3 className="font-marcellus text-2xl text-warmCharcoal">Soul Alignment</h3>
+                </div>
+                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
+                  Continue your inner clarity work and purpose alignment.
+                </p>
+                <Button href="/soul" variant="ghost" size="sm">
+                  Go to Soul →
+                </Button>
+              </TiltCard>
+
+              <TiltCard hover className="group animate-fade-in-up stagger-5">
+                <div className="flex items-center gap-5 mb-5">
+                  <div className="ipurpose-icon-bubble-gold group-hover:scale-110">
+                    <span className="text-3xl">⚙️</span>
+                  </div>
+                  <h3 className="font-marcellus text-2xl text-warmCharcoal">Systems</h3>
+                </div>
+                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
+                  Structure your workflows, offers, and strategic foundation.
+                </p>
+                <Button href="/systems" variant="ghost" size="sm">
+                  Go to Systems →
+                </Button>
+              </TiltCard>
+
+              <TiltCard hover className="group animate-fade-in-up stagger-6">
+                <div className="flex items-center gap-5 mb-5">
+                  <div className="ipurpose-icon-bubble-salmon group-hover:scale-110">
+                    <span className="text-3xl">🤖</span>
+                  </div>
+                  <h3 className="font-marcellus text-2xl text-warmCharcoal">AI Mentor</h3>
+                </div>
+                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
+                  Expand your capacity with aligned automation and prompts.
+                </p>
+                <Button href="/ai" variant="ghost" size="sm">
+                  Go to AI Tools →
+                </Button>
+              </TiltCard>
+
+              <TiltCard hover className="group animate-fade-in-up" data-stagger="7">
+                <div className="flex items-center gap-5 mb-5">
+                  <div className="ipurpose-icon-bubble group-hover:scale-110">
+                    <span className="text-3xl">📊</span>
+                  </div>
+                  <h3 className="font-marcellus text-2xl text-warmCharcoal">Insights</h3>
+                </div>
+                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
+                  Review reflections, trends, and alignment reports.
+                </p>
+                <Button href="/insights" variant="ghost" size="sm">
+                  Go to Insights →
+                </Button>
+              </TiltCard>
+            </div>
+          </div>
+        </ScrollReveal>
 
         {/* Mood/Intention Panel */}
         <div className="grid md:grid-cols-2 gap-5">
