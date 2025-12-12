@@ -1,4 +1,8 @@
 import Link from "next/link";
+import ParallaxImage from './components/ParallaxImage';
+import PhotoCard from './components/PhotoCard';
+import ScrollReveal from './components/ScrollReveal';
+import Button from './components/Button';
 
 const sections = [
   {
@@ -45,84 +49,111 @@ const sections = [
 
 export default function HomePage() {
   return (
-    <div className="container max-w-6xl py-12 md:py-16 lg:py-20 px-6 md:px-8">
-      {/* Top pill */}
-      <div className="flex justify-between items-center gap-4 mb-8 md:mb-10">
-        <span className="ipurpose-pill">
-          <span className="h-1.5 w-1.5 rounded-full bg-lavenderViolet animate-pulse" />
-          Soul → Systems → AI
-        </span>
+    <div className="relative">
+      {/* Hero Section with Parallax */}
+      <div className="relative h-screen flex items-center justify-center overflow-hidden">
+        <ParallaxImage
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80"
+          alt="Serene landscape"
+          speed={0.3}
+          className="absolute inset-0"
+        />
+        
+        <div className="relative z-10 text-center px-4 max-w-4xl">
+          <ScrollReveal direction="scale">
+            <h1 className="heading-hero mb-6 text-white drop-shadow-2xl">
+              Align Your Soul.<br />Empower Your Systems.<br />Expand Through AI.
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 font-marcellus mb-8 drop-shadow-lg">
+              The transformation platform for visionary entrepreneurs
+            </p>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <Button href="/signup" size="lg">
+                Begin Your Journey
+              </Button>
+              <Button href="/login" variant="secondary" size="lg">
+                Sign In
+              </Button>
+            </div>
+          </ScrollReveal>
+        </div>
       </div>
 
-      {/* Hero */}
-      <section className="grid md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-8 md:gap-12 items-start mb-14 md:mb-16 lg:mb-20">
-        <div className="space-y-6">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-offWhite leading-tight">
-            Welcome to{" "}
-            <span className="font-italiana text-lavenderViolet drop-shadow-[0_0_22px_rgba(156,136,255,0.6)]">
-              iPurpose
-            </span>
-          </h1>
-          <p className="text-base md:text-lg text-white/75 max-w-xl leading-relaxed">
-            Align your <span className="font-semibold text-salmonPeach">Soul</span>.
-            Empower your <span className="font-semibold text-softGold">Systems</span>.
-            Expand through <span className="font-semibold text-lavenderViolet">AI</span>.
-          </p>
+      {/* Three Pillars Section */}
+      <div className="max-w-7xl mx-auto px-4 py-24">
+        <ScrollReveal>
+          <h2 className="heading-section text-center mb-16">
+            Three Pillars of Transformation
+          </h2>
+        </ScrollReveal>
 
-          <div className="flex flex-wrap gap-4 mt-6 pt-2">
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center rounded-full bg-lavenderViolet px-6 py-3 text-sm font-semibold text-[#0f1017] shadow-soft hover:brightness-110 transition-all"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-offWhite bg-white/5 hover:bg-white/10 transition-all"
-            >
-              Create Account
-            </Link>
+        <div className="grid md:grid-cols-3 gap-8 mb-24">
+          <ScrollReveal delay={100}>
+            <PhotoCard
+              src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"
+              alt="Soul - Inner clarity"
+              title="Soul"
+              description="Discover your authentic purpose and align with your deepest values"
+              aspectRatio="portrait"
+            />
+          </ScrollReveal>
+
+          <ScrollReveal delay={200}>
+            <PhotoCard
+              src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80"
+              alt="Systems - Strategic foundation"
+              title="Systems"
+              description="Build sustainable workflows and strategic frameworks"
+              aspectRatio="portrait"
+            />
+          </ScrollReveal>
+
+          <ScrollReveal delay={300}>
+            <PhotoCard
+              src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
+              alt="AI - Exponential growth"
+              title="AI"
+              description="Leverage intelligent automation to amplify your impact"
+              aspectRatio="portrait"
+            />
+          </ScrollReveal>
+        </div>
+
+        {/* Connection Section */}
+        <ScrollReveal>
+          <div className="text-center mb-16">
+            <h2 className="heading-section mb-6">
+              Built for Connection
+            </h2>
+            <p className="text-lg text-warmCharcoal/70 max-w-2xl mx-auto leading-relaxed">
+              Join a community of purpose-driven entrepreneurs creating meaningful impact
+            </p>
           </div>
-        </div>
+        </ScrollReveal>
 
-        {/* Side highlight card */}
-        <div className="ipurpose-card border-l-2 border-lavenderViolet/70">
-          <p className="text-xs font-medium tracking-[0.2em] text-white/55 uppercase">
-            YOUR ALIGNMENT HUB
-          </p>
-          <p className="mt-4 text-sm text-white/80 leading-relaxed">
-            This is your control center for building a soul-aligned business
-            that's supported by systems and amplified by AI.
-          </p>
-          <ul className="mt-5 space-y-2.5 text-xs text-white/65 leading-relaxed">
-            <li>• Centralize your offers, clients, and content.</li>
-            <li>• Track progress in one calming dashboard.</li>
-            <li>• Let AI handle the busywork, you hold the vision.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Framework tiles */}
-      <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-        {sections.map((section) => (
-          <div key={section.id} className="ipurpose-card hover:border-white/10 transition-all">
-            <span
-              className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium border ${section.tone}`}
-            >
-              {section.label}
-            </span>
-            <p className="text-xs text-white/75 leading-relaxed mt-1">{section.description}</p>
-            <div className="mt-4">
+        {/* Quick Access Links */}
+        <ScrollReveal delay={200}>
+          <div className="grid md:grid-cols-3 gap-6">
+            {sections.slice(0, 3).map((section, index) => (
               <Link
+                key={section.id}
                 href={section.href}
-                className="inline-flex text-xs font-semibold text-lavenderViolet hover:text-[#C8BCFF] transition"
+                className="ipurpose-card hover group transition-all"
               >
-                {section.cta} →
+                <h3 className="font-marcellus text-xl mb-3 text-warmCharcoal group-hover:text-lavenderViolet transition-colors">
+                  {section.label}
+                </h3>
+                <p className="text-sm text-warmCharcoal/70 leading-relaxed mb-4">
+                  {section.description}
+                </p>
+                <span className="text-sm font-semibold text-lavenderViolet">
+                  {section.cta} →
+                </span>
               </Link>
-            </div>
+            ))}
           </div>
-        ))}
-      </section>
+        </ScrollReveal>
+      </div>
     </div>
   );
 }

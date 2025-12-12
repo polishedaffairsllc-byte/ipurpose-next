@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AuthContextProvider } from './context/AuthContext';
 import FloatingOrbs from "./components/FloatingOrbs";
 import DynamicBackground from "./components/DynamicBackground";
+import ConnectionNetwork from "./components/ConnectionNetwork";
 
 export const metadata: Metadata = {
   title: "iPurpose Platform",
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body className="min-h-screen font-montserrat text-warmCharcoal">
         <DynamicBackground />
         <FloatingOrbs />
+        <ConnectionNetwork />
         
         {/* Background texture layer */}
         <div className="fixed inset-0 -z-10">
