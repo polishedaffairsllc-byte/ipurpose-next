@@ -22,13 +22,13 @@ export default function Button({
   disabled = false,
   className = '',
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center rounded-full font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-indigoDeep/40 focus:ring-offset-2';
+  const baseStyles = 'inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-lavenderViolet/40 focus:ring-offset-2';
   
   const variants = {
-    primary: 'bg-lavenderViolet text-white shadow-soft hover:bg-indigoDeep',
-    secondary: 'bg-indigoDeep/10 text-indigoDeep hover:bg-indigoDeep/20 border border-indigoDeep/20',
-    ghost: 'text-indigoDeep hover:bg-indigoDeep/10',
-    accent: 'bg-salmonPeach text-warmCharcoal hover:bg-salmonPeach/90 shadow-soft',
+    primary: 'ipurpose-button-gradient',
+    secondary: 'bg-gradient-to-r from-lavenderViolet/10 to-salmonPeach/10 text-indigoDeep hover:from-lavenderViolet/20 hover:to-salmonPeach/20 border border-lavenderViolet/20',
+    ghost: 'text-indigoDeep hover:bg-lavenderViolet/10 hover:shadow-soft-sm',
+    accent: 'bg-gradient-to-r from-salmonPeach to-softGold text-warmCharcoal hover:shadow-soft-md',
   };
   
   const sizes = {

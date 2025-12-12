@@ -9,20 +9,16 @@ interface CardProps {
 
 export default function Card({ children, className = '', hover = false, accent = 'none' }: CardProps) {
   const accentStyles = {
-    lavender: 'border-accent-lavender',
-    salmon: 'border-accent-salmon',
-    gold: 'border-accent-gold',
+    lavender: 'ipurpose-card-lavender',
+    salmon: 'ipurpose-card-salmon',
+    gold: 'ipurpose-card-gold',
     none: '',
   };
   
   return (
     <div
-      className={`bg-white border border-lavenderViolet/10 rounded-2xl p-6 lg:p-8 shadow-soft ${
-        accentStyles[accent]
-      } ${
-        hover
-          ? 'hover:border-lavenderViolet/30 hover:shadow-xl transition-all cursor-pointer focus-within:ring-2 focus-within:ring-indigoDeep/40'
-          : ''
+      className={`ipurpose-card ${accentStyles[accent]} ${
+        hover ? 'cursor-pointer group' : ''
       } ${className}`}
     >
       {children}

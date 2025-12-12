@@ -17,8 +17,7 @@ export default async function SystemsPage() {
     return (
       <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
         
-        <div className="relative mb-10">
-          <div className="absolute -inset-4 bg-gradient-to-r from-softGold/15 to-salmonPeach/10 rounded-3xl blur-2xl opacity-60"></div>
+        <div className="ipurpose-glow-container mb-10">
           <div className="relative">
             <PageTitle subtitle="Build the structures that carry your purpose. Organize, automate, and streamline your flow.">
               Systems
@@ -27,13 +26,12 @@ export default async function SystemsPage() {
         </div>
 
         {/* Philosophy Card */}
-        <div className="relative mb-12">
-          <div className="absolute -inset-2 bg-gradient-to-r from-softGold/20 to-salmonPeach/15 rounded-2xl blur-xl opacity-50"></div>
+        <div className="ipurpose-glow-container mb-12">
           <Card accent="gold" className="relative">
             <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-montserrat">
               SYSTEMS PHILOSOPHY
             </p>
-            <p className="text-base text-warmCharcoal/75 leading-relaxed font-montserrat">
+            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-montserrat">
               Systems turn your purpose into momentum. These tools help you organize every part
               of your flow so your energy stays aligned, efficient, and powerful.
             </p>

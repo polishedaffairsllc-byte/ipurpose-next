@@ -57,22 +57,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{
-      background: 'linear-gradient(135deg, #FAF5FF 0%, #FFF5F0 50%, #FFFBF0 100%)'
-    }}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="relative">
-          {/* Glow effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-lavenderViolet/20 via-salmonPeach/20 to-softGold/20 rounded-3xl blur-xl opacity-75"></div>
-          
-          <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl p-8 border border-lavenderViolet/10" style={{
-            boxShadow: '0 20px 60px rgba(156, 136, 255, 0.15), 0 0 40px rgba(252, 196, 183, 0.1)'
-          }}>
+        <div className="ipurpose-glow-container">
+          <div className="relative ipurpose-card">
             <div className="text-center mb-8">
-              <h1 className="font-italiana text-5xl bg-gradient-to-r from-lavenderViolet via-indigoDeep to-salmonPeach bg-clip-text text-transparent mb-3">
+              <h1 className="heading-hero mb-4">
                 Welcome to iPurpose
               </h1>
-              <p className="font-marcellus text-warmCharcoal/70 text-base">
+              <p className="font-marcellus text-warmCharcoal/70 text-lg">
                 Log in to access your dashboard and AI tools
               </p>
             </div>
@@ -88,8 +81,7 @@ export default function LoginPage() {
               <input
                 id="email"
                 type="email"
-                className="w-full px-4 py-3 border-2 border-lavenderViolet/20 rounded-xl bg-lavenderViolet/5 focus:border-lavenderViolet focus:outline-none focus:ring-4 focus:ring-lavenderViolet/10 focus:bg-white transition-all"
-                style={{ boxShadow: '0 4px 12px rgba(156, 136, 255, 0.05)' }}
+                className="ipurpose-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -106,8 +98,7 @@ export default function LoginPage() {
               <input
                 id="password"
                 type="password"
-                className="w-full px-4 py-3 border-2 border-lavenderViolet/20 rounded-xl bg-lavenderViolet/5 focus:border-lavenderViolet focus:outline-none focus:ring-4 focus:ring-lavenderViolet/10 focus:bg-white transition-all"
-                style={{ boxShadow: '0 4px 12px rgba(156, 136, 255, 0.05)' }}
+                className="ipurpose-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -123,10 +114,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-6 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold rounded-xl hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              style={{
-                boxShadow: '0 10px 30px rgba(156, 136, 255, 0.3), 0 0 20px rgba(156, 136, 255, 0.1)'
-              }}
+              className="ipurpose-button-gradient w-full"
             >
               {loading ? "Logging in..." : "Login"}
             </button>

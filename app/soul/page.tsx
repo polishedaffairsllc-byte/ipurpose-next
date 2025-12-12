@@ -17,8 +17,7 @@ export default async function SoulPage() {
     return (
       <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
         
-        <div className="relative mb-10">
-          <div className="absolute -inset-4 bg-gradient-to-r from-lavenderViolet/10 to-salmonPeach/10 rounded-3xl blur-2xl opacity-60"></div>
+        <div className="ipurpose-glow-container mb-10">
           <div className="relative">
             <PageTitle subtitle="Explore the inner work that aligns your purpose and illuminates your path forward.">
               Soul Alignment
@@ -27,13 +26,12 @@ export default async function SoulPage() {
         </div>
 
         {/* Philosophy Card */}
-        <div className="relative mb-12">
-          <div className="absolute -inset-2 bg-gradient-to-r from-lavenderViolet/15 to-salmonPeach/15 rounded-2xl blur-xl opacity-50"></div>
+        <div className="ipurpose-glow-container mb-12">
           <Card accent="lavender" className="relative">
             <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-montserrat">
               YOUR SOUL → SYSTEMS → AI™ FOUNDATION
             </p>
-            <p className="text-base text-warmCharcoal/75 leading-relaxed font-montserrat">
+            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-montserrat">
               Soul work creates the foundation for everything. When you're aligned internally,
               your systems flow naturally and your AI tools amplify what truly matters.
             </p>
@@ -48,12 +46,10 @@ export default async function SoulPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card hover accent="lavender" className="group">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-lavenderViolet/20 to-lavenderViolet/10 flex items-center justify-center group-hover:scale-110 transition-transform" style={{
-                  boxShadow: '0 8px 20px rgba(156, 136, 255, 0.15)'
-                }}>
+                <div className="ipurpose-icon-bubble group-hover:scale-110">
                   <span className="text-3xl">✨</span>
                 </div>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-lavenderViolet/15 to-lavenderViolet/10 text-indigoDeep font-montserrat">
+                <span className="ipurpose-pill">
                   Visionary
                 </span>
               </div>
@@ -68,12 +64,10 @@ export default async function SoulPage() {
 
             <Card hover accent="salmon" className="group">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-salmonPeach/20 to-salmonPeach/10 flex items-center justify-center group-hover:scale-110 transition-transform" style={{
-                  boxShadow: '0 8px 20px rgba(252, 196, 183, 0.15)'
-                }}>
+                <div className="ipurpose-icon-bubble-salmon group-hover:scale-110">
                   <span className="text-3xl">🎯</span>
                 </div>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-salmonPeach/20 to-salmonPeach/15 text-warmCharcoal font-montserrat">
+                <span className="ipurpose-pill">
                   Builder
                 </span>
               </div>
