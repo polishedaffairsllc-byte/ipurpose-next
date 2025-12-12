@@ -15,13 +15,17 @@
     margin: 0;
     min-height: 100%;
     font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    /* Token-driven gradient background */
-    background: linear-gradient(
-      135deg,
-      rgba(250, 245, 255, 1) 0%,
-      rgba(255, 249, 245, 1) 50%,
-      rgba(255, 251, 240, 1) 100%
-    );
+    line-height: 1.7;
+    /* Enhanced gradient background with texture */
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(156, 136, 255, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(252, 196, 183, 0.03) 0%, transparent 50%),
+      linear-gradient(
+        135deg,
+        rgba(250, 245, 255, 1) 0%,
+        rgba(255, 249, 245, 1) 50%,
+        rgba(255, 251, 240, 1) 100%
+      );
     background-attachment: fixed;
     color: #2A2A2A;
   }
@@ -29,7 +33,11 @@
   a {
     color: inherit;
     text-decoration: none;
-    transition: colors 200ms ease;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  a:hover {
+    opacity: 0.85;
   }
 
   * {
@@ -39,6 +47,8 @@
   /* Headings use Marcellus from tokens */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Marcellus', serif;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
   }
 }
 
@@ -47,36 +57,41 @@
    ============================================================================ */
 
 @layer components {
-  /* Glass Card with Glow */
+  /* Glass Card with Enhanced Glow & Depth */
   .ipurpose-card {
+    position: relative;
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(255, 250, 250, 0.90) 100%
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(255, 252, 252, 0.95) 100%
     );
-    border: 1px solid rgba(156, 136, 255, 0.15);
-    border-radius: 1rem;
-    padding: 1.5rem;
+    border: 1px solid rgba(156, 136, 255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 1.25rem;
+    padding: 2rem;
     box-shadow: 
-      0 20px 60px rgba(156, 136, 255, 0.12),
-      0 0 40px rgba(252, 196, 183, 0.08),
-      0 8px 32px rgba(75, 78, 109, 0.05);
-    backdrop-filter: blur(12px);
-    transition: all 300ms ease;
+      0 1px 1px rgba(255, 255, 255, 0.6) inset,
+      0 24px 64px rgba(156, 136, 255, 0.14),
+      0 0 48px rgba(252, 196, 183, 0.1),
+      0 8px 32px rgba(75, 78, 109, 0.06);
+    backdrop-filter: blur(16px);
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @media (min-width: 1024px) {
     .ipurpose-card {
-      padding: 2rem;
+      padding: 2.5rem;
     }
   }
 
   .ipurpose-card:hover {
     box-shadow: 
-      0 24px 70px rgba(156, 136, 255, 0.18),
-      0 0 50px rgba(252, 196, 183, 0.12),
-      0 12px 40px rgba(75, 78, 109, 0.08);
-    transform: translateY(-2px);
+      0 1px 1px rgba(255, 255, 255, 0.8) inset,
+      0 28px 80px rgba(156, 136, 255, 0.22),
+      0 0 60px rgba(252, 196, 183, 0.15),
+      0 12px 48px rgba(75, 78, 109, 0.1);
+    transform: translateY(-4px) scale(1.01);
+    border-color: rgba(156, 136, 255, 0.3);
   }
 
   /* Accent Card Variants */
@@ -107,51 +122,68 @@
     );
   }
 
-  /* Pastel Pill Badge */
+  /* Pastel Pill Badge with Shimmer */
   .ipurpose-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
     border-radius: 9999px;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     background: linear-gradient(
       135deg,
-      rgba(156, 136, 255, 0.15) 0%,
-      rgba(252, 196, 183, 0.10) 100%
+      rgba(156, 136, 255, 0.18) 0%,
+      rgba(252, 196, 183, 0.12) 100%
     );
     color: #4B4E6D;
-    box-shadow: 0 4px 12px rgba(156, 136, 255, 0.12);
-    transition: all 200ms ease;
+    box-shadow: 
+      0 1px 0 rgba(255, 255, 255, 0.5) inset,
+      0 4px 12px rgba(156, 136, 255, 0.15);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .ipurpose-pill:hover {
-    box-shadow: 0 6px 16px rgba(156, 136, 255, 0.20);
-    transform: translateY(-1px);
+    background: linear-gradient(
+      135deg,
+      rgba(156, 136, 255, 0.25) 0%,
+      rgba(252, 196, 183, 0.18) 100%
+    );
+    box-shadow: 
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 6px 20px rgba(156, 136, 255, 0.25);
+    transform: translateY(-2px);
   }
 
-  /* Icon Bubble */
+  /* Icon Bubble with Breathing Animation */
   .ipurpose-icon-bubble {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 1rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(
       135deg,
-      rgba(156, 136, 255, 0.20) 0%,
-      rgba(156, 136, 255, 0.08) 100%
+      rgba(156, 136, 255, 0.22) 0%,
+      rgba(156, 136, 255, 0.10) 100%
     );
     box-shadow: 
-      0 8px 24px rgba(156, 136, 255, 0.15),
-      0 0 20px rgba(156, 136, 255, 0.08);
-    transition: transform 300ms ease;
+      0 1px 0 rgba(255, 255, 255, 0.4) inset,
+      0 10px 28px rgba(156, 136, 255, 0.18),
+      0 0 24px rgba(156, 136, 255, 0.1);
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    animation: breathe 4s ease-in-out infinite;
   }
 
   .ipurpose-icon-bubble:hover {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 12px 36px rgba(156, 136, 255, 0.28),
+      0 0 32px rgba(156, 136, 255, 0.15);
+    animation-play-state: paused;
   }
 
   .ipurpose-icon-bubble-salmon {
@@ -176,7 +208,7 @@
       0 0 20px rgba(245, 232, 199, 0.12);
   }
 
-  /* Glow Container */
+  /* Glow Container with Pulse */
   .ipurpose-glow-container {
     position: relative;
   }
@@ -184,74 +216,101 @@
   .ipurpose-glow-container::before {
     content: '';
     position: absolute;
-    inset: -1rem;
-    border-radius: 1.5rem;
-    filter: blur(2rem);
-    opacity: 0.6;
+    inset: -1.5rem;
+    border-radius: 2rem;
+    filter: blur(2.5rem);
+    opacity: 0.7;
     background: linear-gradient(
       135deg,
-      rgba(156, 136, 255, 0.15) 0%,
-      rgba(252, 196, 183, 0.12) 50%,
-      rgba(245, 232, 199, 0.10) 100%
+      rgba(156, 136, 255, 0.2) 0%,
+      rgba(252, 196, 183, 0.15) 50%,
+      rgba(245, 232, 199, 0.12) 100%
     );
     z-index: -1;
+    animation: pulse-glow 3s ease-in-out infinite;
   }
 
-  /* Gradient Text */
+  /* Gradient Text with Shimmer */
   .ipurpose-gradient-text {
     background: linear-gradient(
       135deg,
       #9C88FF 0%,
-      #4B4E6D 50%,
-      #FCC4B7 100%
+      #4B4E6D 40%,
+      #FCC4B7 80%,
+      #F5E8C7 100%
     );
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: shimmer 8s ease-in-out infinite;
+    text-shadow: 0 0 40px rgba(156, 136, 255, 0.3);
   }
 
-  /* Button Gradient */
+  /* Button Gradient with Ripple Effect */
   .ipurpose-button-gradient {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(
       135deg,
       #9C88FF 0%,
+      #7B6FD9 50%,
       #4B4E6D 100%
     );
+    background-size: 200% 200%;
     box-shadow: 
-      0 10px 30px rgba(156, 136, 255, 0.30),
-      0 0 20px rgba(156, 136, 255, 0.15);
+      0 1px 0 rgba(255, 255, 255, 0.2) inset,
+      0 12px 32px rgba(156, 136, 255, 0.35),
+      0 0 24px rgba(156, 136, 255, 0.18);
     color: white;
     font-weight: 600;
-    border-radius: 0.75rem;
-    padding: 0.75rem 1.5rem;
-    transition: all 200ms ease;
+    letter-spacing: 0.02em;
+    border-radius: 0.875rem;
+    padding: 0.875rem 1.75rem;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .ipurpose-button-gradient:hover {
+    background-position: 100% 100%;
     box-shadow: 
-      0 12px 40px rgba(156, 136, 255, 0.40),
-      0 0 30px rgba(156, 136, 255, 0.20);
-    transform: translateY(-2px) scale(1.02);
+      0 1px 0 rgba(255, 255, 255, 0.3) inset,
+      0 16px 48px rgba(156, 136, 255, 0.45),
+      0 0 36px rgba(156, 136, 255, 0.25);
+    transform: translateY(-3px) scale(1.03);
   }
 
-  /* Input Field */
+  .ipurpose-button-gradient:active {
+    transform: translateY(-1px) scale(1.01);
+    transition-duration: 100ms;
+  }
+
+  /* Input Field with Smooth Focus */
   .ipurpose-input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    border: 2px solid rgba(156, 136, 255, 0.20);
-    background: rgba(156, 136, 255, 0.05);
-    box-shadow: 0 4px 12px rgba(156, 136, 255, 0.05);
-    transition: all 200ms ease;
+    padding: 0.875rem 1.25rem;
+    border-radius: 0.875rem;
+    border: 2px solid rgba(156, 136, 255, 0.25);
+    background: rgba(156, 136, 255, 0.04);
+    box-shadow: 
+      0 1px 0 rgba(255, 255, 255, 0.5) inset,
+      0 4px 12px rgba(156, 136, 255, 0.06);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9375rem;
   }
 
   .ipurpose-input:focus {
     outline: none;
     border-color: #9C88FF;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     box-shadow: 
-      0 0 0 4px rgba(156, 136, 255, 0.10),
-      0 4px 12px rgba(156, 136, 255, 0.12);
+      0 1px 0 rgba(255, 255, 255, 0.8) inset,
+      0 0 0 4px rgba(156, 136, 255, 0.12),
+      0 8px 20px rgba(156, 136, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .ipurpose-input::placeholder {
+    color: rgba(75, 78, 109, 0.4);
   }
 }
 
@@ -260,37 +319,50 @@
    ============================================================================ */
 
 @layer utilities {
-  /* Elegant large heading */
+  /* Elegant large heading with shimmer */
   .heading-hero {
     font-family: 'Italiana', serif;
-    font-size: 3rem;
-    line-height: 1.2;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     background: linear-gradient(
       135deg,
       #9C88FF 0%,
+      #7B6FD9 25%,
       #4B4E6D 50%,
-      #FCC4B7 100%
+      #FCC4B7 75%,
+      #F5E8C7 100%
     );
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: shimmer 8s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(156, 136, 255, 0.25));
   }
 
   @media (min-width: 768px) {
     .heading-hero {
-      font-size: 3.75rem;
+      font-size: 4.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .heading-hero {
+      font-size: 5.5rem;
     }
   }
 
   .heading-section {
     font-family: 'Marcellus', serif;
-    font-size: 1.875rem;
+    font-size: 2rem;
+    letter-spacing: -0.015em;
     color: #2A2A2A;
   }
 
   @media (min-width: 768px) {
     .heading-section {
-      font-size: 2.25rem;
+      font-size: 2.5rem;
     }
   }
 
@@ -334,3 +406,76 @@
   }
 }
 
+/* ============================================================================
+   KEYFRAME ANIMATIONS
+   ============================================================================ */
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.95;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.7;
+    filter: blur(2.5rem);
+  }
+  50% {
+    opacity: 0.85;
+    filter: blur(3rem);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+[data-stagger="7"] { animation-delay: 0.7s; }
