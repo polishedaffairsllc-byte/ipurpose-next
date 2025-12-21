@@ -12,18 +12,22 @@ export async function middleware(request: NextRequest) {
     if (path.startsWith('/login') || path.startsWith('/signup')) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set('x-pathname', path);
+    return response;
   }
 
   // 2. If NO session exists AND the path is protected, redirect to /login
-  const isProtectedPath = !path.startsWith('/login') && !path.startsWith('/signup') && !path.startsWith('/api/auth') && path !== '/';
+  const isProtectedPath = !path.startsWith('/login') && !path.startsWith('/signup') && !path.startsWith('/api/auth') && path !== '/' && path !== '/about';
   
   if (isProtectedPath) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // 3. Otherwise (no session, accessing /login, /signup, or homepage), allow access
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', path);
+  return response;
 }
 
 export const config = {

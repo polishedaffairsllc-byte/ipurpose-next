@@ -16,7 +16,7 @@ export default async function SoulPage() {
     await firebaseAdmin.auth().verifySessionCookie(session, true);
 
     return (
-      <div className="relative pt-20">
+      <div className="relative">
         {/* Hero Section */}
         <div className="relative h-[60vh] flex items-center justify-center overflow-hidden mb-12">
           <img

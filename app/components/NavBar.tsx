@@ -1,11 +1,19 @@
 "use server";
 import Link from "next/link";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import React from "react";
 
 export default async function NavBar() {
   const cookieStore = await cookies();
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+  
+  // Hide navbar on login and signup pages
+  if (pathname === "/login" || pathname === "/signup") {
+    return null;
+  }
+
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
   let displayName = "Guest";
   let isLoggedIn = false;
@@ -21,13 +29,8 @@ export default async function NavBar() {
     }
   }
 
-  // Don't show navbar on homepage if not logged in
-  if (!isLoggedIn) {
-    return null;
-  }
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
+    <header className="bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Brand Text Only */}
