@@ -44,7 +44,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-lavenderViolet/20 to-salmonPeach/20 rounded-2xl transform rotate-3"></div>
               <img
-                src="/images/IMG_8011 2.JPG"
+                src="/images/renita-hamilton.jpg"
                 alt="Renita Hamilton"
                 className="relative rounded-2xl shadow-2xl w-full object-cover aspect-[3/4]"
               />

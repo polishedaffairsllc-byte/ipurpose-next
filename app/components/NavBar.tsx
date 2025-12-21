@@ -28,9 +28,9 @@ export default async function NavBar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <img 
-              src="/images/APPROVED LOGO.png" 
+              src="/images/ipurpose-logo.png" 
               alt="iPurpose Logo" 
-              className="h-10 w-auto"
+              className="h-12 w-12 object-contain"
             />
             <div className="flex flex-col">
               <span className="font-italiana text-xl text-warmCharcoal">iPurpose</span>
