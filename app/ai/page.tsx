@@ -17,7 +17,7 @@ export default async function AIPage() {
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
 
     return (
-      <div className="relative">
+      <div className="relative pt-20">
         {/* Hero Section */}
         <div className="relative h-[50vh] flex items-center justify-center overflow-hidden mb-12">
           <img

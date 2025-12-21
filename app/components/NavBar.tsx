@@ -21,25 +21,23 @@ export default async function NavBar() {
     }
   }
 
+  // Don't show navbar on homepage if not logged in
+  if (!isLoggedIn) {
+    return null;
+  }
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img 
-              src="/images/ipurpose-logo.png" 
-              alt="iPurpose Logo" 
-              className="h-12 w-12 object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="font-italiana text-xl text-warmCharcoal">iPurpose</span>
-              <span className="text-xs text-warmCharcoal/60 -mt-1">Portal</span>
-            </div>
+          {/* Brand Text Only */}
+          <Link href="/" className="flex flex-col hover:opacity-80 transition-opacity">
+            <span className="font-italiana text-2xl text-warmCharcoal">iPurpose</span>
+            <span className="text-xs text-warmCharcoal/60 -mt-1">Portal</span>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-2">
             <Link 
               href="/" 
               className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"

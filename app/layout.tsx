@@ -31,9 +31,7 @@ export default function RootLayout({
         
         <AuthContextProvider>
           <NavBar />
-          <main className="pt-20">
-            {children}
-          </main>
+          {children}
         </AuthContextProvider>
       </body>
     </html>

@@ -20,7 +20,7 @@ export default async function DashboardPage() {
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
 
     return (
-      <div className="relative">
+      <div className="relative pt-20">
         {/* Hero Background */}
         <div className="relative h-[40vh] mb-12 overflow-hidden">
           <img
