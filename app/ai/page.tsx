@@ -46,6 +46,7 @@ export default async function AIPage() {
         </Card>
 
         <AIClient initialName={name} />
+        </div>
       </div>
     );
   } catch (e) {
