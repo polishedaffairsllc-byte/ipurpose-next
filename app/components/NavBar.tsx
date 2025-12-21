@@ -21,16 +21,24 @@ export default async function NavBar() {
 
   return (
     <header className="top-nav">
-      <div className="brand">
-        <div>iPurpose</div>
-        <small>Portal</small>
-      </div>
+      <Link href="/" className="brand" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <img 
+          src="/images/APPROVED LOGO.png" 
+          alt="iPurpose Logo" 
+          style={{ height: '40px', width: 'auto' }}
+        />
+        <div>
+          <div>iPurpose</div>
+          <small>Portal</small>
+        </div>
+      </Link>
 
       <nav className="nav-links" aria-label="Main navigation">
         <Link className="nav-link" href="/dashboard">Dashboard</Link>
         <Link className="nav-link" href="/ai">AI</Link>
         <Link className="nav-link" href="/soul">Soul</Link>
         <Link className="nav-link" href="/systems">Systems</Link>
+        <Link className="nav-link" href="/about">About</Link>
         <Link className="nav-link" href="/settings">Settings</Link>
         <form action="/api/auth/logout" method="post" style={{ display: "inline" }}>
           <button type="submit" className="nav-link" style={{ background: "transparent", border: "none", cursor: "pointer" }}>Logout</button>

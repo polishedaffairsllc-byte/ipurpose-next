@@ -243,6 +243,7 @@ export default async function SoulPage() {
           </div>
         </div>
 
+        </div>
       </div>
     );
   } catch (e) {
