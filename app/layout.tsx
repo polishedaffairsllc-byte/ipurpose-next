@@ -4,6 +4,7 @@ import { AuthContextProvider } from './context/AuthContext';
 import FloatingOrbs from "./components/FloatingOrbs";
 import DynamicBackground from "./components/DynamicBackground";
 import ConnectionNetwork from "./components/ConnectionNetwork";
+import NavBar from "./components/NavBar";
 
 export const metadata: Metadata = {
   title: "iPurpose Platform",
@@ -29,7 +30,10 @@ export default function RootLayout({
         </div>
         
         <AuthContextProvider>
-          {children}
+          <NavBar />
+          <main className="pt-20">
+            {children}
+          </main>
         </AuthContextProvider>
       </body>
     </html>

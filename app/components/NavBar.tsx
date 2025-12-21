@@ -8,44 +8,121 @@ export default async function NavBar() {
   const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
   let displayName = "Guest";
+  let isLoggedIn = false;
 
   if (session) {
     try {
       const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
       const user = await firebaseAdmin.auth().getUser(decoded.uid);
       displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
+      isLoggedIn = true;
     } catch (e) {
       // If verification fails, fall back to Guest
     }
   }
 
   return (
-    <header className="top-nav">
-      <Link href="/" className="brand" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <img 
-          src="/images/APPROVED LOGO.png" 
-          alt="iPurpose Logo" 
-          style={{ height: '40px', width: 'auto' }}
-        />
-        <div>
-          <div>iPurpose</div>
-          <small>Portal</small>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img 
+              src="/images/APPROVED LOGO.png" 
+              alt="iPurpose Logo" 
+              className="h-10 w-auto"
+            />
+            <div className="flex flex-col">
+              <span className="font-italiana text-xl text-warmCharcoal">iPurpose</span>
+              <span className="text-xs text-warmCharcoal/60 -mt-1">Portal</span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-1">
+            <Link 
+              href="/" 
+              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+            >
+              Home
+            </Link>
+            {isLoggedIn && (
+              <>
+                <Link 
+                  href="/dashboard" 
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <Link 
+                  href="/soul" 
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+                >
+                  Soul
+                </Link>
+                <Link 
+                  href="/systems" 
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+                >
+                  Systems
+                </Link>
+                <Link 
+                  href="/ai" 
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+                >
+                  AI
+                </Link>
+              </>
+            )}
+            <Link 
+              href="/about" 
+              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+            >
+              About
+            </Link>
+          </nav>
+
+          {/* Right Side - User Actions */}
+          <div className="flex items-center gap-3">
+            {isLoggedIn ? (
+              <>
+                <span className="hidden lg:block text-sm text-warmCharcoal/70">
+                  {displayName}
+                </span>
+                <Link
+                  href="/settings"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+                >
+                  Settings
+                </Link>
+                <form action="/api/auth/logout" method="post">
+                  <button 
+                    type="submit" 
+                    className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-salmonPeach/10 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-6 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-lavenderViolet to-salmonPeach hover:shadow-lg transition-all"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
         </div>
-      </Link>
-
-      <nav className="nav-links" aria-label="Main navigation">
-        <Link className="nav-link" href="/dashboard">Dashboard</Link>
-        <Link className="nav-link" href="/ai">AI</Link>
-        <Link className="nav-link" href="/soul">Soul</Link>
-        <Link className="nav-link" href="/systems">Systems</Link>
-        <Link className="nav-link" href="/about">About</Link>
-        <Link className="nav-link" href="/settings">Settings</Link>
-        <form action="/api/auth/logout" method="post" style={{ display: "inline" }}>
-          <button type="submit" className="nav-link" style={{ background: "transparent", border: "none", cursor: "pointer" }}>Logout</button>
-        </form>
-      </nav>
-
-      <div className="user-greeting">Welcome, {displayName}</div>
+      </div>
     </header>
   );
 }
