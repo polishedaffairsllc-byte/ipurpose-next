@@ -18,7 +18,7 @@ export default async function SoulPage() {
     return (
       <div className="relative">
         {/* Hero Section */}
-        <div className="relative h-[60vh] flex items-center justify-center overflow-hidden mb-12">
+        <div className="relative h-[56vh] flex items-center justify-center overflow-hidden mb-10">
           <img
             src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1920&q=80"
             alt="Soul journey"
@@ -32,7 +32,7 @@ export default async function SoulPage() {
           </div>
         </div>
 
-        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
+        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-6 md:py-8 space-y-10">
 
         {/* Philosophy Card */}
         <div className="ipurpose-glow-container mb-12">
@@ -48,7 +48,7 @@ export default async function SoulPage() {
         </div>
 
         {/* Archetypes Section */}
-        <div className="mb-16">
+        <div className="mb-12">
           <SectionHeading level="h2" className="mb-8">
             iPurpose Archetypes
           </SectionHeading>

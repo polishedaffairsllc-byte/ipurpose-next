@@ -19,7 +19,7 @@ export default async function AIPage() {
     return (
       <div className="relative">
         {/* Hero Section */}
-        <div className="relative h-[50vh] flex items-center justify-center overflow-hidden mb-12">
+        <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-10">
           <img
             src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80"
             alt="AI and technology"
@@ -33,7 +33,7 @@ export default async function AIPage() {
           </div>
         </div>
         
-        <div className="container max-w-4xl mx-auto px-6 md:px-10 py-8 md:py-12">
+        <div className="container max-w-4xl mx-auto px-6 md:px-10 py-6 md:py-8 space-y-10">
 
         <Card accent="salmon" className="mb-8">
           <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/55 uppercase mb-2">

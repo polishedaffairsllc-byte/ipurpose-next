@@ -22,7 +22,7 @@ export default async function DashboardPage() {
     return (
       <div className="relative">
         {/* Hero Background */}
-        <div className="relative h-[40vh] mb-12 overflow-hidden">
+        <div className="relative h-[40vh] mb-10 overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80"
             alt="Dashboard background"
@@ -38,10 +38,10 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8">
+        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-6 space-y-10">
         {/* Daily Affirmation */}
         <ScrollReveal delay={200}>
-          <div className="ipurpose-glow-container mb-16 animate-fade-in-up stagger-2">
+          <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2">
             <Card accent="lavender" className="relative">
               <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
                 TODAY'S AFFIRMATION
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
 
         {/* Quick Links Section */}
         <ScrollReveal delay={300}>
-          <div className="mb-16 animate-fade-in-up stagger-3">
+          <div className="mb-12 animate-fade-in-up stagger-3">
             <SectionHeading level="h2" className="mb-8">
               Quick Access
             </SectionHeading>
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
         </ScrollReveal>
 
         {/* Mood/Intention Panel */}
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-2 gap-6">
           <Card accent="salmon">
             <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
               INTENTION SETTING
