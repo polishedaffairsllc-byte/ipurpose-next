@@ -33,21 +33,20 @@ export default function HomePage() {
   return (
     <div className="relative">
       {/* Hero Section with Parallax */}
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-lavenderViolet/20 via-softGold/10 to-salmonPeach/20">
+      <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-lavenderViolet/20 via-softGold/10 to-salmonPeach/20 py-8 md:py-12">
         <img
           src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80"
           alt="Serene landscape"
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
         />
-        
-        <div className="relative z-10 text-center px-4 max-w-4xl">
-          <h1 className="heading-hero mb-6 text-warmCharcoal drop-shadow-2xl">
+        <div className="relative z-10 text-center px-2 md:px-4 max-w-3xl mx-auto flex flex-col items-center">
+          <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl text-3xl md:text-5xl">
             Align Your Soul.<br />Empower Your Systems.<br />Expand Through AI.
           </h1>
-          <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus mb-8 drop-shadow-lg">
+          <p className="text-lg md:text-2xl text-warmCharcoal/80 font-marcellus mb-6 drop-shadow-lg">
             The transformation platform for visionary entrepreneurs
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex gap-3 justify-center flex-wrap">
             <Button href="/signup" size="lg">
               Begin Your Journey
             </Button>
@@ -59,12 +58,12 @@ export default function HomePage() {
       </div>
 
       {/* Three Pillars Section */}
-      <div className="max-w-7xl mx-auto px-4 py-24">
-        <h2 className="heading-section text-center mb-16">
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
+        <h2 className="heading-section text-center mb-10 md:mb-14">
           Three Pillars of Transformation
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-24">
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-14 md:mb-20">
           <PhotoCard
             src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&q=80"
             alt="Soul - Inner clarity"
@@ -92,11 +91,11 @@ export default function HomePage() {
 
         {/* Connection Section */}
         <ScrollReveal>
-          <div className="text-center mb-16">
-            <h2 className="heading-section mb-6">
+          <div className="text-center mb-10 md:mb-14">
+            <h2 className="heading-section mb-4 md:mb-6">
               Built for Connection
             </h2>
-            <p className="text-lg text-warmCharcoal/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-warmCharcoal/70 max-w-2xl mx-auto leading-relaxed">
               Join a community of purpose-driven entrepreneurs creating meaningful impact
             </p>
           </div>
@@ -104,7 +103,7 @@ export default function HomePage() {
 
         {/* Quick Access Links */}
         <ScrollReveal delay={200}>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
             {sections.map((section) => (
               <Link
                 key={section.id}
