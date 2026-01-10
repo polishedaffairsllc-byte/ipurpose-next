@@ -31,6 +31,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // ⭐️ CRITICAL: Match all paths EXCEPT API routes, static files, and the _next directory.
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  // ⭐️ CRITICAL: Match all paths EXCEPT API routes, static files, public assets (images/videos), and the _next directory.
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|videos).*)'],
 };
