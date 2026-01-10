@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-black relative overflow-hidden">
       {/* Background Video (with JS fallback) */}
-      <VideoBackground src="/videos/water-reflection.mp4" poster="/images/ipurpose-logo-transparent.png" className="brightness-75" />
+      <VideoBackground src="/videos/i.mp4" poster="/images/ipurpose-logo-transparent.png" className="brightness-75" />
       {/* Overlay Content */}
       <section className="ipurpose-glow-container w-full max-w-3xl mx-auto flex flex-col items-center text-center py-20 px-4 relative z-10">
         <div className="w-40 h-40 mb-8 rounded-3xl overflow-hidden shadow-2xl border-4 border-lavenderViolet/30 animate-fade-in bg-white/70 flex items-center justify-center">
