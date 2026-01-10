@@ -54,4 +54,4 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
     </div>
   );
 }
-  }
+
