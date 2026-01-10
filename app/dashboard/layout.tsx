@@ -8,8 +8,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-dashboard overflow-hidden">
-      {/* Left Sidebar */}
+    <div className="flex flex-col h-screen bg-dashboard overflow-hidden">
+      {/* Top Navigation */}
       <DashboardSidebar />
 
       {/* Main Content Area */}
