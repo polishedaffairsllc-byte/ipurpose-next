@@ -9,8 +9,8 @@ export default async function NavBar() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
   
-  // Hide navbar on login and signup pages
-  if (pathname === "/login" || pathname === "/signup") {
+  // Hide navbar on login, signup, and home pages
+  if (pathname === "/login" || pathname === "/signup" || pathname === "/" || pathname === "") {
     return null;
   }
 

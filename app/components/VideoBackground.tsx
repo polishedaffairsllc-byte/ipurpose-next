@@ -85,8 +85,6 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
         />
       )}
 
-      {/* small dev status badge to help debugging */}
-      <div className="pointer-events-none fixed top-4 right-4 z-50 bg-black/50 text-white text-xs px-2 py-1 rounded">{error ? "video: failed" : loaded ? "video: playing" : "video: loading"}</div>
     </div>
   );
 }
