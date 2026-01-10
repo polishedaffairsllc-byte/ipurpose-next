@@ -148,7 +148,6 @@ export default async function DashboardPage() {
             </p>
           </Card>
         </div>
-        </div>
       </div>
     );
   } catch (e) {
