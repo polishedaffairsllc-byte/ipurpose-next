@@ -60,8 +60,6 @@ export default function DashboardSidebar() {
 
         {/* Logout */}
         <div className="shrink-0">
-        {/* Logout */}
-        <div className="shrink-0">
           <Link
             href="/api/auth/logout"
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal/70 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
@@ -69,5 +67,7 @@ export default function DashboardSidebar() {
             <span>Logout</span>
           </Link>
         </div>
+      </div>
+    </nav>
   );
 }
