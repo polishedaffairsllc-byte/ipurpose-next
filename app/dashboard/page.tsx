@@ -27,15 +27,15 @@ export default async function DashboardPage() {
           <VideoBackground src="/videos/water-reflection.mp4" />
           <div className="absolute inset-0 bg-black/30"></div>
           <div className="relative z-10 container max-w-6xl mx-auto px-6 h-full flex flex-col justify-center">
-            <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">
-              Welcome back, {name}
-            </h1>
             <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">
               Welcome back, {name}
             </h1>
             <p className="text-xl md:text-2xl text-white/80 font-marcellus drop-shadow-lg">
               Your iPurpose Portal
             </p>
+          </div>
+        </div>
+
         <div className="container max-w-6xl mx-auto px-6 md:px-10 py-6 space-y-10">
         {/* Daily Affirmation */}
         <ScrollReveal delay={200}>
