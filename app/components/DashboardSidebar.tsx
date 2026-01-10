@@ -23,6 +23,11 @@ export default function DashboardSidebar() {
       }}>
         {/* Logo Section */}
         <Link href="/dashboard" className="flex items-center gap-3 group shrink-0">
+          <div className="w-10 h-10 bg-gradient-to-br from-lavenderViolet via-indigoDeep to-salmonPeach rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200" style={{
+            boxShadow: '0 4px 12px rgba(156, 136, 255, 0.25)'
+          }}>
+            <span className="text-lg font-italiana text-white">iP</span>
+          </div>
           <div>
             <h1 className="text-lg font-italiana bg-gradient-to-r from-lavenderViolet to-indigoDeep bg-clip-text text-transparent">iPurpose</h1>
           </div>
