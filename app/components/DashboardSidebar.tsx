@@ -42,7 +42,7 @@ export default function DashboardSidebar() {
                 key={item.href}
                 href={item.href}
                 className={`
-                  flex items-center gap-2 px-3 py-2 rounded-lg font-montserrat text-sm font-medium
+                  flex items-center gap-2 px-4 py-2 rounded-lg font-montserrat text-sm font-medium
                   transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/30
                   ${
                     isActive
@@ -51,10 +51,8 @@ export default function DashboardSidebar() {
                   }
                 `}
                 style={isActive ? { boxShadow: '0 2px 8px rgba(156, 136, 255, 0.1)' } : {}}
-                title={item.label}
               >
-                <span className="text-lg">{item.icon}</span>
-                <span className="hidden md:inline">{item.label}</span>
+                <span>{item.label}</span>
               </Link>
             );
           })}
@@ -62,16 +60,14 @@ export default function DashboardSidebar() {
 
         {/* Logout */}
         <div className="shrink-0">
+        {/* Logout */}
+        <div className="shrink-0">
           <Link
             href="/api/auth/logout"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-warmCharcoal/70 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
-            title="Logout"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal/70 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
           >
-            <span className="text-lg">🚪</span>
-            <span className="hidden md:inline">Logout</span>
+            <span>Logout</span>
           </Link>
         </div>
-      </div>
-    </nav>
   );
 }
