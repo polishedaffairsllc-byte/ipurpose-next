@@ -1,4 +1,5 @@
 import React from "react";
+import DashboardSidebar from "../components/DashboardSidebar";
 
 export default function DashboardLayout({
   children,
@@ -7,6 +8,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex flex-col h-screen bg-dashboard overflow-hidden">
+      {/* Top Navigation */}
+      <DashboardSidebar />
+
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Scrollable Content */}
