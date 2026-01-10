@@ -34,7 +34,7 @@ export default function DashboardSidebar() {
         </Link>
 
         {/* Navigation Items */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-6 flex-1 justify-around">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
