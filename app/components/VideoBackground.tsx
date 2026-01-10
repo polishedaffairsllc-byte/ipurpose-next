@@ -43,7 +43,7 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
       ) : (
         // fallback: show poster image if video failed or timed out
         <img
-          src={poster || "/images/ipurpose-logo.png"}
+          src={poster || "/images/ipurpose-logo-transparent.png"}
           alt="background fallback"
           className="absolute inset-0 w-full h-full object-cover"
         />
