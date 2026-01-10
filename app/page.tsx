@@ -9,7 +9,7 @@ export default function HomePage() {
           Align your soul. Empower your systems. Expand through AI.<br />
           <span className="text-warmCharcoal/60 text-base md:text-lg block m-0 p-0">A transformation platform for visionary entrepreneurs.</span>
         </p>
-        <Button href="/signup" size="xl" className="m-0 p-0 text-lg md:text-xl font-semibold">
+        <Button href="/signup" size="lg" className="m-0 p-0 text-lg md:text-xl font-semibold">
           Get Started
         </Button>
       </section>
