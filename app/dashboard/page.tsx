@@ -22,12 +22,12 @@ export default async function DashboardPage() {
     return (
       <div className="relative">
         {/* Hero Background */}
-        <div className="relative h-[40vh] mb-10 overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80"
-            alt="Dashboard background"
-            className="absolute inset-0 w-full h-full object-cover opacity-20"
-          />
+        <div className="relative h-[40vh] mb-10 overflow-hidden bg-gradient-to-br from-lavenderViolet/20 via-salmonPeach/10 to-softGold/20">
+          {/* Animated gradient mesh background */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-gradient-to-tr from-lavenderViolet/30 via-transparent to-salmonPeach/30 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-bl from-softGold/20 via-transparent to-lavenderViolet/20 animate-pulse" style={{ animationDelay: '1s' }}></div>
+          </div>
           <div className="relative z-10 container max-w-6xl mx-auto px-6 h-full flex flex-col justify-center">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">
               Welcome back, {name}
