@@ -30,9 +30,6 @@ export default async function DashboardPage() {
             <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">
               Welcome back, {name}
             </h1>
-            <p className="text-xl md:text-2xl text-white/80 font-marcellus drop-shadow-lg">
-              Your iPurpose Portal
-            </p>
           </div>
         </div>
 
