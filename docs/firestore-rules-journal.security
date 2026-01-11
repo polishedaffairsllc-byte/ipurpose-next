@@ -1,0 +1,55 @@
+/**
+ * Firestore Security Rules for Journal & Reflection System
+ * Deploy to Firebase Console > Firestore > Rules
+ */
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User profiles - users can only read/write their own
+    match /users/{uid} {
+      allow read, write: if request.auth.uid == uid;
+
+      // Journal entries subcollection
+      match /journalEntries/{entryId} {
+        allow read, write: if request.auth.uid == uid;
+      }
+
+      // Sessions subcollection
+      match /sessions/{sessionId} {
+        allow read, write: if request.auth.uid == uid;
+      }
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+/**
+ * Security Rules Explanation:
+ *
+ * 1. User Profiles (users/{uid})
+ *    - Users can only read and write their own profile
+ *    - Enforced by checking request.auth.uid == uid
+ *
+ * 2. Journal Entries (users/{uid}/journalEntries/{entryId})
+ *    - Inherited from parent: users can only access their own entries
+ *    - All CRUD operations allowed for authenticated user's own entries
+ *
+ * 3. Sessions (users/{uid}/sessions/{sessionId})
+ *    - Inherited from parent: users can only access their own sessions
+ *    - All CRUD operations allowed for authenticated user's own sessions
+ *
+ * 4. Default Deny
+ *    - All other collections/documents are denied by default
+ *    - Prevents accidental exposure of data structures
+ *
+ * Production Enhancements:
+ * - Add time-based expiration for draft entries (auto-cleanup)
+ * - Validate schema (e.g., ensure status is 'draft' or 'final')
+ * - Restrict autosave frequency (e.g., max 1 update per 5 seconds)
+ * - Add audit logging for session finalization
+ */
