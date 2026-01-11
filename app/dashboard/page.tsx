@@ -160,7 +160,6 @@ export default async function DashboardPage() {
             </Card>
           </div>
         </ScrollReveal>
-        </div>
       </div>
     );
   } catch (e) {
