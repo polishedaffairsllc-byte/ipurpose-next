@@ -50,7 +50,7 @@ export default async function DashboardPage() {
                 "{todaysAffirmation}"
               </p>
               <Button href="/journal" variant="primary" size="md">
-                Journal
+                Journal on this
               </Button>
             </Card>
           </div>
@@ -61,10 +61,10 @@ export default async function DashboardPage() {
           <div className="mb-12 animate-fade-in-up stagger-2b">
             <Card accent="salmon" className="text-center">
               <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
-                INTENTION SETTING
+                Today's intention
               </p>
               <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-6">
-                What is your primary focus today?
+                What do you want to move forward today?
               </p>
               <Button variant="secondary" size="md">
                 Set Intention
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
         <ScrollReveal delay={300}>
           <div className="mb-12 animate-fade-in-up stagger-3">
             <SectionHeading level="h2" className="mb-8">
-              Quick Access
+              Choose your path
             </SectionHeading>
             
             <div className="grid md:grid-cols-2 gap-8">
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
                   Continue your inner clarity work and purpose alignment.
                 </p>
                 <Button href="/soul" variant="ghost" size="sm">
-                  Go to Soul →
+                  Enter Soul →
                 </Button>
               </TiltCard>
 
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
                   Structure your workflows, offers, and strategic foundation.
                 </p>
                 <Button href="/systems" variant="ghost" size="sm">
-                  Go to Systems →
+                  Open Systems →
                 </Button>
               </TiltCard>
 
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
                   Expand your capacity with aligned automation and prompts.
                 </p>
                 <Button href="/ai" variant="ghost" size="sm">
-                  Go to AI Tools →
+                  Explore AI →
                 </Button>
               </TiltCard>
 
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
                   Review reflections, trends, and alignment reports.
                 </p>
                 <Button href="/insights" variant="ghost" size="sm">
-                  Go to Insights →
+                  View Insights →
                 </Button>
               </TiltCard>
             </div>
