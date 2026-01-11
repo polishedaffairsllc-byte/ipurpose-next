@@ -37,6 +37,8 @@ export default async function DashboardPage() {
               </h1>
             </div>
           </div>
+        </div>
+
         {/* Daily Affirmation */}
         <ScrollReveal delay={200}>
           <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2">
