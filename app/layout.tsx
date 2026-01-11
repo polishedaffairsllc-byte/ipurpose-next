@@ -5,6 +5,7 @@ import FloatingOrbs from "./components/FloatingOrbs";
 import DynamicBackground from "./components/DynamicBackground";
 import ConnectionNetwork from "./components/ConnectionNetwork";
 import NavBar from "./components/NavBar";
+import DashboardSidebar from "./components/DashboardSidebar";
 
 export const metadata: Metadata = {
   title: "iPurpose Platform",
@@ -31,6 +32,7 @@ export default function RootLayout({
         
         <AuthContextProvider>
           <NavBar />
+          <DashboardSidebar />
           {children}
         </AuthContextProvider>
       </body>

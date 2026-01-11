@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const navItems = [
   { href: '/dashboard', label: 'Overview', icon: '📊' },
@@ -14,6 +14,12 @@ const navItems = [
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Hide on public pages
+  const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/terms';
+  
+  if (isPublicPage) return null;
 
   return (
     <nav className="w-full relative border-b border-lavenderViolet/10">
@@ -22,38 +28,32 @@ export default function DashboardSidebar() {
         boxShadow: '0 4px 20px rgba(156, 136, 255, 0.05)'
       }}>
         {/* Logo Section */}
-        <Link href="/dashboard" className="flex items-center gap-3 group shrink-0">
-          <div className="w-10 h-10 bg-gradient-to-br from-lavenderViolet via-indigoDeep to-salmonPeach rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200" style={{
-            boxShadow: '0 4px 12px rgba(156, 136, 255, 0.25)'
-          }}>
-            <span className="text-lg font-italiana text-white">iP</span>
-          </div>
+        <Link href="/dashboard" className="flex items-center gap-2 group shrink-0">
+          <img 
+            src="/images/Tiny Transparent Logo.png" 
+            alt="iPurpose Logo" 
+            className="h-6 group-hover:scale-105 transition-transform duration-200"
+          />
           <div>
             <h1 className="text-lg font-italiana bg-gradient-to-r from-lavenderViolet to-indigoDeep bg-clip-text text-transparent">iPurpose</h1>
           </div>
         </Link>
-
         {/* Navigation Items */}
-        <div className="flex items-center gap-6 flex-1 justify-around">
+        <div className="flex items-center gap-3 flex-1 justify-around">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link
+              <button
                 key={item.href}
-                href={item.href}
+                onClick={() => router.push(item.href)}
                 className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg font-montserrat text-base font-medium
-                  transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/30
-                  ${
-                    isActive
-                      ? 'bg-gradient-to-r from-lavenderViolet/15 to-salmonPeach/10 text-indigoDeep border border-lavenderViolet/20'
-                      : 'text-warmCharcoal/70 hover:bg-gradient-to-r hover:from-lavenderViolet/5 hover:to-salmonPeach/5 hover:text-indigoDeep'
-                  }
+                  flex items-center gap-2 px-5 py-2.5 rounded-xl font-italiana text-sm font-semibold
+                  transition-all duration-150 focus:outline-none cursor-pointer
+                  ${isActive ? 'ipurpose-button-gold' : 'ipurpose-button-gold opacity-60 hover:opacity-100'}
                 `}
-                style={isActive ? { boxShadow: '0 2px 8px rgba(156, 136, 255, 0.1)' } : {}}
               >
                 <span>{item.label}</span>
-              </Link>
+              </button>
             );
           })}
         </div>

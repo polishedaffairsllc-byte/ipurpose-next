@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
+import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import TiltCard from "../components/TiltCard";
@@ -19,6 +20,9 @@ export default async function DashboardPage() {
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const user = await firebaseAdmin.auth().getUser(decoded.uid);
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
+    
+    // Fetch today's affirmation
+    const todaysAffirmation = await getTodaysAffirmation();
 
     return (
       <div className="relative">
@@ -26,24 +30,43 @@ export default async function DashboardPage() {
         <div className="relative h-[40vh] mb-10 overflow-hidden">
           <VideoBackground src="/videos/water-reflection.mp4" />
           <div className="absolute inset-0 bg-black/30"></div>
-          <div className="relative z-10 container max-w-6xl mx-auto px-6 h-full flex flex-col justify-center">
-            <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">
-              Welcome back, {name}
-            </h1>
+          <div className="relative z-10 container max-w-6xl mx-auto px-6 h-full flex flex-col justify-center items-center text-center">
+            <div className="bg-black/25 backdrop-blur-sm rounded-2xl px-12 py-8">
+              <h1 className="heading-hero mb-0 text-white drop-shadow-2xl text-5xl md:text-6xl lg:text-7xl">
+                Welcome back, {name}
+              </h1>
+            </div>
           </div>
-        </div>
-
-        <div className="container max-w-6xl mx-auto px-6 md:px-10 py-6 space-y-10">
         {/* Daily Affirmation */}
         <ScrollReveal delay={200}>
           <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2">
-            <Card accent="lavender" className="relative">
+            <Card accent="lavender" className="relative text-center">
               <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
                 TODAY'S AFFIRMATION
               </p>
-              <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed">
-                "I create space for what matters."
+              <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed mb-6">
+                "{todaysAffirmation}"
               </p>
+              <Button href="/journal" variant="primary" size="md">
+                Journal
+              </Button>
+            </Card>
+          </div>
+        </ScrollReveal>
+
+        {/* Intention Setting */}
+        <ScrollReveal delay={250}>
+          <div className="mb-12 animate-fade-in-up stagger-2b">
+            <Card accent="salmon" className="text-center">
+              <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
+                INTENTION SETTING
+              </p>
+              <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-6">
+                What is your primary focus today?
+              </p>
+              <Button variant="secondary" size="md">
+                Set Intention
+              </Button>
             </Card>
           </div>
         </ScrollReveal>
@@ -119,32 +142,22 @@ export default async function DashboardPage() {
           </div>
         </ScrollReveal>
 
-        {/* Mood/Intention Panel */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card accent="salmon">
-            <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
-              INTENTION SETTING
-            </p>
-            <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-4">
-              What is your primary focus today?
-            </p>
-            <Button variant="secondary" size="sm">
-              Set Intention
-            </Button>
-          </Card>
-
-          <Card accent="gold">
-            <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
-              RECENT ACTIVITY
-            </p>
-            <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-2">
-              • Completed Soul Reflection
-            </p>
-            <p className="text-sm text-warmCharcoal/75 leading-relaxed">
-              • Updated Systems Framework
-            </p>
-          </Card>
-        </div>
+        {/* Recent Activity Panel */}
+        <ScrollReveal delay={400}>
+          <div className="mb-12 animate-fade-in-up stagger-8">
+            <Card accent="gold">
+              <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
+                RECENT ACTIVITY
+              </p>
+              <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-2">
+                • Completed Soul Reflection
+              </p>
+              <p className="text-sm text-warmCharcoal/75 leading-relaxed">
+                • Updated Systems Framework
+              </p>
+            </Card>
+          </div>
+        </ScrollReveal>
         </div>
       </div>
     );
