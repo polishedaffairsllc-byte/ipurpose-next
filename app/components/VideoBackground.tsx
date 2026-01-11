@@ -39,10 +39,10 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
     probe();
 
     let t: ReturnType<typeof setTimeout> | null = null;
-    // If video doesn't fire canplay within 5s, show fallback
+    // If video doesn't fire canplay within 10s, show fallback (increased timeout for large files)
     t = setTimeout(() => {
       if (!loaded) setError(true);
-    }, 5000);
+    }, 10000);
     return () => {
       cancelled = true;
       if (t) clearTimeout(t);
