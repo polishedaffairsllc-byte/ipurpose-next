@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import SectionHeading from "../components/SectionHeading";
+import VideoBackground from "../components/VideoBackground";
 import AIClient from "./AIClient";
 
 export default async function AIPage() {
@@ -20,11 +21,8 @@ export default async function AIPage() {
       <div className="relative min-h-screen" style={{ position: "relative", zIndex: 1 }}>
         {/* Hero Section */}
         <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-10">
-          <img
-            src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80"
-            alt="AI and technology"
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
-          />
+          <VideoBackground src="/videos/water-reflection.mp4" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-transparent"></div>
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">iPurpose Mentor</h1>
             <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
