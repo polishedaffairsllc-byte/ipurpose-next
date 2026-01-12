@@ -9,7 +9,6 @@ import ScrollReveal from "../components/ScrollReveal";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
-import DashboardJournalPanel from "../components/DashboardJournalPanel";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -40,16 +39,41 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Journal Panel */}
-<ScrollReveal delay={200}>
-  <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2">
-    <Card accent="lavender" className="relative">
-      <DashboardJournalPanel todaysAffirmation={todaysAffirmation} />
-    </Card>
-  </div>
-</ScrollReveal>
+        {/* Daily Affirmation */}
+        <ScrollReveal delay={200}>
+          <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2">
+            <Card accent="lavender" className="relative text-center">
+              <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
+                TODAY'S AFFIRMATION
+              </p>
+              <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed mb-6">
+                "{todaysAffirmation}"
+              </p>
+              <Button href="/journal" variant="primary" size="md">
+                Journal on this
+              </Button>
+            </Card>
+          </div>
+        </ScrollReveal>
 
-{/* Quick Links Section */}
+        {/* Intention Setting */}
+        <ScrollReveal delay={250}>
+          <div className="mb-12 animate-fade-in-up stagger-2b">
+            <Card accent="salmon" className="text-center">
+              <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-5 font-montserrat">
+                Today's intention
+              </p>
+              <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-6">
+                What do you want to move forward today?
+              </p>
+              <Button variant="secondary" size="md">
+                Set Intention
+              </Button>
+            </Card>
+          </div>
+        </ScrollReveal>
+
+        {/* Quick Links Section */}
         <ScrollReveal delay={300}>
           <div className="mb-12 animate-fade-in-up stagger-3">
             <SectionHeading level="h2" className="mb-8">

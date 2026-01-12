@@ -6,8 +6,8 @@ import { Timestamp } from "firebase/firestore";
 export interface UserProfile {
   displayName: string;
   email: string;
-  createdAt: Timestamp;
-  lastActiveAt: Timestamp;
+  createdAt: any; // Admin SDK Timestamp or Modular SDK Timestamp
+  lastActiveAt: any;
   timezone?: string;
 }
 
@@ -30,8 +30,8 @@ export interface JournalEntry {
   type: JournalEntryType;
   status: JournalEntryStatus;
   content: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: any; // Admin SDK Timestamp
+  updatedAt: any;
   dateKey: string; // YYYY-MM-DD in user's timezone
   sessionId: string;
   source: JournalEntrySource;
@@ -46,7 +46,7 @@ export interface JournalEntry {
 export interface SessionSummary {
   title: string;
   highlights: string[];
-  generatedAt: Timestamp;
+  generatedAt: any; // Admin SDK Timestamp
   model: "ai" | "user";
 }
 
@@ -55,8 +55,8 @@ export interface SessionSummary {
  */
 export interface Session {
   id?: string; // Firestore doc ID (added client-side)
-  startedAt: Timestamp;
-  endedAt: Timestamp | null;
+  startedAt: any; // Admin SDK Timestamp
+  endedAt: any | null;
   dateKey: string; // YYYY-MM-DD in user's timezone
   summary?: SessionSummary;
 }

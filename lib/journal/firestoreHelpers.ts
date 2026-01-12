@@ -1,17 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  query,
-  where,
-  getDocs,
-  Timestamp,
-  writeBatch,
-  QueryConstraint,
-} from "firebase/firestore";
-import { firebaseAdmin } from "./firebaseAdmin";
+import * as admin from "firebase-admin";
 import type {
   UserProfile,
   JournalEntry,
@@ -23,8 +10,9 @@ import {
   getDateKey,
   generateSessionId,
   generateEntryId,
-  getServerTimestamp,
-} from "./journal/dateUtils";
+} from "@/lib/journal/dateUtils";
+
+const db = admin.firestore();
 
 /**
  * Get or create user profile
@@ -33,22 +21,22 @@ export async function getOrCreateUserProfile(
   uid: string,
   email?: string
 ): Promise<UserProfile> {
-  const userRef = doc(firebaseAdmin, "users", uid);
-  const userSnap = await getDoc(userRef);
+  const userRef = db.collection("users").doc(uid);
+  const userSnap = await userRef.get();
 
-  if (userSnap.exists()) {
+  if (userSnap.exists) {
     return userSnap.data() as UserProfile;
   }
 
   const newProfile: UserProfile = {
     displayName: email?.split("@")[0] || "User",
     email: email || "",
-    createdAt: Timestamp.now(),
-    lastActiveAt: Timestamp.now(),
+    createdAt: admin.firestore.Timestamp.now(),
+    lastActiveAt: admin.firestore.Timestamp.now(),
     timezone: "America/New_York",
   };
 
-  await setDoc(userRef, newProfile);
+  await userRef.set(newProfile);
   return newProfile;
 }
 
@@ -59,11 +47,9 @@ export async function getOrCreateSession(
   uid: string
 ): Promise<Session & { id: string }> {
   const dateKey = getDateKey();
-  const sessionsRef = collection(firebaseAdmin, "users", uid, "sessions");
+  const sessionsRef = db.collection("users").doc(uid).collection("sessions");
 
-  // Query for session with today's dateKey
-  const q = query(sessionsRef, where("dateKey", "==", dateKey));
-  const snapshot = await getDocs(q);
+  const snapshot = await sessionsRef.where("dateKey", "==", dateKey).get();
 
   if (!snapshot.empty) {
     const doc = snapshot.docs[0];
@@ -75,14 +61,14 @@ export async function getOrCreateSession(
 
   // Create new session
   const sessionId = generateSessionId();
-  const sessionRef = doc(sessionsRef, sessionId);
+  const sessionRef = sessionsRef.doc(sessionId);
   const newSession: Session = {
-    startedAt: Timestamp.now(),
+    startedAt: admin.firestore.Timestamp.now(),
     endedAt: null,
     dateKey,
   };
 
-  await setDoc(sessionRef, newSession);
+  await sessionRef.set(newSession);
 
   return {
     id: sessionId,
@@ -102,16 +88,17 @@ export async function getOrCreateDraftEntry(
   promptId?: string
 ): Promise<JournalEntry & { id: string }> {
   const dateKey = getDateKey();
-  const entriesRef = collection(firebaseAdmin, "users", uid, "journalEntries");
+  const entriesRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("journalEntries");
 
   // Query for existing draft with same type and session
-  const q = query(
-    entriesRef,
-    where("sessionId", "==", sessionId),
-    where("type", "==", type),
-    where("status", "==", "draft")
-  );
-  const snapshot = await getDocs(q);
+  const snapshot = await entriesRef
+    .where("sessionId", "==", sessionId)
+    .where("type", "==", type)
+    .where("status", "==", "draft")
+    .get();
 
   if (!snapshot.empty) {
     const doc = snapshot.docs[0];
@@ -123,8 +110,8 @@ export async function getOrCreateDraftEntry(
 
   // Create new entry
   const entryId = generateEntryId();
-  const entryRef = doc(entriesRef, entryId);
-  const now = Timestamp.now();
+  const entryRef = entriesRef.doc(entryId);
+  const now = admin.firestore.Timestamp.now();
   const newEntry: JournalEntry = {
     type,
     status: "draft",
@@ -138,7 +125,7 @@ export async function getOrCreateDraftEntry(
     promptId,
   };
 
-  await setDoc(entryRef, newEntry);
+  await entryRef.set(newEntry);
 
   return {
     id: entryId,
@@ -154,14 +141,18 @@ export async function autosaveEntry(
   entryId: string,
   updates: Partial<JournalEntry>
 ): Promise<void> {
-  const entryRef = doc(firebaseAdmin, "users", uid, "journalEntries", entryId);
+  const entryRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("journalEntries")
+    .doc(entryId);
 
   const dataToUpdate = {
     ...updates,
-    updatedAt: Timestamp.now(),
+    updatedAt: admin.firestore.Timestamp.now(),
   };
 
-  await updateDoc(entryRef, dataToUpdate);
+  await entryRef.update(dataToUpdate);
 }
 
 /**
@@ -171,24 +162,29 @@ export async function finalizeSession(
   uid: string,
   sessionId: string
 ): Promise<void> {
-  const entriesRef = collection(firebaseAdmin, "users", uid, "journalEntries");
-  const sessionRef = doc(firebaseAdmin, "users", uid, "sessions", sessionId);
+  const entriesRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("journalEntries");
+  const sessionRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("sessions")
+    .doc(sessionId);
 
   // Get all draft entries for this session
-  const q = query(
-    entriesRef,
-    where("sessionId", "==", sessionId),
-    where("status", "==", "draft")
-  );
-  const entriesSnap = await getDocs(q);
+  const entriesSnap = await entriesRef
+    .where("sessionId", "==", sessionId)
+    .where("status", "==", "draft")
+    .get();
 
   // Batch update: mark all drafts as final
-  const batch = writeBatch(firebaseAdmin);
+  const batch = db.batch();
 
   entriesSnap.docs.forEach((doc) => {
     batch.update(doc.ref, {
       status: "final",
-      updatedAt: Timestamp.now(),
+      updatedAt: admin.firestore.Timestamp.now(),
     });
   });
 
@@ -197,7 +193,7 @@ export async function finalizeSession(
 
   // Update session
   batch.update(sessionRef, {
-    endedAt: Timestamp.now(),
+    endedAt: admin.firestore.Timestamp.now(),
     summary,
   });
 
@@ -212,9 +208,11 @@ async function generateSessionSummary(
   uid: string,
   sessionId: string
 ): Promise<SessionSummary> {
-  const entriesRef = collection(firebaseAdmin, "users", uid, "journalEntries");
-  const q = query(entriesRef, where("sessionId", "==", sessionId));
-  const snapshot = await getDocs(q);
+  const entriesRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("journalEntries");
+  const snapshot = await entriesRef.where("sessionId", "==", sessionId).get();
 
   const entries = snapshot.docs.map((doc) => doc.data() as JournalEntry);
 
@@ -226,7 +224,7 @@ async function generateSessionSummary(
   return {
     title: `Session on ${getDateKey()}`,
     highlights: highlights.slice(0, 3),
-    generatedAt: Timestamp.now(),
+    generatedAt: admin.firestore.Timestamp.now(),
     model: "user",
   };
 }
@@ -238,9 +236,11 @@ export async function getSessionEntries(
   uid: string,
   sessionId: string
 ): Promise<(JournalEntry & { id: string })[]> {
-  const entriesRef = collection(firebaseAdmin, "users", uid, "journalEntries");
-  const q = query(entriesRef, where("sessionId", "==", sessionId));
-  const snapshot = await getDocs(q);
+  const entriesRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("journalEntries");
+  const snapshot = await entriesRef.where("sessionId", "==", sessionId).get();
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
@@ -255,10 +255,14 @@ export async function getEntry(
   uid: string,
   entryId: string
 ): Promise<(JournalEntry & { id: string }) | null> {
-  const entryRef = doc(firebaseAdmin, "users", uid, "journalEntries", entryId);
-  const snap = await getDoc(entryRef);
+  const entryRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("journalEntries")
+    .doc(entryId);
+  const snap = await entryRef.get();
 
-  if (!snap.exists()) return null;
+  if (!snap.exists) return null;
 
   return {
     id: snap.id,
@@ -273,10 +277,14 @@ export async function getSession(
   uid: string,
   sessionId: string
 ): Promise<(Session & { id: string }) | null> {
-  const sessionRef = doc(firebaseAdmin, "users", uid, "sessions", sessionId);
-  const snap = await getDoc(sessionRef);
+  const sessionRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("sessions")
+    .doc(sessionId);
+  const snap = await sessionRef.get();
 
-  if (!snap.exists()) return null;
+  if (!snap.exists) return null;
 
   return {
     id: snap.id,
