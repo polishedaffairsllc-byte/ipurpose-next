@@ -73,7 +73,7 @@ export function useAIChatWithModes({ userId, conversationId = "default" }: UseAI
 
       try {
         // Call chat API with responseMode and userId
-        const response = await fetch("/api/ai/chat", {
+        const response = await fetch("/api/ai", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
