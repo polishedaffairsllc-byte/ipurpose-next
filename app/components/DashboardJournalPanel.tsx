@@ -215,10 +215,6 @@ export default function DashboardJournalPanel({ todaysAffirmation, userName = "F
         </div>
       )}
 
-      <p className="text-xs text-warmCharcoal/50 text-center italic">
-        Full journaling integration coming soon
-      </p>
-
       {/* Session Summary Modal */}
       <SessionSummaryModal
         isOpen={showSummary}
