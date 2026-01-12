@@ -45,7 +45,7 @@ export default async function AIPage() {
           </p>
         </Card>
 
-        <AIClient initialName={name} />
+        <AIClient initialName={name} userId={decoded.uid} />
         </div>
       </div>
     );

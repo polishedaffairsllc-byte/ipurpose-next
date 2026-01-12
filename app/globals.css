@@ -521,18 +521,14 @@
 @keyframes heartbeatOmbre {
   0%, 100% {
     transform: scale(1);
-    background: radial-gradient(circle at 30% 30%, currentColor, currentColor);
+    filter: drop-shadow(0 0 0px rgba(156, 136, 255, 0.5));
   }
   50% {
     transform: scale(1.08);
-    background: radial-gradient(circle at 30% 30%, currentColor 0%, #FCC4B7 70%, #FFE8D6 100%);
+    filter: drop-shadow(0 0 8px rgba(252, 196, 183, 0.8));
   }
 }
 
-.banner-circle {
-  transition: all 0.3s ease-in-out;
-}
-
-.banner-circle.pulsate-heartbeat {
-  animation: heartbeatOmbre 0.8s ease-in-out infinite;
+.pulsate-heartbeat {
+  animation: heartbeatOmbre 0.8s ease-in-out infinite !important;
 }

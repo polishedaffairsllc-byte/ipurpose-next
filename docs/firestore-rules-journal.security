@@ -1,5 +1,5 @@
 /**
- * Firestore Security Rules for Journal & Reflection System
+ * Firestore Security Rules for Journal & Reflection System + AI Coach
  * Deploy to Firebase Console > Firestore > Rules
  */
 
@@ -17,6 +17,11 @@ service cloud.firestore {
 
       // Sessions subcollection
       match /sessions/{sessionId} {
+        allow read, write: if request.auth.uid == uid;
+      }
+
+      // AI Preferences subcollection (response mode, conversation history, etc.)
+      match /aiPreferences/{document=**} {
         allow read, write: if request.auth.uid == uid;
       }
     }
@@ -43,7 +48,12 @@ service cloud.firestore {
  *    - Inherited from parent: users can only access their own sessions
  *    - All CRUD operations allowed for authenticated user's own sessions
  *
- * 4. Default Deny
+ * 4. AI Preferences (users/{uid}/aiPreferences/{document})
+ *    - Inherited from parent: users can only access their own preferences
+ *    - Stores response mode, conversation history, and AI coaching settings
+ *    - Recursive match allows nested documents/subcollections
+ *
+ * 5. Default Deny
  *    - All other collections/documents are denied by default
  *    - Prevents accidental exposure of data structures
  *
@@ -52,4 +62,6 @@ service cloud.firestore {
  * - Validate schema (e.g., ensure status is 'draft' or 'final')
  * - Restrict autosave frequency (e.g., max 1 update per 5 seconds)
  * - Add audit logging for session finalization
+ * - Validate AI preferences format (responseMode must be one of 4 modes)
+ * - Archive old conversation history to optimize storage
  */
