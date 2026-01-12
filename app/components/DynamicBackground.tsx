@@ -72,7 +72,8 @@ export default function DynamicBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[-2]"
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: -10 }}
     />
   );
 }
