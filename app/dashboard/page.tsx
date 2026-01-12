@@ -3,6 +3,7 @@ import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import PageTitle from "../components/PageTitle";
+import PathBanner from "@/app/components/PathBanner";
 import Card from "../components/Card";
 import TiltCard from "../components/TiltCard";
 import ScrollReveal from "../components/ScrollReveal";
@@ -56,66 +57,34 @@ export default async function DashboardPage() {
               Choose your path
             </SectionHeading>
             
-            <div className="grid md:grid-cols-2 gap-8">
-              <TiltCard hover className="group animate-fade-in-up stagger-4">
-                <div className="flex items-center gap-5 mb-5">
-                  <div className="ipurpose-icon-bubble group-hover:scale-110">
-                    <span className="text-3xl">🧠</span>
-                  </div>
-                  <h3 className="font-marcellus text-2xl text-warmCharcoal">Soul Alignment</h3>
-                </div>
-                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                  Continue your inner clarity work and purpose alignment.
-                </p>
-                <Button href="/soul" variant="ghost" size="sm">
-                  Enter Soul →
-                </Button>
-              </TiltCard>
+            <div className="space-y-4 max-w-2xl mx-auto w-full">
+              <PathBanner 
+                href="/soul"
+                title="Soul Alignment"
+                description="Continue your inner clarity work and purpose alignment."
+                color="#9C88FF"
+              />
 
-              <TiltCard hover className="group animate-fade-in-up stagger-5">
-                <div className="flex items-center gap-5 mb-5">
-                  <div className="ipurpose-icon-bubble-gold group-hover:scale-110">
-                    <span className="text-3xl">⚙️</span>
-                  </div>
-                  <h3 className="font-marcellus text-2xl text-warmCharcoal">Systems</h3>
-                </div>
-                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                  Structure your workflows, offers, and strategic foundation.
-                </p>
-                <Button href="/systems" variant="ghost" size="sm">
-                  Open Systems →
-                </Button>
-              </TiltCard>
+              <PathBanner 
+                href="/systems"
+                title="Systems"
+                description="Structure your workflows, offers, and strategic foundation."
+                color="#F5E8C7"
+              />
 
-              <TiltCard hover className="group animate-fade-in-up stagger-6">
-                <div className="flex items-center gap-5 mb-5">
-                  <div className="ipurpose-icon-bubble-salmon group-hover:scale-110">
-                    <span className="text-3xl">🤖</span>
-                  </div>
-                  <h3 className="font-marcellus text-2xl text-warmCharcoal">AI Mentor</h3>
-                </div>
-                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                  Expand your capacity with aligned automation and prompts.
-                </p>
-                <Button href="/ai" variant="ghost" size="sm">
-                  Explore AI →
-                </Button>
-              </TiltCard>
+              <PathBanner 
+                href="/ai"
+                title="AI Mentor"
+                description="Expand your capacity with aligned automation and prompts."
+                color="#FCC4B7"
+              />
 
-              <TiltCard hover className="group animate-fade-in-up" data-stagger="7">
-                <div className="flex items-center gap-5 mb-5">
-                  <div className="ipurpose-icon-bubble group-hover:scale-110">
-                    <span className="text-3xl">📊</span>
-                  </div>
-                  <h3 className="font-marcellus text-2xl text-warmCharcoal">Insights</h3>
-                </div>
-                <p className="text-base text-warmCharcoal/70 mb-6 leading-relaxed">
-                  Review reflections, trends, and alignment reports.
-                </p>
-                <Button href="/insights" variant="ghost" size="sm">
-                  View Insights →
-                </Button>
-              </TiltCard>
+              <PathBanner 
+                href="/insights"
+                title="Insights"
+                description="Review reflections, trends, and alignment reports."
+                color="#4B4E6D"
+              />
             </div>
           </div>
         </ScrollReveal>

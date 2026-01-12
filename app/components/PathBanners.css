@@ -1,0 +1,26 @@
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.1);
+    filter: brightness(1.15);
+  }
+  50% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  75% {
+    transform: scale(1.1);
+    filter: brightness(1.15);
+  }
+}
+
+.banner-circle {
+  transition: all 0.3s ease-in-out;
+}
+
+.banner-circle.pulsate-heartbeat {
+  animation: heartbeat 0.6s ease-in-out infinite;
+}

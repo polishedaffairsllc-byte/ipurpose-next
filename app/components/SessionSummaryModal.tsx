@@ -23,6 +23,9 @@ export function SessionSummaryModal({
   userName = "Friend",
 }: SessionSummaryModalProps) {
   const handlePrint = useCallback(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+
     // Create a new window for printing
     const printWindow = window.open('', '', 'height=600,width=800');
     if (!printWindow) return;
@@ -84,7 +87,40 @@ export function SessionSummaryModal({
 
   return (
     <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }} data-print-modal>
-      <div style={{ backgroundColor: 'white', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '42rem', width: '100%', margin: '2rem 0', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div style={{ backgroundColor: 'white', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '48rem', width: '100%', maxHeight: '60vh', overflow: 'auto', margin: '2rem 0', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {/* Actions - Top */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(42, 42, 42, 0.1)' }}>
+          <p style={{ fontSize: '0.875rem', color: 'rgba(42, 42, 42, 0.6)', textAlign: 'center', margin: 0 }}>
+            💡 <strong>Tip:</strong> Save your session to review later
+          </p>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <button
+              onClick={handlePrint}
+              style={{ flex: 1, padding: '0.875rem', backgroundColor: '#f0f0f0', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s ease', fontSize: '0.95rem' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e0e0e0')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+            >
+              🖨 Print
+            </button>
+            <button
+              onClick={handleDownload}
+              style={{ flex: 1, padding: '0.875rem', backgroundColor: '#f0f0f0', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s ease', fontSize: '0.95rem' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e0e0e0')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+            >
+              ⬇ Download
+            </button>
+            <button
+              onClick={onClose}
+              style={{ flex: 1, padding: '0.875rem', backgroundColor: '#9C88FF', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s ease', fontSize: '0.95rem' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#8577E8')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9C88FF')}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+
         {/* Header */}
         <div style={{ borderBottom: '1px solid rgba(42, 42, 42, 0.1)', paddingBottom: '2rem' }}>
           <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '0.5rem' }}>
@@ -172,27 +208,6 @@ export function SessionSummaryModal({
           )}
         </div>
 
-        {/* Actions */}
-        <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '2rem', borderTop: '1px solid rgba(42, 42, 42, 0.1)' }}>
-          <button
-            onClick={handlePrint}
-            style={{ flex: 1, padding: '0.75rem', backgroundColor: '#f0f0f0', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' }}
-          >
-            🖨 Print
-          </button>
-          <button
-            onClick={handleDownload}
-            style={{ flex: 1, padding: '0.75rem', backgroundColor: '#f0f0f0', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' }}
-          >
-            ⬇ Download
-          </button>
-          <button
-            onClick={onClose}
-            style={{ flex: 1, padding: '0.75rem', backgroundColor: '#9C88FF', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' }}
-          >
-            Close
-          </button>
-        </div>
       </div>
     </div>
   );

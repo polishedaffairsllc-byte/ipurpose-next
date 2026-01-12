@@ -516,3 +516,23 @@
 .stagger-5 { animation-delay: 0.5s; }
 .stagger-6 { animation-delay: 0.6s; }
 [data-stagger="7"] { animation-delay: 0.7s; }
+
+/* Heartbeat Ombre Animation */
+@keyframes heartbeatOmbre {
+  0%, 100% {
+    transform: scale(1);
+    background: radial-gradient(circle at 30% 30%, currentColor, currentColor);
+  }
+  50% {
+    transform: scale(1.08);
+    background: radial-gradient(circle at 30% 30%, currentColor 0%, #FCC4B7 70%, #FFE8D6 100%);
+  }
+}
+
+.banner-circle {
+  transition: all 0.3s ease-in-out;
+}
+
+.banner-circle.pulsate-heartbeat {
+  animation: heartbeatOmbre 0.8s ease-in-out infinite;
+}
