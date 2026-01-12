@@ -42,16 +42,16 @@ export default async function DashboardPage() {
 
         {/* Journal Panel */}
 <ScrollReveal delay={200}>
-  <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2">
-    <Card accent="lavender" className="relative">
-      <DashboardJournalPanel todaysAffirmation={todaysAffirmation} />
+  <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2 relative z-10">
+    <Card accent="lavender">
+      <DashboardJournalPanel todaysAffirmation={todaysAffirmation} userName={name} />
     </Card>
   </div>
 </ScrollReveal>
 
-{/* Quick Links Section */}
+{/* Quick Links Section - Behind Dialog */}
         <ScrollReveal delay={300}>
-          <div className="mb-12 animate-fade-in-up stagger-3">
+          <div className="mb-12 animate-fade-in-up stagger-3 relative z-0">
             <SectionHeading level="h2" className="mb-8">
               Choose your path
             </SectionHeading>
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
 
         {/* Recent Activity Panel */}
         <ScrollReveal delay={400}>
-          <div className="mb-12 animate-fade-in-up stagger-8">
+          <div className="mb-12 animate-fade-in-up stagger-8 relative z-0">
             <Card accent="gold">
               <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
                 RECENT ACTIVITY

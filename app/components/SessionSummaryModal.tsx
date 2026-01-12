@@ -9,6 +9,7 @@ interface SessionSummaryModalProps {
   session: Session & { id: string };
   entries: (JournalEntry & { id: string })[];
   onClose: () => void;
+  userName?: string;
 }
 
 /**
@@ -19,9 +20,51 @@ export function SessionSummaryModal({
   session,
   entries,
   onClose,
+  userName = "Friend",
 }: SessionSummaryModalProps) {
   const handlePrint = useCallback(() => {
-    window.print();
+    // Create a new window for printing
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (!printWindow) return;
+
+    // Get the modal content
+    const modalElement = document.querySelector('[data-print-modal]');
+    if (!modalElement) return;
+
+    // Clone the content
+    const content = modalElement.cloneNode(true) as HTMLElement;
+    
+    // Write to print window
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${userName}'s Journal Session Summary</title>
+        <style>
+          body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #2A2A2A;
+            max-width: 800px;
+            margin: 0;
+            padding: 2rem;
+          }
+          h1 { font-size: 2.25rem; margin-top: 0; }
+          h2 { font-size: 1.875rem; margin-top: 1.5rem; }
+          h3 { font-weight: 600; }
+          .entry { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+          .tags { margin-top: 0.5rem; font-size: 0.875rem; }
+          .tag { display: inline-block; background: #f0f0f0; padding: 0.25rem 0.5rem; margin-right: 0.5rem; border-radius: 12px; }
+          button { display: none; }
+        </style>
+      </head>
+      <body>
+        ${content.innerHTML}
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
   }, []);
 
   const handleDownload = useCallback(() => {
@@ -40,14 +83,14 @@ export function SessionSummaryModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8 space-y-8 p-8 print:p-0 print:shadow-none print:bg-white">
+    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }} data-print-modal>
+      <div style={{ backgroundColor: 'white', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '42rem', width: '100%', margin: '2rem 0', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         {/* Header */}
-        <div className="border-b border-warmCharcoal/10 pb-8 print:pb-4">
-          <h1 className="text-4xl font-marcellus text-warmCharcoal mb-2">
-            ✨ Session Summary
+        <div style={{ borderBottom: '1px solid rgba(42, 42, 42, 0.1)', paddingBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '0.5rem' }}>
+            ✨ {userName}&apos;s Journal Session Summary
           </h1>
-          <p className="text-warmCharcoal/60">
+          <p style={{ color: 'rgba(42, 42, 42, 0.6)' }}>
             {new Date(session.dateKey).toLocaleDateString("en-US", {
               weekday: "long",
               month: "long",
@@ -59,18 +102,18 @@ export function SessionSummaryModal({
 
         {/* AI-Generated Summary */}
         {session.summary && (
-          <div className="bg-lavenderViolet/5 rounded-xl p-6 border border-lavenderViolet/20 print:border-gray-300">
-            <h2 className="text-lg font-semibold text-warmCharcoal mb-4">
+          <div style={{ backgroundColor: 'rgba(156, 136, 255, 0.05)', borderRadius: '0.75rem', padding: '1.5rem', border: '1px solid rgba(156, 136, 255, 0.2)' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
               Session Highlights
             </h2>
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-4">
+            <h3 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '1rem' }}>
               {session.summary.title}
             </h3>
             {session.summary.highlights.length > 0 && (
-              <ul className="space-y-2">
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {session.summary.highlights.map((highlight, idx) => (
-                  <li key={idx} className="text-warmCharcoal/75 flex gap-3">
-                    <span className="text-lavenderViolet">•</span>
+                  <li key={idx} style={{ color: 'rgba(42, 42, 42, 0.75)', display: 'flex', gap: '0.75rem' }}>
+                    <span style={{ color: '#9C88FF' }}>•</span>
                     <span>{highlight}</span>
                   </li>
                 ))}
@@ -80,44 +123,44 @@ export function SessionSummaryModal({
         )}
 
         {/* Entries */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-marcellus text-warmCharcoal">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#2A2A2A' }}>
             Your Reflections
           </h2>
           {entries.length === 0 ? (
-            <p className="text-warmCharcoal/60 italic">
+            <p style={{ color: 'rgba(42, 42, 42, 0.6)', fontStyle: 'italic' }}>
               No entries in this session.
             </p>
           ) : (
             entries.map((entry) => (
               <div
                 key={entry.id}
-                className="border border-warmCharcoal/10 rounded-lg p-6 bg-white/40 print:bg-white print:border-gray-300"
+                style={{ border: '1px solid rgba(42, 42, 42, 0.1)', borderRadius: '0.5rem', padding: '1.5rem', backgroundColor: 'rgba(255, 255, 255, 0.4)' }}
               >
-                <div className="flex items-start justify-between mb-3">
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                   <div>
-                    <h3 className="font-semibold text-warmCharcoal capitalize">
+                    <h3 style={{ fontWeight: '600', color: '#2A2A2A', textTransform: 'capitalize' }}>
                       {entry.type.replace(/_/g, " ")}
                     </h3>
                     {entry.promptText && (
-                      <p className="text-sm text-warmCharcoal/60 italic mt-1">
+                      <p style={{ fontSize: '0.875rem', color: 'rgba(42, 42, 42, 0.6)', fontStyle: 'italic', marginTop: '0.25rem' }}>
                         &quot;{entry.promptText}&quot;
                       </p>
                     )}
                   </div>
-                  <span className="text-xs text-warmCharcoal/40 whitespace-nowrap ml-4">
+                  <span style={{ fontSize: '0.75rem', color: 'rgba(42, 42, 42, 0.4)', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
                     {entry.source}
                   </span>
                 </div>
-                <p className="text-warmCharcoal/80 whitespace-pre-wrap leading-relaxed">
+                <p style={{ color: 'rgba(42, 42, 42, 0.8)', whiteSpace: 'pre-wrap', lineHeight: '1.625' }}>
                   {entry.content}
                 </p>
                 {entry.tags && entry.tags.length > 0 && (
-                  <div className="flex gap-2 flex-wrap mt-4 pt-4 border-t border-warmCharcoal/5">
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(42, 42, 42, 0.05)' }}>
                     {entry.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-3 py-1 rounded-full bg-lavenderViolet/10 text-lavenderViolet"
+                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem', borderRadius: '9999px', backgroundColor: 'rgba(156, 136, 255, 0.1)', color: '#9C88FF' }}
                       >
                         #{tag}
                       </span>
@@ -130,31 +173,25 @@ export function SessionSummaryModal({
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-8 border-t border-warmCharcoal/10 print:hidden">
-          <Button
-            variant="secondary"
-            size="md"
+        <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '2rem', borderTop: '1px solid rgba(42, 42, 42, 0.1)' }}>
+          <button
             onClick={handlePrint}
-            className="flex-1"
+            style={{ flex: 1, padding: '0.75rem', backgroundColor: '#f0f0f0', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' }}
           >
             🖨 Print
-          </Button>
-          <Button
-            variant="secondary"
-            size="md"
+          </button>
+          <button
             onClick={handleDownload}
-            className="flex-1"
+            style={{ flex: 1, padding: '0.75rem', backgroundColor: '#f0f0f0', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' }}
           >
             ⬇ Download
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
+          </button>
+          <button
             onClick={onClose}
-            className="flex-1"
+            style={{ flex: 1, padding: '0.75rem', backgroundColor: '#9C88FF', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' }}
           >
             Close
-          </Button>
+          </button>
         </div>
       </div>
     </div>
