@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { JournalEntry } from "@/lib/types/journal";
+import type { JournalEntry, Session } from "@/lib/types/journal";
 import { JournalEntryBox } from "./JournalEntryBox";
+import { SessionSummaryModal } from "./SessionSummaryModal";
 import Button from "./Button";
 
 type Props = {
@@ -20,6 +21,7 @@ export default function DashboardJournalPanel({ todaysAffirmation }: Props) {
   const [intentionContent, setIntentionContent] = useState("");
   const [isEndingSession, setIsEndingSession] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const [sessionStartTime] = useState(new Date());
 
   // In a full implementation, these would be real entries from getOrCreateDraftEntry()
@@ -73,9 +75,8 @@ export default function DashboardJournalPanel({ todaysAffirmation }: Props) {
       // Simulate delay
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Redirect to session summary page
-      // router.push(`/dashboard/session/session-1`);
-      alert("Session ended! (Mock - would redirect to summary page)");
+      // Show summary modal
+      setShowSummary(true);
     } catch (error) {
       console.error("Error ending session:", error);
       alert("Failed to end session. Please try again.");
@@ -89,6 +90,53 @@ export default function DashboardJournalPanel({ todaysAffirmation }: Props) {
   };
 
   const sessionDuration = getSessionDuration();
+
+  // Mock session data for summary
+  const mockSession: Session & { id: string } = {
+    id: "session-1",
+    startedAt: sessionStartTime as any,
+    endedAt: new Date() as any,
+    dateKey: new Date().toISOString().split("T")[0],
+    summary: {
+      title: `A Beautiful Session`,
+      highlights: affirmationContent
+        ? [`Affirmation: ${affirmationContent.substring(0, 60)}`]
+        : [],
+      generatedAt: new Date() as any,
+      model: "user",
+    },
+  };
+
+  // Mock entries for summary
+  const mockEntries: (JournalEntry & { id: string })[] = [];
+  if (affirmationContent) {
+    mockEntries.push({
+      id: "affirmation-1",
+      type: "affirmation_reflection",
+      status: "final",
+      content: affirmationContent,
+      createdAt: new Date() as any,
+      updatedAt: new Date() as any,
+      dateKey: new Date().toISOString().split("T")[0],
+      sessionId: "session-1",
+      source: "overview",
+      promptText: "What does today's affirmation mean to you?",
+    });
+  }
+  if (intentionContent) {
+    mockEntries.push({
+      id: "intention-1",
+      type: "intention",
+      status: "final",
+      content: intentionContent,
+      createdAt: new Date() as any,
+      updatedAt: new Date() as any,
+      dateKey: new Date().toISOString().split("T")[0],
+      sessionId: "session-1",
+      source: "overview",
+      promptText: "What do you want to move forward today?",
+    });
+  }
 
   return (
     <div className="space-y-8">
@@ -200,6 +248,14 @@ export default function DashboardJournalPanel({ todaysAffirmation }: Props) {
       <p className="text-xs text-warmCharcoal/50 text-center italic">
         Full journaling integration coming soon
       </p>
+
+      {/* Session Summary Modal */}
+      <SessionSummaryModal
+        isOpen={showSummary}
+        session={mockSession}
+        entries={mockEntries}
+        onClose={() => setShowSummary(false)}
+      />
     </div>
   );
 }
