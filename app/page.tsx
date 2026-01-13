@@ -62,7 +62,7 @@ export default async function Home() {
         <div className="absolute bottom-6 lg:bottom-12 right-6 lg:right-12 z-20">
           <Link href="/" className="flex-shrink-0">
             <Image 
-              src="/images/my-logo.png" 
+              src="/images/my-logo2.png" 
               alt="iPurpose Logo" 
               width={80} 
               height={80}
