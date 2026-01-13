@@ -47,38 +47,38 @@ export default function ProgramPage() {
         <h2 className="text-4xl font-marcellus text-warmCharcoal mb-12 text-center">
           What's Included
         </h2>
-        <div className="space-y-8">
-          <div className="border-l-4 border-lavenderViolet pl-6">
+        <div className="space-y-8 flex flex-col items-center">
+          <div className="border-l-4 border-lavenderViolet pl-6 w-full max-w-2xl text-center">
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Live Group Sessions</h3>
             <p className="text-warmCharcoal/70 text-justify">
               Six weeks of guided group calls with mentors and peers who understand your journey. Real conversations, not recordings.
             </p>
           </div>
-          <div className="border-l-4 border-lavenderViolet pl-6">
+          <div className="border-l-4 border-lavenderViolet pl-6 w-full max-w-2xl text-center">
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Soul Work</h3>
             <p className="text-warmCharcoal/70 text-justify">
               Reconnect with your purpose, clarify your values, and define what success truly means to you. Reflection frameworks + journaling.
             </p>
           </div>
-          <div className="border-l-4 border-lavenderViolet pl-6">
+          <div className="border-l-4 border-lavenderViolet pl-6 w-full max-w-2xl text-center">
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Systems Building</h3>
             <p className="text-warmCharcoal/70 text-justify">
               Design workflows, clarify your offer, and build aligned strategy. Templates, worksheets, and one-on-one guidance.
             </p>
           </div>
-          <div className="border-l-4 border-salmonPeach pl-6">
+          <div className="border-l-4 border-salmonPeach pl-6 w-full max-w-2xl text-center">
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">AI Integration</h3>
             <p className="text-warmCharcoal/70 text-justify">
               Learn to leverage AI without losing your voice. Get access to iPurpose Mentor—an AI coach trained on your framework.
             </p>
           </div>
-          <div className="border-l-4 border-salmonPeach pl-6">
+          <div className="border-l-4 border-salmonPeach pl-6 w-full max-w-2xl text-center">
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Community</h3>
             <p className="text-warmCharcoal/70 text-justify">
               Connect with 8–12 other thoughtful leaders. Accountability, support, and lasting relationships beyond the program.
             </p>
           </div>
-          <div className="border-l-4 border-salmonPeach pl-6">
+          <div className="border-l-4 border-salmonPeach pl-6 w-full max-w-2xl text-center">
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Your Clarity Blueprint</h3>
             <p className="text-warmCharcoal/70 text-justify">
               Walk away with a documented clarity statement, strategic roadmap, and AI integration plan you can execute immediately.
@@ -93,43 +93,43 @@ export default function ProgramPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
             After 6 Weeks, You'll Have:
           </h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
+          <div className="space-y-6 flex flex-col items-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Crystal-Clear Purpose</h3>
                 <p className="text-warmCharcoal/70 text-justify">Know why you're building and what truly matters to you.</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full max-w-2xl text-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Aligned Systems</h3>
                 <p className="text-warmCharcoal/70 text-justify">Workflows, processes, and strategy that support your vision.</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full max-w-2xl text-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">AI Strategy</h3>
                 <p className="text-warmCharcoal/70 text-justify">Know where and how to use AI without compromising your voice.</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full max-w-2xl text-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Accountability Partners</h3>
                 <p className="text-warmCharcoal/70 text-justify">A community of peers committed to the same transformation.</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full max-w-2xl text-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Renewed Energy</h3>
                 <p className="text-warmCharcoal/70 text-justify">Relief from burnout; confidence to move forward.</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full max-w-2xl text-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Clarity Blueprint</h3>
@@ -142,8 +142,8 @@ export default function ProgramPage() {
 
       {/* Who It's For / Not For */}
       <div className="container max-w-4xl mx-auto px-6 py-20">
-        <div className="space-y-12">
-          <div>
+        <div className="space-y-12 flex flex-col items-center">
+          <div className="w-full max-w-2xl">
             <h3 className="text-3xl font-marcellus text-warmCharcoal mb-6 text-center">
               This Program Is For You If:
             </h3>
@@ -170,7 +170,7 @@ export default function ProgramPage() {
               </li>
             </ul>
           </div>
-          <div>
+          <div className="w-full max-w-2xl">
             <h3 className="text-3xl font-marcellus text-warmCharcoal mb-6 text-center">
               This Program Is NOT For You If:
             </h3>
@@ -202,7 +202,7 @@ export default function ProgramPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
             Program Format & Cohorts
           </h2>
-          <div className="space-y-6 text-warmCharcoal/75 text-lg mb-12">
+          <div className="space-y-6 text-warmCharcoal/75 text-lg mb-12 mx-auto max-w-2xl">
             <p className="text-justify">
               <strong>Format:</strong> 6 weeks, with one 90-minute group call per week + asynchronous work between sessions. Totally online and cohort-based.
             </p>
