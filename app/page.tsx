@@ -32,9 +32,9 @@ export default async function Home() {
           <Image 
             src="/images/my-logo.png" 
             alt="iPurpose Logo" 
-            width={50} 
-            height={50}
-            className="h-12 w-auto"
+            width={80} 
+            height={80}
+            className="h-20 w-auto bg-transparent"
           />
         </Link>
         <Button size="lg" variant="primary" href="/clarity-check">
