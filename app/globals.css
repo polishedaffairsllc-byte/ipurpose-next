@@ -359,7 +359,7 @@
   /* Elegant large heading with shimmer */
   .heading-hero {
     font-family: 'Italiana', serif;
-    font-size: 3.5rem;
+    font-size: 7rem;
     line-height: 1.1;
     letter-spacing: -0.03em;
     background: linear-gradient(
@@ -380,13 +380,13 @@
 
   @media (min-width: 768px) {
     .heading-hero {
-      font-size: 4.5rem;
+      font-size: 9rem;
     }
   }
 
   @media (min-width: 1024px) {
     .heading-hero {
-      font-size: 5.5rem;
+      font-size: 11rem;
     }
   }
 

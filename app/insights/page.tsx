@@ -6,79 +6,151 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
 
+// Data source helpers
+async function getUserInsights(userId: string) {
+  try {
+    const db = firebaseAdmin.firestore();
+    
+    // Get check-ins (for Soul Alignment)
+    const checkInsSnapshot = await db
+      .collection("users")
+      .doc(userId)
+      .collection("checkIns")
+      .where("timestamp", ">=", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+      .orderBy("timestamp", "desc")
+      .get();
+    
+    const checkIns = checkInsSnapshot.docs.map(doc => ({
+      ...doc.data(),
+      timestamp: doc.data().timestamp?.toDate?.() || new Date(doc.data().timestamp)
+    }));
+    
+    // Get practices (for Active Practices)
+    const practicesSnapshot = await db
+      .collection("users")
+      .doc(userId)
+      .collection("practices")
+      .where("completedAt", ">=", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+      .get();
+    
+    const activePractices = practicesSnapshot.docs.length;
+    
+    // Calculate alignment consistency
+    const alignmentConsistency = checkIns.length > 0 
+      ? Math.round((Math.min(checkIns.length, 7) / 7) * 100)
+      : 0;
+    
+    // Get last 7 days activity for streak
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const recentActivity = checkIns.filter(c => new Date(c.timestamp) >= sevenDaysAgo);
+    
+    return {
+      checkIns,
+      activePractices,
+      alignmentConsistency,
+      recentActivityCount: recentActivity.length,
+      hasCheckIns: checkIns.length > 0,
+      hasPractices: activePractices > 0
+    };
+  } catch (error) {
+    console.error("Error fetching user insights:", error);
+    return {
+      checkIns: [],
+      activePractices: 0,
+      alignmentConsistency: 0,
+      recentActivityCount: 0,
+      hasCheckIns: false,
+      hasPractices: false
+    };
+  }
+}
+
 export default async function InsightsPage() {
   const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
   if (!session) return redirect("/login");
 
   try {
-    await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const userId = decodedClaims.uid;
+    const insights = await getUserInsights(userId);
 
     return (
       <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
         
-        <PageTitle subtitle="Data that reveals your patterns, growth, and alignment over time.">
+        <PageTitle subtitle="Real data from your check-ins and practices. The more you use iPurpose, the smarter this becomes.">
           Insights
         </PageTitle>
 
         {/* Philosophy Card */}
         <Card accent="salmon" className="mb-12">
           <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-montserrat">
-            INSIGHTS PHILOSOPHY
+            HOW THIS WORKS
           </p>
           <p className="text-sm text-warmCharcoal/75 leading-relaxed font-montserrat">
-            Numbers don't replace intuition — they inform it. Watch your patterns, celebrate your growth, and course-correct with clarity.
+            Insights are based on your check-ins and practices in iPurpose. Every number here comes from your real activity. Start with a check-in to unlock your data.
           </p>
         </Card>
 
         {/* Key Metrics */}
         <div className="mb-16">
           <SectionHeading level="h2" className="mb-6">
-            Key Metrics
+            Your Progress
           </SectionHeading>
-          <div className="grid md:grid-cols-4 gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
+            {/* Alignment Consistency */}
             <Card accent="lavender">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
-                Soul Alignment
+                Alignment Consistency
               </p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">87%</span>
-                <span className="text-sm text-emerald-600 font-medium font-montserrat">+12%</span>
+                <span className="text-3xl font-marcellus text-warmCharcoal">
+                  {insights.alignmentConsistency}%
+                </span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">vs. last month</p>
+              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+                Check-ins last 7 days
+              </p>
+              {!insights.hasCheckIns && (
+                <p className="text-xs text-warmCharcoal/40 mt-3 italic font-montserrat">
+                  Start a check-in to build your data
+                </p>
+              )}
             </Card>
 
+            {/* Active Practices */}
             <Card accent="salmon">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
-                Active Practices
+                Practices Completed
               </p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">14</span>
-                <span className="text-sm text-emerald-600 font-medium font-montserrat">+3</span>
+                <span className="text-3xl font-marcellus text-warmCharcoal">
+                  {insights.activePractices}
+                </span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">vs. last month</p>
+              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+                Last 30 days
+              </p>
+              {!insights.hasPractices && (
+                <p className="text-xs text-warmCharcoal/40 mt-3 italic font-montserrat">
+                  Build your first practice to get started
+                </p>
+              )}
             </Card>
 
+            {/* Check-in Count */}
             <Card accent="gold">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
-                Revenue Growth
+                Check-ins Logged
               </p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">24%</span>
-                <span className="text-sm text-emerald-600 font-medium font-montserrat">+8%</span>
+                <span className="text-3xl font-marcellus text-warmCharcoal">
+                  {insights.checkIns.length}
+                </span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">vs. last quarter</p>
-            </Card>
-
-            <Card accent="lavender">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
-                Engagement Rate
+              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+                Last 30 days
               </p>
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">6.2%</span>
-                <span className="text-sm text-emerald-600 font-medium font-montserrat">+1.4%</span>
-              </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">vs. last month</p>
             </Card>
           </div>
         </div>
@@ -86,142 +158,122 @@ export default async function InsightsPage() {
         {/* Soul & Growth Analytics */}
         <div className="mb-16">
           <SectionHeading level="h2" className="mb-6">
-            Soul & Growth Analytics
+            Your Journey
           </SectionHeading>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-1 gap-6">
             <Card hover accent="lavender">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-marcellus text-xl text-warmCharcoal mb-1">Alignment Trends</h3>
+                  <h3 className="font-marcellus text-xl text-warmCharcoal mb-1">Check-Ins</h3>
                   <p className="text-xs text-warmCharcoal/55 font-montserrat">
-                    30-day rolling average
+                    Track your alignment and clarity over time
+                  </p>
+                </div>
+                <span className="text-2xl">✨</span>
+              </div>
+              
+              {insights.hasCheckIns ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-warmCharcoal/70 font-montserrat">
+                    You've logged <strong>{insights.checkIns.length} check-ins</strong> in the last 30 days.
+                  </p>
+                  <div className="text-xs text-warmCharcoal/60 space-y-1 font-montserrat">
+                    <p>Most recent: {new Date(insights.checkIns[0]?.timestamp).toLocaleDateString()}</p>
+                  </div>
+                  <Button variant="ghost" size="sm" href="/soul">
+                    Review Your Check-Ins →
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-sm text-warmCharcoal/60 mb-4 font-montserrat">
+                    No check-ins yet. Start with your first check-in to build your insights.
+                  </p>
+                  <Button variant="primary" size="sm" href="/soul">
+                    Start Your First Check-In
+                  </Button>
+                </div>
+              )}
+            </Card>
+          </div>
+        </div>
+
+        {/* Systems & Practices */}
+        <div className="mb-16">
+          <SectionHeading level="h2" className="mb-6">
+            Practices & Systems
+          </SectionHeading>
+          <div className="grid md:grid-cols-1 gap-6">
+            <Card hover accent="salmon">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="font-marcellus text-xl text-warmCharcoal mb-1">Your Practices</h3>
+                  <p className="text-xs text-warmCharcoal/55 font-montserrat">
+                    Built systems and aligned workflows
+                  </p>
+                </div>
+                <span className="text-2xl">⚙️</span>
+              </div>
+              
+              {insights.hasPractices ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-warmCharcoal/70 font-montserrat">
+                    You've completed <strong>{insights.activePractices} practices</strong> in the last 30 days.
+                  </p>
+                  <Button variant="ghost" size="sm" href="/systems">
+                    View Your Systems →
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-sm text-warmCharcoal/60 mb-4 font-montserrat">
+                    No practices yet. Build your first system to start tracking progress.
+                  </p>
+                  <Button variant="primary" size="sm" href="/systems">
+                    Build Your First Practice
+                  </Button>
+                </div>
+              )}
+            </Card>
+          </div>
+        </div>
+
+        {/* Coming Soon Features */}
+        <div className="mb-16">
+          <SectionHeading level="h2" className="mb-6">
+            Coming Soon
+          </SectionHeading>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card accent="gold" className="opacity-50">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="font-marcellus text-lg text-warmCharcoal">Alignment Trends</h3>
+                  <p className="text-xs text-warmCharcoal/55 font-montserrat">
+                    30-day visualization (building soon)
                   </p>
                 </div>
                 <span className="text-2xl">📈</span>
               </div>
-              
-              {/* Chart Placeholder */}
-              <div className="bg-lavenderViolet/5 rounded-lg h-48 flex items-center justify-center mb-6">
-                <p className="text-sm text-warmCharcoal/40 font-montserrat">
-                  Chart visualization placeholder
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-montserrat">
-                  <span className="text-warmCharcoal/60">Morning Reflections</span>
-                  <span className="text-warmCharcoal font-medium">21 days</span>
-                </div>
-                <div className="flex items-center justify-between text-xs font-montserrat">
-                  <span className="text-warmCharcoal/60">Values Check-ins</span>
-                  <span className="text-warmCharcoal font-medium">14 days</span>
-                </div>
-                <div className="flex items-center justify-between text-xs font-montserrat">
-                  <span className="text-warmCharcoal/60">Purpose Sessions</span>
-                  <span className="text-warmCharcoal font-medium">8 days</span>
-                </div>
-              </div>
+              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+                We're building this feature to show how your alignment scores trend over time.
+              </p>
             </Card>
 
-            <Card hover accent="salmon">
+            <Card accent="lavender" className="opacity-50">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-marcellus text-xl text-warmCharcoal mb-1">Business Momentum</h3>
+                  <h3 className="font-marcellus text-lg text-warmCharcoal">Custom Dashboards</h3>
                   <p className="text-xs text-warmCharcoal/55 font-montserrat">
-                    Revenue & client activity
+                    Build your own view (building soon)
                   </p>
                 </div>
-                <span className="text-2xl">💰</span>
+                <span className="text-2xl">🎯</span>
               </div>
-              
-              {/* Chart Placeholder */}
-              <div className="bg-salmonPeach/10 rounded-lg h-48 flex items-center justify-center mb-6">
-                <p className="text-sm text-warmCharcoal/40 font-montserrat">
-                  Chart visualization placeholder
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-montserrat">
-                  <span className="text-warmCharcoal/60">Total Revenue</span>
-                  <span className="text-warmCharcoal font-medium">$12,400</span>
-                </div>
-                <div className="flex items-center justify-between text-xs font-montserrat">
-                  <span className="text-warmCharcoal/60">Active Clients</span>
-                  <span className="text-warmCharcoal font-medium">8</span>
-                </div>
-                <div className="flex items-center justify-between text-xs font-montserrat">
-                  <span className="text-warmCharcoal/60">Avg. Project Value</span>
-                  <span className="text-warmCharcoal font-medium">$1,550</span>
-                </div>
-              </div>
+              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+                Create personalized dashboards for metrics that matter most to you.
+              </p>
             </Card>
           </div>
-        </div>
-
-        {/* Content & Audience */}
-        <div className="mb-16">
-          <SectionHeading level="h2" className="mb-6">
-            Content & Audience
-          </SectionHeading>
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card hover accent="gold">
-              <span className="text-2xl mb-3 block">📊</span>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Content Performance</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                See which content resonates most with your audience and drives engagement.
-              </p>
-              <Button variant="ghost" size="sm">
-                View Report →
-              </Button>
-            </Card>
-
-            <Card hover accent="lavender">
-              <span className="text-2xl mb-3 block">👥</span>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Audience Growth</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Track subscriber and follower trends across all your platforms.
-              </p>
-              <Button variant="ghost" size="sm">
-                View Growth →
-              </Button>
-            </Card>
-
-            <Card hover accent="salmon">
-              <span className="text-2xl mb-3 block">💬</span>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Engagement Insights</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Understand how your audience interacts with your work.
-              </p>
-              <Button variant="ghost" size="sm">
-                View Insights →
-              </Button>
-            </Card>
-          </div>
-        </div>
-
-        {/* Custom Dashboards */}
-        <div>
-          <SectionHeading level="h2" className="mb-6">
-            Custom Dashboards
-          </SectionHeading>
-          <Card accent="gold">
-            <div className="flex items-center gap-4 mb-4">
-              <span className="text-3xl">🎯</span>
-              <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal">Build Your View</h3>
-                <p className="text-xs text-warmCharcoal/55 font-montserrat">
-                  Personalized analytics for what matters most
-                </p>
-              </div>
-            </div>
-            <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
-              Create custom dashboards tailored to your unique goals. Track the metrics that matter to you, visualize your patterns, and make aligned decisions with confidence.
-            </p>
-            <Button variant="secondary">
-              Build Custom Dashboard
-            </Button>
-          </Card>
         </div>
 
       </div>

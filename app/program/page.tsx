@@ -10,33 +10,16 @@ export const metadata: Metadata = {
 export default function ProgramPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img
-              src="/images/my-logo.png"
-              alt="iPurpose Logo"
-              className="h-8 w-auto"
-            />
-            <span className="font-marcellus text-2xl text-warmCharcoal">iPurpose</span>
-          </Link>
-          <div className="flex gap-4">
-            <Button variant="primary" href="/login" size="sm">Login</Button>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-6 py-20 text-center">
-          <h1 className="heading-hero mb-6 text-warmCharcoal">
+        <div className="container max-w-6xl mx-auto px-[100px] py-32 text-center">
+          <h1 className="heading-hero mb-6 text-warmCharcoal text-[72px] md:text-[96px] lg:text-[120px]">
             The 6-Week Program
           </h1>
-          <p className="text-2xl text-warmCharcoal/80 mb-8">
+          <p className="text-3xl md:text-4xl lg:text-5xl text-warmCharcoal/80 mb-8">
             A cohort-based journey to clarify your purpose, build aligned systems, and expand through AI.
           </p>
-          <p className="text-lg text-warmCharcoal/70">
+          <p className="text-2xl md:text-3xl lg:text-4xl text-warmCharcoal/70">
             Small group. Live mentorship. Real transformation.
           </p>
         </div>
@@ -44,43 +27,43 @@ export default function ProgramPage() {
 
       {/* What You'll Get */}
       <div className="container max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-4xl font-marcellus text-warmCharcoal mb-12 text-center">
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-marcellus text-warmCharcoal mb-12 text-center">
           What's Included
         </h2>
         <div className="space-y-8 flex flex-col items-center">
-          <div className="w-full max-w-2xl text-center">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Live Group Sessions</h3>
-            <p className="text-warmCharcoal/70 text-justify">
+          <div className="w-full max-w-2xl">
+            <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">Live Group Sessions</h3>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
               Six weeks of guided group calls with mentors and peers who understand your journey. Real conversations, not recordings.
             </p>
           </div>
-          <div className="w-full max-w-2xl text-center">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Soul Work</h3>
-            <p className="text-warmCharcoal/70 text-justify">
+          <div className="w-full max-w-2xl">
+            <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">Soul Work</h3>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
               Reconnect with your purpose, clarify your values, and define what success truly means to you. Reflection frameworks + journaling.
             </p>
           </div>
-          <div className="w-full max-w-2xl text-center">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Systems Building</h3>
-            <p className="text-warmCharcoal/70 text-justify">
+          <div className="w-full max-w-2xl">
+            <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">Systems Building</h3>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
               Design workflows, clarify your offer, and build aligned strategy. Templates, worksheets, and one-on-one guidance.
             </p>
           </div>
-          <div className="w-full max-w-2xl text-center">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">AI Integration</h3>
-            <p className="text-warmCharcoal/70 text-justify">
+          <div className="w-full max-w-2xl">
+            <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">AI Integration</h3>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
               Learn to leverage AI without losing your voice. Get access to iPurpose Mentor—an AI coach trained on your framework.
             </p>
           </div>
-          <div className="w-full max-w-2xl text-center">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Community</h3>
-            <p className="text-warmCharcoal/70 text-justify">
+          <div className="w-full max-w-2xl">
+            <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">Community</h3>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
               Connect with 8–12 other thoughtful leaders. Accountability, support, and lasting relationships beyond the program.
             </p>
           </div>
-          <div className="w-full max-w-2xl text-center">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Your Clarity Blueprint</h3>
-            <p className="text-warmCharcoal/70 text-justify">
+          <div className="w-full max-w-2xl">
+            <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">Your Clarity Blueprint</h3>
+            <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
               Walk away with a documented clarity statement, strategic roadmap, and AI integration plan you can execute immediately.
             </p>
           </div>
@@ -94,46 +77,46 @@ export default function ProgramPage() {
             After 6 Weeks, You'll Have:
           </h2>
           <div className="space-y-6 flex flex-col items-center">
-            <div className="flex gap-4 w-full max-w-2xl text-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Crystal-Clear Purpose</h3>
-                <p className="text-warmCharcoal/70 text-justify">Know why you're building and what truly matters to you.</p>
+                <p className="text-warmCharcoal/70 text-center">Know why you're building and what truly matters to you.</p>
               </div>
             </div>
-            <div className="flex gap-4 w-full max-w-2xl text-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Aligned Systems</h3>
-                <p className="text-warmCharcoal/70 text-justify">Workflows, processes, and strategy that support your vision.</p>
+                <p className="text-warmCharcoal/70 text-center">Workflows, processes, and strategy that support your vision.</p>
               </div>
             </div>
-            <div className="flex gap-4 w-full max-w-2xl text-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">AI Strategy</h3>
-                <p className="text-warmCharcoal/70 text-justify">Know where and how to use AI without compromising your voice.</p>
+                <p className="text-warmCharcoal/70 text-center">Know where and how to use AI without compromising your voice.</p>
               </div>
             </div>
-            <div className="flex gap-4 w-full max-w-2xl text-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Accountability Partners</h3>
-                <p className="text-warmCharcoal/70 text-justify">A community of peers committed to the same transformation.</p>
+                <p className="text-warmCharcoal/70 text-center">A community of peers committed to the same transformation.</p>
               </div>
             </div>
-            <div className="flex gap-4 w-full max-w-2xl text-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Renewed Energy</h3>
-                <p className="text-warmCharcoal/70 text-justify">Relief from burnout; confidence to move forward.</p>
+                <p className="text-warmCharcoal/70 text-center">Relief from burnout; confidence to move forward.</p>
               </div>
             </div>
-            <div className="flex gap-4 w-full max-w-2xl text-center">
+            <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Clarity Blueprint</h3>
-                <p className="text-warmCharcoal/70 text-justify">A documented plan you'll reference for months to come.</p>
+                <p className="text-warmCharcoal/70 text-center">A documented plan you'll reference for months to come.</p>
               </div>
             </div>
           </div>
@@ -148,23 +131,23 @@ export default function ProgramPage() {
               This Program Is For You If:
             </h3>
             <ul className="space-y-3">
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
                 <span>You feel disconnected from your work or purpose</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
                 <span>You're successful but burned out</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
                 <span>You want clarity before your next move</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
                 <span>You're curious about AI but want to stay in control</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
                 <span>You value reflection and real support (not hype)</span>
               </li>
@@ -175,19 +158,19 @@ export default function ProgramPage() {
               This Program Is NOT For You If:
             </h3>
             <ul className="space-y-3">
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-salmonPeach font-bold flex-shrink-0">✗</span>
                 <span>You're looking for quick fixes or productivity hacks</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-salmonPeach font-bold flex-shrink-0">✗</span>
                 <span>You're not ready to do reflective work</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-salmonPeach font-bold flex-shrink-0">✗</span>
                 <span>You prefer pre-recorded content over live community</span>
               </li>
-              <li className="flex gap-3 text-warmCharcoal/75 text-justify">
+              <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-salmonPeach font-bold flex-shrink-0">✗</span>
                 <span>You're looking to scale at all costs</span>
               </li>
@@ -202,17 +185,17 @@ export default function ProgramPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
             Program Format & Cohorts
           </h2>
-          <div className="space-y-6 text-warmCharcoal/75 text-lg mb-12 mx-auto max-w-2xl">
-            <p className="text-justify">
+          <div className="space-y-6 text-warmCharcoal/75 text-lg mb-12 mx-auto max-w-2xl text-center">
+            <p>
               <strong>Format:</strong> 6 weeks, with one 90-minute group call per week + asynchronous work between sessions. Totally online and cohort-based.
             </p>
-            <p className="text-justify">
+            <p>
               <strong>Cohort Size:</strong> 8–12 people to keep it intimate and real.
             </p>
-            <p className="text-justify">
+            <p>
               <strong>Next Cohort:</strong> Launching March 2026. Limited spots available. Early members get access to beta features and community pricing.
             </p>
-            <p className="text-justify">
+            <p>
               <strong>Time Commitment:</strong> ~3–4 hours per week (1.5 hours live + 1.5–2.5 hours self-guided work).
             </p>
           </div>

@@ -5,7 +5,101 @@ import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
-import PhotoCard from "../components/PhotoCard";
+import ArchetypeSelector from "../components/ArchetypeSelector";
+import DailyCheckIn from "../components/DailyCheckIn";
+import PracticeCard, { type Practice } from "../components/PracticeCard";
+
+const PRACTICES: Practice[] = [
+  {
+    id: "morning-reflection",
+    title: "Morning Reflection",
+    description: "Start your day with intention. Reflect on your energy, priorities, and alignment.",
+    duration: 5,
+    icon: "📝",
+    instructions: [
+      "Find a quiet space. Sit for one minute without doing anything.",
+      "Ask yourself: What do I want to feel today?",
+      "What's one thing that would make today meaningful?",
+      "Set an intention and close with three deep breaths."
+    ]
+  },
+  {
+    id: "evening-integration",
+    title: "Evening Integration",
+    description: "Close your day with gratitude. Review what aligned and what didn't.",
+    duration: 10,
+    icon: "🌙",
+    instructions: [
+      "Reflect on your day. What moments felt aligned?",
+      "What didn't? Look with curiosity, not judgment.",
+      "Write one thing you learned about yourself today.",
+      "End with gratitude for one person or thing."
+    ]
+  },
+  {
+    id: "value-mapping",
+    title: "Value Mapping",
+    description: "Identify and clarify the core values that guide your decisions and direction.",
+    duration: 20,
+    icon: "💭",
+    instructions: [
+      "List 10 things that matter most to you (no judgment).",
+      "Circle the top 3-5.",
+      "For each, write why it matters in one sentence.",
+      "Notice any patterns or contradictions.",
+      "Define your top 3 values in your own words."
+    ]
+  },
+  {
+    id: "purpose-articulation",
+    title: "Purpose Articulation",
+    description: "Craft a clear, powerful statement of your aligned purpose and mission.",
+    duration: 30,
+    icon: "🎯",
+    instructions: [
+      "Review your values from the Value Mapping practice.",
+      "Complete this sentence: 'I exist to...'",
+      "Write 3-5 versions. They don't need to be perfect.",
+      "Choose the one that makes your body relax.",
+      "Test it: Does this guide my decisions?"
+    ]
+  }
+];
+
+async function getUserArchetype(userId: string) {
+  try {
+    const db = firebaseAdmin.firestore();
+    const doc = await db.collection("users").doc(userId).get();
+    const data = doc.data();
+    return {
+      primary: data?.archetypePrimary || null,
+      secondary: data?.archetypeSecondary || null
+    };
+  } catch {
+    return { primary: null, secondary: null };
+  }
+}
+
+async function hasCheckedInToday(userId: string) {
+  try {
+    const db = firebaseAdmin.firestore();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const snapshot = await db
+      .collection("users")
+      .doc(userId)
+      .collection("checkIns")
+      .where("createdAt", ">=", today)
+      .where("type", "==", "daily")
+      .limit(1)
+      .get();
+    
+    return !snapshot.empty;
+  } catch {
+    return false;
+  }
+}
 
 export default async function SoulPage() {
   const cookieStore = await cookies();
@@ -13,7 +107,11 @@ export default async function SoulPage() {
   if (!session) return redirect("/login");
 
   try {
-    await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const userId = decodedClaims.uid;
+    
+    const archetype = await getUserArchetype(userId);
+    const hasCheckedIn = await hasCheckedInToday(userId);
 
     return (
       <div className="relative">
@@ -27,7 +125,7 @@ export default async function SoulPage() {
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">Soul Alignment</h1>
             <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
-              Explore the inner work that aligns your purpose and illuminates your path forward.
+              Self-understanding over self-judgment. Your inner work is the foundation.
             </p>
           </div>
         </div>
@@ -47,199 +145,43 @@ export default async function SoulPage() {
           </Card>
         </div>
 
-        {/* Archetypes Section */}
+        {/* Archetype Section */}
         <div className="mb-12">
-          <SectionHeading level="h2" className="mb-8">
-            iPurpose Archetypes
-          </SectionHeading>
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=800&q=80"
-              alt="The Visionary Guide"
-              title="Visionary"
-              description="You see possibilities others don't. Your strength is in strategic clarity and long-term vision."
-              aspectRatio="portrait"
-            />
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80"
-              alt="The Strategic Builder"
-              title="Builder"
-              description="You create systems and structures that scale. Your gift is turning ideas into reality."
-              aspectRatio="portrait"
-            />
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80"
-              alt="The Transformational Healer"
-              title="Healer"
-              description="You hold space for deep transformation. Your power is in intuitive guidance and healing."
-              aspectRatio="portrait"
-            />
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card hover accent="lavender" className="group">
-              <div className="flex items-start justify-between mb-4">
-                <div className="ipurpose-icon-bubble group-hover:scale-110">
-                  <span className="text-3xl">✨</span>
-                </div>
-                <span className="ipurpose-pill">
-                  Visionary
-                </span>
-              </div>
-              <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">The Visionary Guide</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-5 leading-relaxed font-montserrat">
-                You see possibilities others don't. Your strength is in strategic clarity and long-term vision.
+          {!archetype.primary ? (
+            <ArchetypeSelector onComplete={() => window.location.reload()} />
+          ) : (
+            <Card accent="lavender" className="mb-8">
+              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-montserrat">
+                Your Archetype
               </p>
-              <Button variant="ghost" size="sm">
-                Explore Archetype →
-              </Button>
-            </Card>
-
-            <Card hover accent="salmon" className="group">
-              <div className="flex items-start justify-between mb-4">
-                <div className="ipurpose-icon-bubble-salmon group-hover:scale-110">
-                  <span className="text-3xl">🎯</span>
-                </div>
-                <span className="ipurpose-pill">
-                  Builder
-                </span>
+              <div className="space-y-3">
+                <p className="font-marcellus text-warmCharcoal text-lg">
+                  {archetype.primary === 'visionary' && '✨ Visionary'}
+                  {archetype.primary === 'builder' && '🎯 Builder'}
+                  {archetype.primary === 'healer' && '💫 Healer'}
+                  {archetype.secondary && ` + ${archetype.secondary === 'visionary' ? '✨ Visionary' : archetype.secondary === 'builder' ? '🎯 Builder' : '💫 Healer'}`}
+                </p>
+                <p className="text-sm text-warmCharcoal/70 font-montserrat">
+                  Your archetype helps you understand your strengths and where you tend to judge yourself.
+                </p>
               </div>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">The Strategic Builder</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                You create systems and structures that scale. Your gift is turning ideas into reality.
-              </p>
-              <Button variant="ghost" size="sm">
-                Explore Archetype →
-              </Button>
             </Card>
+          )}
 
-            <Card hover accent="gold">
-              <div className="flex items-start justify-between mb-3">
-                <span className="text-3xl">💫</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-softGold/30 text-warmCharcoal font-montserrat">
-                  Healer
-                </span>
-              </div>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">The Transformational Healer</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                You hold space for deep transformation. Your power is in intuitive guidance and healing.
-              </p>
-              <Button variant="ghost" size="sm">
-                Explore Archetype →
-              </Button>
-            </Card>
-          </div>
-        </div>
+          {/* Daily Check-in */}
+          {!hasCheckedIn && <DailyCheckIn onComplete={() => window.location.reload()} />}
 
-        {/* Daily Reflections Section */}
-        <div className="mb-16">
           <SectionHeading level="h2" className="mb-6">
             Daily Soul Practices
           </SectionHeading>
           <div className="grid md:grid-cols-2 gap-6">
-            <Card hover>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">📝</span>
-                <h3 className="font-marcellus text-lg text-warmCharcoal">Morning Reflection</h3>
-              </div>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Start your day with intention. Reflect on your energy, priorities, and alignment.
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-warmCharcoal/50 font-montserrat">5-10 minutes</span>
-                <Button variant="ghost" size="sm">
-                  Begin Practice →
-                </Button>
-              </div>
-            </Card>
-
-            <Card hover>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">🌙</span>
-                <h3 className="font-marcellus text-lg text-warmCharcoal">Evening Integration</h3>
-              </div>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Close your day with gratitude. Review what aligned and what didn't.
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-warmCharcoal/50 font-montserrat">10 minutes</span>
-                <Button variant="ghost" size="sm">
-                  Begin Practice →
-                </Button>
-              </div>
-            </Card>
-
-            <Card hover>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">💭</span>
-                <h3 className="font-marcellus text-lg text-warmCharcoal">Value Mapping</h3>
-              </div>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Identify and clarify the core values that guide your decisions and direction.
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-warmCharcoal/50 font-montserrat">20 minutes</span>
-                <Button variant="ghost" size="sm">
-                  Begin Practice →
-                </Button>
-              </div>
-            </Card>
-
-            <Card hover>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">🎯</span>
-                <h3 className="font-marcellus text-lg text-warmCharcoal">Purpose Articulation</h3>
-              </div>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Craft a clear, powerful statement of your aligned purpose and mission.
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-warmCharcoal/50 font-montserrat">30 minutes</span>
-                <Button variant="ghost" size="sm">
-                  Begin Practice →
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* Purpose Pathways Section */}
-        <div>
-          <SectionHeading level="h2" className="mb-6">
-            Purpose Pathways
-          </SectionHeading>
-          <div className="grid lg:grid-cols-3 gap-6">
-            <Card accent="lavender">
-              <span className="text-3xl mb-4 block">🧭</span>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Clarity Path</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                A 30-day journey to uncover your core purpose and authentic direction.
-              </p>
-              <Button variant="secondary" size="sm" className="w-full">
-                Start Pathway
-              </Button>
-            </Card>
-
-            <Card accent="salmon">
-              <span className="text-3xl mb-4 block">🌱</span>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Growth Path</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Deepen your self-awareness and expand your capacity for aligned action.
-              </p>
-              <Button variant="secondary" size="sm" className="w-full">
-                Start Pathway
-              </Button>
-            </Card>
-
-            <Card accent="gold">
-              <span className="text-3xl mb-4 block">⚡</span>
-              <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Mastery Path</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
-                Advanced practices for those ready to embody their purpose fully.
-              </p>
-              <Button variant="secondary" size="sm" className="w-full">
-                Start Pathway
-              </Button>
-            </Card>
+            {PRACTICES.map(practice => (
+              <PracticeCard
+                key={practice.id}
+                practice={practice}
+                onComplete={() => window.location.reload()}
+              />
+            ))}
           </div>
         </div>
 
