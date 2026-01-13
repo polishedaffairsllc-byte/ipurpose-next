@@ -26,19 +26,6 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
       
-      {/* Logo - Standalone Above Navigation */}
-      <div className="relative z-20 w-full flex justify-center pt-6 lg:pt-8">
-        <Link href="/" className="flex-shrink-0">
-          <Image 
-            src="/images/my-logo.png" 
-            alt="iPurpose Logo" 
-            width={80} 
-            height={80}
-            className="h-20 w-auto"
-          />
-        </Link>
-      </div>
-      
       {/* Top Navigation Bar - CTAs and Auth */}
       <nav className="relative z-20 w-full flex items-center justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <Button size="lg" variant="primary" href="/clarity-check">
