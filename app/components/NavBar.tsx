@@ -33,11 +33,7 @@ export default async function NavBar() {
     <header className="bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Brand Text Only */}
-          <Link href="/" className="flex flex-col hover:opacity-80 transition-opacity">
-            <span className="font-italiana text-2xl text-warmCharcoal">iPurpose</span>
-            <span className="text-xs text-warmCharcoal/60 -mt-1">Portal</span>
-          </Link>
+          {/* Brand - Hidden for now */}
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-2">
