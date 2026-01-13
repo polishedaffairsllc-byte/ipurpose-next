@@ -45,9 +45,9 @@ export default async function Home() {
       </nav>
 
       {/* Hero Content - Vertically Centered */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-6 lg:p-12" style={{ top: '80px', transform: 'translateY(-6vh)' }}>
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 lg:p-12" style={{ top: '80px', transform: 'translateY(-6vh)' }}>
         {/* Hero Glass Wrapper */}
-        <div className="max-w-[720px] px-7 py-6" style={{
+        <div className="max-w-[720px] px-7 py-6 text-center" style={{
           backgroundColor: 'rgba(0, 0, 0, 0.35)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
