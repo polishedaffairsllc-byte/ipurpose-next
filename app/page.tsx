@@ -25,9 +25,6 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
       
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 z-5 pointer-events-none" style={{ backgroundColor: 'rgba(0, 0, 0, 0.35)' }}></div>
-      
       {/* Top Navigation Bar with CTAs */}
       <nav className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <div className="flex items-center gap-4 lg:gap-6">
@@ -48,9 +45,14 @@ export default async function Home() {
       </nav>
 
       {/* Hero Content - Vertically Centered */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-6 lg:p-12" style={{ top: '80px' }}>
-        {/* Hero Section */}
-        <div className="max-w-4xl">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center p-6 lg:p-12" style={{ top: '80px', transform: 'translateY(-6vh)' }}>
+        {/* Hero Glass Wrapper */}
+        <div className="max-w-[720px] px-7 py-6" style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.35)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '16px'
+        }}>
           <h1 className="text-6xl lg:text-7xl mb-6 font-italiana" style={{ color: '#FFFFFF' }}>
             Build what's true — without burning out.
           </h1>
