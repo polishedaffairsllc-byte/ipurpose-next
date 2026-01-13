@@ -43,7 +43,7 @@ export default async function Home() {
       {/* Hero Section - Full Viewport Height */}
       <div className="relative w-full flex items-center justify-center p-6 lg:p-12" style={{ height: 'calc(100vh - 80px)', zIndex: 10 }}>
         {/* Hero Content Block with Gradient Overlay */}
-        <div className="max-w-5xl text-center relative p-12 lg:p-16" style={{ 
+        <div className="max-w-3xl text-center relative p-12 lg:p-16" style={{ 
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.15) 100%)'
         }}>
           <h1 className="text-[108px] lg:text-[144px] mb-3 lg:mb-4 font-italiana leading-none" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
