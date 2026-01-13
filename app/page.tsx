@@ -23,7 +23,7 @@ export default async function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-white">
       {/* Background Video */}
-      <VideoBackground src="/videos/i.mp4" poster="/images/ipurpose-hero-bg.jpg" />
+      <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
       {/* Navigation Bar */}
       <nav className="relative z-20 w-full flex items-center justify-end p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <div className="flex items-center gap-8 lg:gap-16">
