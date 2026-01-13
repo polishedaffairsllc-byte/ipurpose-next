@@ -30,7 +30,7 @@ export default function DashboardSidebar() {
         {/* Logo Section */}
         <Link href="/dashboard" className="flex items-center gap-2 group shrink-0">
           <img 
-            src="/images/Tiny Transparent Logo.png" 
+            src="/images/my-logo.png?v=2" 
             alt="iPurpose Logo" 
             className="h-6 group-hover:scale-105 transition-transform duration-200"
           />

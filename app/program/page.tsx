@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Button from '../components/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'iPurpose 6-Week Program | Build with Clarity',
@@ -13,8 +14,15 @@ export default function ProgramPage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
-            iPurpose
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Image
+              src="/images/my-logo.png?v=2"
+              alt="iPurpose Logo"
+              width={40}
+              height={40}
+              className="h-10 w-auto"
+            />
+            <span className="font-marcellus text-2xl text-warmCharcoal">iPurpose</span>
           </Link>
           <div className="flex gap-4">
             <Button variant="primary" href="/login" size="sm">Login</Button>
