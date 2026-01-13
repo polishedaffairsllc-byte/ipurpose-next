@@ -43,11 +43,11 @@ export default async function Home() {
       {/* Hero Section - Full Viewport Height */}
       <div className="relative w-full flex items-center justify-center p-6 lg:p-12" style={{ height: 'calc(100vh - 80px)', zIndex: 10 }}>
         {/* Hero Content Block with Background */}
-        <div className="max-w-3xl text-center relative p-12 lg:p-16" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <h1 className="text-9xl lg:text-[120px] mb-8 font-italiana" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+        <div className="max-w-5xl text-center relative p-12 lg:p-16" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <h1 className="text-[150px] lg:text-[200px] mb-8 font-italiana leading-none" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Build what's true — without burning out.
           </h1>
-          <p className="text-5xl lg:text-6xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <p className="text-6xl lg:text-7xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear about what they're building reconnect to what matters and build with clarity.
           </p>
         </div>
