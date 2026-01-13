@@ -113,7 +113,7 @@ export default function SoulGPTPage() {
               <p className="text-gray-600 mb-4">Not sure which archetype fits you?</p>
               <button
                 onClick={() => setShowChat(true)}
-                className="px-8 py-4 bg-purple-600 text-white rounded-lg font-semibold text-lg hover:bg-purple-700 transition-colors shadow-lg"
+                className="px-8 py-4 bg-white/10 border-2 border-white/20 text-gray-700 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors shadow-lg backdrop-blur-sm"
               >
                 Start Open Conversation
               </button>
