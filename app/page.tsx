@@ -46,8 +46,8 @@ export default async function Home() {
 
       {/* Hero Section - Full Viewport Height */}
       <div className="relative w-full flex items-center justify-center p-6 lg:p-12" style={{ height: 'calc(100vh - 80px)', zIndex: 10 }}>
-        {/* Hero Content Block */}
-        <div className="max-w-3xl text-center">
+        {/* Hero Content Block with Background */}
+        <div className="max-w-3xl text-center relative p-12 lg:p-16" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <h1 className="text-9xl lg:text-[120px] mb-8 font-italiana" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Build what's true — without burning out.
           </h1>
