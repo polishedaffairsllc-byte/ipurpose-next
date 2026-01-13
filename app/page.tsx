@@ -24,9 +24,18 @@ export default async function Home() {
     <div className="relative min-h-screen w-full overflow-hidden bg-white">
       {/* Background Video */}
       <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
-      {/* Navigation Bar */}
-      <nav className="relative z-20 w-full flex items-center justify-end p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-        <div className="flex items-center gap-8 lg:gap-16">
+      
+      {/* Top Navigation Bar with CTAs */}
+      <nav className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
+        <div className="flex items-center gap-4 lg:gap-6">
+          <Button size="lg" variant="primary" href="/clarity-check">
+            Take the Clarity Check
+          </Button>
+          <Button size="lg" variant="primary" href="/program">
+            View the 6-Week Program
+          </Button>
+        </div>
+        <div>
           {isLoggedIn ? (
             <Button variant="primary" href="/dashboard">Dashboard</Button>
           ) : (
@@ -34,27 +43,17 @@ export default async function Home() {
           )}
         </div>
       </nav>
-      {/* Content */}
-      <div className="relative z-10 w-full min-h-[calc(100vh-80px)] flex flex-col justify-center items-center text-center p-6 lg:p-12">
-        {/* Hero Section */}
-        <div className="max-w-3xl">
+
+      {/* Hero Content - Full Height */}
+      <div className="relative z-10 w-full min-h-[calc(100vh-80px)] flex flex-col justify-end items-center text-center p-6 lg:p-12 pb-24">
+        {/* Hero Section at Bottom */}
+        <div className="max-w-4xl">
           <h1 className="text-6xl lg:text-7xl mb-6 font-italiana" style={{ color: '#FFFFFF' }}>
             Build what's true — without burning out.
           </h1>
-          <p className="text-xl lg:text-2xl mb-12 leading-relaxed" style={{ color: '#FFFFFF' }}>
+          <p className="text-xl lg:text-2xl leading-relaxed" style={{ color: '#FFFFFF' }}>
             iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear about what they're building reconnect to what matters and build with clarity.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" variant="primary" href="/clarity-check">
-              Take the Clarity Check
-            </Button>
-            <Button size="lg" variant="primary" href="/program">
-              View the 6-Week Program
-            </Button>
-            <Link href="/login" className="text-lg font-semibold text-white hover:opacity-80 transition-opacity">
-              Login
-            </Link>
-          </div>
         </div>
       </div>
     </div>
