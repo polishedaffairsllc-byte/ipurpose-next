@@ -3,16 +3,6 @@ import { cookies } from 'next/headers';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import Link from 'next/link';
 
-function IPurposeLogo() {
-  return (
-    <div className="flex items-center gap-2">
-      <div className="w-10 h-10 bg-gradient-to-br from-lavenderViolet to-salmonPeach rounded-lg flex items-center justify-center">
-        <span className="text-white font-marcellus font-bold text-lg">i</span>
-      </div>
-      <span className="font-marcellus text-xl font-semibold text-warmCharcoal">iPurpose</span>
-    </div>
-  );
-}
 import VideoBackground from './components/VideoBackground';
 
 export default async function Home() {
@@ -35,10 +25,7 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/i.mp4" poster="/images/ipurpose-hero-bg.jpg" />
       {/* Navigation Bar */}
-      <nav className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-        <Link href="/" className="hover:opacity-80 transition-opacity">
-          <IPurposeLogo />
-        </Link>
+      <nav className="relative z-20 w-full flex items-center justify-end p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <div className="flex items-center gap-8 lg:gap-16">
           {isLoggedIn ? (
             <Button variant="primary" href="/dashboard">Dashboard</Button>

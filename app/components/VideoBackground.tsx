@@ -28,21 +28,20 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
           resp = await fetch(url, { method: "GET", headers: { Range: "bytes=0-0" }, cache: "no-cache" });
         }
         const contentType = resp.headers.get("content-type") || "";
-        const ok = resp.ok && contentType.startsWith("video/");
+        const ok = resp.ok && (contentType.startsWith("video/") || contentType === "");
         if (!cancelled) setOkToPlay(ok);
         if (!ok) setError(true);
       } catch (e) {
-        if (!cancelled) setOkToPlay(false);
-        if (!cancelled) setError(true);
+        if (!cancelled) setOkToPlay(true);
       }
     }
     probe();
 
     let t: ReturnType<typeof setTimeout> | null = null;
-    // If video doesn't fire canplay within 10s, show fallback (increased timeout for large files)
+    // If video doesn't fire canplay within 20s, show fallback (increased timeout for large files)
     t = setTimeout(() => {
       if (!loaded) setError(true);
-    }, 10000);
+    }, 20000);
     return () => {
       cancelled = true;
       if (t) clearTimeout(t);
