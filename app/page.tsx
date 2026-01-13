@@ -26,22 +26,18 @@ export default async function Home() {
       <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
       
       {/* Top Navigation Bar - CTAs and Auth */}
-      <nav className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-        <div className="flex items-center gap-4 lg:gap-8 flex-1">
-          <Button size="lg" variant="primary" href="/clarity-check">
-            Take the Clarity Check
-          </Button>
-          <Button size="lg" variant="primary" href="/program">
-            View the 6-Week Program
-          </Button>
-        </div>
-        <div>
-          {isLoggedIn ? (
-            <Button variant="primary" href="/dashboard">Dashboard</Button>
-          ) : (
-            <Button variant="primary" href="/login">Sign In</Button>
-          )}
-        </div>
+      <nav className="relative z-20 w-full flex items-center justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
+        <Button size="lg" variant="primary" href="/clarity-check">
+          Take the Clarity Check
+        </Button>
+        <Button size="lg" variant="primary" href="/program">
+          View the 6-Week Program
+        </Button>
+        {isLoggedIn ? (
+          <Button variant="primary" href="/dashboard">Dashboard</Button>
+        ) : (
+          <Button variant="primary" href="/login">Sign In</Button>
+        )}
       </nav>
 
       {/* Hero Section - Full Viewport Height */}
