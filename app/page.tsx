@@ -25,13 +25,23 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
       
-      {/* Top Navigation Bar - Sign In Only */}
-      <nav className="relative z-20 w-full flex items-center justify-end p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-        {isLoggedIn ? (
-          <Button variant="primary" href="/dashboard">Dashboard</Button>
-        ) : (
-          <Button variant="primary" href="/login">Sign In</Button>
-        )}
+      {/* Top Navigation Bar - CTAs and Auth */}
+      <nav className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
+        <div className="flex items-center gap-4 lg:gap-8 flex-1">
+          <Button size="lg" variant="primary" href="/clarity-check">
+            Take the Clarity Check
+          </Button>
+          <Button size="lg" variant="primary" href="/program">
+            View the 6-Week Program
+          </Button>
+        </div>
+        <div>
+          {isLoggedIn ? (
+            <Button variant="primary" href="/dashboard">Dashboard</Button>
+          ) : (
+            <Button variant="primary" href="/login">Sign In</Button>
+          )}
+        </div>
       </nav>
 
       {/* Hero Section - Full Viewport Height */}
@@ -41,19 +51,9 @@ export default async function Home() {
           <h1 className="text-9xl lg:text-[120px] mb-8 font-italiana" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Build what's true — without burning out.
           </h1>
-          <p className="text-5xl lg:text-6xl mb-20 leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <p className="text-5xl lg:text-6xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear about what they're building reconnect to what matters and build with clarity.
           </p>
-          
-          {/* CTAs - Part of Hero Unit */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" variant="primary" href="/clarity-check">
-              Take the Clarity Check
-            </Button>
-            <Button size="lg" variant="primary" href="/program">
-              View the 6-Week Program
-            </Button>
-          </div>
         </div>
       </div>
     </div>
