@@ -59,7 +59,7 @@ export default async function Home() {
           <h1 className="text-[108px] lg:text-[144px] mb-3 lg:mb-4 font-italiana leading-none" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Build what's true — without burning out.
           </h1>
-          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-5 lg:mt-6" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)', maxWidth: '75%' }}>
             iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear. Let's reconnect you to what matters and build it with clarity.
           </p>
         </div>
