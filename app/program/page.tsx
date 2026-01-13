@@ -42,7 +42,7 @@ export default function ProgramPage() {
         <h2 className="text-4xl font-marcellus text-warmCharcoal mb-12 text-center">
           What's Included
         </h2>
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-12 mx-auto max-w-4xl">
           <div className="space-y-6">
             <div className="border-l-4 border-lavenderViolet pl-6">
               <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Live Group Sessions</h3>
@@ -140,7 +140,7 @@ export default function ProgramPage() {
       </div>
 
       {/* Who It's For / Not For */}
-      <div className="container max-w-5xl mx-auto px-6 py-20">
+      <div className="container max-w-4xl mx-auto px-6 py-20">
         <div className="grid md:grid-cols-2 gap-12">
           <div>
             <h3 className="text-3xl font-marcellus text-warmCharcoal mb-6">
