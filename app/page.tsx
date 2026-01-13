@@ -26,8 +26,8 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/i.mp4?v=2" poster="/images/ipurpose-hero-bg.jpg" />
       
-      {/* Top Navigation Bar - CTAs and Auth */}
-      <nav className="relative z-20 w-full flex items-center justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
+      {/* Logo - Above Navigation */}
+      <div className="relative z-20 w-full flex justify-center pt-6 lg:pt-8" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <Link href="/" className="flex-shrink-0">
           <Image 
             src="/images/my-logo.png" 
@@ -37,6 +37,10 @@ export default async function Home() {
             className="h-20 w-auto bg-transparent"
           />
         </Link>
+      </div>
+      
+      {/* Top Navigation Bar - CTAs and Auth */}
+      <nav className="relative z-20 w-full flex items-center justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <Button size="lg" variant="primary" href="/clarity-check">
           Take the Clarity Check
         </Button>
@@ -59,8 +63,11 @@ export default async function Home() {
           <h1 className="text-[108px] lg:text-[144px] mb-3 lg:mb-4 font-italiana leading-none" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Build what's true — without burning out.
           </h1>
-          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)', maxWidth: '75%' }}>
-            iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear. Let's reconnect you to what matters and build it with clarity.
+          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+            iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear.
+          </p>
+          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-3 lg:mt-4 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+            Let's reconnect you to what matters and build it with clarity.
           </p>
         </div>
       </div>
