@@ -67,6 +67,7 @@ export default async function Home() {
               width={80} 
               height={80}
               className="h-20 w-auto"
+              style={{ backgroundColor: 'transparent', mixBlendMode: 'multiply' }}
             />
           </Link>
         </div>
