@@ -57,6 +57,19 @@ export default async function Home() {
             Let's reconnect you to what matters and build it with clarity.
           </p>
         </div>
+        
+        {/* Logo - Bottom Right Corner */}
+        <div className="absolute bottom-6 lg:bottom-12 right-6 lg:right-12 z-20">
+          <Link href="/" className="flex-shrink-0">
+            <Image 
+              src="/images/my-logo.png" 
+              alt="iPurpose Logo" 
+              width={80} 
+              height={80}
+              className="h-20 w-auto"
+            />
+          </Link>
+        </div>
       </div>
     </div>
   );
