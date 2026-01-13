@@ -30,7 +30,7 @@ export default async function Home() {
       <nav className="relative z-20 w-full flex items-center justify-between lg:justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <Link href="/" className="flex-shrink-0 mr-auto lg:mr-0">
           <Image 
-            src="/images/ipurpose-logo.png" 
+            src="/images/my-logo.png" 
             alt="iPurpose Logo" 
             width={50} 
             height={50}
