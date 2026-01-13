@@ -17,7 +17,7 @@ export default function ProgramPage() {
             <img
               src="/images/my-logo.png"
               alt="iPurpose Logo"
-              className="h-10 w-auto"
+              className="h-8 w-auto"
             />
             <span className="font-marcellus text-2xl text-warmCharcoal">iPurpose</span>
           </Link>
