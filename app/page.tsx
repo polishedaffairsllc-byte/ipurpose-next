@@ -59,7 +59,7 @@ export default async function Home() {
         </div>
         
         {/* Logo - Bottom Right Corner */}
-        <div className="absolute bottom-6 lg:bottom-12 right-6 lg:right-12 z-20">
+        <div className="absolute bottom-0 lg:bottom-0 right-6 lg:right-12 z-20">
           <Link href="/" className="flex-shrink-0">
             <Image 
               src="/images/my-logo.png" 
