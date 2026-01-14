@@ -26,7 +26,7 @@ export default function AboutPage() {
       </nav>
 
       {/* Main Content */}
-      <div className="container max-w-4xl mx-auto px-6 py-12 space-y-12">
+      <div className="container max-w-3xl mx-auto px-8 md:px-16 py-12 space-y-12">
         
         {/* Hero */}
         <section className="text-center space-y-6">
