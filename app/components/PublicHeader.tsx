@@ -22,82 +22,84 @@ export default async function PublicHeader() {
   }
 
   return (
-    <header className="relative z-20 w-full flex items-center justify-between p-4 md:p-6 lg:p-8 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md gap-6 md:gap-8">
-      {/* Left Navigation Links */}
-      <nav className="flex items-center justify-start gap-3 md:gap-4">
-        <Link 
-          href="/discover" 
-          className="px-4 md:px-5 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-          style={{ backgroundColor: '#9C88FF' }}
-        >
-          Discover
-        </Link>
-        <Link 
-          href="/about" 
-          className="px-4 md:px-5 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-          style={{ backgroundColor: '#5B4BA6' }}
-        >
-          About
-        </Link>
-        <Link 
-          href="/program" 
-          className="px-4 md:px-5 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-          style={{ backgroundColor: '#E8967A' }}
-        >
-          6-Week Program
-        </Link>
-      </nav>
+    <header className="relative z-20 w-full flex items-center justify-center gap-4 p-4 md:p-6 lg:p-8 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md">
+      {/* Discover */}
+      <Link 
+        href="/discover" 
+        className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+        style={{ backgroundColor: '#9C88FF' }}
+      >
+        Discover
+      </Link>
 
-      {/* Right Side - CTAs and Auth */}
-      <div className="flex items-center justify-end gap-3 md:gap-4">
-        <Link
-          href="/clarity-check"
-          className="px-5 md:px-6 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
-          style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #5B4BA6 100%)' }}
-        >
-          Clarity Check
-        </Link>
-        {isLoggedIn ? (
-          <>
-            <span className="hidden lg:block text-xs md:text-sm font-medium text-white/90 px-3">
-              {displayName}
-            </span>
-            <Link
-              href="/dashboard"
-              className="px-4 md:px-5 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-              style={{ backgroundColor: '#9C88FF' }}
+      {/* About */}
+      <Link 
+        href="/about" 
+        className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+        style={{ backgroundColor: '#5B4BA6' }}
+      >
+        About
+      </Link>
+
+      {/* 6-Week Program */}
+      <Link 
+        href="/program" 
+        className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+        style={{ backgroundColor: '#E8967A' }}
+      >
+        6-Week Program
+      </Link>
+
+      {/* Clarity Check */}
+      <Link
+        href="/clarity-check"
+        className="px-5 md:px-6 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
+        style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #5B4BA6 100%)' }}
+      >
+        Clarity Check
+      </Link>
+
+      {/* Auth Section */}
+      {isLoggedIn ? (
+        <>
+          <span className="hidden lg:block text-xs md:text-sm font-medium text-white/90 px-3">
+            {displayName}
+          </span>
+          <Link
+            href="/dashboard"
+            className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+            style={{ backgroundColor: '#9C88FF' }}
+          >
+            Dashboard
+          </Link>
+          <form action="/api/auth/logout" method="post">
+            <button 
+              type="submit" 
+              className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+              style={{ backgroundColor: '#E8967A' }}
             >
-              Dashboard
-            </Link>
-            <form action="/api/auth/logout" method="post">
-              <button 
-                type="submit" 
-                className="px-4 md:px-5 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-                style={{ backgroundColor: '#E8967A' }}
-              >
-                Logout
-              </button>
-            </form>
-          </>
-        ) : (
-          <>
-            <Link
-              href="/login"
-              className="px-4 md:px-5 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-              style={{ backgroundColor: '#5B4BA6' }}
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="px-5 md:px-6 py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
-              style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #E8967A 100%)' }}
-            >
-              Get Started
-            </Link>
-          </>
-        )}
-      </div>
+              Logout
+            </button>
+          </form>
+        </>
+      ) : (
+        <>
+          <Link
+            href="/login"
+            className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+            style={{ backgroundColor: '#5B4BA6' }}
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/signup"
+            className="px-5 md:px-6 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
+            style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #E8967A 100%)' }}
+          >
+            Get Started
+          </Link>
+        </>
+      )}
     </header>
   );
 }
