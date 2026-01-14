@@ -19,8 +19,8 @@ export default function AboutPage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
-            iPurpose
+          <Link href="/" className="text-warmCharcoal hover:opacity-80 transition-opacity">
+            <span className="sr-only">Back to Home</span>
           </Link>
         </div>
       </nav>
@@ -43,22 +43,24 @@ export default function AboutPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Founder
           </h2>
-          <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="flex-shrink-0 md:w-64">
-              <Image
-                src="/images/renita-hamilton.jpg"
-                alt="Renita Hamilton, Founder of iPurpose"
-                width={300}
-                height={400}
-                className="rounded-lg shadow-lg"
-              />
-            </div>
-            <div className="space-y-4">
+          <div className="flex flex-col-reverse md:flex-row gap-8 items-start">
+            <div className="flex-1 space-y-4">
               <h3 className="text-2xl font-marcellus text-warmCharcoal">Renita Hamilton</h3>
               <p className="text-lg font-semibold text-lavenderViolet">Creator of iPurpose</p>
               <p className="text-lg text-warmCharcoal/75">
                 Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
               </p>
+            </div>
+            <div className="flex-shrink-0 md:w-80">
+              <div className="border-4 border-lavenderViolet rounded-lg overflow-hidden shadow-lg">
+                <Image
+                  src="/images/renita-hamilton.jpg"
+                  alt="Renita Hamilton, Founder of iPurpose"
+                  width={320}
+                  height={420}
+                  className="w-full h-auto"
+                />
+              </div>
             </div>
           </div>
         </section>
