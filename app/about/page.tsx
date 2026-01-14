@@ -21,11 +21,6 @@ export default function AboutPage() {
           <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
             iPurpose
           </Link>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-warmCharcoal hover:text-lavenderViolet transition-colors font-semibold">
-              Login
-            </Link>
-          </div>
         </div>
       </nav>
 
