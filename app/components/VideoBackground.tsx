@@ -62,8 +62,17 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
               loop
               muted
               playsInline
-              onCanPlay={() => setLoaded(true)}
-              onError={() => setError(true)}
+              onCanPlay={() => {
+                setLoaded(true);
+                // Ensure video plays after canplay event
+                if (vidRef.current) {
+                  vidRef.current.play().catch(e => console.error('Video play failed:', e));
+                }
+              }}
+              onError={(e) => {
+                console.error('Video error:', e);
+                setError(true);
+              }}
               className="absolute inset-0 w-full h-full object-cover"
               poster={poster}
             >
