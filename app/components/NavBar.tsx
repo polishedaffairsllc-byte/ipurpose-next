@@ -9,8 +9,8 @@ export default async function NavBar() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
   
-  // Hide navbar on login, signup, home, and dashboard pages
-  if (pathname === "/login" || pathname === "/signup" || pathname === "/" || pathname === "" || pathname.startsWith("/dashboard") || pathname.startsWith("/soul") || pathname.startsWith("/systems") || pathname.startsWith("/ai") || pathname.startsWith("/insights") || pathname.startsWith("/settings")) {
+  // Hide navbar on login, signup, home, clarity-check, and dashboard pages
+  if (pathname === "/login" || pathname === "/signup" || pathname === "/" || pathname === "" || pathname === "/clarity-check" || pathname.startsWith("/dashboard") || pathname.startsWith("/soul") || pathname.startsWith("/systems") || pathname.startsWith("/ai") || pathname.startsWith("/insights") || pathname.startsWith("/settings")) {
     return null;
   }
 
