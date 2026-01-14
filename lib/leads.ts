@@ -154,6 +154,12 @@ export async function processLead(
   id?: string;
   deduped?: boolean;
 }> {
+  // Check Firebase initialization
+  if (!firebaseAdmin.apps || firebaseAdmin.apps.length === 0) {
+    console.error('[LEADS] Firebase Admin not initialized');
+    return { ok: false, error: 'FIREBASE_NOT_INITIALIZED' };
+  }
+
   // Validate
   const validation = validateLead(name, email);
   if (!validation.valid) {
