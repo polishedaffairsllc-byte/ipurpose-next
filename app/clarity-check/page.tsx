@@ -22,13 +22,18 @@ export default function ClarityCheckPage() {
         body: JSON.stringify({ name, email }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error('Failed to submit clarity check');
+        // Use error from API response if available
+        const errorMessage = data.error || 'Failed to submit clarity check';
+        throw new Error(errorMessage);
       }
 
-      const data = await res.json();
       if (data.ok) {
         setSubmitted(true);
+      } else {
+        throw new Error(data.error || 'Failed to submit clarity check');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
