@@ -16,13 +16,13 @@ async function getUserInsights(userId: string) {
       .collection("users")
       .doc(userId)
       .collection("checkIns")
-      .where("timestamp", ">=", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-      .orderBy("timestamp", "desc")
+      .where("createdAt", ">=", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+      .orderBy("createdAt", "desc")
       .get();
     
     const checkIns = checkInsSnapshot.docs.map(doc => ({
       ...doc.data(),
-      timestamp: doc.data().timestamp?.toDate?.() || new Date(doc.data().timestamp)
+      createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt)
     }));
     
     // Get practices (for Active Practices)
@@ -42,7 +42,7 @@ async function getUserInsights(userId: string) {
     
     // Get last 7 days activity for streak
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const recentActivity = checkIns.filter(c => new Date(c.timestamp) >= sevenDaysAgo);
+    const recentActivity = checkIns.filter(c => new Date(c.createdAt) >= sevenDaysAgo);
     
     return {
       checkIns,
@@ -178,7 +178,7 @@ export default async function InsightsPage() {
                     You've logged <strong>{insights.checkIns.length} check-ins</strong> in the last 30 days.
                   </p>
                   <div className="text-xs text-warmCharcoal/60 space-y-1 font-montserrat">
-                    <p>Most recent: {new Date(insights.checkIns[0]?.timestamp).toLocaleDateString()}</p>
+                    <p>Most recent: {new Date(insights.checkIns[0]?.createdAt).toLocaleDateString()}</p>
                   </div>
                   <Button variant="ghost" size="sm" href="/soul">
                     Review Your Check-Ins →
