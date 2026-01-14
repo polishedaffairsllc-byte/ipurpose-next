@@ -33,7 +33,7 @@ export default function DashboardSidebar() {
             src="/images/my-logo.png" 
             alt="iPurpose Logo" 
             className="group-hover:scale-105 transition-transform duration-200"
-            style={{ height: '0.8px' }}
+            style={{ height: '20px' }}
           />
           <div>
             <h1 className="text-lg font-italiana bg-gradient-to-r from-lavenderViolet to-indigoDeep bg-clip-text text-transparent">iPurpose</h1>
