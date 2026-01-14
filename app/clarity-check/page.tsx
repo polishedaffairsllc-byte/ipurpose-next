@@ -109,31 +109,36 @@ export default function ClarityCheckPage() {
                 {loading ? 'Submitting...' : 'Take the Clarity Check'}
               </button>
 
-              <p className="text-xs text-warmCharcoal/60 text-center">
-                We'll send you personalized insights and next steps via email.
-              </p>
             </form>
           </div>
         ) : (
           <div className="text-center py-12">
             <div className="text-6xl mb-6">✓</div>
             <h2 className="text-4xl font-marcellus text-warmCharcoal mb-4">
-              Thank You!
+              You're in.
             </h2>
-            <p className="text-lg text-warmCharcoal/75 mb-8">
-              We've received your clarity check. You'll hear from us within 24 hours with personalized insights and your next steps.
+            <p className="text-lg text-warmCharcoal/75 mb-12">
+              Next step: take the Alignment Type check so we can meet you where you are.
             </p>
-            <div className="bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10 mb-8">
-              <p className="text-warmCharcoal/75 mb-4">
-                In the meantime, explore the full program details:
-              </p>
-              <Button size="lg" variant="primary" href="/program">
+            <div className="space-y-4 mb-8">
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdeqCKVGTFlVma5ws5cHIICSqU74dR6ZbpTzawj-Cx4_wcApQ/viewform?usp=sharing&ouid=108847680085116613841"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Discover Your Soul iPurpose Alignment Type
+              </a>
+              <Link
+                href="/program"
+                className="inline-block w-full bg-white text-lavenderViolet font-semibold py-3 px-6 rounded-lg border border-lavenderViolet hover:bg-lavenderViolet/5 transition-colors"
+              >
                 View the 6-Week Program
-              </Button>
+              </Link>
             </div>
-            <p className="text-sm text-warmCharcoal/60">
-              Questions? <Link href="/info-session" className="text-lavenderViolet hover:underline">Join our info session</Link>
-            </p>
+            <Link href="/" className="text-sm text-lavenderViolet hover:underline">
+              Back to Home
+            </Link>
           </div>
         )}
       </div>

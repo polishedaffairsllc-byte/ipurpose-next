@@ -29,7 +29,7 @@ export default async function Home() {
       {/* Top Navigation Bar - CTAs and Auth */}
       <nav className="relative z-20 w-full flex items-center justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <Button size="lg" variant="primary" href="/clarity-check">
-          Take the Clarity Check
+          Start the Clarity Check
         </Button>
         <Button size="lg" variant="primary" href="/program">
           View the 6-Week Program
