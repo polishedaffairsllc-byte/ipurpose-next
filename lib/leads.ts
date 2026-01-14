@@ -64,41 +64,51 @@ export async function findExistingLead(
   const db = firebaseAdmin.firestore();
   const leadsRef = db.collection('leads');
 
-  // Query: find leads with same email + source
-  const query = leadsRef
-    .where('source', '==', source)
-    .where('email', '==', normalizedEmail)
-    .orderBy('createdAt', 'desc')
-    .limit(1);
+  try {
+    // Query: find leads with same source (simple query, no composite index needed)
+    const query = leadsRef.where('source', '==', source);
 
-  const snapshot = await query.get();
+    const snapshot = await query.get();
 
-  if (snapshot.empty) {
-    return null;
-  }
-
-  const doc = snapshot.docs[0];
-  const data = doc.data() as LeadData;
-
-  // Check if within last 7 days
-  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-
-  let createdAtMs: number | null = null;
-
-  if (data.createdAt instanceof Timestamp) {
-    createdAtMs = data.createdAt.toMillis();
-  } else if (data.createdAt) {
-    const d = new Date(data.createdAt as any);
-    if (!isNaN(d.getTime())) {
-      createdAtMs = d.getTime();
+    if (snapshot.empty) {
+      return null;
     }
-  }
 
-  if (createdAtMs && createdAtMs >= sevenDaysAgo) {
-    return { docId: doc.id, data };
-  }
+    // Filter by email and date in code to avoid composite index requirement
+    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    let latestMatch: { docId: string; data: LeadData } | null = null;
 
-  return null;
+    for (const doc of snapshot.docs) {
+      const data = doc.data() as LeadData;
+
+      if (data.email !== normalizedEmail) {
+        continue; // Not the email we're looking for
+      }
+
+      let createdAtMs: number | null = null;
+
+      if (data.createdAt instanceof Timestamp) {
+        createdAtMs = data.createdAt.toMillis();
+      } else if (data.createdAt) {
+        const d = new Date(data.createdAt as any);
+        if (!isNaN(d.getTime())) {
+          createdAtMs = d.getTime();
+        }
+      }
+
+      // Keep the most recent one within 7 days
+      if (createdAtMs && createdAtMs >= sevenDaysAgo) {
+        if (!latestMatch || createdAtMs > (latestMatch.data.createdAt instanceof Timestamp ? latestMatch.data.createdAt.toMillis() : 0)) {
+          latestMatch = { docId: doc.id, data };
+        }
+      }
+    }
+
+    return latestMatch;
+  } catch (error) {
+    console.error('[LEADS] Error in findExistingLead:', error);
+    throw error;
+  }
 }
 
 /**
