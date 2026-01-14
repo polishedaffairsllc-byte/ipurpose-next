@@ -64,11 +64,14 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
               playsInline
               onCanPlay={() => {
                 setLoaded(true);
+                console.log('Video can play, duration:', vidRef.current?.duration);
                 // Ensure video plays after canplay event
                 if (vidRef.current) {
                   vidRef.current.play().catch(e => console.error('Video play failed:', e));
                 }
               }}
+              onPlay={() => console.log('Video playing')}
+              onEnded={() => console.log('Video ended')}
               onError={(e) => {
                 console.error('Video error:', e);
                 setError(true);
