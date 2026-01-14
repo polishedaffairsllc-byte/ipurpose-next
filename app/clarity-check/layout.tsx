@@ -1,8 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Clarity Check | iPurpose',
-  description: 'Take a 2-minute clarity check to see if iPurpose is right for you. Get personalized insights about reconnecting with your purpose.',
+  title: 'Discover Your Alignment Type | iPurpose',
+  description: 'Take the iPurpose Alignment Type assessment to discover your unique archetype and get personalized guidance for your journey.',
+  openGraph: {
+    title: 'Discover Your Alignment Type | iPurpose',
+    description: 'Take the iPurpose Alignment Type assessment to discover your unique archetype and get personalized guidance for your journey.',
+    type: 'website',
+  },
+  robots: 'index, follow',
 };
 
 export default function ClarityCheckLayout({

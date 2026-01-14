@@ -1,4 +1,9 @@
 import Image from 'next/image';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  robots: 'noindex, nofollow',
+};
 
 export default function TestPage() {
   return (
