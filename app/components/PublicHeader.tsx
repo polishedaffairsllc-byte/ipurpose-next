@@ -27,19 +27,22 @@ export default async function PublicHeader() {
       <nav className="flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-3 w-full md:w-auto md:mr-auto">
         <Link 
           href="/discover" 
-          className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-lavenderViolet hover:bg-lavenderViolet/90 transition-all whitespace-nowrap"
+          className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+          style={{ backgroundColor: '#9C88FF' }}
         >
           Discover
         </Link>
         <Link 
           href="/about" 
-          className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-indigoDeep hover:bg-indigoDeep/90 transition-all whitespace-nowrap"
+          className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+          style={{ backgroundColor: '#5B4BA6' }}
         >
           About
         </Link>
         <Link 
           href="/program" 
-          className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-salmonPeach hover:bg-salmonPeach/90 transition-all whitespace-nowrap"
+          className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+          style={{ backgroundColor: '#E8967A' }}
         >
           6-Week Program
         </Link>
@@ -49,7 +52,8 @@ export default async function PublicHeader() {
       <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 md:gap-3 w-full md:w-auto md:ml-auto">
         <Link
           href="/clarity-check"
-          className="px-5 md:px-6 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-gradient-to-r from-lavenderViolet to-indigoDeep hover:shadow-lg transition-all whitespace-nowrap"
+          className="px-5 md:px-6 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
+          style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #5B4BA6 100%)' }}
         >
           Clarity Check
         </Link>
@@ -60,14 +64,16 @@ export default async function PublicHeader() {
             </span>
             <Link
               href="/dashboard"
-              className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-lavenderViolet hover:bg-lavenderViolet/90 transition-all whitespace-nowrap"
+              className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+              style={{ backgroundColor: '#9C88FF' }}
             >
               Dashboard
             </Link>
             <form action="/api/auth/logout" method="post">
               <button 
                 type="submit" 
-                className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-salmonPeach hover:bg-salmonPeach/90 transition-all whitespace-nowrap"
+                className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+                style={{ backgroundColor: '#E8967A' }}
               >
                 Logout
               </button>
@@ -77,13 +83,15 @@ export default async function PublicHeader() {
           <>
             <Link
               href="/login"
-              className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-indigoDeep hover:bg-indigoDeep/90 transition-all whitespace-nowrap"
+              className="px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
+              style={{ backgroundColor: '#5B4BA6' }}
             >
               Sign In
             </Link>
             <Link
               href="/signup"
-              className="px-5 md:px-6 py-2 rounded-lg text-xs md:text-sm font-semibold text-white bg-gradient-to-r from-lavenderViolet to-salmonPeach hover:shadow-lg transition-all whitespace-nowrap"
+              className="px-5 md:px-6 py-2 rounded-lg text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
+              style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #E8967A 100%)' }}
             >
               Get Started
             </Link>
