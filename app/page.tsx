@@ -1,10 +1,8 @@
-import Button from './components/Button';
 import { cookies } from 'next/headers';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
-import Link from 'next/link';
-import Image from 'next/image';
 
 import VideoBackground from './components/VideoBackground';
+import PublicHeader from './components/PublicHeader';
 
 export default async function Home() {
   // Check if user is logged in
@@ -26,20 +24,8 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/water-reflection.mp4" poster="" />
       
-      {/* Top Navigation Bar - CTAs and Auth */}
-      <nav className="relative z-20 w-full flex items-center justify-around p-6 lg:p-12 border-b border-white/10" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-        <Button size="lg" variant="primary" href="/clarity-check">
-          Start the Clarity Check
-        </Button>
-        <Button size="lg" variant="primary" href="/program">
-          View the 6-Week Program
-        </Button>
-        {isLoggedIn ? (
-          <Button variant="primary" href="/dashboard">Dashboard</Button>
-        ) : (
-          <Button variant="primary" href="/login">Sign In</Button>
-        )}
-      </nav>
+      {/* Top Navigation Bar with new tabs */}
+      <PublicHeader />
 
       {/* Hero Section - Full Viewport Height */}
       <div className="relative w-full flex items-center justify-center p-6 lg:p-12" style={{ height: 'calc(100vh - 80px)', zIndex: 10 }}>
