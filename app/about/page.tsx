@@ -26,7 +26,7 @@ export default function AboutPage() {
       </nav>
 
       {/* Main Content */}
-      <div className="container max-w-4xl mx-auto px-6 py-20 space-y-20">
+      <div className="container max-w-4xl mx-auto px-6 py-12 space-y-12">
         
         {/* Hero */}
         <section className="text-center space-y-6">
@@ -39,14 +39,14 @@ export default function AboutPage() {
         </section>
 
         {/* Founder Section */}
-        <section className="space-y-6">
+        <section className="space-y-3">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Founder
           </h2>
           <div className="flex gap-8">
             <div className="flex-1">
-              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Renita Hamilton</h3>
-              <p className="text-lg font-semibold text-lavenderViolet mb-4">Creator of iPurpose</p>
+              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-1">Renita Hamilton</h3>
+              <p className="text-lg font-semibold text-lavenderViolet mb-3">Creator of iPurpose</p>
               <p className="text-base text-warmCharcoal/75 leading-relaxed max-w-md">
                 Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
               </p>
@@ -67,7 +67,7 @@ export default function AboutPage() {
         </section>
 
         {/* Why iPurpose Exists */}
-        <section className="space-y-6">
+        <section className="space-y-3">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Why iPurpose Exists
           </h2>
@@ -77,14 +77,14 @@ export default function AboutPage() {
         </section>
 
         {/* Philosophy Section */}
-        <section className="space-y-6">
+        <section className="space-y-3">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             The Philosophy
           </h2>
-          <p className="text-lg text-warmCharcoal/75 mb-6">
+          <p className="text-lg text-warmCharcoal/75 mb-4">
             Soul → Systems → AI
           </p>
-          <ul className="space-y-4 text-lg text-warmCharcoal/75">
+          <ul className="space-y-3 text-lg text-warmCharcoal/75">
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">•</span>
               <span><strong>Soul:</strong> Alignment before action. Know yourself and your values first.</span>
@@ -98,13 +98,13 @@ export default function AboutPage() {
               <span><strong>AI:</strong> Automation only after clarity. Use technology to amplify, not replace, your vision.</span>
             </li>
           </ul>
-          <p className="text-lg text-warmCharcoal/75 mt-6">
+          <p className="text-lg text-warmCharcoal/75 mt-4">
             This sequence ensures that technology serves the human — not the other way around.
           </p>
         </section>
 
         {/* Intention Section */}
-        <section className="space-y-6">
+        <section className="space-y-3">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Intention
           </h2>
