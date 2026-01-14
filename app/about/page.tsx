@@ -43,7 +43,7 @@ export default function AboutPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Founder
           </h2>
-          <div className="flex flex-col-reverse md:flex-row gap-8 items-start">
+          <div className="flex gap-8 items-start">
             <div className="flex-1 space-y-4">
               <h3 className="text-2xl font-marcellus text-warmCharcoal">Renita Hamilton</h3>
               <p className="text-lg font-semibold text-lavenderViolet">Creator of iPurpose</p>
@@ -51,7 +51,7 @@ export default function AboutPage() {
                 Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
               </p>
             </div>
-            <div className="flex-shrink-0 md:w-80">
+            <div className="flex-shrink-0 w-80">
               <div className="border-4 border-lavenderViolet rounded-lg overflow-hidden shadow-lg">
                 <Image
                   src="/images/renita-hamilton.jpg"
