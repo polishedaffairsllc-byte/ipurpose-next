@@ -22,61 +22,53 @@ export default async function PublicHeader() {
   }
 
   return (
-    <header className="relative z-20 w-full flex items-center justify-center gap-4 p-4 md:p-6 lg:p-8 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md">
-      {/* Discover */}
+    <header className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md">
       <Link 
         href="/discover" 
-        className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-        style={{ backgroundColor: '#9C88FF' }}
+        className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+        style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
       >
         Discover
       </Link>
 
-      {/* About */}
       <Link 
         href="/about" 
-        className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-        style={{ backgroundColor: '#5B4BA6' }}
+        className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+        style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))' }}
       >
         About
       </Link>
 
-      {/* 6-Week Program */}
       <Link 
         href="/program" 
-        className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-        style={{ backgroundColor: '#E8967A' }}
+        className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+        style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))' }}
       >
         6-Week Program
       </Link>
 
-      {/* Clarity Check */}
       <Link
         href="/clarity-check"
-        className="px-5 md:px-6 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
-        style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #5B4BA6 100%)' }}
+        className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+        style={{ background: 'linear-gradient(to right, #9C88FF, rgba(91, 75, 166, 0))' }}
       >
         Clarity Check
       </Link>
 
-      {/* Auth Section */}
       {isLoggedIn ? (
         <>
-          <span className="hidden lg:block text-xs md:text-sm font-medium text-white/90 px-3">
-            {displayName}
-          </span>
           <Link
             href="/dashboard"
-            className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-            style={{ backgroundColor: '#9C88FF' }}
+            className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))' }}
           >
             Dashboard
           </Link>
-          <form action="/api/auth/logout" method="post">
+          <form action="/api/auth/logout" method="post" className="flex-1 mx-2">
             <button 
               type="submit" 
-              className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-              style={{ backgroundColor: '#E8967A' }}
+              className="w-full px-6 py-3 rounded-full font-italiana text-white text-lg hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))' }}
             >
               Logout
             </button>
@@ -86,15 +78,15 @@ export default async function PublicHeader() {
         <>
           <Link
             href="/login"
-            className="px-4 md:px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:opacity-80 transition-all whitespace-nowrap"
-            style={{ backgroundColor: '#5B4BA6' }}
+            className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))' }}
           >
             Sign In
           </Link>
           <Link
             href="/signup"
-            className="px-5 md:px-6 py-2.5 rounded-full text-xs md:text-sm font-semibold text-white hover:shadow-lg transition-all whitespace-nowrap"
-            style={{ background: 'linear-gradient(90deg, #9C88FF 0%, #E8967A 100%)' }}
+            className="px-6 py-3 rounded-full font-italiana text-white text-lg flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(232, 150, 122, 0))' }}
           >
             Get Started
           </Link>
