@@ -44,20 +44,6 @@ export default function ClarityCheckPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
-            iPurpose
-          </Link>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-warmCharcoal hover:text-lavenderViolet transition-colors font-semibold">
-              Login
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Main Content */}
       <div className="container max-w-2xl mx-auto px-6 py-20">
         {!submitted ? (
