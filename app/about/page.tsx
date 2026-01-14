@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -42,12 +43,23 @@ export default function AboutPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Founder
           </h2>
-          <div className="space-y-4">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal">Renita Hamilton</h3>
-            <p className="text-lg font-semibold text-lavenderViolet">Creator of iPurpose</p>
-            <p className="text-lg text-warmCharcoal/75">
-              Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
-            </p>
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            <div className="flex-shrink-0 md:w-64">
+              <Image
+                src="/images/renita-hamilton.jpg"
+                alt="Renita Hamilton, Founder of iPurpose"
+                width={300}
+                height={400}
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-2xl font-marcellus text-warmCharcoal">Renita Hamilton</h3>
+              <p className="text-lg font-semibold text-lavenderViolet">Creator of iPurpose</p>
+              <p className="text-lg text-warmCharcoal/75">
+                Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
+              </p>
+            </div>
           </div>
         </section>
 
