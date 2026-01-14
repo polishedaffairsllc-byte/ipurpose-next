@@ -18,9 +18,12 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="relative w-full pt-20 pb-12 px-6 md:px-12 lg:px-20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="font-italiana text-5xl md:text-6xl text-white mb-8 leading-tight">
+          <div 
+            className="font-italiana mb-8 leading-tight"
+            style={{ fontSize: '48px', color: '#FFFFFF', backgroundImage: 'linear-gradient(to right, #FFFFFF, rgba(255, 255, 255, 0.6))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          >
             About iPurpose
-          </h1>
+          </div>
           <p className="text-lg text-white/80 leading-relaxed">
             Understanding the story, philosophy, and intention behind iPurpose.
           </p>
@@ -30,7 +33,7 @@ export default function AboutPage() {
       {/* Founder Section */}
       <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-italiana text-4xl text-white mb-8">Founder</h2>
+          <h2 className="font-italiana text-4xl text-white mb-8" style={{ fontSize: '36px', backgroundImage: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Founder</h2>
           
           <div className="bg-gradient-to-r from-white/5 to-white/0 p-8 rounded-lg border border-white/10">
             <h3 className="font-italiana text-2xl text-white mb-2">Renita Hamilton</h3>
@@ -46,7 +49,7 @@ export default function AboutPage() {
       {/* Why iPurpose Exists */}
       <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-italiana text-4xl text-white mb-8">Why iPurpose Exists</h2>
+          <h2 className="font-italiana text-4xl text-white mb-8" style={{ fontSize: '36px', backgroundImage: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Why iPurpose Exists</h2>
           
           <div className="bg-gradient-to-r from-white/5 to-white/0 p-8 rounded-lg border border-white/10">
             <p className="text-base text-white/80 leading-relaxed">
@@ -59,7 +62,7 @@ export default function AboutPage() {
       {/* Philosophy Section */}
       <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-italiana text-4xl text-white mb-8">The Philosophy</h2>
+          <h2 className="font-italiana text-4xl text-white mb-8" style={{ fontSize: '36px', backgroundImage: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>The Philosophy</h2>
           
           <div className="mb-8">
             <h3 className="font-italiana text-3xl text-white mb-8">Soul → Systems → AI</h3>
@@ -102,7 +105,7 @@ export default function AboutPage() {
       {/* Intention Section */}
       <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-italiana text-4xl text-white mb-8">Intention</h2>
+          <h2 className="font-italiana text-4xl text-white mb-8" style={{ fontSize: '36px', backgroundImage: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Intention</h2>
           
           <div className="bg-gradient-to-r from-white/5 to-white/0 p-8 rounded-lg border border-white/10">
             <p className="text-base text-white/80 leading-relaxed">
