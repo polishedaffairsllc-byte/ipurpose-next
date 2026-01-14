@@ -10,7 +10,16 @@ export default async function NavBar() {
   const pathname = headersList.get("x-pathname") || "";
   
   // Hide navbar on login, signup, home, clarity-check, and dashboard pages
-  if (pathname === "/login" || pathname === "/signup" || pathname === "/" || pathname === "" || pathname === "/clarity-check" || pathname.startsWith("/dashboard") || pathname.startsWith("/soul") || pathname.startsWith("/systems") || pathname.startsWith("/ai") || pathname.startsWith("/insights") || pathname.startsWith("/settings")) {
+  const hiddenRoutes = ["/login", "/signup", "/", "", "/clarity-check"];
+  const isHidden = hiddenRoutes.includes(pathname) || 
+                   pathname.startsWith("/dashboard") || 
+                   pathname.startsWith("/soul") || 
+                   pathname.startsWith("/systems") || 
+                   pathname.startsWith("/ai") || 
+                   pathname.startsWith("/insights") || 
+                   pathname.startsWith("/settings");
+  
+  if (isHidden) {
     return null;
   }
 
