@@ -29,11 +29,7 @@ const ARCHETYPES = {
   }
 };
 
-interface ArchetypeSelectorProps {
-  onComplete: () => void;
-}
-
-export default function ArchetypeSelector({ onComplete }: ArchetypeSelectorProps) {
+export default function ArchetypeSelector() {
   const { user } = useAuth();
   const [step, setStep] = useState<'quiz' | 'selection'>('quiz');
   const [selectedPrimary, setSelectedPrimary] = useState<keyof typeof ARCHETYPES | null>(null);
@@ -112,7 +108,7 @@ export default function ArchetypeSelector({ onComplete }: ArchetypeSelectorProps
       });
 
       if (saveResponse.ok) {
-        onComplete();
+        window.location.reload();
       }
     } finally {
       setLoading(false);

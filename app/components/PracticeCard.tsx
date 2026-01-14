@@ -13,12 +13,7 @@ export interface Practice {
   icon: string;
 }
 
-interface PracticeCardProps {
-  practice: Practice;
-  onComplete: () => void;
-}
-
-export default function PracticeCard({ practice, onComplete }: PracticeCardProps) {
+export default function PracticeCard({ practice }: { practice: Practice }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'instructions' | 'reflection' | 'confirmation'>('instructions');
   const [reflection, setReflection] = useState('');
@@ -43,8 +38,7 @@ export default function PracticeCard({ practice, onComplete }: PracticeCardProps
       if (response.ok) {
         setStep('confirmation');
         setTimeout(() => {
-          setIsOpen(false);
-          onComplete();
+          window.location.reload();
         }, 2000);
       }
     } finally {

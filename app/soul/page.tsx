@@ -148,7 +148,7 @@ export default async function SoulPage() {
         {/* Archetype Section */}
         <div className="mb-12">
           {!archetype.primary ? (
-            <ArchetypeSelector onComplete={() => window.location.reload()} />
+            <ArchetypeSelector />
           ) : (
             <Card accent="lavender" className="mb-8">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-montserrat">
@@ -169,7 +169,7 @@ export default async function SoulPage() {
           )}
 
           {/* Daily Check-in */}
-          {!hasCheckedIn && <DailyCheckIn onComplete={() => window.location.reload()} />}
+          {!hasCheckedIn && <DailyCheckIn />}
 
           <SectionHeading level="h2" className="mb-6">
             Daily Soul Practices
@@ -179,7 +179,6 @@ export default async function SoulPage() {
               <PracticeCard
                 key={practice.id}
                 practice={practice}
-                onComplete={() => window.location.reload()}
               />
             ))}
           </div>

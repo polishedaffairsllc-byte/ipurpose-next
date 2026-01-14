@@ -6,11 +6,7 @@ import Button from './Button';
 
 const EMOTIONS = ['Grounded', 'Energized', 'Uncertain', 'Tired', 'Inspired', 'Anxious', 'Peaceful'];
 
-interface DailyCheckInProps {
-  onComplete: () => void;
-}
-
-export default function DailyCheckIn({ onComplete }: DailyCheckInProps) {
+export default function DailyCheckIn() {
   const [step, setStep] = useState<'form' | 'confirmation'>('form');
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
   const [alignment, setAlignment] = useState(5);
@@ -43,7 +39,7 @@ export default function DailyCheckIn({ onComplete }: DailyCheckInProps) {
 
       if (response.ok) {
         setStep('confirmation');
-        setTimeout(() => onComplete(), 2000);
+        setTimeout(() => window.location.reload(), 2000);
       }
     } finally {
       setLoading(false);
