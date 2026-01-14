@@ -1,111 +1,139 @@
-'use client';
+import Link from "next/link";
+import { Metadata } from "next";
 
-import { Metadata } from 'next';
-import Link from 'next/link';
-
-// Note: Can't export metadata in client component, but we'll add it via layout if needed
+export const metadata: Metadata = {
+  title: "About iPurpose",
+  description: "Learn about Renita Hamilton, founder of iPurpose, and the philosophy behind Soul → Systems → AI.",
+  robots: "index, follow",
+  openGraph: {
+    title: "About iPurpose",
+    description: "Learn about Renita Hamilton, founder of iPurpose, and the philosophy behind Soul → Systems → AI.",
+    type: "website",
+  },
+};
 
 export default function AboutPage() {
   return (
-    <div className="relative min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
-            iPurpose
-          </Link>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-warmCharcoal hover:text-lavenderViolet transition-colors font-semibold">
-              Login
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="container max-w-4xl mx-auto px-6 py-20 space-y-20">
-        
-        {/* Hero */}
-        <section className="text-center space-y-6">
-          <h1 className="heading-hero mb-6 text-warmCharcoal">
+    <main className="min-h-screen bg-gradient-to-b from-black via-black to-black">
+      {/* Hero Section */}
+      <section className="relative w-full pt-20 pb-12 px-6 md:px-12 lg:px-20">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="font-italiana text-5xl md:text-6xl text-white mb-8 leading-tight">
             About iPurpose
           </h1>
-        </section>
-
-        {/* Why iPurpose Exists */}
-        <section className="space-y-6">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            Why iPurpose exists
-          </h2>
-          <p className="text-lg text-warmCharcoal/75">
-            iPurpose exists for people who are capable and driven—but feel disconnected from what they're building. It's designed to help you reconnect to what matters, reduce internal friction, and build with clarity.
+          <p className="text-lg text-white/80 leading-relaxed">
+            Understanding the story, philosophy, and intention behind iPurpose.
           </p>
-        </section>
+        </div>
+      </section>
 
-        {/* The Method */}
-        <section className="space-y-6">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            The method
-          </h2>
-          <p className="text-lg text-warmCharcoal/75 mb-6">
-            The framework is simple: Soul → Systems → AI.
-          </p>
-          <ul className="space-y-4 text-lg text-warmCharcoal/75">
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">•</span>
-              <span><strong>Soul:</strong> alignment, truth, and inner clarity</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">•</span>
-              <span><strong>Systems:</strong> structure, follow-through, and momentum</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">•</span>
-              <span><strong>AI:</strong> gentle support that amplifies what's already true</span>
-            </li>
-          </ul>
-        </section>
+      {/* Founder Section */}
+      <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-italiana text-4xl text-white mb-8">Founder</h2>
+          
+          <div className="bg-gradient-to-r from-white/5 to-white/0 p-8 rounded-lg border border-white/10">
+            <h3 className="font-italiana text-2xl text-white mb-2">Renita Hamilton</h3>
+            <p className="text-lg text-white/60 mb-6 font-semibold">Creator of iPurpose</p>
+            
+            <p className="text-base text-white/80 leading-relaxed">
+              Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        {/* What Makes It Different */}
-        <section className="space-y-6">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            What makes it different
-          </h2>
-          <ul className="space-y-4 text-lg text-warmCharcoal/75">
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">✦</span>
-              <span>Not performance-based</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">✦</span>
-              <span>Not hustle-based</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">✦</span>
-              <span>Built for thoughtful people who want real alignment</span>
-            </li>
-          </ul>
-        </section>
+      {/* Why iPurpose Exists */}
+      <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-italiana text-4xl text-white mb-8">Why iPurpose Exists</h2>
+          
+          <div className="bg-gradient-to-r from-white/5 to-white/0 p-8 rounded-lg border border-white/10">
+            <p className="text-base text-white/80 leading-relaxed">
+              iPurpose was created because traditional business often ignores the soul — and spiritual work often ignores structure. I saw capable, thoughtful people feeling disconnected, overwhelmed, or stuck between intuition and implementation. iPurpose exists to hold both.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        {/* Next Steps */}
-        <section className="space-y-8 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            Next steps
-          </h2>
-          <div className="space-y-3">
+      {/* Philosophy Section */}
+      <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-italiana text-4xl text-white mb-8">The Philosophy</h2>
+          
+          <div className="mb-8">
+            <h3 className="font-italiana text-3xl text-white mb-8">Soul → Systems → AI</h3>
+            
+            <div className="space-y-6 mb-8">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-1 bg-gradient-to-b from-white/60 to-white/10 rounded-full"></div>
+                <div>
+                  <p className="font-semibold text-white mb-2">Soul: Alignment before action</p>
+                  <p className="text-white/70 text-sm">Know yourself and your values first.</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-1 bg-gradient-to-b from-white/60 to-white/10 rounded-full"></div>
+                <div>
+                  <p className="font-semibold text-white mb-2">Systems: Structure before scale</p>
+                  <p className="text-white/70 text-sm">Build sustainable frameworks that reflect your values.</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-1 bg-gradient-to-b from-white/60 to-white/10 rounded-full"></div>
+                <div>
+                  <p className="font-semibold text-white mb-2">AI: Automation only after clarity</p>
+                  <p className="text-white/70 text-sm">Use technology to amplify, not replace, your vision.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-white/5 to-white/0 p-6 rounded-lg border border-white/10">
+              <p className="text-base text-white/80 leading-relaxed">
+                This sequence ensures that technology serves the human — not the other way around.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Intention Section */}
+      <section className="w-full py-16 px-6 md:px-12 lg:px-20 border-t border-white/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-italiana text-4xl text-white mb-8">Intention</h2>
+          
+          <div className="bg-gradient-to-r from-white/5 to-white/0 p-8 rounded-lg border border-white/10">
+            <p className="text-base text-white/80 leading-relaxed">
+              iPurpose is not about hustle, hype, or extraction. It is about building what is true, at a pace that is sustainable, in a way that feels ethical, grounded, and alive.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="w-full py-20 px-6 md:px-12 lg:px-20 border-t border-white/10">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+            <Link
+              href="/discover"
+              className="px-8 py-4 rounded-full font-italiana text-lg text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '18px' }}
+            >
+              Discover iPurpose
+            </Link>
+            
             <Link
               href="/program"
-              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
+              className="px-8 py-4 rounded-full font-italiana text-lg text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '18px' }}
             >
               View the 6-Week Program
             </Link>
-            <Link href="/discover" className="text-lavenderViolet hover:underline block text-center">
-              Discover iPurpose
-            </Link>
           </div>
-        </section>
-
-      </div>
-    </div>
+        </div>
+      </section>
+    </main>
   );
 }
