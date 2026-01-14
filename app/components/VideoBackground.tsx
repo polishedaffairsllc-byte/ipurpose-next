@@ -51,39 +51,45 @@ export default function VideoBackground({ src, poster, className = "" }: Props) 
   return (
     <div className={`absolute inset-0 w-full h-full z-0 ${className}`}>
       {(!error && okToPlay !== false) ? (
-        okToPlay ? (
-          <video
-            ref={vidRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            onCanPlay={() => setLoaded(true)}
-            onError={() => setError(true)}
-            className="absolute inset-0 w-full h-full object-cover"
-            poster={poster}
-          >
-            <source src={src} type="video/mp4" />
-            {/* fallback text for very old browsers */}
-            Your browser does not support the video tag.
-          </video>
-        ) : (
+        <>
+          {/* Background color while video loads */}
+          <div className="absolute inset-0 bg-black" />
+          
+          {okToPlay && (
+            <video
+              ref={vidRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              onCanPlay={() => setLoaded(true)}
+              onError={() => setError(true)}
+              className="absolute inset-0 w-full h-full object-cover"
+              poster={poster}
+            >
+              <source src={src} type="video/mp4" />
+              {/* fallback text for very old browsers */}
+              Your browser does not support the video tag.
+            </video>
+          )}
+          
+          {/* Only show fallback image if video failed */}
+          {!okToPlay && !loaded && (
+            <img
+              src={poster || "/images/my-logo.png"}
+              alt="background fallback"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+        </>
+      ) : (
         // fallback: show poster image if video failed or timed out
         <img
-          src={poster || "/images/ipurpose-logo-transparent.png"}
-          alt="background fallback"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        )
-      ) : (
-        // While probing, show poster so layout is stable
-        <img
-          src={poster || "/images/ipurpose-logo-transparent.png"}
+          src={poster || "/images/my-logo.png"}
           alt="background fallback"
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
-
     </div>
   );
 }
