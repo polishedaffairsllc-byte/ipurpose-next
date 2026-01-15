@@ -22,7 +22,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-white">
+    <div className="relative w-full bg-white">
       {/* Background Video */}
       <VideoBackground src="/videos/water-reflection.mp4" poster="" />
       
