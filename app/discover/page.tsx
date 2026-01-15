@@ -32,7 +32,7 @@ export default function DiscoverPage() {
           <h1 className="heading-hero mb-6 text-warmCharcoal">
             Discover iPurpose
           </h1>
-          <p className="text-2xl text-warmCharcoal/80">
+          <p className="text-warmCharcoal/80" style={{ fontSize: '48px' }}>
             If you feel disconnected, tired, or unclear about what you're building, iPurpose helps you reconnect to what matters and build it with clarity.
           </p>
         </section>
