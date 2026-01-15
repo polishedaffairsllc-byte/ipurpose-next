@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
+import Footer from '../components/Footer';
 
 export default function ClarityCheckPage() {
   const [name, setName] = useState('');
@@ -138,6 +139,9 @@ export default function ClarityCheckPage() {
           </div>
         )}
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

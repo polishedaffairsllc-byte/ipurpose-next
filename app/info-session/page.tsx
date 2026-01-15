@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import Link from 'next/link';
 import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
+import Footer from '../components/Footer';
 
 export default function InfoSessionPage() {
   const [name, setName] = useState('');
@@ -142,6 +143,9 @@ export default function InfoSessionPage() {
           </div>
         )}
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

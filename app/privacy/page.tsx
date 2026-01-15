@@ -1,5 +1,6 @@
 import React from "react";
 import PublicHeader from "../components/PublicHeader";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Privacy Policy — iPurpose",
@@ -18,6 +19,8 @@ export default function PrivacyPage() {
       </p>
       <p>We do not publish or share service-account keys or private credentials.</p>
     </main>
+    
+    <Footer />
     </>
   );
 }

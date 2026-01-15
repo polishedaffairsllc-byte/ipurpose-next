@@ -3,6 +3,7 @@ import Button from '../components/Button';
 import Link from 'next/link';
 import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
+import Footer from '../components/Footer';
 
 export const metadata: Metadata = {
   title: 'iPurpose 6-Week Program | Build with Clarity',
@@ -241,6 +242,9 @@ export default function ProgramPage() {
           </Button>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

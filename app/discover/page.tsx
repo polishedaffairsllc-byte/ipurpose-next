@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
+import Footer from '../components/Footer';
 
 export const metadata: Metadata = {
   title: 'Discover iPurpose | Build With Clarity',
@@ -135,6 +136,9 @@ export default function DiscoverPage() {
         </section>
 
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

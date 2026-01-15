@@ -4,6 +4,7 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import VideoBackground from './components/VideoBackground';
 import FloatingLogo from './components/FloatingLogo';
 import PublicHeader from './components/PublicHeader';
+import Footer from './components/Footer';
 
 export default async function Home() {
   // Check if user is logged in
@@ -48,6 +49,9 @@ export default async function Home() {
           </p>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

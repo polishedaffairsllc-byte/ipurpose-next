@@ -1,5 +1,6 @@
 import React from "react";
 import PublicHeader from "../components/PublicHeader";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Contact — iPurpose",
@@ -20,6 +21,8 @@ export default function ContactPage() {
       </ul>
       <p>If you'd like company documents (registration or investor validation), email renita@ipurposesoul.com and I will provide secure access.</p>
     </main>
+    
+    <Footer />
     </>
   );
 }

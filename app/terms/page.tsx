@@ -1,5 +1,6 @@
 import React from "react";
 import PublicHeader from "../components/PublicHeader";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Terms of Service — iPurpose",
@@ -55,6 +56,8 @@ export default function TermsPage() {
         <small>© iPurpose LLC</small>
       </footer>
     </main>
+    
+    <Footer />
     </>
   );
 }

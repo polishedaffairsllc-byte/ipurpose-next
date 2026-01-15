@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 import FloatingLogo from "../components/FloatingLogo";
 import PublicHeader from "../components/PublicHeader";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "About iPurpose",
@@ -131,6 +132,9 @@ export default function AboutPage() {
         </section>
 
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
