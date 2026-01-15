@@ -29,7 +29,7 @@ export default function DiscoverPage() {
         
         {/* Hero */}
         <section className="text-center space-y-6">
-          <h1 className="font-marcellus mb-6 text-warmCharcoal" style={{ fontSize: '24px' }}>
+          <h1 className="heading-hero mb-6 text-warmCharcoal">
             Discover iPurpose
           </h1>
           <p className="text-2xl text-warmCharcoal/80">
@@ -42,7 +42,7 @@ export default function DiscoverPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             What iPurpose is
           </h2>
-          <p className="text-lg text-warmCharcoal/75">
+          <p className="text-warmCharcoal/75" style={{ fontSize: '24px' }}>
             iPurpose is a clarity + alignment platform that helps thoughtful, capable people move from internal friction to clear direction—by integrating Soul (inner alignment), Systems (practical structure), and AI (gentle support).
           </p>
         </section>
@@ -52,7 +52,7 @@ export default function DiscoverPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Who it's for
           </h2>
-          <ul className="space-y-4 text-lg text-warmCharcoal/75">
+          <ul className="space-y-4 text-warmCharcoal/75" style={{ fontSize: '24px' }}>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">✓</span>
               <span>You're capable, but you feel scattered or stuck</span>
@@ -77,7 +77,7 @@ export default function DiscoverPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             How it works
           </h2>
-          <ul className="space-y-4 text-lg text-warmCharcoal/75">
+          <ul className="space-y-4 text-warmCharcoal/75" style={{ fontSize: '24px' }}>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">→</span>
               <span><strong>Soul:</strong> clarify what matters and what's misaligned</span>
