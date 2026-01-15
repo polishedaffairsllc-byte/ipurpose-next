@@ -18,8 +18,8 @@ export default function DiscoverPage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
-            iPurpose
+          <Link href="/" className="text-warmCharcoal hover:opacity-80 transition-opacity">
+            <span className="sr-only">Back to Home</span>
           </Link>
         </div>
       </nav>
@@ -29,7 +29,7 @@ export default function DiscoverPage() {
         
         {/* Hero */}
         <section className="text-center space-y-6">
-          <h1 className="heading-hero mb-6 text-warmCharcoal">
+          <h1 className="font-marcellus mb-6 text-warmCharcoal" style={{ fontSize: '24px' }}>
             Discover iPurpose
           </h1>
           <p className="text-2xl text-warmCharcoal/80">
