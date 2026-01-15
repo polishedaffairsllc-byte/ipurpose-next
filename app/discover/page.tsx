@@ -95,30 +95,34 @@ export default function DiscoverPage() {
 
         {/* Start Here */}
         <section className="space-y-8 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
+          <h2 className="font-marcellus text-warmCharcoal" style={{ fontSize: '48px' }}>
             Start here
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-4 flex flex-col">
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSdeqCKVGTFlVma5ws5cHIICSqU74dR6ZbpTzawj-Cx4_wcApQ/viewform?usp=sharing&ouid=108847680085116613841"
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:opacity-90 transition-all text-center"
-              style={{ fontSize: '24px' }}
+              className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ fontSize: '24px', background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
             >
               Discover Your Soul iPurpose Alignment Type
             </a>
             <Link
               href="/program"
-              className="block w-full bg-gradient-to-r from-salmonPeach to-warmCharcoal text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:opacity-90 transition-all text-center"
-              style={{ fontSize: '24px' }}
+              className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ fontSize: '24px', background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))' }}
             >
               View the 6-Week Program
             </Link>
+            <Link
+              href="/about"
+              className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ fontSize: '24px', background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))' }}
+            >
+              About iPurpose
+            </Link>
           </div>
-          <Link href="/about" className="text-lavenderViolet hover:underline block text-center font-semibold" style={{ fontSize: '24px' }}>
-            About iPurpose
-          </Link>
         </section>
 
       </div>
