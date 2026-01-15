@@ -16,35 +16,36 @@ export const metadata: Metadata = {
 export default function DiscoverPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-warmCharcoal hover:opacity-80 transition-opacity">
-            <span className="sr-only">Back to Home</span>
-          </Link>
-        </div>
-      </nav>
+      {/* Floating Logo - Link back to home */}
+      <Link href="/" className="fixed top-6 left-6 z-20 relative w-40 h-10 hover:opacity-80 transition-opacity">
+        <Image 
+          src="/images/my-logo.png" 
+          alt="iPurpose Logo - Back to Home"
+          fill
+          className="object-contain"
+        />
+      </Link>
 
       {/* Main Content */}
       <div className="container max-w-4xl mx-auto px-6 py-20 space-y-20">
         
         {/* Hero */}
-        <section className="relative text-center space-y-6 py-24 px-6 rounded-2xl overflow-hidden">
-          {/* Background Image */}
-          <Image
-            src="/images/sebastien-gabriel--IMlv9Jlb24-unsplash.jpg"
-            alt="Sunrise inspirational background"
-            fill
-            className="absolute inset-0 object-cover -z-10"
-          />
+        <section 
+          className="relative text-center space-y-6 py-24 px-6 rounded-2xl overflow-hidden"
+          style={{
+            backgroundImage: 'url(/images/sebastien-gabriel--IMlv9Jlb24-unsplash.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/50 -z-10"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
           
           <h1 className="heading-hero mb-6 text-white relative z-10">
             Discover iPurpose
           </h1>
-          <p className="text-white relative z-10" style={{ fontSize: '48px' }}>
-            If you feel disconnected, tired, or unclear about what you're building, iPurpose helps you reconnect to what matters and build it with clarity.
+          <p className="text-white relative z-10 font-italiana px-6 py-3 rounded-lg" style={{ fontSize: '48px', backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+            Soul + Systems + AI
           </p>
         </section>
 
@@ -115,21 +116,21 @@ export default function DiscoverPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ fontSize: '24px', background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '24px' }}
             >
               Discover Your Soul iPurpose Alignment Type
             </a>
             <Link
               href="/program"
               className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ fontSize: '24px', background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))' }}
+              style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '24px' }}
             >
               View the 6-Week Program
             </Link>
             <Link
               href="/about"
               className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ fontSize: '24px', background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))' }}
+              style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '24px' }}
             >
               About iPurpose
             </Link>

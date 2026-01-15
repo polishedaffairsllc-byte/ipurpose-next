@@ -19,8 +19,13 @@ export default function AboutPage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-warmCharcoal hover:opacity-80 transition-opacity">
-            <span className="sr-only">Back to Home</span>
+          <Link href="/" className="text-warmCharcoal hover:opacity-80 transition-opacity relative w-20 h-5">
+            <Image 
+              src="/images/my-logo.png" 
+              alt="iPurpose Logo"
+              fill
+              className="object-contain"
+            />
           </Link>
         </div>
       </nav>
