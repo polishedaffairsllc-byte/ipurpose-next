@@ -1,4 +1,5 @@
 import React from "react";
+import PublicHeader from "../components/PublicHeader";
 
 export const metadata = {
   title: "Terms of Service — iPurpose",
@@ -6,7 +7,9 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <main style={{ padding: 32, maxWidth: 900, margin: "0 auto" }}>
+    <>
+      <PublicHeader />
+      <main style={{ padding: 32, maxWidth: 900, margin: "0 auto" }}>
       <h1>Terms of Service</h1>
       <p>Effective date: December 2025</p>
 
@@ -52,5 +55,6 @@ export default function TermsPage() {
         <small>© iPurpose LLC</small>
       </footer>
     </main>
+    </>
   );
 }

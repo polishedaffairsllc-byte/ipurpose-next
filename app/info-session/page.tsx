@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Button from '../components/Button';
 import Link from 'next/link';
+import FloatingLogo from '../components/FloatingLogo';
+import PublicHeader from '../components/PublicHeader';
 
 export default function InfoSessionPage() {
   const [name, setName] = useState('');
@@ -39,19 +41,13 @@ export default function InfoSessionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
-            iPurpose
-          </Link>
-          <div className="flex gap-4">
-            <Button variant="primary" href="/login" size="sm">Login</Button>
-          </div>
-        </div>
-      </nav>
-
+    <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
+      {/* Public Header */}
+      <PublicHeader />
+      
       {/* Main Content */}
       <div className="container max-w-2xl mx-auto px-6 py-20">
         {!submitted ? (

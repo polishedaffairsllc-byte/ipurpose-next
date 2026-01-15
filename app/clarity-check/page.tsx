@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import FloatingLogo from '../components/FloatingLogo';
+import PublicHeader from '../components/PublicHeader';
 
 export default function ClarityCheckPage() {
   const [name, setName] = useState('');
@@ -43,7 +45,13 @@ export default function ClarityCheckPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
+      {/* Public Header */}
+      <PublicHeader />
+      
       {/* Main Content */}
       <div className="container max-w-2xl mx-auto px-6 py-20">
         {!submitted ? (

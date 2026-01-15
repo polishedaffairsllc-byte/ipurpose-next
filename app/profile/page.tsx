@@ -12,12 +12,6 @@ export default function ProfilePage() {
     <ProtectedRoute>
       <div className="min-h-screen w-full bg-white text-ip-heading flex flex-col">
 
-        {/* HEADER */}
-        <header className="w-full border-b border-ip-border px-6 py-4 flex justify-between items-center">
-          <IPHeading size="lg">Profile</IPHeading>
-          <LogoutButton />
-        </header>
-
         {/* MAIN */}
         <main className="flex-1 px-6 py-10 space-y-12">
 

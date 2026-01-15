@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Button from '../components/Button';
 import Link from 'next/link';
+import FloatingLogo from '../components/FloatingLogo';
+import PublicHeader from '../components/PublicHeader';
 
 export const metadata: Metadata = {
   title: 'iPurpose 6-Week Program | Build with Clarity',
@@ -15,7 +17,13 @@ export const metadata: Metadata = {
 
 export default function ProgramPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
+      {/* Public Header */}
+      <PublicHeader />
+      
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-6xl mx-auto px-[100px] py-32 text-center">

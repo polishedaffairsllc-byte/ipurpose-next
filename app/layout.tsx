@@ -4,8 +4,7 @@ import { AuthContextProvider } from './context/AuthContext';
 import FloatingOrbs from "./components/FloatingOrbs";
 import DynamicBackground from "./components/DynamicBackground";
 import ConnectionNetwork from "./components/ConnectionNetwork";
-import NavBar from "./components/NavBar";
-import DashboardSidebar from "./components/DashboardSidebar";
+import InternalNavbar from "./components/InternalNavbar";
 
 export const metadata: Metadata = {
   title: "iPurpose Platform",
@@ -17,6 +16,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Trigger rebuild to ensure NavBar removal is picked up
   return (
     <html lang="en" className="antialiased">
       <body className="min-h-screen font-montserrat text-warmCharcoal">
@@ -32,8 +32,7 @@ export default function RootLayout({
         <ConnectionNetwork />
         
         <AuthContextProvider>
-          <NavBar />
-          <DashboardSidebar />
+          <InternalNavbar />
           {children}
         </AuthContextProvider>
       </body>

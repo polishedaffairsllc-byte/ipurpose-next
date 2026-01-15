@@ -1,4 +1,5 @@
 import React from "react";
+import PublicHeader from "../components/PublicHeader";
 
 export const metadata = {
   title: "Privacy Policy — iPurpose",
@@ -6,7 +7,9 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
+    <>
+      <PublicHeader />
+      <main style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
       <h1>Privacy Policy</h1>
       <p>
         This site collects only minimal demo data and uses cookies for session handling. For production we follow
@@ -15,5 +18,6 @@ export default function PrivacyPage() {
       </p>
       <p>We do not publish or share service-account keys or private credentials.</p>
     </main>
+    </>
   );
 }

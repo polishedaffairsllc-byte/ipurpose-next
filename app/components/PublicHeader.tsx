@@ -1,25 +1,19 @@
-"use server";
+'use client';
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { firebaseAdmin } from "@/lib/firebaseAdmin";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export default async function PublicHeader() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("FirebaseSession")?.value ?? null;
-  let displayName = "Guest";
-  let isLoggedIn = false;
+export default function PublicHeader() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  if (session) {
-    try {
-      const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-      const user = await firebaseAdmin.auth().getUser(decoded.uid);
-      displayName = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
-      isLoggedIn = true;
-    } catch (e) {
-      // If verification fails, fall back to Guest
-    }
-  }
+  useEffect(() => {
+    // Check if user has session cookie
+    const hasCookie = document.cookie.includes('FirebaseSession');
+    setIsLoggedIn(!!hasCookie);
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <header className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md">

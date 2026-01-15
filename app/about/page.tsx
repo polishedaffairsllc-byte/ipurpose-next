@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
+import FloatingLogo from "../components/FloatingLogo";
+import PublicHeader from "../components/PublicHeader";
 
 export const metadata: Metadata = {
   title: "About iPurpose",
@@ -15,21 +17,13 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-warmCharcoal hover:opacity-80 transition-opacity relative w-20 h-5">
-            <Image 
-              src="/images/my-logo.png" 
-              alt="iPurpose Logo"
-              fill
-              className="object-contain"
-            />
-          </Link>
-        </div>
-      </nav>
-
+    <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
+      {/* Public Header */}
+      <PublicHeader />
+      
       {/* Main Content */}
       <div className="container max-w-3xl mx-auto px-8 md:px-16 py-12 space-y-12">
         

@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 import VideoBackground from './components/VideoBackground';
+import FloatingLogo from './components/FloatingLogo';
 import PublicHeader from './components/PublicHeader';
 
 export default async function Home() {
@@ -20,15 +21,18 @@ export default async function Home() {
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-white">
+    <div className="relative min-h-screen w-full bg-white">
       {/* Background Video */}
       <VideoBackground src="/videos/water-reflection.mp4" poster="" />
       
-      {/* Top Navigation Bar with new tabs */}
-      <PublicHeader />
+      {/* Floating Logo */}
+      <FloatingLogo />
 
+      {/* Public Header Navigation */}
+      <PublicHeader />
+      
       {/* Hero Section - Full Viewport Height */}
-      <div className="relative w-full flex items-center justify-center p-6 lg:p-12" style={{ height: 'calc(100vh - 80px)', zIndex: 10 }}>
+      <div className="relative w-full flex items-center justify-center p-6 lg:p-12" style={{ height: 'calc(100vh - 180px)', zIndex: 10 }}>
         {/* Hero Content Block with Gradient Overlay */}
         <div className="max-w-3xl text-center relative p-12 lg:p-16" style={{ 
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.15) 100%)'

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
+import FloatingLogo from '../components/FloatingLogo';
+import PublicHeader from '../components/PublicHeader';
 
 export const metadata: Metadata = {
   title: 'Discover iPurpose | Build With Clarity',
@@ -15,17 +16,13 @@ export const metadata: Metadata = {
 
 export default function DiscoverPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Floating Logo - Link back to home */}
-      <Link href="/" className="fixed top-6 left-6 z-20 relative w-40 h-10 hover:opacity-80 transition-opacity">
-        <Image 
-          src="/images/my-logo.png" 
-          alt="iPurpose Logo - Back to Home"
-          fill
-          className="object-contain"
-        />
-      </Link>
-
+    <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
+      {/* Public Header */}
+      <PublicHeader />
+      
       {/* Main Content */}
       <div className="container max-w-4xl mx-auto px-6 py-20 space-y-20">
         

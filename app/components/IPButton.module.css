@@ -1,32 +1,36 @@
 .button {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
   border: none;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
+  transition: opacity 0.2s ease;
 }
 
-/* primary */
+.button:hover {
+  opacity: 0.9;
+}
+
+/* primary - Purple gradient */
 .primary {
-  background-color: #0ea5a4;
-  color: white;
+  background: linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0));
+  color: #FFFFFF;
 }
 
-/* secondary */
+/* secondary - Indigo gradient */
 .secondary {
-  background-color: white;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  background: linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0));
+  color: #FFFFFF;
 }
 
-/* champagne */
+/* champagne - Salmon gradient */
 .champagne {
-  background-color: #f7e7ce;
-  color: #5b4636;
-  border: 1px solid #e6d4bf;
+  background: linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0));
+  color: #FFFFFF;
 }
 
-/* ghost: transparent background, subtle border/text */
+/* ghost - transparent background, subtle border/text */
 .ghost {
   background-color: transparent;
   color: #0f172a;
