@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Discover iPurpose | Build With Clarity',
@@ -28,11 +29,21 @@ export default function DiscoverPage() {
       <div className="container max-w-4xl mx-auto px-6 py-20 space-y-20">
         
         {/* Hero */}
-        <section className="text-center space-y-6">
-          <h1 className="heading-hero mb-6 text-warmCharcoal">
+        <section className="relative text-center space-y-6 py-24 px-6 rounded-2xl overflow-hidden">
+          {/* Background Image */}
+          <Image
+            src="/images/sebastien-gabriel--IMlv9Jlb24-unsplash.jpg"
+            alt="Sunrise inspirational background"
+            fill
+            className="absolute inset-0 object-cover -z-10"
+          />
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/50 -z-10"></div>
+          
+          <h1 className="heading-hero mb-6 text-white relative z-10">
             Discover iPurpose
           </h1>
-          <p className="text-warmCharcoal/80" style={{ fontSize: '48px' }}>
+          <p className="text-white relative z-10" style={{ fontSize: '48px' }}>
             If you feel disconnected, tired, or unclear about what you're building, iPurpose helps you reconnect to what matters and build it with clarity.
           </p>
         </section>
