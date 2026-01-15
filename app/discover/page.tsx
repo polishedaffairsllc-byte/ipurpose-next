@@ -21,11 +21,6 @@ export default function DiscoverPage() {
           <Link href="/" className="font-marcellus text-2xl text-warmCharcoal hover:opacity-80 transition-opacity">
             iPurpose
           </Link>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-warmCharcoal hover:text-lavenderViolet transition-colors font-semibold">
-              Login
-            </Link>
-          </div>
         </div>
       </nav>
 
@@ -108,18 +103,18 @@ export default function DiscoverPage() {
               href="https://docs.google.com/forms/d/e/1FAIpQLSdeqCKVGTFlVma5ws5cHIICSqU74dR6ZbpTzawj-Cx4_wcApQ/viewform?usp=sharing&ouid=108847680085116613841"
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
+              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:opacity-90 transition-all text-center"
             >
               Discover Your Soul iPurpose Alignment Type
             </a>
             <Link
               href="/program"
-              className="block w-full bg-white text-lavenderViolet font-semibold py-3 px-6 rounded-lg border border-lavenderViolet hover:bg-lavenderViolet/5 transition-colors text-center"
+              className="block w-full bg-gradient-to-r from-salmonPeach to-warmCharcoal text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:opacity-90 transition-all text-center"
             >
               View the 6-Week Program
             </Link>
           </div>
-          <Link href="/about" className="text-lavenderViolet hover:underline block text-center">
+          <Link href="/about" className="text-lavenderViolet hover:underline block text-center font-semibold">
             About iPurpose
           </Link>
         </section>
