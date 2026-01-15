@@ -104,17 +104,19 @@ export default function DiscoverPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:opacity-90 transition-all text-center"
+              style={{ fontSize: '24px' }}
             >
               Discover Your Soul iPurpose Alignment Type
             </a>
             <Link
               href="/program"
               className="block w-full bg-gradient-to-r from-salmonPeach to-warmCharcoal text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg hover:opacity-90 transition-all text-center"
+              style={{ fontSize: '24px' }}
             >
               View the 6-Week Program
             </Link>
           </div>
-          <Link href="/about" className="text-lavenderViolet hover:underline block text-center font-semibold">
+          <Link href="/about" className="text-lavenderViolet hover:underline block text-center font-semibold" style={{ fontSize: '24px' }}>
             About iPurpose
           </Link>
         </section>
