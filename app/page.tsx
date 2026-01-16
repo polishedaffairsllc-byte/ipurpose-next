@@ -39,7 +39,7 @@ export default async function Home() {
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.15) 100%)'
         }}>
           <h1 className="font-italiana leading-none" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
-            <div style={{ fontSize: '160px', marginBottom: '20px' }}>iPurpose</div>
+            <div style={{ fontSize: '160px', marginBottom: '40px' }}>iPurpose</div>
             <div style={{ fontSize: '80px' }}>Helping people orient themselves in a changing world.</div>
           </h1>
           <p className="text-[37px] lg:text-[49px] leading-relaxed mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
