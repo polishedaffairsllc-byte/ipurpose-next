@@ -49,6 +49,7 @@ export default async function AIPage() {
           <p className="text-sm text-warmCharcoal/75 leading-relaxed">
             The iPurpose Mentor does not decide for you — it helps you clarify, structure, and reflect on your own decisions.
           </p>
+        </Card>
 
         <AIClient initialName={name} userId={decoded.uid} />
         </div>
