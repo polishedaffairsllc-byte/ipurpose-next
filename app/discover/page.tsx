@@ -53,7 +53,10 @@ export default function DiscoverPage() {
             What iPurpose is
           </h2>
           <p className="text-warmCharcoal/75" style={{ fontSize: '24px' }}>
-            iPurpose is a clarity + alignment platform that helps thoughtful, capable people move from internal friction to clear direction—by integrating Soul (inner alignment), Systems (practical structure), and AI (gentle support).
+            iPurpose is a framework for orienting yourself when what you're building no longer feels coherent.
+          </p>
+          <p className="text-warmCharcoal/75" style={{ fontSize: '24px' }}>
+            It integrates inner alignment (Soul), practical structure (Systems), and supportive technology (AI) to help people make decisions that are both meaningful and sustainable.
           </p>
         </section>
 
@@ -82,7 +85,28 @@ export default function DiscoverPage() {
           </ul>
         </section>
 
-        {/* How It Works */}
+        {/* This May Not Be For You */}
+        <section className="space-y-6">
+          <h2 className="text-4xl font-marcellus text-warmCharcoal">
+            This may not be for you if…
+          </h2>
+          <ul className="space-y-4 text-warmCharcoal/75" style={{ fontSize: '24px' }}>
+            <li className="flex gap-3">
+              <span className="text-warmCharcoal/50 font-bold">✕</span>
+              <span>You're looking for quick fixes or hype-driven motivation</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-warmCharcoal/50 font-bold">✕</span>
+              <span>You want tactics without reflection</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-warmCharcoal/50 font-bold">✕</span>
+              <span>You expect automation to replace personal responsibility</span>
+            </li>
+          </ul>
+        </section>
+
+        {/* How It Works */
         <section className="space-y-6">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             How it works
@@ -90,15 +114,15 @@ export default function DiscoverPage() {
           <ul className="space-y-4 text-warmCharcoal/75" style={{ fontSize: '24px' }}>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">→</span>
-              <span><strong>Soul:</strong> clarify what matters and what's misaligned</span>
+              <span><strong>Soul:</strong> focuses on internal clarity and values</span>
             </li>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">→</span>
-              <span><strong>Systems:</strong> build simple structure for follow-through</span>
+              <span><strong>Systems:</strong> addresses structure, follow-through, and sustainability</span>
             </li>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">→</span>
-              <span><strong>AI:</strong> use guidance to stay consistent and supported</span>
+              <span><strong>AI:</strong> provides supportive guidance once clarity is established</span>
             </li>
           </ul>
         </section>
