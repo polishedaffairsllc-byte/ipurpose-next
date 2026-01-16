@@ -89,28 +89,28 @@ export default function ProgramPage() {
       <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-20">
         <div className="container max-w-4xl mx-auto px-6">
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
-            After 6 Weeks, You'll Leave With:
+            By the End of 6 Weeks, You'll Have Built:
           </h2>
           <div className="space-y-6 flex flex-col items-center">
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Crystal-Clear Purpose</h3>
-                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Know why you're building and what truly matters to you.</p>
+                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">A Defined Purpose & Priorities Statement</h3>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A documented articulation of what you're building and why.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Aligned Systems</h3>
-                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Workflows, processes, and strategy that support your vision.</p>
+                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Core Systems Aligned to Your Goals</h3>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Workflows, processes, and strategy designed to support your direction.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">AI Strategy</h3>
-                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Know where and how to use AI without compromising your voice.</p>
+                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">A Practical AI Usage Plan</h3>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Clear guidelines for where and how AI supports your work.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
@@ -123,8 +123,8 @@ export default function ProgramPage() {
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">A Clear Path Forward</h3>
-                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A defined direction and confidence in your next steps.</p>
+                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">A Defined Direction Forward</h3>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Clear next steps based on the systems and decisions you've built.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
@@ -148,7 +148,7 @@ export default function ProgramPage() {
             <ul className="space-y-3">
               <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
-                <span>You feel disconnected from your work or purpose</span>
+                <span>You feel unclear about your next direction or priorities</span>
               </li>
               <li className="flex gap-3 text-warmCharcoal/75 text-center justify-center">
                 <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
