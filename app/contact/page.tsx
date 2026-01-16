@@ -10,7 +10,7 @@ export default function ContactPage() {
   return (
     <>
       <PublicHeader />
-      <main style={{ padding: 32, maxWidth: 800, margin: "0 auto" }}>
+      <main style={{ padding: 32, maxWidth: 800, margin: "0 auto", fontSize: '24px' }}>
       <h1>Contact</h1>
       <p>
         For press, partnerships, or Google review inquiries:

@@ -10,7 +10,7 @@ export default function TermsPage() {
   return (
     <>
       <PublicHeader />
-      <main style={{ padding: 32, maxWidth: 900, margin: "0 auto", lineHeight: 1.8 }}>
+      <main style={{ padding: 32, maxWidth: 900, margin: "0 auto", lineHeight: 1.8, fontSize: '24px' }}>
         <h1>Terms of Service</h1>
         
         <p><strong>Effective Date: December 2025</strong></p>

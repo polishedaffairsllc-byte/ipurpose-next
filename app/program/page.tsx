@@ -96,42 +96,42 @@ export default function ProgramPage() {
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Crystal-Clear Purpose</h3>
-                <p className="text-warmCharcoal/70 text-center">Know why you're building and what truly matters to you.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Know why you're building and what truly matters to you.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Aligned Systems</h3>
-                <p className="text-warmCharcoal/70 text-center">Workflows, processes, and strategy that support your vision.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Workflows, processes, and strategy that support your vision.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">AI Strategy</h3>
-                <p className="text-warmCharcoal/70 text-center">Know where and how to use AI without compromising your voice.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>Know where and how to use AI without compromising your voice.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Peer Network</h3>
-                <p className="text-warmCharcoal/70 text-center">A community of thoughtful builders working through similar challenges.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A community of thoughtful builders working through similar challenges.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">A Clear Path Forward</h3>
-                <p className="text-warmCharcoal/70 text-center">A defined direction and confidence in your next steps.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A defined direction and confidence in your next steps.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Clarity Blueprint</h3>
-                <p className="text-warmCharcoal/70 text-center">A documented plan you'll reference for months to come.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A documented plan you'll reference for months to come.</p>
               </div>
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function ProgramPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
             Program Format & Cohorts
           </h2>
-          <div className="space-y-6 text-warmCharcoal/75 text-lg mb-12 mx-auto max-w-2xl text-center">
+          <div className="space-y-6 text-warmCharcoal/75 mb-12 mx-auto max-w-2xl text-center" style={{ fontSize: '24px' }}>
             <p>
               <strong>Format:</strong> 6 weeks, with one 90-minute group call per week + asynchronous work between sessions. Totally online and cohort-based.
             </p>
