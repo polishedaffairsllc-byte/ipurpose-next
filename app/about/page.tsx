@@ -34,21 +34,95 @@ export default function AboutPage() {
             About iPurpose
           </h1>
           <p className="text-2xl text-warmCharcoal/80">
-            The story, philosophy, and intention behind iPurpose.
+            A framework for building what matters — without losing yourself.
           </p>
         </section>
 
-        {/* Founder Section */}
-        <section className="space-y-3">
+        {/* Why iPurpose Exists */}
+        <section className="space-y-4">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            Founder
+            Why iPurpose Exists
           </h2>
-          <div className="flex gap-8">
+          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+            iPurpose exists to address a persistent gap: traditional business often ignores the soul, while spiritual work often ignores structure.
+          </p>
+          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+            Many capable, thoughtful people find themselves overwhelmed, disconnected, or stuck between intuition and implementation. iPurpose was created to hold both — meaning and method — without asking people to abandon either.
+          </p>
+        </section>
+
+        {/* Philosophy Section */}
+        <section className="space-y-6">
+          <div>
+            <h2 className="text-4xl font-marcellus text-warmCharcoal mb-2">
+              The iPurpose Philosophy
+            </h2>
+            <p className="text-xl text-warmCharcoal/80 font-semibold">
+              Soul → Systems → AI
+            </p>
+            <p className="text-lg text-warmCharcoal/75 italic mt-2">
+              This is not a slogan. It is a sequence.
+            </p>
+          </div>
+          
+          <div className="space-y-4 pl-4 border-l-4 border-lavenderViolet">
+            <div>
+              <h3 className="text-xl font-marcellus text-warmCharcoal mb-1">Soul — Alignment before action.</h3>
+              <p className="text-lg text-warmCharcoal/75">
+                Know yourself and your values before deciding what to build.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-marcellus text-warmCharcoal mb-1">Systems — Structure before scale.</h3>
+              <p className="text-lg text-warmCharcoal/75">
+                Create frameworks that support sustainability, not burnout.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-marcellus text-warmCharcoal mb-1">AI — Automation only after clarity.</h3>
+              <p className="text-lg text-warmCharcoal/75">
+                Use technology to amplify human intention — not replace it.
+              </p>
+            </div>
+          </div>
+          
+          <p className="text-lg text-warmCharcoal/75 leading-relaxed font-semibold pt-2">
+            When this order is respected, technology serves the human — not the other way around.
+          </p>
+        </section>
+
+        {/* What iPurpose Is (and Is Not) */}
+        <section className="space-y-4">
+          <h2 className="text-4xl font-marcellus text-warmCharcoal">
+            What iPurpose Is (and Is Not)
+          </h2>
+          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+            iPurpose is <strong>not</strong> about hustle, hype, or extraction.<br />
+            It is <strong>not</strong> optimization without meaning.
+          </p>
+          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+            It <strong>is</strong> about building what is true,<br />
+            at a pace that is sustainable,<br />
+            in a way that is ethical, grounded, and alive.
+          </p>
+        </section>
+
+        {/* About the Founder */}
+        <section className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10">
+          <div>
+            <h2 className="text-3xl font-marcellus text-warmCharcoal mb-2">
+              About the Founder
+            </h2>
+            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-1">Renita Hamilton</h3>
+            <p className="text-lg font-semibold text-lavenderViolet mb-4">Founder of iPurpose</p>
+          </div>
+          
+          <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-1">
-              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-1">Renita Hamilton</h3>
-              <p className="text-lg font-semibold text-lavenderViolet mb-3">Creator of iPurpose</p>
-              <p className="text-base text-warmCharcoal/75 leading-relaxed max-w-md">
-                Renita Hamilton is a purpose-driven entrepreneur and strategist bridging spirituality, systems, and technology. She founded iPurpose to help people remember who they are, build aligned structures, and create sustainable income without burning out.
+              <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+                Renita Hamilton is a strategist and entrepreneur working at the intersection of alignment, systems, and technology. She created iPurpose to help people build lives and work that reflect who they are — while remaining practical, structured, and sustainable.
               </p>
             </div>
             <div className="flex-shrink-0">
@@ -56,77 +130,32 @@ export default function AboutPage() {
                 <Image
                   src="/images/renita-hamilton.jpg"
                   alt="Renita Hamilton, Founder of iPurpose"
-                  width={280}
-                  height={360}
-                  className="w-80 h-auto"
+                  width={240}
+                  height={320}
+                  className="w-60 h-auto"
                 />
               </div>
-              <p className="text-center text-warmCharcoal font-marcellus text-lg mt-3">Founder</p>
             </div>
           </div>
         </section>
 
-        {/* Why iPurpose Exists */}
-        <section className="space-y-3">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            Why iPurpose Exists
-          </h2>
-          <p className="text-lg text-warmCharcoal/75">
-            iPurpose was created because traditional business often ignores the soul — and spiritual work often ignores structure. I saw capable, thoughtful people feeling disconnected, overwhelmed, or stuck between intuition and implementation. iPurpose exists to hold both.
-          </p>
-        </section>
-
-        {/* Philosophy Section */}
-        <section className="space-y-3">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            The Philosophy
-          </h2>
-          <p className="text-lg text-warmCharcoal/75 mb-4">
-            Soul → Systems → AI
-          </p>
-          <ul className="space-y-3 text-lg text-warmCharcoal/75">
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">•</span>
-              <span><strong>Soul:</strong> Alignment before action. Know yourself and your values first.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">•</span>
-              <span><strong>Systems:</strong> Structure before scale. Build sustainable frameworks that reflect your values.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold">•</span>
-              <span><strong>AI:</strong> Automation only after clarity. Use technology to amplify, not replace, your vision.</span>
-            </li>
-          </ul>
-          <p className="text-lg text-warmCharcoal/75 mt-4">
-            This sequence ensures that technology serves the human — not the other way around.
-          </p>
-        </section>
-
-        {/* Intention Section */}
-        <section className="space-y-3">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            Intention
-          </h2>
-          <p className="text-lg text-warmCharcoal/75">
-            iPurpose is not about hustle, hype, or extraction. It is about building what is true, at a pace that is sustainable, in a way that feels ethical, grounded, and alive.
-          </p>
-        </section>
-
         {/* Next Steps */}
-        <section className="space-y-8 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10">
+        <section className="space-y-6">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
-            Next steps
+            Next Steps
           </h2>
           <div className="space-y-3">
             <Link
               href="/discover"
               className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
             >
-              Discover iPurpose
+              Discover the iPurpose Framework
             </Link>
-            <Link href="/program" className="text-lavenderViolet hover:underline block text-center">
-              View the 6-Week Program
+            <Link
+              href="/program"
+              className="block w-full bg-gradient-to-r from-indigoDeep to-salmonPeach text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
+            >
+              Explore the 6-Week Program
             </Link>
           </div>
         </section>
