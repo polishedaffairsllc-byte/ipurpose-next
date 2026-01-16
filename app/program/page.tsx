@@ -117,7 +117,7 @@ export default function ProgramPage() {
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
                 <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Peer Network</h3>
-                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A community of thoughtful builders working through similar challenges.</p>
+                <p className="text-warmCharcoal/70 text-center" style={{ fontSize: '24px' }}>A small cohort of thoughtful builders navigating similar challenges.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
