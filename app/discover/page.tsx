@@ -106,7 +106,7 @@ export default function DiscoverPage() {
           </ul>
         </section>
 
-        {/* How It Works */
+        {/* How It Works */}
         <section className="space-y-6">
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             How it works
