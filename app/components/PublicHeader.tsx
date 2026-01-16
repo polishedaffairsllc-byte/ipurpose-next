@@ -77,13 +77,6 @@ export default function PublicHeader() {
           >
             Sign In
           </Link>
-          <Link
-            href="/signup"
-            className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(232, 150, 122, 0))', fontSize: '24px', color: '#FFFFFF' }}
-          >
-            Get Started
-          </Link>
         </>
       )}
     </header>

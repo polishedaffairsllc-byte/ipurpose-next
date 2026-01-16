@@ -73,6 +73,15 @@ export default async function InsightsPage() {
   try {
     const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const userId = decodedClaims.uid;
+
+    // Check entitlement
+    const db = firebaseAdmin.firestore();
+    const userDoc = await db.collection("users").doc(userId).get();
+
+    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+      return redirect("/enrollment-required");
+    }
+
     const insights = await getUserInsights(userId);
 
     return (

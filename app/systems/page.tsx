@@ -13,7 +13,15 @@ export default async function SystemsPage() {
   if (!session) return redirect("/login");
 
   try {
-    await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
+
+    // Check entitlement
+    const db = firebaseAdmin.firestore();
+    const userDoc = await db.collection("users").doc(decodedClaims.uid).get();
+
+    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+      return redirect("/enrollment-required");
+    }
 
     return (
       <div className="relative">

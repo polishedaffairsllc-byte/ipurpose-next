@@ -21,6 +21,15 @@ export default async function DashboardPage() {
   try {
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const user = await firebaseAdmin.auth().getUser(decoded.uid);
+
+    // Check entitlement
+    const db = firebaseAdmin.firestore();
+    const userDoc = await db.collection("users").doc(decoded.uid).get();
+
+    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+      return redirect("/enrollment-required");
+    }
+
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
     
     // Fetch today's affirmation

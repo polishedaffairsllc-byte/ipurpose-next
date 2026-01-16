@@ -100,14 +100,6 @@ export default function Footer() {
                   Sign In
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/signup"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Sign Up
-                </Link>
-              </li>
               {isAuthenticated && (
                 <li>
                   <Link

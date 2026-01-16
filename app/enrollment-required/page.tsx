@@ -1,8 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 
-export default function SignupPage() {
+export default function EnrollmentRequiredPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-lavenderViolet/10 px-6">
       <div className="w-full max-w-md">
@@ -10,10 +8,10 @@ export default function SignupPage() {
           <div className="relative ipurpose-card px-6 py-8 text-center space-y-8">
             <div>
               <h1 className="text-3xl font-marcellus text-warmCharcoal mb-2">
-                Account Creation
+                Enrollment Required
               </h1>
               <p className="text-warmCharcoal/70">
-                Accounts are created after enrollment in our 6-Week Program.
+                Access to this page requires active enrollment in our program.
               </p>
             </div>
 
@@ -25,16 +23,16 @@ export default function SignupPage() {
                 View Program
               </Link>
               <Link
-                href="/clarity-check"
+                href="/info-session"
                 className="block px-6 py-3 border-2 border-lavenderViolet text-lavenderViolet rounded-lg font-marcellus hover:bg-lavenderViolet/5 transition"
               >
-                Take Clarity Check
+                Join Info Session
               </Link>
               <Link
-                href="/info-session"
+                href="/clarity-check"
                 className="block px-6 py-3 border-2 border-warmCharcoal/20 text-warmCharcoal rounded-lg font-marcellus hover:bg-warmCharcoal/5 transition"
               >
-                Join Info Session
+                Take Clarity Check
               </Link>
               <Link
                 href="/login"

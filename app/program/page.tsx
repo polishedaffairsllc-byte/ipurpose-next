@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import Button from '../components/Button';
 import Link from 'next/link';
 import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
+import ProgramEnrollButton from './ProgramEnrollButton';
 
 export const metadata: Metadata = {
   title: 'iPurpose 6-Week Program | Build with Clarity',
@@ -234,12 +234,21 @@ export default function ProgramPage() {
           Understand your fit through a clarity check, or attend an info session to ask questions about the program structure and community.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
-          <Button size="lg" variant="primary" href="/clarity-check">
+          <ProgramEnrollButton />
+          <Link
+            href="/clarity-check"
+            className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '24px' }}
+          >
             Take the Clarity Check
-          </Button>
-          <Button size="lg" variant="primary" href="/info-session">
+          </Link>
+          <Link
+            href="/info-session"
+            className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '24px' }}
+          >
             Join the Info Session
-          </Button>
+          </Link>
         </div>
       </div>
       
