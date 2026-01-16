@@ -43,10 +43,10 @@ export default function AboutPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             Why iPurpose Exists
           </h2>
-          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+          <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
             iPurpose exists to address a persistent gap: traditional business often ignores the soul, while spiritual work often ignores structure.
           </p>
-          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+          <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
             Many capable, thoughtful people find themselves overwhelmed, disconnected, or stuck between intuition and implementation. iPurpose was created to hold both — meaning and method — without asking people to abandon either.
           </p>
         </section>
@@ -68,27 +68,27 @@ export default function AboutPage() {
           <div className="space-y-4 pl-4 border-l-4 border-lavenderViolet">
             <div>
               <h3 className="text-xl font-marcellus text-warmCharcoal mb-1">Soul — Alignment before action.</h3>
-              <p className="text-lg text-warmCharcoal/75">
+              <p className="text-warmCharcoal/75" style={{ fontSize: '18px' }}>
                 Know yourself and your values before deciding what to build.
               </p>
             </div>
             
             <div>
               <h3 className="text-xl font-marcellus text-warmCharcoal mb-1">Systems — Structure before scale.</h3>
-              <p className="text-lg text-warmCharcoal/75">
+              <p className="text-warmCharcoal/75" style={{ fontSize: '18px' }}>
                 Create frameworks that support sustainability, not burnout.
               </p>
             </div>
             
             <div>
               <h3 className="text-xl font-marcellus text-warmCharcoal mb-1">AI — Automation only after clarity.</h3>
-              <p className="text-lg text-warmCharcoal/75">
+              <p className="text-warmCharcoal/75" style={{ fontSize: '18px' }}>
                 Use technology to amplify human intention — not replace it.
               </p>
             </div>
           </div>
           
-          <p className="text-lg text-warmCharcoal/75 leading-relaxed font-semibold pt-2">
+          <p className="text-warmCharcoal/75 leading-relaxed font-semibold pt-2" style={{ fontSize: '18px' }}>
             When this order is respected, technology serves the human — not the other way around.
           </p>
         </section>
@@ -98,11 +98,11 @@ export default function AboutPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal">
             What iPurpose Is (and Is Not)
           </h2>
-          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+          <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
             iPurpose is <strong>not</strong> about hustle, hype, or extraction.<br />
             It is <strong>not</strong> optimization without meaning.
           </p>
-          <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+          <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
             It <strong>is</strong> about building what is true,<br />
             at a pace that is sustainable,<br />
             in a way that is ethical, grounded, and alive.
@@ -121,7 +121,7 @@ export default function AboutPage() {
           
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-1">
-              <p className="text-lg text-warmCharcoal/75 leading-relaxed">
+              <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
                 Renita Hamilton is a strategist and entrepreneur working at the intersection of alignment, systems, and technology. She created iPurpose to help people build lives and work that reflect who they are — while remaining practical, structured, and sustainable.
               </p>
             </div>
