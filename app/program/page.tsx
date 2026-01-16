@@ -35,7 +35,7 @@ export default function ProgramPage() {
             A cohort-based journey to clarify your purpose, build aligned systems, and expand through AI.
           </p>
           <p className="text-2xl md:text-3xl lg:text-4xl text-warmCharcoal/70">
-            Small group. Live mentorship. Real transformation.
+            Small group. Live mentorship. Tangible outcomes.
           </p>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function ProgramPage() {
           <div className="w-full max-w-2xl">
             <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">Soul Work</h3>
             <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
-              Reconnect with your purpose, clarify your values, and define what success truly means to you. Reflection frameworks + journaling.
+              Clarify your values, articulate what success means to you, and document your purpose framework. Reflection exercises + workbooks.
             </p>
           </div>
           <div className="w-full max-w-2xl">
@@ -67,7 +67,7 @@ export default function ProgramPage() {
           <div className="w-full max-w-2xl">
             <h3 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-2 text-center">AI Integration</h3>
             <p className="text-xl md:text-2xl text-warmCharcoal/70 text-center">
-              Learn to leverage AI without losing your voice. Get access to iPurpose Mentor—an AI coach trained on your framework.
+              Learn where AI adds value without compromising your voice. Get access to iPurpose Mentor—an AI coach configured for your specific framework.
             </p>
           </div>
           <div className="w-full max-w-2xl">
@@ -89,7 +89,7 @@ export default function ProgramPage() {
       <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-20">
         <div className="container max-w-4xl mx-auto px-6">
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
-            After 6 Weeks, You'll Have:
+            After 6 Weeks, You'll Leave With:
           </h2>
           <div className="space-y-6 flex flex-col items-center">
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
@@ -116,15 +116,15 @@ export default function ProgramPage() {
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Accountability Partners</h3>
-                <p className="text-warmCharcoal/70 text-center">A community of peers committed to the same transformation.</p>
+                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Peer Network</h3>
+                <p className="text-warmCharcoal/70 text-center">A community of thoughtful builders working through similar challenges.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
               <span className="text-3xl flex-shrink-0">✓</span>
               <div>
-                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Renewed Energy</h3>
-                <p className="text-warmCharcoal/70 text-center">Relief from burnout; confidence to move forward.</p>
+                <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">A Clear Path Forward</h3>
+                <p className="text-warmCharcoal/70 text-center">A defined direction and confidence in your next steps.</p>
               </div>
             </div>
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
@@ -228,10 +228,10 @@ export default function ProgramPage() {
       {/* CTA Section */}
       <div className="container max-w-3xl mx-auto px-6 py-20 text-center">
         <h2 className="text-3xl font-marcellus text-warmCharcoal mb-6">
-          Ready to Reconnect and Clarify?
+          Next Steps
         </h2>
         <p className="text-lg text-warmCharcoal/75 mb-12">
-          Start with a clarity check to see if you're a fit, or jump straight to the info session to ask questions live.
+          Understand your fit through a clarity check, or attend an info session to ask questions about the program structure and community.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
           <Button size="lg" variant="primary" href="/clarity-check">
