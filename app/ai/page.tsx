@@ -26,7 +26,7 @@ export default async function AIPage() {
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">iPurpose Mentor</h1>
             <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
-              Your aligned AI assistant for clarity, strategy, and expansion.
+              A structured AI support tool to help you think, reflect, and build with clarity.
             </p>
           </div>
         </div>
@@ -38,10 +38,17 @@ export default async function AIPage() {
             AI MENTOR MODE
           </p>
           <p className="text-sm text-warmCharcoal/75 leading-relaxed">
-            Ask questions about your purpose, systems, or growth strategy. 
-            The AI understands your iPurpose framework.
+            Use the iPurpose Mentor to reflect on your thinking, explore options, and organize decisions related to your purpose, systems, or growth strategy. The AI works within the iPurpose framework to support — not replace — your judgment.
           </p>
         </Card>
+
+        <Card accent="salmon" className="mb-8">
+          <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/55 uppercase mb-2">
+            AUTHORITY & DECISION-MAKING
+          </p>
+          <p className="text-sm text-warmCharcoal/75 leading-relaxed">
+            The iPurpose Mentor does not decide for you — it helps you clarify, structure, and reflect on your own decisions.
+          </p>
 
         <AIClient initialName={name} userId={decoded.uid} />
         </div>

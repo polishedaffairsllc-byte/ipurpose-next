@@ -142,7 +142,7 @@ export default function AIClient({ initialName, userId }: { initialName?: string
           </div>
         </div>
         <p style={{ fontSize: 12, color: "#666", marginTop: 8 }}>
-          {responseMode === "balanced" && "Smart mode: AI infers which perspective you need (Soul/Systems/AI)"}
+          {responseMode === "balanced" && "Smart mode: The AI suggests a Soul, Systems, or AI perspective based on your input to help structure your thinking."}
           {responseMode === "reflect" && "Alignment focus: Explore purpose, values, and inner clarity"}
           {responseMode === "build" && "Systems focus: Structure workflows, processes, and offers"}
           {responseMode === "expand" && "Strategy focus: Leverage automation and scale impact"}
@@ -189,7 +189,7 @@ export default function AIClient({ initialName, userId }: { initialName?: string
           onChange={(e) => setPrompt(e.target.value)}
           rows={3}
           style={{ width: "100%", marginBottom: 12, fontFamily: "inherit" }}
-          placeholder={`Hi ${initialName || "there"}, ask anything about your purpose, systems, or growth strategy...`}
+          placeholder={`Hi ${initialName || "there"} — share what you're thinking through, and the Mentor will help you reflect and organize your next steps.`}
           disabled={loading}
         />
 
