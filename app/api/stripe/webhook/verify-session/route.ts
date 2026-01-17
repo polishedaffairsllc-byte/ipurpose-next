@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+// Force this route to be dynamic (no build-time prerendering)
+export const dynamic = 'force-dynamic';
+
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('Missing STRIPE_SECRET_KEY environment variable');
+  }
+  return new Stripe(key);
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,12 +24,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!process.env.STRIPE_SECRET_KEY) {
-      return NextResponse.json(
-        { verified: false, error: 'Stripe not configured' },
-        { status: 500 }
-      );
-    }
+    const stripe = getStripe();
 
     // Retrieve session with line items expanded
     const session = await stripe.checkout.sessions.retrieve(sessionId, {

@@ -2,7 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+// Force this route to be dynamic (no build-time prerendering)
+export const dynamic = 'force-dynamic';
+
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('Missing STRIPE_SECRET_KEY environment variable');
+  }
+  return new Stripe(key);
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -18,6 +27,7 @@ export async function POST(request: NextRequest) {
 
   let event;
   try {
+    const stripe = getStripe();
     event = stripe.webhooks.constructEvent(
       body,
       signature,
