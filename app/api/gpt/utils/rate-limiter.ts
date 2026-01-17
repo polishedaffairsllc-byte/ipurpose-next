@@ -6,7 +6,10 @@
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { OPENAI_CONFIG } from './openai-client';
 
-const db = firebaseAdmin.firestore();
+// Lazy getter to defer Firestore initialization to request time
+function getDb() {
+  return firebaseAdmin.firestore();
+}
 
 interface RateLimitData {
   userId: string;
@@ -33,6 +36,7 @@ export async function checkRateLimit(userId: string): Promise<{
   resetAt?: Date;
 }> {
   try {
+    const db = getDb();
     const now = new Date();
     const docRef = db.collection('rate-limits').doc(userId);
     const doc = await docRef.get();
@@ -109,6 +113,7 @@ export async function checkRateLimit(userId: string): Promise<{
  */
 export async function recordRequest(userId: string, tokensUsed: number): Promise<void> {
   try {
+    const db = getDb();
     const docRef = db.collection('rate-limits').doc(userId);
     const now = new Date();
     
@@ -118,7 +123,7 @@ export async function recordRequest(userId: string, tokensUsed: number): Promise
       tokens: firebaseAdmin.firestore.FieldValue.increment(tokensUsed),
       lastRequest: now,
     }, { merge: true });
-  } catch (error) {
+  } catch (error):
     console.error('Failed to record request:', error);
     // Don't throw - logging failures shouldn't break API
   }
@@ -128,6 +133,7 @@ export async function recordRequest(userId: string, tokensUsed: number): Promise
  * Initialize rate limit data for user
  */
 async function initializeRateLimit(userId: string, now: Date): Promise<void> {
+  const db = getDb();
   const docRef = db.collection('rate-limits').doc(userId);
   
   await docRef.set({
@@ -151,6 +157,7 @@ export async function getRateLimitStatus(userId: string): Promise<{
   resetAt: Date;
 }> {
   try {
+    const db = getDb();
     const docRef = db.collection('rate-limits').doc(userId);
     const doc = await docRef.get();
 

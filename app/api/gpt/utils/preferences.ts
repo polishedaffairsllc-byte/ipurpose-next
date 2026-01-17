@@ -7,13 +7,17 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import type { UserPreferences, ConversationSession, ConversationMemory } from '../types/preferences';
 import type { GPTDomain } from '../types';
 
-const db = firebaseAdmin.firestore();
+// Lazy getter to defer Firestore initialization to request time
+function getDb() {
+  return firebaseAdmin.firestore();
+}
 
 /**
  * Get user preferences
  */
 export async function getUserPreferences(userId: string): Promise<UserPreferences> {
   try {
+    const db = getDb();
     const doc = await db.collection('user-preferences').doc(userId).get();
 
     if (!doc.exists) {
@@ -68,6 +72,7 @@ export async function updateUserPreferences(
   updates: Partial<UserPreferences>
 ): Promise<void> {
   try {
+    const db = getDb();
     await db.collection('user-preferences').doc(userId).update({
       ...updates,
       updatedAt: new Date(),
@@ -87,6 +92,7 @@ export async function updateDomainPreferences(
   updates: any
 ): Promise<void> {
   try {
+    const db = getDb();
     const updatePath = `${domain}.lastUpdated`;
     await db.collection('user-preferences').doc(userId).update({
       [domain]: updates,
@@ -108,6 +114,7 @@ export async function upsertConversationSession(
   sessionData: Partial<ConversationSession>
 ): Promise<string> {
   try {
+    const db = getDb();
     const sessionId = sessionData.sessionId || `${userId}-${domain}-${Date.now()}`;
     
     const sessionRef = db.collection('conversation-sessions').doc(sessionId);
@@ -182,6 +189,7 @@ export async function saveConversationMemory(
   memory: Omit<ConversationMemory, 'timestamp'>
 ): Promise<void> {
   try {
+    const db = getDb();
     const memoryWithTimestamp: ConversationMemory = {
       ...memory,
       timestamp: new Date(),
@@ -288,6 +296,7 @@ export async function getCrossDomainInsights(
  */
 export async function completeSession(sessionId: string): Promise<void> {
   try {
+    const db = getDb();
     await db.collection('conversation-sessions').doc(sessionId).update({
       'metadata.completed': true,
       'metadata.sessionDuration': firebaseAdmin.firestore.FieldValue.serverTimestamp(),
