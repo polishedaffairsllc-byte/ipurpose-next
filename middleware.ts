@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 
   // 2. If NO session exists AND the path is protected, redirect to /login
   const publicPaths = ['/', '/about', '/discover', '/program', '/clarity-check', '/info-session', '/contact', '/privacy', '/terms', '/google-review'];
-  const isPublicPath = publicPaths.includes(path) || path.startsWith('/api/auth');
+  const isPublicPath = publicPaths.includes(path) || path.startsWith('/api/auth') || path === '/robots.txt' || path === '/sitemap.xml';
   const isProtectedPath = !isPublicPath && !path.startsWith('/login') && !path.startsWith('/signup');
   
   if (isProtectedPath) {
