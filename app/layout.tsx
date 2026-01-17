@@ -7,8 +7,8 @@ import ConnectionNetwork from "./components/ConnectionNetwork";
 import InternalNavbar from "./components/InternalNavbar";
 
 export const metadata: Metadata = {
-  title: "iPurpose Platform",
-  description: "Align your Soul. Empower your Systems. Expand through AI.",
+  title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
+  description: "iPurpose helps creators move from stuck or self-doubting into clarity and coherent action by integrating inner alignment, practical structure, and thoughtful use of AI.",
 };
 
 export default function RootLayout({

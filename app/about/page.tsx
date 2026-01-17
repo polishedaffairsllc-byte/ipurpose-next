@@ -6,12 +6,12 @@ import PublicHeader from "../components/PublicHeader";
 import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "About iPurpose",
-  description: "Learn about Renita Hamilton, founder of iPurpose, and the philosophy behind Soul → Systems → AI.",
+  title: "About iPurpose — Built for Clarity, Structure, and Sustainable Progress",
+  description: "Learn why iPurpose was created and how it helps creators translate insight into clear decisions, ordered steps, and meaningful work.",
   robots: "index, follow",
   openGraph: {
-    title: "About iPurpose",
-    description: "Learn about Renita Hamilton, founder of iPurpose, and the philosophy behind Soul → Systems → AI.",
+    title: "About iPurpose — Built for Clarity, Structure, and Sustainable Progress",
+    description: "Learn why iPurpose was created and how it helps creators translate insight into clear decisions, ordered steps, and meaningful work.",
     type: "website",
   },
 };

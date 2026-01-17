@@ -6,11 +6,11 @@ import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
 
 export const metadata: Metadata = {
-  title: 'iPurpose 6-Week Program | Build with Clarity',
-  description: 'A guided 6-week journey to reconnect with your purpose, build aligned systems, and expand through AI. Cohort-based learning with live mentorship.',
+  title: 'The iPurpose 6-Week Program — From Insight to Action',
+  description: 'A guided 6-week experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
   openGraph: {
-    title: 'iPurpose 6-Week Program | Build with Clarity',
-    description: 'A guided 6-week journey to reconnect with your purpose, build aligned systems, and expand through AI. Cohort-based learning with live mentorship.',
+    title: 'The iPurpose 6-Week Program — From Insight to Action',
+    description: 'A guided 6-week experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
     type: 'website',
   },
   robots: 'index, follow',
@@ -218,9 +218,12 @@ export default function ProgramPage() {
             <p className="text-xl text-warmCharcoal mb-6">
               Want to learn more before committing? Join our upcoming info session.
             </p>
-            <Button size="lg" variant="primary" href="/info-session">
+            <Link
+              href="/info-session"
+              className="inline-block px-8 py-4 bg-lavenderViolet text-white rounded-full font-marcellus text-lg hover:bg-indigoDeep transition"
+            >
               Reserve Your Info Session Spot
-            </Button>
+            </Link>
           </div>
         </div>
       </div>

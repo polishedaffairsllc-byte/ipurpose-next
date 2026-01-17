@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Discover Your Alignment Type | iPurpose',
-  description: 'Take the iPurpose Alignment Type assessment to discover your unique archetype and get personalized guidance for your journey.',
+  title: 'Clarity Check — Find Your Next Aligned Step',
+  description: 'Start here to gain clarity on what you\'re building and what comes next, with a grounded introduction to the iPurpose method.',
   openGraph: {
-    title: 'Discover Your Alignment Type | iPurpose',
-    description: 'Take the iPurpose Alignment Type assessment to discover your unique archetype and get personalized guidance for your journey.',
+    title: 'Clarity Check — Find Your Next Aligned Step',
+    description: 'Start here to gain clarity on what you\'re building and what comes next, with a grounded introduction to the iPurpose method.',
     type: 'website',
   },
   robots: 'index, follow',

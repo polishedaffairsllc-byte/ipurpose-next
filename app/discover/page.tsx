@@ -5,11 +5,11 @@ import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Discover iPurpose | Build With Clarity',
-  description: 'iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear reconnect to what matters and build it with clarity.',
+  title: 'Discover iPurpose — Soul, Systems, and Thoughtful AI',
+  description: 'Explore the iPurpose approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
   openGraph: {
-    title: 'Discover iPurpose | Build With Clarity',
-    description: 'iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear reconnect to what matters and build it with clarity.',
+    title: 'Discover iPurpose — Soul, Systems, and Thoughtful AI',
+    description: 'Explore the iPurpose approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
     type: 'website',
   },
   robots: 'index, follow',
