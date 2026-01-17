@@ -13,6 +13,9 @@ import { compilePrompt } from '../prompt-engine/compiler';
 import { logInteraction } from '../utils/firestore';
 import { callGPTStream, validatePromptLength } from '../utils/gpt-core';
 
+// Force this route to be dynamic (no build-time prerendering)
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Authenticate user

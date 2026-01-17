@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 
+// Force this route to be dynamic (no build-time prerendering)
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
