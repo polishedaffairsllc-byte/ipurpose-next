@@ -164,6 +164,7 @@ export async function getActiveSession(
   domain: GPTDomain
 ): Promise<ConversationSession | null> {
   try {
+    const db = getDb();
     const snapshot = await db
       .collection('conversation-sessions')
       .where('userId', '==', userId)
@@ -211,6 +212,7 @@ export async function getRecentMemory(
   limit: number = 10
 ): Promise<ConversationMemory[]> {
   try {
+    const db = getDb();
     const snapshot = await db
       .collection('conversation-memory')
       .where('userId', '==', userId)
@@ -238,6 +240,7 @@ export async function getCrossDomainInsights(
   sentimentTrend: string;
 }> {
   try {
+    const db = getDb();
     const snapshot = await db
       .collection('conversation-memory')
       .where('userId', '==', userId)
