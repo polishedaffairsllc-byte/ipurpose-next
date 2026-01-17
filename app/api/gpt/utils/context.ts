@@ -6,7 +6,10 @@
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import type { UserContext, UserContextDoc, GPTDomain } from '../types';
 
-const db = firebaseAdmin.firestore();
+// Lazy getter to defer Firestore initialization to request time
+function getDb() {
+  return firebaseAdmin.firestore();
+}
 
 /**
  * Get user context from Firestore for a specific domain
@@ -16,6 +19,7 @@ export async function getUserContext<T extends UserContext>(
   domain: GPTDomain
 ): Promise<T> {
   try {
+    const db = getDb();
     const docRef = db.collection('user-contexts').doc(userId);
     const doc = await docRef.get();
 
@@ -65,6 +69,7 @@ export async function updateUserContext(
   contextData: Partial<UserContext>
 ): Promise<void> {
   try {
+    const db = getDb();
     const docRef = db.collection('user-contexts').doc(userId);
     
     const updateData: any = {
@@ -87,6 +92,7 @@ export async function updateUserContext(
  */
 export async function initializeUserContext(userId: string): Promise<void> {
   try {
+    const db = getDb();
     const docRef = db.collection('user-contexts').doc(userId);
     
     const initialDoc: Partial<UserContextDoc> = {

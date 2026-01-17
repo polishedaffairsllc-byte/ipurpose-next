@@ -6,7 +6,10 @@
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import type { GPTInteraction, GPTDomain, UserContext } from '../types';
 
-const db = firebaseAdmin.firestore();
+// Lazy getter to defer Firestore initialization to request time
+function getDb() {
+  return firebaseAdmin.firestore();
+}
 
 /**
  * Log a GPT interaction to Firestore
@@ -24,6 +27,7 @@ export async function logInteraction(params: {
   streamEnabled?: boolean;
 }): Promise<void> {
   try {
+    const db = getDb();
     const collection = db.collection('gpt-interactions');
     
     const interaction: Omit<GPTInteraction, 'id'> & {
