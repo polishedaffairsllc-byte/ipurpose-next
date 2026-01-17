@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       success_url: `${appUrl}/enroll/create-account?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/program`,
       customer_creation: 'always',
+      allow_promotion_codes: true,
       metadata: {
         product,
         cohort,
