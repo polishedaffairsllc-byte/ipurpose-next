@@ -11,6 +11,9 @@ import { sanitizeInput, validatePrompt, isValidDomain, getProductionRateLimiter,
 import type { GPTRequest, GPTResponse, GPTDomain } from './types';
 import { routeToHandler } from './router';
 
+// Force this route to be dynamic (no build-time prerendering)
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Rate limiting

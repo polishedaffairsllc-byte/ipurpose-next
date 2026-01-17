@@ -5,7 +5,7 @@
 
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
-import { openai, OPENAI_CONFIG, validateOpenAIKey } from './openai-client';
+import { getOpenAI, OPENAI_CONFIG, validateOpenAIKey } from './openai-client';
 import { checkRateLimit, recordRequest } from './rate-limiter';
 import type { GPTDomain, CompiledPrompt } from '../types';
 
@@ -63,6 +63,7 @@ export async function callGPT(options: GPTCallOptions): Promise<GPTCallResult> {
 
   try {
     // 5. Make OpenAI API call
+    const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
       model,
       messages,
@@ -144,6 +145,7 @@ export async function* callGPTStream(
 
   try {
     // 5. Make streaming OpenAI API call
+    const openai = getOpenAI();
     const stream = await openai.chat.completions.create({
       model,
       messages,

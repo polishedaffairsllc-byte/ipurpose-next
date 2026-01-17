@@ -11,9 +11,16 @@ import {
   ResponseMode,
 } from "@/lib/ai/prompts/ipurposeMentorPrompts";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Force this route to be dynamic (no build-time prerendering)
+export const dynamic = 'force-dynamic';
+
+function getOpenAI() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('Missing OPENAI_API_KEY environment variable');
+  }
+  return new OpenAI({ apiKey });
+}
 
 interface ChatRequest {
   message: string;
@@ -34,6 +41,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const openai = getOpenAI();
 
     // Get the system prompt for the selected response mode
     const systemPrompt = getSystemPrompt(responseMode as ResponseMode);

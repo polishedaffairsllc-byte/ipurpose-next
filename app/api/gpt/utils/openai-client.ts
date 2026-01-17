@@ -11,7 +11,24 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 /**
- * OpenAI client instance
+ * OpenAI client instance - lazy getter to defer instantiation to request time
+ */
+let cachedOpenAI: OpenAI | null = null;
+
+export function getOpenAI(): OpenAI {
+  if (!cachedOpenAI) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error('Missing OPENAI_API_KEY environment variable');
+    }
+    cachedOpenAI = new OpenAI({ apiKey });
+  }
+  return cachedOpenAI;
+}
+
+/**
+ * Deprecated: Use getOpenAI() instead. Kept for backward compatibility.
+ * @deprecated Use getOpenAI() instead
  */
 export const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
