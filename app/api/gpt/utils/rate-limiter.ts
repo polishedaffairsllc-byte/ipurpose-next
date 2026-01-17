@@ -123,7 +123,7 @@ export async function recordRequest(userId: string, tokensUsed: number): Promise
       tokens: firebaseAdmin.firestore.FieldValue.increment(tokensUsed),
       lastRequest: now,
     }, { merge: true });
-  } catch (error):
+  } catch (error) {
     console.error('Failed to record request:', error);
     // Don't throw - logging failures shouldn't break API
   }
