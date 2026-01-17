@@ -65,6 +65,7 @@ export async function getInteractionHistory(
   limit: number = 10
 ): Promise<GPTInteraction[]> {
   try {
+    const db = getDb();
     let query = db
       .collection('gpt-interactions')
       .where('userId', '==', userId)
@@ -96,6 +97,7 @@ export async function getTokenUsage(
   endDate?: Date
 ): Promise<{ total: number; byDomain: Record<GPTDomain, number> }> {
   try {
+    const db = getDb();
     let query = db
       .collection('gpt-interactions')
       .where('userId', '==', userId);
