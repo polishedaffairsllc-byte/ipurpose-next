@@ -19,8 +19,41 @@ export default function Footer() {
     <footer className="mt-20 bg-black/40 backdrop-blur-sm border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
         {/* Footer Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-          {/* Column 1 - Platform */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
+          {/* Column 1 - Start Here */}
+          <div>
+            <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
+              Start Here
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/starter-pack"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  Starter Pack
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/ai-blueprint"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  AI Blueprint
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/clarity-check"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  Clarity Check
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2 - Platform */}
           <div>
             <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
               Platform
@@ -44,14 +77,6 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/clarity-check"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Clarity Check
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/about"
                   className="text-sm text-white/60 hover:text-white/80 transition-colors"
                 >
@@ -61,7 +86,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 2 - Legal */}
+          {/* Column 3 - Legal */}
           <div>
             <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
               Legal
@@ -86,7 +111,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3 - Account */}
+          {/* Column 4 - Account */}
           <div>
             <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
               Account
