@@ -44,6 +44,22 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/starter-pack"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  Starter Pack
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/ai-blueprint"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  AI Blueprint
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/clarity-check"
                   className="text-sm text-white/60 hover:text-white/80 transition-colors"
                 >

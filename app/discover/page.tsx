@@ -143,11 +143,25 @@ export default function DiscoverPage() {
               Discover Your Soul iPurpose Alignment Type
             </a>
             <Link
+              href="/starter-pack"
+              className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #D4A373, rgba(212, 163, 115, 0))', fontSize: '24px' }}
+            >
+              Get the Starter Pack — $27
+            </Link>
+            <Link
+              href="/ai-blueprint"
+              className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '24px' }}
+            >
+              Get the AI Blueprint — $47
+            </Link>
+            <Link
               href="/program"
               className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '24px' }}
             >
-              View the iPurpose Accelerator
+              Enroll in the iPurpose Accelerator
             </Link>
             <Link
               href="/about"

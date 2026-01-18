@@ -42,6 +42,22 @@ export default function PublicHeader() {
       </Link>
 
       <Link
+        href="/starter-pack"
+        className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+        style={{ background: 'linear-gradient(to right, #D4A373, rgba(212, 163, 115, 0))', fontSize: '24px', color: '#FFFFFF' }}
+      >
+        Starter Pack
+      </Link>
+
+      <Link
+        href="/ai-blueprint"
+        className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
+        style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '24px', color: '#FFFFFF' }}
+      >
+        AI Blueprint
+      </Link>
+
+      <Link
         href="/clarity-check"
         className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
         style={{ background: 'linear-gradient(to right, #9C88FF, rgba(91, 75, 166, 0))', fontSize: '24px', color: '#FFFFFF' }}
