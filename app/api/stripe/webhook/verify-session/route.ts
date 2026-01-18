@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     // Verify line items include a valid product price
     const validPriceIds = [
-      process.env.STRIPE_PRICE_ID_STARTER_PACK,
+      process.env.STRIPE_PRICE_STARTER_PACK,
       process.env.STRIPE_PRICE_ID_AI_BLUEPRINT,
       process.env.STRIPE_PRICE_ID_ACCELERATOR,
     ].filter(Boolean) as string[];

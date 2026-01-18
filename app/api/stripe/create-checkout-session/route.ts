@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 // Product to price ID mapping
 const PRODUCT_PRICE_MAP: { [key: string]: string } = {
-  'starter_pack': 'STRIPE_PRICE_ID_STARTER_PACK',
+  'starter_pack': 'STRIPE_PRICE_STARTER_PACK',
   'ai_blueprint': 'STRIPE_PRICE_ID_AI_BLUEPRINT',
   'accelerator': 'STRIPE_PRICE_ID_ACCELERATOR',
 };
