@@ -47,10 +47,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Optional: Verify line items include the iPurpose Accelerator price
-    if (process.env.STRIPE_PRICE_ID_6WEEK && session.line_items) {
+    // Verify line items include a valid product price
+    const validPriceIds = [
+      process.env.STRIPE_PRICE_ID_STARTER_PACK,
+      process.env.STRIPE_PRICE_ID_AI_BLUEPRINT,
+      process.env.STRIPE_PRICE_ID_ACCELERATOR,
+    ].filter(Boolean) as string[];
+
+    if (validPriceIds.length > 0 && session.line_items) {
       const hasValidPrice = session.line_items.data.some(
-        (item: any) => item.price?.id === process.env.STRIPE_PRICE_ID_6WEEK
+        (item: any) => validPriceIds.includes(item.price?.id)
       );
 
       if (!hasValidPrice) {
