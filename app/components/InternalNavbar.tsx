@@ -18,7 +18,7 @@ export default function InternalNavbar() {
   const router = useRouter();
 
   // Hide on public pages
-  const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/terms' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/program' || pathname === '/google-review' || pathname === '/info-session' || pathname === '/ipurpose-6-week';
+  const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/terms' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/program' || pathname === '/google-review' || pathname === '/info-session' || pathname === '/ipurpose-6-week' || pathname === '/starter-pack' || pathname === '/ai-blueprint';
   
   if (isPublicPage) return null;
 
