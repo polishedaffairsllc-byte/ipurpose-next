@@ -39,7 +39,7 @@ export default function Footer() {
                   href="/program"
                   className="text-sm text-white/60 hover:text-white/80 transition-colors"
                 >
-                  6-Week Program
+                  iPurpose Accelerator
                 </Link>
               </li>
               <li>
