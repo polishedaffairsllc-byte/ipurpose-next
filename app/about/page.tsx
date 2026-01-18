@@ -155,7 +155,7 @@ export default function AboutPage() {
               href="/program"
               className="block w-full bg-gradient-to-r from-indigoDeep to-salmonPeach text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
             >
-              Explore the 6-Week Program
+              Explore the iPurpose Accelerator
             </Link>
           </div>
         </section>

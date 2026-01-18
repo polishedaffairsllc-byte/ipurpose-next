@@ -6,10 +6,10 @@ import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
 
 export const metadata: Metadata = {
-  title: 'The iPurpose 6-Week Program — From Insight to Action',
+  title: 'iPurpose Accelerator — 6-Week Hybrid Program — From Insight to Action',
   description: 'A guided 6-week experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
   openGraph: {
-    title: 'The iPurpose 6-Week Program — From Insight to Action',
+    title: 'iPurpose Accelerator — 6-Week Hybrid Program — From Insight to Action',
     description: 'A guided 6-week experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
     type: 'website',
   },
@@ -29,7 +29,7 @@ export default function ProgramPage() {
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-6xl mx-auto px-[100px] py-32 text-center">
           <h1 className="heading-hero mb-6 text-warmCharcoal text-[72px] md:text-[96px] lg:text-[120px]">
-            The 6-Week Program
+            iPurpose Accelerator
           </h1>
           <p className="text-3xl md:text-4xl lg:text-5xl text-warmCharcoal/80 mb-8">
             A cohort-based journey to clarify your purpose, build aligned systems, and expand through AI.

@@ -147,7 +147,7 @@ export default function DiscoverPage() {
               className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '24px' }}
             >
-              View the 6-Week Program
+              View the iPurpose Accelerator
             </Link>
             <Link
               href="/about"
