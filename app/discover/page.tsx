@@ -5,11 +5,11 @@ import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Discover iPurpose — Soul, Systems, and Thoughtful AI',
-  description: 'Explore the iPurpose approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
+  title: 'Discover iPurpose™ — Soul, Systems, and Thoughtful AI',
+  description: 'Explore the iPurpose™ approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
   openGraph: {
-    title: 'Discover iPurpose — Soul, Systems, and Thoughtful AI',
-    description: 'Explore the iPurpose approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
+    title: 'Discover iPurpose™ — Soul, Systems, and Thoughtful AI',
+    description: 'Explore the iPurpose™ approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
     type: 'website',
   },
   robots: 'index, follow',
@@ -40,7 +40,7 @@ export default function DiscoverPage() {
           <div className="absolute inset-0 bg-black/50"></div>
           
           <h1 className="heading-hero mb-6 text-white relative z-10">
-            Discover iPurpose
+            Discover iPurpose™
           </h1>
           <p className="text-white relative z-10 font-italiana px-6 py-3 rounded-lg" style={{ fontSize: '48px', backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
             Soul + Systems + AI
@@ -161,7 +161,7 @@ export default function DiscoverPage() {
               className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '24px' }}
             >
-              Enroll in the iPurpose Accelerator
+              Explore the iPurpose Accelerator
             </Link>
             <Link
               href="/about"

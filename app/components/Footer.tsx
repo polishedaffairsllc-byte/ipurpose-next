@@ -39,23 +39,7 @@ export default function Footer() {
                   href="/program"
                   className="text-sm text-white/60 hover:text-white/80 transition-colors"
                 >
-                  iPurpose Accelerator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/starter-pack"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Starter Pack
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/ai-blueprint"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  AI Blueprint
+                  6-Week Program
                 </Link>
               </li>
               <li>

@@ -15,7 +15,7 @@ export default function ProgramEnrollButton() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          product: 'accelerator',
+          product: '6-week',
           cohort: '2026-03',
         }),
       });

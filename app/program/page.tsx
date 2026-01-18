@@ -6,11 +6,11 @@ import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
 
 export const metadata: Metadata = {
-  title: 'iPurpose Accelerator — 6-Week Hybrid Program — From Insight to Action',
-  description: 'A guided 6-week experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
+  title: 'iPurpose Accelerator™ — From Insight to Action',
+  description: 'A guided cohort-based experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
   openGraph: {
-    title: 'iPurpose Accelerator — 6-Week Hybrid Program — From Insight to Action',
-    description: 'A guided 6-week experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
+    title: 'iPurpose Accelerator™ — From Insight to Action',
+    description: 'A guided cohort-based experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
     type: 'website',
   },
   robots: 'index, follow',
@@ -29,7 +29,7 @@ export default function ProgramPage() {
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-6xl mx-auto px-[100px] py-32 text-center">
           <h1 className="heading-hero mb-6 text-warmCharcoal text-[72px] md:text-[96px] lg:text-[120px]">
-            iPurpose Accelerator
+            iPurpose Accelerator™
           </h1>
           <p className="text-3xl md:text-4xl lg:text-5xl text-warmCharcoal/80 mb-8">
             A cohort-based journey to clarify your purpose, build aligned systems, and expand through AI.
@@ -89,7 +89,7 @@ export default function ProgramPage() {
       <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-20">
         <div className="container max-w-4xl mx-auto px-6">
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
-            By the End of 6 Weeks, You'll Have Built:
+            By the End, You'll Have Built:
           </h2>
           <div className="space-y-6 flex flex-col items-center">
             <div className="flex gap-4 w-full max-w-2xl text-center justify-center">
@@ -202,7 +202,7 @@ export default function ProgramPage() {
           </h2>
           <div className="space-y-6 text-warmCharcoal/75 mb-12 mx-auto max-w-2xl text-center" style={{ fontSize: '24px' }}>
             <p>
-              <strong>Format:</strong> 6 weeks, with one 90-minute group call per week + asynchronous work between sessions. Totally online and cohort-based.
+              <strong>Format:</strong> 6 weekly 90-minute group calls + asynchronous work between sessions. Totally online and cohort-based.
             </p>
             <p>
               <strong>Cohort Size:</strong> 8–12 people to keep it intimate and real.

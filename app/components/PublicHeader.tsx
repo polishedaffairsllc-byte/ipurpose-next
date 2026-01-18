@@ -38,23 +38,7 @@ export default function PublicHeader() {
         className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
         style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '24px', color: '#FFFFFF' }}
       >
-        iPurpose Accelerator
-      </Link>
-
-      <Link
-        href="/starter-pack"
-        className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
-        style={{ background: 'linear-gradient(to right, #D4A373, rgba(212, 163, 115, 0))', fontSize: '24px', color: '#FFFFFF' }}
-      >
-        Starter Pack
-      </Link>
-
-      <Link
-        href="/ai-blueprint"
-        className="px-6 py-3 rounded-full font-italiana flex-1 text-center mx-2 hover:opacity-90 transition-opacity"
-        style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '24px', color: '#FFFFFF' }}
-      >
-        AI Blueprint
+        6-Week Program
       </Link>
 
       <Link

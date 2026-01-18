@@ -47,7 +47,7 @@ export default function AboutPage() {
             iPurpose exists to address a persistent gap: traditional business often ignores the soul, while spiritual work often ignores structure.
           </p>
           <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '24px' }}>
-            Many capable, thoughtful people find themselves overwhelmed, disconnected, or stuck between intuition and implementation. iPurpose was created to hold both — meaning and method — without asking people to abandon either.
+            Many capable, thoughtful people find themselves overwhelmed, disconnected, or stuck between intuition and implementation. iPurpose™ was created to hold both — meaning and method — without asking people to abandon either.
           </p>
         </section>
 
@@ -58,7 +58,7 @@ export default function AboutPage() {
               The iPurpose Philosophy
             </h2>
             <p className="text-xl text-warmCharcoal/80 font-semibold">
-              Soul → Systems → AI
+              Soul → Systems → AI™
             </p>
             <p className="text-lg text-warmCharcoal/75 italic mt-2">
               This is not a slogan. It is a sequence.

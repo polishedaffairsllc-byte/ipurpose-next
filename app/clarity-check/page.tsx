@@ -130,7 +130,7 @@ export default function ClarityCheckPage() {
                 href="/program"
                 className="inline-block w-full bg-white text-lavenderViolet font-semibold py-3 px-6 rounded-lg border border-lavenderViolet hover:bg-lavenderViolet/5 transition-colors"
               >
-                View the iPurpose Accelerator
+                Explore the iPurpose Accelerator
               </Link>
             </div>
             <Link href="/" className="text-sm text-lavenderViolet hover:underline">

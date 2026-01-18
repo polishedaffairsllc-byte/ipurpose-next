@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Optional: Verify line items include the 6-week price
+    // Optional: Verify line items include the iPurpose Accelerator price
     if (process.env.STRIPE_PRICE_ID_6WEEK && session.line_items) {
       const hasValidPrice = session.line_items.data.some(
         (item: any) => item.price?.id === process.env.STRIPE_PRICE_ID_6WEEK
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
       sessionId: session.id,
       customerId: session.customer,
       email: session.customer_details?.email,
-      product: session.metadata?.product || '6-week',
+      product: session.metadata?.product || 'accelerator',
       cohort: session.metadata?.cohort || '2026-03',
     });
   } catch (error) {

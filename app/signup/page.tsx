@@ -13,7 +13,7 @@ export default function SignupPage() {
                 Account Creation
               </h1>
               <p className="text-warmCharcoal/70">
-                Accounts are created after enrollment in our iPurpose Accelerator.
+                Accounts are created after enrollment in our 6-Week Program.
               </p>
             </div>
 

@@ -223,7 +223,7 @@ export default function StarterPackPage() {
               Is this the full program?
             </h3>
             <p className="text-warmCharcoal/70">
-              No. This is a starter experience designed to give you clarity and momentum. The iPurpose Accelerator is our full 6-week cohort program with live mentorship.
+              No. This is a starter experience designed to give you clarity and momentum. The iPurpose Accelerator is our full cohort program with live mentorship.
             </p>
           </div>
           <div className="border-l-4 border-salmonPeach pl-6">

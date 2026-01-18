@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       const customerId = session.customer as string;
       const email = session.customer_details?.email;
       const sessionId = session.id;
-      const product = session.metadata?.product || '6-week';
+      const product = session.metadata?.product || 'accelerator';
       const cohort = session.metadata?.cohort || '2026-03';
 
       if (!customerId || !email) {

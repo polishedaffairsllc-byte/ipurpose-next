@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'iPurpose Accelerator | 6-Week Hybrid Program | Build with Clarity',
-  description: 'A guided 6-week journey to reconnect with your purpose, build aligned systems, and expand through AI. Cohort-based learning with live mentorship.',"
+  title: 'iPurpose Accelerator | Build with Clarity',
+  description: 'A guided cohort-based journey to reconnect with your purpose, build aligned systems, and expand through AI. Live mentorship and cohort-based learning.',
 };
 
 export default function ProgramLayout({

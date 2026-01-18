@@ -12,74 +12,32 @@ function getStripe() {
   return new Stripe(key);
 }
 
-// Map product keys to price environment variables
-const PRODUCT_PRICE_MAP: { [key: string]: string } = {
-  'starter_pack': 'STRIPE_PRICE_ID_STARTER_PACK',
-  'ai_blueprint': 'STRIPE_PRICE_ID_AI_BLUEPRINT',
-  'accelerator': 'STRIPE_PRICE_ID_ACCELERATOR',
-};
-
-// Map product keys to success URLs
-const PRODUCT_SUCCESS_URL_MAP: { [key: string]: string } = {
-  'starter_pack': '/purchase/success?product=starter_pack',
-  'ai_blueprint': '/purchase/success?product=ai_blueprint',
-  'accelerator': '/enroll/create-account?session_id={CHECKOUT_SESSION_ID}', // Keep legacy for accelerator
-};
-
-// Map product keys to cancel URLs
-const PRODUCT_CANCEL_URL_MAP: { [key: string]: string } = {
-  'starter_pack': '/starter-pack',
-  'ai_blueprint': '/ai-blueprint',
-  'accelerator': '/program',
-};
-
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { product = 'accelerator', cohort = '2026-03' } = body;
-
-    // Validate product
-    if (!PRODUCT_PRICE_MAP[product]) {
+    if (!process.env.STRIPE_PRICE_ID_6WEEK) {
       return NextResponse.json(
-        { error: `Unknown product: ${product}` },
-        { status: 400 }
-      );
-    }
-
-    const priceEnvVar = PRODUCT_PRICE_MAP[product];
-    const priceId = process.env[priceEnvVar];
-
-    if (!priceId) {
-      return NextResponse.json(
-        { error: `Stripe price ID not configured for ${product}` },
+        { error: 'Stripe price ID not configured' },
         { status: 500 }
       );
     }
 
     const stripe = getStripe();
+
+    const body = await request.json();
+    const { product = '6-week', cohort = '2026-03' } = body;
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-    // Get success and cancel URLs
-    let successUrl = PRODUCT_SUCCESS_URL_MAP[product] || '/';
-    const cancelUrl = PRODUCT_CANCEL_URL_MAP[product] || '/';
-
-    // For accelerator, preserve the session ID placeholder
-    if (product === 'accelerator') {
-      successUrl = `${appUrl}/enroll/create-account?session_id={CHECKOUT_SESSION_ID}`;
-    } else {
-      successUrl = `${appUrl}${successUrl}`;
-    }
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [
         {
-          price: priceId,
+          price: process.env.STRIPE_PRICE_ID_6WEEK,
           quantity: 1,
         },
       ],
-      success_url: successUrl,
-      cancel_url: `${appUrl}${cancelUrl}`,
+      success_url: `${appUrl}/enroll/create-account?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/program`,
       customer_creation: 'always',
       allow_promotion_codes: true,
       metadata: {
