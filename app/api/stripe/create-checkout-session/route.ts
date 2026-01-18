@@ -14,7 +14,7 @@ function getStripe() {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.STRIPE_PRICE_ID_6WEEK) {
+    if (!process.env.STRIPE_PRICE_STARTER_PACK) {
       return NextResponse.json(
         { error: 'Stripe price ID not configured' },
         { status: 500 }
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const stripe = getStripe();
 
     const body = await request.json();
-    const { product = '6-week', cohort = '2026-03' } = body;
+    const { product = 'starter-pack', cohort = '2026-03' } = body;
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       mode: 'payment',
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID_6WEEK,
+          price: process.env.STRIPE_PRICE_STARTER_PACK,
           quantity: 1,
         },
       ],
