@@ -74,27 +74,27 @@ export default async function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Clarity Check */}
-            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all bg-lavenderViolet/5">
-              <h3 className="text-xl sm:text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
-              <p className="text-white/80 mb-6 text-base sm:text-lg">Take a guided assessment to discover your core values and purpose.</p>
+            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+              <h3 className="text-2xl sm:text-3xl font-italiana mb-4 !text-white" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
+              <p className="!text-white mb-6 text-lg sm:text-xl" style={{ color: '#FFFFFF' }}>Take a guided assessment to discover your core values and purpose.</p>
               <Link href="/clarity-check" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus text-sm sm:text-base transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}>
                 Start Assessment
               </Link>
             </div>
 
             {/* Starter Pack */}
-            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all bg-sky-400/5">
-              <h3 className="text-xl sm:text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>Starter Pack</h3>
-              <p className="text-white/80 mb-6 text-base sm:text-lg">Get foundational tools and exercises to begin your clarity journey.</p>
+            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+              <h3 className="text-2xl sm:text-3xl font-italiana mb-4 !text-white" style={{ color: '#FFFFFF' }}>Starter Pack</h3>
+              <p className="!text-white mb-6 text-lg sm:text-xl" style={{ color: '#FFFFFF' }}>Get foundational tools and exercises to begin your clarity journey.</p>
               <Link href="/starter-pack" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus text-sm sm:text-base transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #7DD3FC, rgba(125, 211, 252, 0.7))', color: '#FFFFFF' }}>
                 Explore Offer
               </Link>
             </div>
 
             {/* AI Blueprint */}
-            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all md:col-span-2 lg:col-span-1 bg-purple-400/5">
-              <h3 className="text-xl sm:text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>AI Blueprint</h3>
-              <p className="text-white/80 mb-6 text-base sm:text-lg">Let AI help you build a personalized action plan for clarity.</p>
+            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all md:col-span-2 lg:col-span-1 text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+              <h3 className="text-2xl sm:text-3xl font-italiana mb-4 !text-white" style={{ color: '#FFFFFF' }}>AI Blueprint</h3>
+              <p className="!text-white mb-6 text-lg sm:text-xl" style={{ color: '#FFFFFF' }}>Let AI help you build a personalized action plan for clarity.</p>
               <Link href="/ai-blueprint" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus text-sm sm:text-base transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #A78BFA, rgba(167, 139, 250, 0.7))', color: '#FFFFFF' }}>
                 Explore Offer
               </Link>
