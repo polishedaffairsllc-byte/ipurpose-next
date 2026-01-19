@@ -154,24 +154,24 @@ export default async function SystemsPage() {
             <Card hover accent="lavender">
               <div className="flex items-start justify-between mb-4">
                 <span className="text-3xl">📅</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-lavenderViolet/10 text-indigoDeep font-montserrat">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-lavenderViolet/10 text-indigoDeep font-marcellus">
                   Integration
                 </span>
               </div>
               <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Calendar Sync</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Connect your scheduling systems and ensure your time reflects your priorities. Protect your energy and honor your rhythm.
               </p>
               <div className="space-y-2 mb-6">
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
                   Multi-calendar sync
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
                   Booking automation
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
                   Time blocking
                 </div>
@@ -192,7 +192,7 @@ export default async function SystemsPage() {
             <Card hover>
               <span className="text-2xl mb-3 block">📝</span>
               <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Content Engine</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Plan, organize, and document your content ideas with aligned strategy.
               </p>
               <Button variant="ghost" size="sm">
@@ -203,7 +203,7 @@ export default async function SystemsPage() {
             <Card hover>
               <span className="text-2xl mb-3 block">📧</span>
               <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Email Sequences</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Craft nurturing sequences that serve your audience authentically.
               </p>
               <Button variant="ghost" size="sm">
@@ -214,7 +214,7 @@ export default async function SystemsPage() {
             <Card hover>
               <span className="text-2xl mb-3 block">🎨</span>
               <h3 className="font-marcellus text-lg text-warmCharcoal mb-2">Brand Assets</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Organize your visual identity, templates, and brand guidelines.
               </p>
               <Button variant="ghost" size="sm">

@@ -19,7 +19,7 @@ export default function RootLayout({
   // Trigger rebuild to ensure NavBar removal is picked up
   return (
     <html lang="en" className="antialiased">
-      <body className="min-h-screen font-montserrat text-warmCharcoal">
+      <body className="min-h-screen font-marcellus text-warmCharcoal">
         <DynamicBackground />
         
         {/* Background texture layer */}

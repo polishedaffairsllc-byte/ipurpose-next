@@ -11,7 +11,7 @@ export default function IPInput({ label, className, ...props }: IPInputProps) {
   return (
     <div className="space-y-1">
       {label && (
-        <label className="block text-xs font-semibold uppercase tracking-[0.14em] text-ip-muted font-montserrat">
+        <label className="block text-xs font-marcellus uppercase tracking-[0.14em] text-ip-muted">
           {label}
         </label>
       )}

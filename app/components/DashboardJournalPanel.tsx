@@ -144,8 +144,8 @@ export default function DashboardJournalPanel({ todaysAffirmation, userName = "F
     <div className="space-y-8">
       <div>
         <div className="mb-4 text-center">
-          <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-4 font-montserrat">
-            TODAY&apos;S AFFIRMATION
+          <p className="text-xs font-marcellus tracking-widest text-warmCharcoal/60 uppercase mb-4">
+            TODAY'S AFFIRMATION
           </p>
           <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed mb-6">
             &quot;{todaysAffirmation}&quot;
@@ -162,8 +162,8 @@ export default function DashboardJournalPanel({ todaysAffirmation, userName = "F
 
       <div>
         <div className="mb-4">
-          <p className="text-xs font-semibold tracking-widest text-warmCharcoal/60 uppercase mb-4 font-montserrat">
-            Today&apos;s intention
+          <p className="text-xs font-marcellus tracking-widest text-warmCharcoal/60 uppercase mb-4">
+            Today's intention
           </p>
         </div>
 
