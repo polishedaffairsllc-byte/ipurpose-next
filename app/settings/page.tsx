@@ -39,7 +39,7 @@ export default async function SettingsPage() {
             <h3 className="font-marcellus text-xl text-warmCharcoal mb-6">Your Profile</h3>
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-warmCharcoal mb-2 font-montserrat">
+                <label className="block text-sm font-medium text-warmCharcoal mb-2 font-marcellus">
                   Display Name
                 </label>
                 <Input
@@ -51,7 +51,7 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-warmCharcoal mb-2 font-montserrat">
+                <label className="block text-sm font-medium text-warmCharcoal mb-2 font-marcellus">
                   Email Address
                 </label>
                 <Input
@@ -63,13 +63,13 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-warmCharcoal mb-2 font-montserrat">
+                <label className="block text-sm font-medium text-warmCharcoal mb-2 font-marcellus">
                   Bio
                 </label>
                 <textarea
                   rows={4}
                   placeholder="Share a bit about your purpose and journey..."
-                  className="w-full px-4 py-3 border border-warmCharcoal/15 rounded-lg text-sm text-warmCharcoal placeholder:text-warmCharcoal/40 font-montserrat focus:outline-none focus:ring-2 focus:ring-lavenderViolet/30 focus:border-lavenderViolet transition-all"
+                  className="w-full px-4 py-3 border border-warmCharcoal/15 rounded-lg text-sm text-warmCharcoal placeholder:text-warmCharcoal/40 font-marcellus focus:outline-none focus:ring-2 focus:ring-lavenderViolet/30 focus:border-lavenderViolet transition-all"
                   defaultValue="Purpose-driven entrepreneur helping others align their work with their soul."
                 />
               </div>
@@ -101,7 +101,7 @@ export default async function SettingsPage() {
                     defaultChecked
                     className="w-4 h-4 rounded border-warmCharcoal/25 text-salmonPeach focus:ring-salmonPeach/30 cursor-pointer"
                   />
-                  <span className="text-sm text-warmCharcoal/75 font-montserrat group-hover:text-warmCharcoal transition-colors">
+                  <span className="text-sm text-warmCharcoal/75 font-marcellus group-hover:text-warmCharcoal transition-colors">
                     Daily reflection reminders
                   </span>
                 </label>
@@ -112,7 +112,7 @@ export default async function SettingsPage() {
                     defaultChecked
                     className="w-4 h-4 rounded border-warmCharcoal/25 text-salmonPeach focus:ring-salmonPeach/30 cursor-pointer"
                   />
-                  <span className="text-sm text-warmCharcoal/75 font-montserrat group-hover:text-warmCharcoal transition-colors">
+                  <span className="text-sm text-warmCharcoal/75 font-marcellus group-hover:text-warmCharcoal transition-colors">
                     Weekly insights summary
                   </span>
                 </label>
@@ -122,7 +122,7 @@ export default async function SettingsPage() {
                     type="checkbox"
                     className="w-4 h-4 rounded border-warmCharcoal/25 text-salmonPeach focus:ring-salmonPeach/30 cursor-pointer"
                   />
-                  <span className="text-sm text-warmCharcoal/75 font-montserrat group-hover:text-warmCharcoal transition-colors">
+                  <span className="text-sm text-warmCharcoal/75 font-marcellus group-hover:text-warmCharcoal transition-colors">
                     Product updates & features
                   </span>
                 </label>
@@ -133,7 +133,7 @@ export default async function SettingsPage() {
                     defaultChecked
                     className="w-4 h-4 rounded border-warmCharcoal/25 text-salmonPeach focus:ring-salmonPeach/30 cursor-pointer"
                   />
-                  <span className="text-sm text-warmCharcoal/75 font-montserrat group-hover:text-warmCharcoal transition-colors">
+                  <span className="text-sm text-warmCharcoal/75 font-marcellus group-hover:text-warmCharcoal transition-colors">
                     Alignment milestones
                   </span>
                 </label>
@@ -144,10 +144,10 @@ export default async function SettingsPage() {
               <h3 className="font-marcellus text-lg text-warmCharcoal mb-4">Display & Theme</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-warmCharcoal mb-2 font-montserrat">
+                  <label className="block text-sm font-medium text-warmCharcoal mb-2 font-marcellus">
                     Theme Mode
                   </label>
-                  <select className="w-full px-4 py-3 border border-warmCharcoal/15 rounded-lg text-sm text-warmCharcoal font-montserrat focus:outline-none focus:ring-2 focus:ring-softGold/30 focus:border-softGold transition-all">
+                  <select className="w-full px-4 py-3 border border-warmCharcoal/15 rounded-lg text-sm text-warmCharcoal font-marcellus focus:outline-none focus:ring-2 focus:ring-softGold/30 focus:border-softGold transition-all">
                     <option>Light</option>
                     <option>Dark (Coming Soon)</option>
                     <option>Auto</option>
@@ -155,7 +155,7 @@ export default async function SettingsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-warmCharcoal mb-2 font-montserrat">
+                  <label className="block text-sm font-medium text-warmCharcoal mb-2 font-marcellus">
                     Accent Color
                   </label>
                   <div className="flex gap-3">
@@ -181,8 +181,8 @@ export default async function SettingsPage() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">📅</span>
                   <div>
-                    <p className="font-medium text-sm text-warmCharcoal font-montserrat">Google Calendar</p>
-                    <p className="text-xs text-warmCharcoal/50 font-montserrat">Sync your scheduling</p>
+                    <p className="font-medium text-sm text-warmCharcoal font-marcellus">Google Calendar</p>
+                    <p className="text-xs text-warmCharcoal/50 font-marcellus">Sync your scheduling</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm">
@@ -194,8 +194,8 @@ export default async function SettingsPage() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">✉️</span>
                   <div>
-                    <p className="font-medium text-sm text-warmCharcoal font-montserrat">Email Marketing</p>
-                    <p className="text-xs text-warmCharcoal/50 font-montserrat">ConvertKit, Mailchimp, etc.</p>
+                    <p className="font-medium text-sm text-warmCharcoal font-marcellus">Email Marketing</p>
+                    <p className="text-xs text-warmCharcoal/50 font-marcellus">ConvertKit, Mailchimp, etc.</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm">
@@ -207,8 +207,8 @@ export default async function SettingsPage() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">💳</span>
                   <div>
-                    <p className="font-medium text-sm text-warmCharcoal font-montserrat">Payment Processor</p>
-                    <p className="text-xs text-warmCharcoal/50 font-montserrat">Stripe, PayPal, etc.</p>
+                    <p className="font-medium text-sm text-warmCharcoal font-marcellus">Payment Processor</p>
+                    <p className="text-xs text-warmCharcoal/50 font-marcellus">Stripe, PayPal, etc.</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm">
@@ -229,10 +229,10 @@ export default async function SettingsPage() {
             <div className="space-y-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-warmCharcoal mb-1 font-montserrat">
+                  <p className="text-sm font-medium text-warmCharcoal mb-1 font-marcellus">
                     Export Your Data
                   </p>
-                  <p className="text-xs text-warmCharcoal/60 font-montserrat">
+                  <p className="text-xs text-warmCharcoal/60 font-marcellus">
                     Download all your reflections, insights, and settings
                   </p>
                 </div>
@@ -245,10 +245,10 @@ export default async function SettingsPage() {
 
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-warmCharcoal mb-1 font-montserrat">
+                  <p className="text-sm font-medium text-warmCharcoal mb-1 font-marcellus">
                     Delete Account
                   </p>
-                  <p className="text-xs text-warmCharcoal/60 font-montserrat">
+                  <p className="text-xs text-warmCharcoal/60 font-marcellus">
                     Permanently delete your account and all data
                   </p>
                 </div>
