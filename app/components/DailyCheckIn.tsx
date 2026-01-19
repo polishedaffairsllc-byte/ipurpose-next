@@ -52,7 +52,7 @@ export default function DailyCheckIn() {
         <div className="text-center py-6">
           <p className="text-2xl mb-3">✨</p>
           <p className="font-marcellus text-lg text-warmCharcoal mb-2">Check-in saved</p>
-          <p className="text-sm text-warmCharcoal/70 font-montserrat">
+          <p className="text-sm text-warmCharcoal/70 font-marcellus">
             You're showing up for yourself. That's the practice.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function DailyCheckIn() {
 
   return (
     <Card accent="salmon" className="mb-8">
-      <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-montserrat">
+      <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
         Today's Check-in
       </p>
 
@@ -101,7 +101,7 @@ export default function DailyCheckIn() {
             onChange={(e) => setAlignment(parseInt(e.target.value))}
             className="w-full"
           />
-          <div className="flex justify-between text-xs text-warmCharcoal/50 mt-2 font-montserrat">
+          <div className="flex justify-between text-xs text-warmCharcoal/50 mt-2 font-marcellus">
             <span>Off track</span>
             <span>Aligned</span>
           </div>
@@ -115,7 +115,7 @@ export default function DailyCheckIn() {
             value={need}
             onChange={(e) => setNeed(e.target.value)}
             placeholder="Rest, clarity, connection…"
-            className="w-full px-3 py-2 rounded-lg border border-warmCharcoal/20 text-sm font-montserrat"
+            className="w-full px-3 py-2 rounded-lg border border-warmCharcoal/20 text-sm font-marcellus"
           />
         </div>
 

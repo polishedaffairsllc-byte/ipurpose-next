@@ -51,8 +51,8 @@ export default function SystemsGPTPage() {
           <div className="space-y-12">
             {/* Header */}
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Systems Builder AI
+              <h1 className="text-4xl md:text-5xl font-italiana text-warmCharcoal mb-4">
+                Systems Guide
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Build sustainable structures that support your purpose. Create workflows,
@@ -62,7 +62,7 @@ export default function SystemsGPTPage() {
 
             {/* Systems Grid */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              <h2 className="text-2xl font-italiana text-warmCharcoal mb-6 text-center">
                 Choose a System to Build
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -77,11 +77,11 @@ export default function SystemsGPTPage() {
                     }`}
                   >
                     <div className="text-5xl mb-4">{system.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
                       {system.name}
                     </h3>
                     <p className="text-gray-700 text-sm">{system.description}</p>
-                    <div className="mt-4 text-sm text-blue-600 font-semibold">
+                    <div className="mt-4 text-sm text-blue-600 font-marcellus">
                       Build →
                     </div>
                   </button>
@@ -94,7 +94,7 @@ export default function SystemsGPTPage() {
               <p className="text-gray-600 mb-4">Need help with multiple systems?</p>
               <button
                 onClick={() => setShowChat(true)}
-                className="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg"
+                className="px-8 py-4 bg-blue-600 text-white rounded-lg font-marcellus text-lg hover:bg-blue-700 transition-colors shadow-lg"
               >
                 Start General Systems Chat
               </button>
@@ -111,7 +111,7 @@ export default function SystemsGPTPage() {
                 ← Back to Systems
               </button>
               {selectedSystem && (
-                <div className="px-6 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold">
+                <div className="px-6 py-2 bg-blue-100 text-blue-800 rounded-lg font-marcellus">
                   Building: {selectedSystem}
                 </div>
               )}

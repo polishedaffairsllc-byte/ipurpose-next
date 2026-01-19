@@ -110,7 +110,7 @@ export default function InfoSessionPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled"
+                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled"
               >
                 {loading ? 'Registering...' : 'Reserve My Spot'}
               </button>

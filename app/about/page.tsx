@@ -57,7 +57,7 @@ export default function AboutPage() {
             <h2 className="text-4xl font-marcellus text-warmCharcoal mb-2">
               The iPurpose Philosophy
             </h2>
-            <p className="text-xl text-warmCharcoal/80 font-semibold">
+            <p className="text-xl text-warmCharcoal/80 font-marcellus">
               Soul → Systems → AI™
             </p>
             <p className="text-lg text-warmCharcoal/75 italic mt-2">
@@ -88,7 +88,7 @@ export default function AboutPage() {
             </div>
           </div>
           
-          <p className="text-warmCharcoal/75 leading-relaxed font-semibold pt-2" style={{ fontSize: '24px' }}>
+          <p className="text-warmCharcoal/75 leading-relaxed font-marcellus pt-2" style={{ fontSize: '24px' }}>
             When this order is respected, technology serves the human — not the other way around.
           </p>
         </section>
@@ -116,7 +116,7 @@ export default function AboutPage() {
               About the Founder
             </h2>
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-1">Renita Hamilton</h3>
-            <p className="text-lg font-semibold text-lavenderViolet mb-4">Founder of iPurpose</p>
+            <p className="text-lg font-marcellus text-lavenderViolet mb-4">Founder of iPurpose</p>
           </div>
           
           <div className="flex flex-col md:flex-row gap-8">
@@ -147,13 +147,13 @@ export default function AboutPage() {
           <div className="space-y-3">
             <Link
               href="/discover"
-              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
+              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
             >
               Discover the iPurpose Framework
             </Link>
             <Link
               href="/program"
-              className="block w-full bg-gradient-to-r from-indigoDeep to-salmonPeach text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
+              className="block w-full bg-gradient-to-r from-indigoDeep to-salmonPeach text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
             >
               Explore the iPurpose Accelerator
             </Link>

@@ -70,7 +70,7 @@ export default function SoulGPTPage() {
           <div className="space-y-12">
             {/* Header */}
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl md:text-5xl font-italiana text-warmCharcoal mb-4">
                 Soul Alignment AI
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -81,7 +81,7 @@ export default function SoulGPTPage() {
 
             {/* Archetypes Grid */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              <h2 className="text-2xl font-italiana text-warmCharcoal mb-6 text-center">
                 Choose Your Archetype
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -96,11 +96,11 @@ export default function SoulGPTPage() {
                     }`}
                   >
                     <div className="text-5xl mb-4">{archetype.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
                       {archetype.name}
                     </h3>
                     <p className="text-gray-700 text-sm">{archetype.description}</p>
-                    <div className="mt-4 text-sm text-purple-600 font-semibold">
+                    <div className="mt-4 text-sm text-purple-600 font-marcellus">
                       Explore →
                     </div>
                   </button>
@@ -113,7 +113,7 @@ export default function SoulGPTPage() {
               <p className="text-gray-600 mb-4">Not sure which archetype fits you?</p>
               <button
                 onClick={() => setShowChat(true)}
-                className="px-8 py-4 bg-white/10 border-2 border-white/20 text-gray-700 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors shadow-lg backdrop-blur-sm"
+                className="px-8 py-4 bg-white/10 border-2 border-white/20 text-gray-700 rounded-lg font-marcellus text-lg hover:bg-white/20 transition-colors shadow-lg backdrop-blur-sm"
               >
                 Start Open Conversation
               </button>
@@ -130,7 +130,7 @@ export default function SoulGPTPage() {
                 ← Back to Archetypes
               </button>
               {selectedArchetype && (
-                <div className="px-6 py-2 bg-purple-100 text-purple-800 rounded-lg font-semibold">
+                <div className="px-6 py-2 bg-purple-100 text-purple-800 rounded-lg font-marcellus">
                   {selectedArchetype}
                 </div>
               )}

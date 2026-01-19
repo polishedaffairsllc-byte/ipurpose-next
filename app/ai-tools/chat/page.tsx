@@ -51,7 +51,7 @@ export default function AIToolsGPTPage() {
           <div className="space-y-12">
             {/* Header */}
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl md:text-5xl font-italiana text-warmCharcoal mb-4">
                 AI Tools Studio
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -62,7 +62,7 @@ export default function AIToolsGPTPage() {
 
             {/* Tools Grid */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              <h2 className="text-2xl font-italiana text-warmCharcoal mb-6 text-center">
                 Choose Your Creative Tool
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -77,11 +77,11 @@ export default function AIToolsGPTPage() {
                     }`}
                   >
                     <div className="text-5xl mb-4">{tool.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
                       {tool.name}
                     </h3>
                     <p className="text-gray-700 text-sm">{tool.description}</p>
-                    <div className="mt-4 text-sm text-violet-600 font-semibold">
+                    <div className="mt-4 text-sm text-violet-600 font-marcellus">
                       Create →
                     </div>
                   </button>
@@ -94,7 +94,7 @@ export default function AIToolsGPTPage() {
               <p className="text-gray-600 mb-4">Need something custom?</p>
               <button
                 onClick={() => setShowChat(true)}
-                className="px-8 py-4 bg-violet-600 text-white rounded-lg font-semibold text-lg hover:bg-violet-700 transition-colors shadow-lg"
+                className="px-8 py-4 bg-violet-600 text-white rounded-lg font-marcellus text-lg hover:bg-violet-700 transition-colors shadow-lg"
               >
                 Start Free-Form Creation
               </button>
@@ -111,7 +111,7 @@ export default function AIToolsGPTPage() {
                 ← Back to Tools
               </button>
               {selectedTool && (
-                <div className="px-6 py-2 bg-violet-100 text-violet-800 rounded-lg font-semibold">
+                <div className="px-6 py-2 bg-violet-100 text-violet-800 rounded-lg font-marcellus">
                   Tool: {selectedTool}
                 </div>
               )}

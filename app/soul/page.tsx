@@ -143,10 +143,10 @@ export default async function SoulPage() {
         {/* Philosophy Card */}
         <div className="ipurpose-glow-container mb-12">
           <Card accent="lavender" className="relative">
-            <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-montserrat">
+            <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus">
               YOUR SOUL → SYSTEMS → AI™ FOUNDATION
             </p>
-            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-montserrat">
+            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-marcellus">
               Soul work creates the foundation for everything. When you're aligned internally,
               your systems flow naturally and your AI tools amplify what truly matters.
             </p>
@@ -159,7 +159,7 @@ export default async function SoulPage() {
             <ArchetypeSelector />
           ) : (
             <Card accent="lavender" className="mb-8">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-montserrat">
+              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
                 Your Archetype
               </p>
               <div className="space-y-3">
@@ -169,7 +169,7 @@ export default async function SoulPage() {
                   {archetype.primary === 'healer' && '💫 Healer'}
                   {archetype.secondary && ` + ${archetype.secondary === 'visionary' ? '✨ Visionary' : archetype.secondary === 'builder' ? '🎯 Builder' : '💫 Healer'}`}
                 </p>
-                <p className="text-sm text-warmCharcoal/70 font-montserrat">
+                <p className="text-sm text-warmCharcoal/70 font-marcellus">
                   Your archetype helps you understand your strengths and where you tend to judge yourself.
                 </p>
               </div>

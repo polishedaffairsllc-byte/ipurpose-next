@@ -117,7 +117,7 @@ export default function ArchetypeSelector() {
 
   return (
     <Card accent="lavender" className="mb-8">
-      <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-montserrat">
+      <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
         Find Your Archetype
       </p>
 
@@ -136,7 +136,7 @@ export default function ArchetypeSelector() {
                       onChange={() => handleQuizAnswer(q.id, opt.archetype)}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm text-warmCharcoal/70 font-montserrat">{opt.text}</span>
+                    <span className="text-sm text-warmCharcoal/70 font-marcellus">{opt.text}</span>
                   </label>
                 ))}
               </div>
@@ -154,20 +154,20 @@ export default function ArchetypeSelector() {
         <div className="space-y-6">
           <div className="space-y-4">
             <div>
-              <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-2 font-montserrat">Primary</p>
+              <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-2 font-marcellus">Primary</p>
               <div className="bg-lavenderViolet/5 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">{ARCHETYPES[selectedPrimary!].emoji}</span>
                   <p className="font-marcellus text-lg text-warmCharcoal">{ARCHETYPES[selectedPrimary!].name}</p>
                 </div>
-                <p className="text-sm text-warmCharcoal/70 mb-3 font-montserrat">{ARCHETYPES[selectedPrimary!].strength}</p>
-                <p className="text-xs text-warmCharcoal/60 italic mb-2 font-montserrat">Shadow: "{ARCHETYPES[selectedPrimary!].shadow}"</p>
-                <p className="text-xs text-warmCharcoal/70 font-montserrat">{ARCHETYPES[selectedPrimary!].reframe}</p>
+                <p className="text-sm text-warmCharcoal/70 mb-3 font-marcellus">{ARCHETYPES[selectedPrimary!].strength}</p>
+                <p className="text-xs text-warmCharcoal/60 italic mb-2 font-marcellus">Shadow: "{ARCHETYPES[selectedPrimary!].shadow}"</p>
+                <p className="text-xs text-warmCharcoal/70 font-marcellus">{ARCHETYPES[selectedPrimary!].reframe}</p>
               </div>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-2 font-montserrat">Secondary (optional)</p>
+              <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-2 font-marcellus">Secondary (optional)</p>
               <div className="grid grid-cols-3 gap-2">
                 {Object.entries(ARCHETYPES).map(([key, arch]) => {
                   if (key === selectedPrimary) return null;
@@ -182,7 +182,7 @@ export default function ArchetypeSelector() {
                       }`}
                     >
                       <div className="text-lg mb-1">{arch.emoji}</div>
-                      <div className="text-xs font-montserrat">{arch.name}</div>
+                      <div className="text-xs font-marcellus">{arch.name}</div>
                     </button>
                   );
                 })}

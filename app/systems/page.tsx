@@ -45,10 +45,10 @@ export default async function SystemsPage() {
         {/* Philosophy Card */}
         <div className="ipurpose-glow-container mb-12">
           <Card accent="gold" className="relative">
-            <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-montserrat">
+            <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus">
               SYSTEMS PHILOSOPHY
             </p>
-            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-montserrat">
+            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-marcellus">
               Systems turn your purpose into momentum. These tools help you organize every part
               of your flow so your energy stays aligned, efficient, and powerful.
             </p>
@@ -64,24 +64,24 @@ export default async function SystemsPage() {
             <Card hover accent="lavender">
               <div className="flex items-start justify-between mb-4">
                 <span className="text-3xl">📋</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-lavenderViolet/10 text-indigoDeep font-montserrat">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-lavenderViolet/10 text-indigoDeep font-marcellus">
                   Essential
                 </span>
               </div>
               <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Offer Architecture</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Structure your offers, pricing, and delivery systems. Create scalable packages that reflect your value and serve your clients powerfully.
               </p>
               <div className="space-y-2 mb-6">
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
                   Offer templates & frameworks
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
                   Pricing calculators
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
                   Delivery workflows
                 </div>
@@ -94,24 +94,24 @@ export default async function SystemsPage() {
             <Card hover accent="salmon">
               <div className="flex items-start justify-between mb-4">
                 <span className="text-3xl">⚡</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-salmonPeach/20 text-warmCharcoal font-montserrat">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-salmonPeach/20 text-warmCharcoal font-marcellus">
                   Essential
                 </span>
               </div>
               <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Workflow Builder</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Create simple, repeatable workflows that keep your operations smooth and confident. Automate the routine, focus on the strategic.
               </p>
               <div className="space-y-2 mb-6">
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-salmonPeach rounded-full"></span>
                   Visual workflow designer
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-salmonPeach rounded-full"></span>
                   Task automation
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-salmonPeach rounded-full"></span>
                   Integration library
                 </div>
@@ -124,24 +124,24 @@ export default async function SystemsPage() {
             <Card hover accent="gold">
               <div className="flex items-start justify-between mb-4">
                 <span className="text-3xl">💰</span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-softGold/30 text-warmCharcoal font-montserrat">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-softGold/30 text-warmCharcoal font-marcellus">
                   Growth
                 </span>
               </div>
               <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Monetization Mode</h3>
-              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-montserrat">
+              <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Track revenue streams, payment systems, and financial flows. Gain clarity on what's working and where to focus your energy.
               </p>
               <div className="space-y-2 mb-6">
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-softGold rounded-full"></span>
                   Revenue analytics
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-softGold rounded-full"></span>
                   Payment integrations
                 </div>
-                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-montserrat">
+                <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-softGold rounded-full"></span>
                   Financial projections
                 </div>
