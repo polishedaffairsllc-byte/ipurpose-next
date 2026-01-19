@@ -35,29 +35,136 @@ function generateSummary(scores: ReturnType<typeof calculateDimensionScores>) {
   // Determine overall profile and next step
   if (totalScore >= 50) {
     summary =
-      "You're in a place of relative clarity and momentum. Your sense of direction feels grounded, and you're open to support. The work now is integration—translating what you know into consistent practice.";
-    nextStep = 'Consider how to structure your days to honor the clarity you have found.';
+      "You have real clarity and forward motion right now. Your direction feels grounded, and you're open to support. The next step is integration - turning what you already know into a steady rhythm.";
+    nextStep = 'Choose one simple structure to protect your momentum this week (a weekly plan, a daily priority, or a decision filter).';
   } else if (totalScore >= 35) {
     summary =
-      "You have insight, but there's friction between knowing and doing. You sense what needs to shift, and you're open to help. The gap isn't about understanding—it's about container and support.";
-    nextStep = 'Identify one area where external structure could unlock your momentum.';
+      "You have insight, but there's a gap between knowing and doing. You can sense what needs to shift, and you're open to support. This isn't a knowledge problem - it's a structure and follow-through problem.";
+    nextStep = 'Pick one area where a clear system would remove friction (time, decisions, or next steps) - and start there.';
   } else {
     summary =
-      "You're navigating fog right now. That's not failure—it's often a signal that a deeper recalibration is needed. You're here because something knows better is possible.";
-    nextStep = 'Start by naming one thing that, if it shifted, would change everything for you.';
+      "Things feel foggy right now - and that doesn't mean you're failing. It often means you're carrying too much, moving without a clear anchor, or trying to decide under pressure. You're here because part of you knows it's time to recalibrate.";
+    nextStep = 'Name one pressure you can release this week, and one truth you\'re ready to act on - even in a small way.';
   }
 
   return { summary, nextStep };
 }
 
-async function sendResultsEmail(email: string, scores: ReturnType<typeof calculateDimensionScores>, summary: string, nextStep: string) {
-  // This is a placeholder for email sending
-  // In production, integrate with SendGrid, Resend, or similar
-  console.log(`Email would be sent to ${email} with results:`, { scores, summary, nextStep });
+async function sendResultsEmail(
+  email: string,
+  scores: ReturnType<typeof calculateDimensionScores>,
+  summary: string,
+  nextStep: string
+) {
+  // Use Resend for email sending
+  const resendApiKey = process.env.RESEND_API_KEY;
 
-  // TODO: Implement actual email sending
-  // For now, we'll just log it
-  return true;
+  if (!resendApiKey) {
+    console.warn('RESEND_API_KEY not configured. Email will not be sent.');
+    return false;
+  }
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(resendApiKey);
+
+    const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #2a2a2a; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; margin-bottom: 30px; }
+    .header h1 { font-size: 28px; color: #2a2a2a; margin: 0 0 10px 0; }
+    .header p { color: #666; font-size: 14px; }
+    .section { margin-bottom: 30px; }
+    .section h2 { font-size: 16px; font-weight: 600; color: #2a2a2a; margin: 0 0 15px 0; }
+    .scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    .score-box { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; }
+    .score-box .label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+    .score-box .value { font-size: 24px; font-weight: 600; color: #7c5cbc; margin: 8px 0 0 0; }
+    .total-score { background: linear-gradient(135deg, #a991d8 0%, #6366b8 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+    .total-score .label { font-size: 14px; opacity: 0.9; }
+    .total-score .value { font-size: 48px; font-weight: 600; margin: 5px 0 0 0; }
+    .summary { background: #f9f5ff; padding: 15px; border-radius: 8px; border-left: 4px solid #a991d8; line-height: 1.7; }
+    .next-step { background: #f5f5f5; padding: 15px; border-radius: 8px; line-height: 1.7; }
+    .footer { text-align: center; font-size: 12px; color: #999; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+    .cta { display: inline-block; margin-top: 20px; padding: 12px 24px; background: linear-gradient(135deg, #a991d8 0%, #6366b8 100%); color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Your Clarity Check Results</h1>
+      <p>Where you are right now</p>
+    </div>
+
+    <div class="section">
+      <div class="total-score">
+        <div class="label">Total Score</div>
+        <div class="value">${scores.totalScore} / 60</div>
+      </div>
+
+      <h2>Dimension Scores</h2>
+      <div class="scores-grid">
+        <div class="score-box">
+          <div class="label">Internal Clarity</div>
+          <div class="value">${scores.internalClarity} / 15</div>
+        </div>
+        <div class="score-box">
+          <div class="label">Readiness for Support</div>
+          <div class="value">${scores.readinessForSupport} / 15</div>
+        </div>
+        <div class="score-box">
+          <div class="label">Friction Between Insight & Action</div>
+          <div class="value">${scores.frictionBetweenInsightAndAction} / 15</div>
+        </div>
+        <div class="score-box">
+          <div class="label">Integration & Momentum</div>
+          <div class="value">${scores.integrationAndMomentum} / 15</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Your Summary</h2>
+      <div class="summary">
+        ${summary}
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Your Next Step</h2>
+      <div class="next-step">
+        ${nextStep}
+      </div>
+      <a href="https://ipurposesoul.com" class="cta">Explore iPurpose Programs</a>
+    </div>
+
+    <div class="footer">
+      <p>Taken on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p>This email contains your personal clarity check results. Keep it safe.</p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'info@ipurposesoul.com',
+      to: email,
+      subject: 'Your iPurpose Clarity Check Results',
+      html: emailHtml,
+    });
+
+    console.log('Email sent successfully:', result);
+    return true;
+  } catch (error) {
+    console.error('Error sending email via Resend:', error);
+    return false;
+  }
 }
 
 export async function POST(request: NextRequest) {
