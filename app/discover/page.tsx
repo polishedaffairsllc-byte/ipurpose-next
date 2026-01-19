@@ -43,7 +43,7 @@ export default function DiscoverPage() {
             Discover iPurpose™
           </h1>
           <p className="text-white relative z-10 font-italiana px-6 py-3 rounded-lg" style={{ fontSize: '48px', backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
-            Soul + Systems + AI
+            Soul + Systems + AI™
           </p>
         </section>
 
@@ -72,7 +72,8 @@ export default function DiscoverPage() {
             </li>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">✓</span>
-              <span>You're building something, but it doesn't feel fully true</span>
+              <span>You're building something, but it doesn't feel fully true — like the vision makes sense, yet something hasn't fully settled into place.<br/>
+              <span style={{ marginTop: '12px', display: 'block' }}>That tension isn't failure. It's often a sign that insight is present, but integration hasn't happened yet.</span></span>
             </li>
             <li className="flex gap-3">
               <span className="text-lavenderViolet font-bold">✓</span>

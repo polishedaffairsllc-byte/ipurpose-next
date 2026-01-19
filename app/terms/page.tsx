@@ -17,12 +17,12 @@ export default function TermsPage() {
 
         <h2>Welcome</h2>
         <p>
-          These Terms govern your use of the iPurpose LLC website and services. iPurpose currently provides an early-stage prototype and demonstration environment for evaluation and educational purposes. By accessing or using this site, you agree to these Terms.
+          These Terms govern your use of the iPurpose LLC website and services. By accessing or using this site, you agree to these Terms.
         </p>
 
-        <h2>Use of the Prototype</h2>
+        <h2>Use of Services</h2>
         <p>
-          iPurpose is an early-stage product and may contain incomplete or evolving features. You may use the platform and any demo accounts provided solely for evaluation, educational, or review purposes. You agree not to misuse, disrupt, reverse-engineer, copy, or exploit the service or its underlying systems.
+          iPurpose provides educational tools, guided frameworks, and evolving digital experiences designed to support clarity, reflection, and aligned decision-making. As the platform grows, features and content may continue to develop. You may use the platform solely for personal evaluation, educational, or review purposes. You agree not to misuse, disrupt, reverse-engineer, copy, or exploit the service or its underlying systems.
         </p>
 
         <h2>Intellectual Property</h2>
@@ -42,8 +42,8 @@ export default function TermsPage() {
 
         <h2>Contact</h2>
         <p>
-          For questions or legal requests, contact:<br />
-          Renita Hamilton — <a href="mailto:renita@ipurposesoul.com">renita@ipurposesoul.com</a>
+          For legal inquiries, contact: <a href="mailto:legal@ipurposesoul.com">legal@ipurposesoul.com</a><br />
+          For general inquiries, contact: <a href="mailto:info@ipurposesoul.com">info@ipurposesoul.com</a>
         </p>
 
         <p style={{ marginTop: 32, paddingTop: 16, borderTop: "1px solid #ddd" }}>

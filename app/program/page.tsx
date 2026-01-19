@@ -208,7 +208,7 @@ export default function ProgramPage() {
               <strong>Cohort Size:</strong> 8–12 people to keep it intimate and real.
             </p>
             <p>
-              <strong>Next Cohort:</strong> Launching March 2026. Limited spots available. Early members get access to beta features and community pricing.
+              <strong>Next Cohort:</strong> Launching March 2026. Limited spots available.
             </p>
             <p>
               <strong>Time Commitment:</strong> ~3–4 hours per week (1.5 hours live + 1.5–2.5 hours self-guided work).
