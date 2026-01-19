@@ -102,7 +102,7 @@ export default function ClarityCheckPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled"
+                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled"
               >
                 {loading ? 'Submitting...' : 'Take the Clarity Check'}
               </button>
@@ -115,22 +115,20 @@ export default function ClarityCheckPage() {
               You're in.
             </h2>
             <p className="text-lg text-warmCharcoal/75 mb-12">
-              Next step: take the Alignment Type check so we can meet you where you are.
+              Now take the assessment. 12 quick questions to understand where you truly stand.
             </p>
             <div className="space-y-4 mb-8">
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLSdeqCKVGTFlVma5ws5cHIICSqU74dR6ZbpTzawj-Cx4_wcApQ/viewform?usp=sharing&ouid=108847680085116613841"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+              <Link
+                href="/clarity-check-numeric"
+                className="inline-block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
               >
-                Discover Your Soul iPurpose Alignment Type
-              </a>
+                Take the Clarity Check Assessment
+              </Link>
               <Link
                 href="/program"
-                className="inline-block w-full bg-white text-lavenderViolet font-semibold py-3 px-6 rounded-lg border border-lavenderViolet hover:bg-lavenderViolet/5 transition-colors"
+                className="inline-block w-full bg-white text-lavenderViolet font-marcellus py-3 px-6 rounded-lg border border-lavenderViolet hover:bg-lavenderViolet/5 transition-colors"
               >
-                Explore the iPurpose Accelerator
+                Or explore the iPurpose Accelerator
               </Link>
             </div>
             <Link href="/" className="text-sm text-lavenderViolet hover:underline">
