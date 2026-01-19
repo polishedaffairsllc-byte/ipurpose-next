@@ -315,19 +315,19 @@ export default function ClarityCheckNumericPage() {
                     <p className="text-lg text-warmCharcoal/85 font-marcellus">
                       {question.id}. {question.text}
                     </p>
-                    <div className="flex gap-3 justify-start">
+                    <div className="flex w-full justify-between">
                       {[1, 2, 3, 4, 5].map((value) => (
                         <button
                           key={value}
                           type="button"
                           onClick={() => handleResponse(question.id, value)}
-                          className={`w-12 h-12 rounded-full font-marcellus text-sm transition-all ${
+                          className={`w-12 h-12 rounded-full font-marcellus text-sm transition-all transform flex items-center justify-center ${
                             responses[question.id] === value
-                              ? 'bg-lavenderViolet text-white shadow-lg'
+                              ? 'bg-warmCharcoal text-warmCharcoal'
                               : 'bg-warmCharcoal/5 text-warmCharcoal/60 hover:bg-warmCharcoal/10'
                           }`}
                         >
-                          {value}
+                          {responses[question.id] === value ? '✕' : value}
                         </button>
                       ))}
                     </div>
