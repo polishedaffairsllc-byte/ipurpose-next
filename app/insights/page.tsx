@@ -93,10 +93,10 @@ export default async function InsightsPage() {
 
         {/* Philosophy Card */}
         <Card accent="salmon" className="mb-12">
-          <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-montserrat">
+          <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">
             HOW THIS WORKS
           </p>
-          <p className="text-sm text-warmCharcoal/75 leading-relaxed font-montserrat">
+          <p className="text-sm text-warmCharcoal/75 leading-relaxed font-marcellus">
             Insights are based on your check-ins and practices in iPurpose. Every number here comes from your real activity. Start with a check-in to unlock your data.
           </p>
         </Card>
@@ -109,7 +109,7 @@ export default async function InsightsPage() {
           <div className="grid md:grid-cols-3 gap-5">
             {/* Alignment Consistency */}
             <Card accent="lavender">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
+              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-marcellus">
                 Alignment Consistency
               </p>
               <div className="flex items-baseline gap-2 mb-1">
@@ -117,11 +117,11 @@ export default async function InsightsPage() {
                   {insights.alignmentConsistency}%
                 </span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+              <p className="text-xs text-warmCharcoal/50 font-marcellus">
                 Check-ins last 7 days
               </p>
               {!insights.hasCheckIns && (
-                <p className="text-xs text-warmCharcoal/40 mt-3 italic font-montserrat">
+                <p className="text-xs text-warmCharcoal/40 mt-3 italic font-marcellus">
                   Start a check-in to build your data
                 </p>
               )}
@@ -129,7 +129,7 @@ export default async function InsightsPage() {
 
             {/* Active Practices */}
             <Card accent="salmon">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
+              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-marcellus">
                 Practices Completed
               </p>
               <div className="flex items-baseline gap-2 mb-1">
@@ -137,11 +137,11 @@ export default async function InsightsPage() {
                   {insights.activePractices}
                 </span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+              <p className="text-xs text-warmCharcoal/50 font-marcellus">
                 Last 30 days
               </p>
               {!insights.hasPractices && (
-                <p className="text-xs text-warmCharcoal/40 mt-3 italic font-montserrat">
+                <p className="text-xs text-warmCharcoal/40 mt-3 italic font-marcellus">
                   Build your first practice to get started
                 </p>
               )}
@@ -149,7 +149,7 @@ export default async function InsightsPage() {
 
             {/* Check-in Count */}
             <Card accent="gold">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-montserrat">
+              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-marcellus">
                 Check-ins Logged
               </p>
               <div className="flex items-baseline gap-2 mb-1">
@@ -157,7 +157,7 @@ export default async function InsightsPage() {
                   {insights.checkIns.length}
                 </span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+              <p className="text-xs text-warmCharcoal/50 font-marcellus">
                 Last 30 days
               </p>
             </Card>
@@ -174,7 +174,7 @@ export default async function InsightsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-marcellus text-xl text-warmCharcoal mb-1">Check-Ins</h3>
-                  <p className="text-xs text-warmCharcoal/55 font-montserrat">
+                  <p className="text-xs text-warmCharcoal/55 font-marcellus">
                     Track your alignment and clarity over time
                   </p>
                 </div>
@@ -183,10 +183,10 @@ export default async function InsightsPage() {
               
               {insights.hasCheckIns ? (
                 <div className="space-y-3">
-                  <p className="text-sm text-warmCharcoal/70 font-montserrat">
+                  <p className="text-sm text-warmCharcoal/70 font-marcellus">
                     You've logged <strong>{insights.checkIns.length} check-ins</strong> in the last 30 days.
                   </p>
-                  <div className="text-xs text-warmCharcoal/60 space-y-1 font-montserrat">
+                  <div className="text-xs text-warmCharcoal/60 space-y-1 font-marcellus">
                     <p>Most recent: {new Date(insights.checkIns[0]?.createdAt).toLocaleDateString()}</p>
                   </div>
                   <Button variant="ghost" size="sm" href="/soul">
@@ -195,7 +195,7 @@ export default async function InsightsPage() {
                 </div>
               ) : (
                 <div className="text-center py-6">
-                  <p className="text-sm text-warmCharcoal/60 mb-4 font-montserrat">
+                  <p className="text-sm text-warmCharcoal/60 mb-4 font-marcellus">
                     No check-ins yet. Start with your first check-in to build your insights.
                   </p>
                   <Button variant="primary" size="sm" href="/soul">
@@ -217,7 +217,7 @@ export default async function InsightsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-marcellus text-xl text-warmCharcoal mb-1">Your Practices</h3>
-                  <p className="text-xs text-warmCharcoal/55 font-montserrat">
+                  <p className="text-xs text-warmCharcoal/55 font-marcellus">
                     Built systems and aligned workflows
                   </p>
                 </div>
@@ -226,7 +226,7 @@ export default async function InsightsPage() {
               
               {insights.hasPractices ? (
                 <div className="space-y-3">
-                  <p className="text-sm text-warmCharcoal/70 font-montserrat">
+                  <p className="text-sm text-warmCharcoal/70 font-marcellus">
                     You've completed <strong>{insights.activePractices} practices</strong> in the last 30 days.
                   </p>
                   <Button variant="ghost" size="sm" href="/systems">
@@ -235,7 +235,7 @@ export default async function InsightsPage() {
                 </div>
               ) : (
                 <div className="text-center py-6">
-                  <p className="text-sm text-warmCharcoal/60 mb-4 font-montserrat">
+                  <p className="text-sm text-warmCharcoal/60 mb-4 font-marcellus">
                     No practices yet. Build your first system to start tracking progress.
                   </p>
                   <Button variant="primary" size="sm" href="/systems">
@@ -257,13 +257,13 @@ export default async function InsightsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-marcellus text-lg text-warmCharcoal">Alignment Trends</h3>
-                  <p className="text-xs text-warmCharcoal/55 font-montserrat">
+                  <p className="text-xs text-warmCharcoal/55 font-marcellus">
                     30-day visualization (building soon)
                   </p>
                 </div>
                 <span className="text-2xl">📈</span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+              <p className="text-xs text-warmCharcoal/50 font-marcellus">
                 We're building this feature to show how your alignment scores trend over time.
               </p>
             </Card>
@@ -272,13 +272,13 @@ export default async function InsightsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-marcellus text-lg text-warmCharcoal">Custom Dashboards</h3>
-                  <p className="text-xs text-warmCharcoal/55 font-montserrat">
+                  <p className="text-xs text-warmCharcoal/55 font-marcellus">
                     Build your own view (building soon)
                   </p>
                 </div>
                 <span className="text-2xl">🎯</span>
               </div>
-              <p className="text-xs text-warmCharcoal/50 font-montserrat">
+              <p className="text-xs text-warmCharcoal/50 font-marcellus">
                 Create personalized dashboards for metrics that matter most to you.
               </p>
             </Card>
