@@ -15,11 +15,16 @@ function parseServiceAccount(): any | undefined {
   }
 }
 
-// 🚫 Skip Firebase Admin initialization during GitHub CI
-if (process.env.CI === "true") {
-  console.warn("CI detected — skipping Firebase Admin initialization.");
+// Check if we're in an environment where we shouldn't initialize Firebase
+const shouldSkipFirebase = 
+  process.env.CI === "true" ||  // GitHub Actions
+  process.env.NODE_ENV === "production" && !process.env.FIREBASE_SERVICE_ACCOUNT; // Production without credentials
+
+// 🚫 Skip Firebase Admin initialization during GitHub CI or in Vercel without credentials
+if (shouldSkipFirebase) {
+  console.warn("Firebase initialization skipped (CI or production without credentials).");
 } else {
-  // ✅ Normal initialization path (local + Vercel)
+  // ✅ Normal initialization path (local + Vercel with credentials)
   if (!admin.apps.length) {
     const cred = parseServiceAccount();
     if (cred) {
@@ -33,7 +38,7 @@ if (process.env.CI === "true") {
       }
     } else {
       console.warn(
-        "Missing FIREBASE_SERVICE_ACCOUNT or FIREBASE_ADMIN_CREDENTIALS env var. Firebase Admin not initialized (expected during build/dev without credentials)."
+        "Missing FIREBASE_SERVICE_ACCOUNT or FIREBASE_ADMIN_CREDENTIALS env var. Firebase Admin not initialized."
       );
     }
   }

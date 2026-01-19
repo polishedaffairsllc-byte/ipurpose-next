@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'AI Blueprint for Purpose-Driven Work | iPurpose',
+  title: 'iPurpose Blueprint | Use AI with Intention',
   description: 'A beginner-friendly guide to using AI ethically and intentionally to support clarity, planning, and creative work.',
   openGraph: {
-    title: 'AI Blueprint for Purpose-Driven Work | iPurpose',
+    title: 'iPurpose Blueprint | Use AI with Intention',
     description: 'A beginner-friendly guide to using AI ethically and intentionally to support clarity, planning, and creative work.',
     type: 'website',
   },

@@ -42,24 +42,37 @@ export default function AIBlueprintPage() {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-italiana text-lavenderViolet shadow-glow-lavender mb-6">
-            AI Blueprint for Purpose-Driven Work
-          </h1>
-          <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
-            Use AI without losing your voice, values, or peace.
-          </p>
-          <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
-            A practical, beginner-friendly guide to help you integrate AI into your workflow ethically—so you can plan, write, organize, and create with more ease.
-          </p>
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32">
+          <section 
+            className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-6"
+            style={{
+              backgroundImage: 'url(/images/sebastien-gabriel--IMlv9Jlb24-unsplash.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black/50"></div>
+            
+            <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
+              iPurpose Blueprint
+            </h1>
+          </section>
+          <div className="text-center">
+            <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
+              Use AI without losing your voice, values, or peace.
+            </p>
+            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
+              A practical, beginner-friendly guide to help you integrate AI into your workflow ethically—so you can plan, write, organize, and create with more ease.
+            </p>
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-              {error}
-            </div>
-          )}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                {error}
+              </div>
+            )}
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
             <button
               onClick={handleCheckout}
               disabled={loading}
@@ -73,6 +86,7 @@ export default function AIBlueprintPage() {
             >
               Start with Purpose First
             </Link>
+            </div>
           </div>
         </div>
       </div>
