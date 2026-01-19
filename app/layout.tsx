@@ -9,6 +9,7 @@ import InternalNavbar from "./components/InternalNavbar";
 export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
   description: "iPurpose helps creators move from stuck or self-doubting into clarity and coherent action by integrating inner alignment, practical structure, and thoughtful use of AI.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
 };
 
 export default function RootLayout({
