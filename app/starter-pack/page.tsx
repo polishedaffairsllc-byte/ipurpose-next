@@ -44,14 +44,14 @@ export default function StarterPackPage() {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-6 py-32 text-center">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-marcellus text-warmCharcoal mb-6">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-italiana text-lavenderViolet shadow-glow-lavender mb-6">
             Purpose Starter Pack
           </h1>
-          <p className="text-2xl md:text-3xl lg:text-4xl text-warmCharcoal/80 mb-8">
+          <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
             Get clear on your direction — without committing to a full program.
           </p>
-          <p className="text-lg md:text-xl text-warmCharcoal/70 mb-12 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
             A short, guided starter experience to help you reconnect to what matters, name your purpose clearly, and take your next step with calm structure.
           </p>
 
@@ -61,17 +61,17 @@ export default function StarterPackPage() {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
             <button
               onClick={handleCheckout}
               disabled={loading}
-              className="px-8 py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-base sm:text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Loading...' : 'Get the Starter Pack — $27'}
             </button>
             <Link
               href="/clarity-check"
-              className="px-8 py-4 border-2 border-lavenderViolet text-lavenderViolet rounded-full font-marcellus text-xl hover:bg-lavenderViolet/5 transition-colors"
+              className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-lavenderViolet text-lavenderViolet rounded-full font-marcellus text-base sm:text-lg hover:bg-lavenderViolet/5 transition-colors"
             >
               Not ready? Try Clarity Check
             </Link>
@@ -80,8 +80,8 @@ export default function StarterPackPage() {
       </div>
 
       {/* What You'll Receive */}
-      <div className="container max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-8 sm:mb-12 text-center">
           What You'll Receive
         </h2>
         <div className="space-y-6">

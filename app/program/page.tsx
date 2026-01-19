@@ -27,22 +27,22 @@ export default function ProgramPage() {
       
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-6xl mx-auto px-[100px] py-32 text-center">
-          <h1 className="heading-hero mb-6 text-warmCharcoal text-[72px] md:text-[96px] lg:text-[120px]">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32 text-center">
+          <h1 className="heading-hero mb-6 text-warmCharcoal text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
             iPurpose Accelerator™
           </h1>
-          <p className="text-3xl md:text-4xl lg:text-5xl text-warmCharcoal/80 mb-8">
+          <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
             A cohort-based journey to clarify your purpose, build aligned systems, and expand through AI.
           </p>
-          <p className="text-2xl md:text-3xl lg:text-4xl text-warmCharcoal/70">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-warmCharcoal/70">
             Small group. Live mentorship. Tangible outcomes.
           </p>
         </div>
       </div>
 
       {/* What You'll Get */}
-      <div className="container max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-marcellus text-warmCharcoal mb-12 text-center">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-marcellus text-warmCharcoal mb-8 sm:mb-12 text-center">
           What's Included
         </h2>
         <div className="space-y-8 flex flex-col items-center">
@@ -86,9 +86,9 @@ export default function ProgramPage() {
       </div>
 
       {/* Outcomes */}
-      <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-20">
-        <div className="container max-w-4xl mx-auto px-6">
-          <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
+      <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-12 sm:py-16 md:py-20">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal text-center mb-8 sm:mb-12">
             By the End, You'll Have Built:
           </h2>
           <div className="space-y-6 flex flex-col items-center">
@@ -200,7 +200,7 @@ export default function ProgramPage() {
           <h2 className="text-4xl font-marcellus text-warmCharcoal text-center mb-12">
             Program Format & Cohorts
           </h2>
-          <div className="space-y-6 text-warmCharcoal/75 mb-12 mx-auto max-w-2xl text-center" style={{ fontSize: '24px' }}>
+          <div className="space-y-6 text-warmCharcoal/75 mb-8 sm:mb-12 mx-auto max-w-2xl text-center text-sm sm:text-base md:text-lg">
             <p>
               <strong>Format:</strong> 6 weekly 90-minute group calls + asynchronous work between sessions. Totally online and cohort-based.
             </p>
@@ -214,8 +214,8 @@ export default function ProgramPage() {
               <strong>Time Commitment:</strong> ~3–4 hours per week (1.5 hours live + 1.5–2.5 hours self-guided work).
             </p>
           </div>
-          <div className="bg-white/50 border border-lavenderViolet/20 rounded-2xl p-8 text-center">
-            <p className="text-xl text-warmCharcoal mb-6">
+          <div className="bg-white/50 border border-lavenderViolet/20 rounded-2xl p-4 sm:p-6 md:p-8 text-center">
+            <p className="text-base sm:text-lg md:text-xl text-warmCharcoal mb-4 sm:mb-6">
               Want to learn more before committing? Join our upcoming info session.
             </p>
             <Link
@@ -229,14 +229,14 @@ export default function ProgramPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="container max-w-3xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-3xl font-marcellus text-warmCharcoal mb-6">
+      <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 text-center">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-4 sm:mb-6">
           Next Steps
         </h2>
-        <p className="text-lg text-warmCharcoal/75 mb-12">
+        <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/75 mb-8 sm:mb-12">
           Understand your fit through a clarity check, or attend an info session to ask questions about the program structure and community.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center flex-wrap">
           <ProgramEnrollButton />
           <Link
             href="/clarity-check"

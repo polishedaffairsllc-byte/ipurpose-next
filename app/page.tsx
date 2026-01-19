@@ -34,54 +34,54 @@ export default async function Home() {
       <PublicHeader />
       
       {/* Hero Section - Full Viewport Height */}
-      <div className="relative w-full flex items-center justify-center p-6 lg:p-12 min-h-screen" style={{ zIndex: 10 }}>
+      <div className="relative w-full flex items-center justify-center p-4 sm:p-6 lg:p-12 min-h-screen" style={{ zIndex: 10 }}>
         {/* Hero Content Block with Gradient Overlay */}
-        <div className="max-w-3xl text-center relative p-12 lg:p-16" style={{ 
+        <div className="max-w-3xl text-center relative p-6 sm:p-8 md:p-12 lg:p-16" style={{ 
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.15) 100%)'
         }}>
           <h1 className="font-italiana leading-none" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
-            <div style={{ fontSize: '160px', marginBottom: '60px' }}>iPurpose™</div>
-            <div style={{ fontSize: '80px' }}>Helping people orient themselves in a changing world.</div>
+            <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6 sm:mb-8 md:mb-10 lg:mb-16">iPurpose™</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">Helping people orient themselves in a changing world.</div>
           </h1>
-          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <p className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-relaxed mt-4 sm:mt-5 md:mt-6 lg:mt-8 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear.
           </p>
-          <p className="text-[37px] lg:text-[49px] leading-relaxed mt-3 lg:mt-4 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <p className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-relaxed mt-3 sm:mt-4 md:mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Let's reconnect you to what matters and build it with clarity.
           </p>
         </div>
       </div>
 
       {/* Offers Section */}
-      <div className="relative w-full bg-black/20 backdrop-blur-sm py-20 px-6 lg:px-12" style={{ zIndex: 10 }}>
+      <div className="relative w-full bg-black/20 backdrop-blur-sm py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-12" style={{ zIndex: 10 }}>
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl lg:text-6xl font-italiana text-center mb-16" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-italiana text-center mb-8 sm:mb-12 md:mb-16" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             Start Your Journey
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Clarity Check */}
-            <div className="relative p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all" style={{ background: 'linear-gradient(135deg, rgba(156, 136, 255, 0.1) 0%, rgba(156, 136, 255, 0.05) 100%)' }}>
-              <h3 className="text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
-              <p className="text-white/80 mb-6 text-lg">Take a guided assessment to discover your core values and purpose.</p>
-              <Link href="/clarity-check" className="inline-block px-8 py-3 rounded-full font-marcellus transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}>
+            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all" style={{ background: 'linear-gradient(135deg, rgba(156, 136, 255, 0.1) 0%, rgba(156, 136, 255, 0.05) 100%)' }}>
+              <h3 className="text-xl sm:text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
+              <p className="text-white/80 mb-6 text-base sm:text-lg">Take a guided assessment to discover your core values and purpose.</p>
+              <Link href="/clarity-check" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus text-sm sm:text-base transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}>
                 Start Assessment
               </Link>
             </div>
 
             {/* Starter Pack */}
-            <div className="relative p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all" style={{ background: 'linear-gradient(135deg, rgba(125, 211, 252, 0.1) 0%, rgba(125, 211, 252, 0.05) 100%)' }}>
-              <h3 className="text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>Starter Pack</h3>
-              <p className="text-white/80 mb-6 text-lg">Get foundational tools and exercises to begin your clarity journey.</p>
-              <Link href="/starter-pack" className="inline-block px-8 py-3 rounded-full font-marcellus transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #7DD3FC, rgba(125, 211, 252, 0.7))', color: '#FFFFFF' }}>
+            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all" style={{ background: 'linear-gradient(135deg, rgba(125, 211, 252, 0.1) 0%, rgba(125, 211, 252, 0.05) 100%)' }}>
+              <h3 className="text-xl sm:text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>Starter Pack</h3>
+              <p className="text-white/80 mb-6 text-base sm:text-lg">Get foundational tools and exercises to begin your clarity journey.</p>
+              <Link href="/starter-pack" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus text-sm sm:text-base transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #7DD3FC, rgba(125, 211, 252, 0.7))', color: '#FFFFFF' }}>
                 Explore Offer
               </Link>
             </div>
 
             {/* AI Blueprint */}
-            <div className="relative p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all" style={{ background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(167, 139, 250, 0.05) 100%)' }}>
-              <h3 className="text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>AI Blueprint</h3>
-              <p className="text-white/80 mb-6 text-lg">Let AI help you build a personalized action plan for clarity.</p>
-              <Link href="/ai-blueprint" className="inline-block px-8 py-3 rounded-full font-marcellus transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #A78BFA, rgba(167, 139, 250, 0.7))', color: '#FFFFFF' }}>
+            <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all md:col-span-2 lg:col-span-1" style={{ background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(167, 139, 250, 0.05) 100%)' }}>
+              <h3 className="text-xl sm:text-2xl font-italiana mb-4" style={{ color: '#FFFFFF' }}>AI Blueprint</h3>
+              <p className="text-white/80 mb-6 text-base sm:text-lg">Let AI help you build a personalized action plan for clarity.</p>
+              <Link href="/ai-blueprint" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus text-sm sm:text-base transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #A78BFA, rgba(167, 139, 250, 0.7))', color: '#FFFFFF' }}>
                 Explore Offer
               </Link>
             </div>

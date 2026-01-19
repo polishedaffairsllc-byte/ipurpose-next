@@ -1,0 +1,151 @@
+
+> ipurpose-next@0.1.0 build
+> next build
+
+ ⚠ turbopack.root should be absolute, using: /Users/renita.hamilton/Desktop/ipurpose-next
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Environments: .env.local
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 15.1s
+   Running TypeScript ...
+   Collecting page data using 7 workers ...
+⚠️  OPENAI_API_KEY not found in environment variables
+⚠️  OPENAI_API_KEY not found in environment variables
+⚠️  OPENAI_API_KEY not found in environment variables
+   Generating static pages using 7 workers (0/46) ...
+ ⚠ Unsupported metadata viewport is configured in metadata export in /enroll/create-account. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /enrollment-required. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /google-review. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /info-session. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /insights/chat. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /ai-blueprint. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /ai-tools/chat. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /insights. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /ipurpose-6-week. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /login. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /ai. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /ai-tools. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /about. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+   Generating static pages using 7 workers (11/46) 
+   Generating static pages using 7 workers (22/46) 
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /privacy. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /profile. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /program. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /settings. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /signup. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /soul/chat. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /starter-pack. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /soul. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /systems/chat. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /systems. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /terms. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /test. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+   Generating static pages using 7 workers (34/46) 
+ ⚠ Unsupported metadata viewport is configured in metadata export in /clarity-check. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /clarity-check-numeric. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /dashboard. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /contact. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /discover. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ✓ Generating static pages using 7 workers (46/46) in 2.4s
+   Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /about
+├ ƒ /ai
+├ ○ /ai-blueprint
+├ ƒ /ai-tools
+├ ○ /ai-tools/chat
+├ ƒ /api/admin/affirmations
+├ ƒ /api/admin/status
+├ ƒ /api/affirmation/today
+├ ƒ /api/ai
+├ ƒ /api/ai/stream
+├ ƒ /api/auth/create-user-with-entitlement
+├ ƒ /api/auth/login
+├ ƒ /api/auth/logout
+├ ƒ /api/clarity-check/submit
+├ ƒ /api/gpt
+├ ƒ /api/gpt/stream
+├ ƒ /api/health
+├ ƒ /api/leads/clarity-check
+├ ƒ /api/leads/info-session
+├ ƒ /api/preferences
+├ ƒ /api/soul/archetype
+├ ƒ /api/soul/checkin
+├ ƒ /api/soul/practice
+├ ƒ /api/stripe/check-config
+├ ƒ /api/stripe/create-checkout-session
+├ ƒ /api/stripe/webhook
+├ ƒ /api/stripe/webhook/verify-session
+├ ○ /clarity-check
+├ ○ /clarity-check-numeric
+├ ○ /contact
+├ ƒ /dashboard
+├ ○ /discover
+├ ○ /enroll/create-account
+├ ○ /enrollment-required
+├ ○ /google-review
+├ ○ /info-session
+├ ƒ /insights
+├ ○ /insights/chat
+├ ○ /ipurpose-6-week
+├ ○ /login
+├ ○ /privacy
+├ ○ /profile
+├ ○ /program
+├ ○ /robots.txt
+├ ƒ /settings
+├ ○ /signup
+├ ○ /sitemap.xml
+├ ƒ /soul
+├ ○ /soul/chat
+├ ○ /starter-pack
+├ ƒ /systems
+├ ○ /systems/chat
+├ ○ /terms
+└ ○ /test
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
