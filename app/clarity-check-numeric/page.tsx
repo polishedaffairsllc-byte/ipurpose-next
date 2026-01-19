@@ -120,6 +120,7 @@ export default function ClarityCheckNumericPage() {
         return;
       }
 
+      setLoading(false);
       setSubmitted(true);
     } catch (err) {
       setError('An error occurred. Please try again.');
