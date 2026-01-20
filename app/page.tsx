@@ -42,10 +42,10 @@ export default async function Home() {
       <PublicHeader />
       
       {/* Gentle Orientation (New Visitor) */}
-      <div className="w-full bg-gradient-to-r from-lavenderViolet/5 to-salmonPeach/5 border-b border-lavenderViolet/10 px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
+      <div className="w-full bg-gradient-to-r from-lavenderViolet/10 to-salmonPeach/10 border-b border-lavenderViolet/20 px-4 sm:px-6 lg:px-12 py-4 sm:py-5" style={{ position: 'relative', zIndex: 20 }}>
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs sm:text-sm text-warmCharcoal/70 font-marcellus">
-            New here? Most people start with the <a href="/clarity-check" className="text-lavenderViolet hover:text-indigoDeep transition-colors underline">Clarity Check</a> — a 2-minute reflection to understand where you are right now.
+          <p className="text-xs sm:text-sm font-marcellus" style={{ color: '#FFFFFF' }}>
+            New here? Most people start with the <Link href="/clarity-check" className="text-lavenderViolet hover:text-salmonPeach transition-colors underline font-semibold">Clarity Check</Link> — a 2-minute reflection to understand where you are right now.
           </p>
         </div>
       </div>
