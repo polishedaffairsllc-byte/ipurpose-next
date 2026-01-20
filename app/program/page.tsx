@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
@@ -19,9 +18,6 @@ export const metadata: Metadata = {
 export default function ProgramPage() {
   return (
     <div className="relative min-h-screen bg-white">
-      {/* Floating Logo */}
-      <FloatingLogo />
-      
       {/* Public Header */}
       <PublicHeader />
       

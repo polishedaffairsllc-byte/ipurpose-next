@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import FloatingLogo from './FloatingLogo';
 
 const navItems = [
   { href: '/dashboard', label: 'Overview' },
@@ -24,7 +23,6 @@ export default function InternalNavbar() {
 
   return (
     <>
-      <FloatingLogo />
       <header className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md">
       {/* Navigation Items */}
       <div className="flex items-center gap-3 flex-1 justify-center">
