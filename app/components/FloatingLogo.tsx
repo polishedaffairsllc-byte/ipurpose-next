@@ -30,30 +30,22 @@ export default function FloatingLogo() {
       `}</style>
       <Link 
         href="/" 
-        className="fixed left-6 z-50 block"
-        aria-label="Back to home"
-        style={{ top: '20px', maxWidth: '240px', cursor: 'pointer' }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className="fixed left-4 sm:left-6 top-4 sm:top-6 z-40 pointer-events-auto"
+        aria-label="Return home"
       >
-        <div style={{ textAlign: 'center' }}>
+        <div className="flex flex-col items-center">
           <img 
             src="/images/my-logo.png" 
             alt="iPurpose Logo"
-            className={isHovered ? 'spinning-logo' : ''}
-            style={{ height: '120px', width: 'auto', display: 'block', margin: '0 auto' }}
+            className={`h-20 sm:h-24 w-auto display-block ${isHovered ? 'spinning-logo' : ''}`}
             loading="eager"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           />
           <div 
+            className="text-xs sm:text-sm font-semibold text-white rounded-full px-3 sm:px-4 py-1 mt-1 sm:mt-2"
             style={{ 
-              background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', 
-              padding: '6px 16px',
-              borderRadius: '20px',
-              marginTop: '-8px',
-              display: 'inline-block',
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#FFFFFF'
+              background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.3))'
             }}
           >
             Home
