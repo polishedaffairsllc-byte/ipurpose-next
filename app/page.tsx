@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 import VideoBackground from './components/VideoBackground';
-import FloatingLogo from './components/FloatingLogo';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
 
@@ -39,9 +38,6 @@ export default async function Home() {
       {/* Background Video */}
       <VideoBackground src="/videos/water-reflection.mp4" poster="" />
       
-      {/* Floating Logo */}
-      <FloatingLogo />
-
       {/* Public Header Navigation */}
       <PublicHeader />
       

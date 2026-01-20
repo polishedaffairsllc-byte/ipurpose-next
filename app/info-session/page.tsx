@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Button from '../components/Button';
 import Link from 'next/link';
-import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
@@ -43,9 +42,6 @@ export default function InfoSessionPage() {
 
   return (
     <div className="relative min-h-screen bg-white">
-      {/* Floating Logo */}
-      <FloatingLogo />
-      
       {/* Public Header */}
       <PublicHeader />
       
