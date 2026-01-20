@@ -29,11 +29,21 @@ export default function AboutPage() {
       <div className="container max-w-3xl mx-auto px-8 md:px-16 py-12 space-y-12">
         
         {/* Hero */}
-        <section className="text-center space-y-6">
-          <h1 className="heading-hero mb-6 text-warmCharcoal">
+        <section 
+          className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
+          style={{
+            backgroundImage: 'url(/images/this-serene-scene-features-vibrant-plants-beside-a-tranquil-water-surface-enhanced-by-gentle-raindrops-all-set-against-a-dreamy-blurred-natural-background-that-evokes-calmness-and-peace-photo.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/50"></div>
+          
+          <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
             About iPurpose
           </h1>
-          <p className="text-2xl text-warmCharcoal/80">
+          <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
             A framework for building what matters — without losing yourself.
           </p>
         </section>

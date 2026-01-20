@@ -27,16 +27,22 @@ export default function ProgramPage() {
       
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32 text-center">
-          <h1 className="heading-hero mb-6 text-warmCharcoal text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-            iPurpose Accelerator™
-          </h1>
-          <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
-            A cohort-based journey to clarify your purpose, build aligned systems, and expand through AI.
-          </p>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-warmCharcoal/70">
-            Small group. Live mentorship. Tangible outcomes.
-          </p>
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32">
+          <section 
+            className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
+            style={{
+              backgroundImage: 'url(/images/360_F_781098715_ieqRgf5DPUnTI9d3vqjmowMGQx2VS0rr.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-black/50"></div>
+            
+            <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+              iPurpose Accelerator™
+            </h1>
+          </section>
         </div>
       </div>
 

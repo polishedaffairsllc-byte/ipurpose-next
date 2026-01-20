@@ -46,7 +46,7 @@ export default function AIBlueprintPage() {
           <section 
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-6"
             style={{
-              backgroundImage: 'url(/images/sebastien-gabriel--IMlv9Jlb24-unsplash.jpg)',
+              backgroundImage: 'url(/images/this-serene-scene-features-vibrant-plants-beside-a-tranquil-water-surface-enhanced-by-gentle-raindrops-all-set-against-a-dreamy-blurred-natural-background-that-evokes-calmness-and-peace-photo.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}

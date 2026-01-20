@@ -48,7 +48,7 @@ export default function StarterPackPage() {
           <section 
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-6"
             style={{
-              backgroundImage: 'url(/images/sebastien-gabriel--IMlv9Jlb24-unsplash.jpg)',
+              backgroundImage: 'url(/images/istockphoto-1127245421-612x612.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
