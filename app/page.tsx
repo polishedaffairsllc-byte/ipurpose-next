@@ -41,15 +41,6 @@ export default async function Home() {
       {/* Public Header Navigation */}
       <PublicHeader />
       
-      {/* Gentle Orientation (New Visitor) */}
-      <div className="w-full bg-gradient-to-r from-lavenderViolet/10 to-salmonPeach/10 border-b border-lavenderViolet/20 px-4 sm:px-6 lg:px-12 py-4 sm:py-5" style={{ position: 'relative', zIndex: 20 }}>
-        <div className="max-w-6xl mx-auto">
-          <p className="text-xs sm:text-sm font-marcellus" style={{ color: '#FFFFFF' }}>
-            New here? Most people start with the <Link href="/clarity-check" className="text-lavenderViolet hover:text-salmonPeach transition-colors underline font-semibold">Clarity Check</Link> — a 2-minute reflection to understand where you are right now.
-          </p>
-        </div>
-      </div>
-      
       {/* Hero Section - Full Viewport Height */}
       <div className="relative w-full flex items-center justify-center p-4 sm:p-6 lg:p-12 min-h-screen" style={{ zIndex: 10 }}>
         {/* Hero Content Block with Gradient Overlay */}
