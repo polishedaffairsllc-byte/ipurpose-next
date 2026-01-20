@@ -33,17 +33,17 @@ export default function FloatingLogo() {
         className="fixed left-4 sm:left-6 top-4 sm:top-6 z-40 pointer-events-auto"
         aria-label="Return home"
       >
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-0.5">
           <img 
             src="/images/my-logo.png" 
             alt="iPurpose Logo"
-            className={`h-20 sm:h-24 w-auto display-block ${isHovered ? 'spinning-logo' : ''}`}
+            className={`h-12 sm:h-16 w-auto display-block ${isHovered ? 'spinning-logo' : ''}`}
             loading="eager"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           />
           <div 
-            className="text-xs sm:text-sm font-semibold text-white rounded-full px-3 sm:px-4 py-1 mt-1 sm:mt-2"
+            className="text-xs font-semibold text-white rounded-full px-2 py-0.5 whitespace-nowrap"
             style={{ 
               background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.3))'
             }}
