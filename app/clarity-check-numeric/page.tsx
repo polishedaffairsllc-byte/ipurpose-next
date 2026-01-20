@@ -160,7 +160,6 @@ export default function ClarityCheckNumericPage() {
             .scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; page-break-inside: avoid; }
           }
         `}</style>
-        <FloatingLogo />
         <PublicHeader />
 
         <div className="clarity-check-results">
