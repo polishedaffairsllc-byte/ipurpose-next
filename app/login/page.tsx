@@ -61,17 +61,17 @@ export default function LoginPage() {
       {/* Hero Section with Background Image */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32">
-          <section 
+          <section
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
             style={{
-              backgroundImage: 'url(/images/360_F_180837604_UyJZNTHPluIJNQJjmTkCpE4XLJ03Zott.jpg)',
+              backgroundImage: 'url(/images/michael-DXQB5D1njMY-unsplash.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
           >
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/50"></div>
-            
+
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl" style={{ lineHeight: '1.2', paddingBottom: '0.5em' }}>
               Let's get started
             </h1>
@@ -104,19 +104,19 @@ export default function LoginPage() {
                   <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs text-center">{error}</div>
                 )}
                 <button type="submit" disabled={loading} className="ipurpose-button-gradient w-full text-base">{loading ? "Logging in..." : "Login"}</button>
-              </form>
-              <div className="mt-3 text-center w-full">
-                <p className="text-xs text-warmCharcoal/60">Don't have an account?{' '}
-                  <a href="/signup" className="text-lavenderViolet font-marcellus hover:text-indigoDeep transition-colors">Sign up</a>
-                </p>
-              </div>
+            </form>
+            <div className="mt-3 text-center w-full">
+              <p className="text-xs text-warmCharcoal/60">Don't have an account?{' '}
+                <a href="/signup" className="text-lavenderViolet font-marcellus hover:text-indigoDeep transition-colors">Sign up</a>
+              </p>
+            </div>
             </div>
           </div>
-          <div className="mt-8 w-full flex justify-center">
-            <a href="/" className="px-6 py-2 rounded-lg bg-lavenderViolet text-white font-marcellus hover:bg-indigoDeep transition-colors text-sm sm:text-base">
-              ← Home
-            </a>
-          </div>
+        </div>
+        <div className="mt-8 w-full flex justify-center">
+          <a href="/" className="px-6 py-2 rounded-lg bg-lavenderViolet text-white font-marcellus hover:bg-indigoDeep transition-colors text-sm sm:text-base">
+            ← Home
+          </a>
         </div>
       </div>
     </div>

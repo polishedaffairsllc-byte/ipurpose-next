@@ -31,7 +31,7 @@ export default function ProgramPage() {
           <section 
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
             style={{
-              backgroundImage: 'url(/images/gettyimages-1729677718-640x640.jpg)',
+              backgroundImage: 'url(/images/cosmic-timetraveler-XPraChyTx68-unsplash.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
