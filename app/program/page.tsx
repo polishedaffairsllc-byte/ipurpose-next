@@ -31,7 +31,7 @@ export default function ProgramPage() {
           <section 
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
             style={{
-              backgroundImage: 'url(/images/360_F_781098715_ieqRgf5DPUnTI9d3vqjmowMGQx2VS0rr.jpg)',
+              backgroundImage: 'url(/images/gettyimages-1729677718-640x640.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
@@ -42,6 +42,9 @@ export default function ProgramPage() {
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
               iPurpose Accelerator™
             </h1>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+              Six weeks to clarify your purpose and build aligned systems
+            </p>
           </section>
         </div>
       </div>

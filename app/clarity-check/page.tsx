@@ -60,7 +60,7 @@ export default function ClarityCheckPage() {
             <section 
               className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-8"
               style={{
-                backgroundImage: 'url(/images/a-leaf-falls-into-a-body-of-water-creating-ripples-and-splashes-free-photo.jpg)',
+                backgroundImage: 'url(/images/pngtree-compass-in-water-navigation-tool-direction-finder-adventure-concept-image_21106843.webp)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
@@ -71,6 +71,9 @@ export default function ClarityCheckPage() {
               <h1 className="heading-hero mb-6 text-white relative z-10 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                 Take Your Clarity Check
               </h1>
+              <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-base sm:text-lg md:text-xl lg:text-2xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+                Five questions to unlock your direction
+              </p>
             </section>
 
             <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">

@@ -55,7 +55,7 @@ export default async function Home() {
             <div style={{ fontSize: 'clamp(3rem, 12vw, 16rem)', lineHeight: '1', marginBottom: 'clamp(2rem, 8vw, 6rem)' }}>
               iPurpose<span style={{ fontSize: '0.3em', verticalAlign: 'super' }}>™</span>
             </div>
-            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">Helping people orient themselves in a changing world.</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">Your purpose, clarified</div>
           </h1>
           <p className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-relaxed mt-4 sm:mt-5 md:mt-6 lg:mt-8 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
             iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear.
