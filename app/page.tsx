@@ -4,7 +4,6 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 import VideoBackground from './components/VideoBackground';
 import PublicHeader from './components/PublicHeader';
-import OptionalTour from './components/OptionalTour';
 import Footer from './components/Footer';
 
 export default async function Home() {
@@ -41,9 +40,6 @@ export default async function Home() {
       
       {/* Public Header Navigation */}
       <PublicHeader />
-      
-      {/* Optional Interactive Tour */}
-      <OptionalTour />
       
       {/* Hero Section - Full Viewport Height */}
       <div className="relative w-full flex items-center justify-center p-4 sm:p-6 lg:p-12 min-h-screen" style={{ zIndex: 10 }}>
