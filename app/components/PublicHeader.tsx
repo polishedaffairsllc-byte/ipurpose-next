@@ -25,7 +25,7 @@ export default function PublicHeader() {
         <img 
           src="/images/my-logo.png" 
           alt="iPurpose Logo"
-          className="h-8 w-auto"
+          className="h-6 w-auto"
           loading="eager"
         />
       </Link>
