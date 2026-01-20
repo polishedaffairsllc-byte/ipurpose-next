@@ -19,15 +19,11 @@ export default function PublicHeader() {
     <header className="relative z-20 w-full flex flex-wrap items-center justify-between p-6 sm:p-8 lg:p-16 border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>
       <Link 
         href="/" 
-        className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 rounded-full font-italiana text-center hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
+        style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.3))', color: '#FFFFFF' }}
         aria-label="Home"
       >
-        <img 
-          src="/images/my-logo.png" 
-          alt="iPurpose Logo"
-          className="h-6 w-auto"
-          loading="eager"
-        />
+        Home
       </Link>
 
       <Link 
