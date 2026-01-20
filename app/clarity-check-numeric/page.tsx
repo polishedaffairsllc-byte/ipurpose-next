@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
@@ -160,6 +161,7 @@ export default function ClarityCheckNumericPage() {
             .scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; page-break-inside: avoid; }
           }
         `}</style>
+        <FloatingLogo />
         <PublicHeader />
 
         <div className="clarity-check-results">
@@ -279,6 +281,7 @@ export default function ClarityCheckNumericPage() {
 
   return (
     <div className="relative min-h-screen bg-white">
+      <FloatingLogo />
       <PublicHeader />
 
       <div className="container max-w-3xl mx-auto px-6 py-20">

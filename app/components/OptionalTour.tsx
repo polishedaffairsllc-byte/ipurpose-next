@@ -1,27 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function OptionalTour() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const steps = [
     {
       title: "Welcome to iPurpose",
       description: "Let's help you find clarity and turn it into action.",
       cta: "Start Tour"
-    },
-    {
-      title: "Discover",
-      description: "Explore the iPurpose approach: how Soul, Systems, and AI work together to help you build what truly matters.",
-      link: "/discover",
-      linkText: "Explore Discover"
     },
     {
       title: "Clarity Check",
@@ -43,13 +33,11 @@ export default function OptionalTour() {
     },
     {
       title: "Ready to Begin?",
-      description: "The best place to start is the Clarity Check. It takes just 2 minutes and sets the foundation for everything else.",
+      description: "The best place to start is the Clarity Check. It takes just 2 minutes and sets the foundation.",
       link: "/clarity-check",
       linkText: "Start Now"
     }
   ];
-
-  if (!mounted) return null;
 
   if (!isOpen) {
     return (
@@ -125,15 +113,14 @@ export default function OptionalTour() {
           )}
 
           {step.link ? (
-            <a
+            <Link
               href={step.link}
               className="flex-1 px-4 py-3 rounded-full font-marcellus text-sm text-center transition-all hover:opacity-90"
               style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => setIsOpen(false)}
             >
               {step.linkText}
-            </a>
+            </Link>
           ) : (
             <button
               onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}

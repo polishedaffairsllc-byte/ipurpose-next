@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
@@ -38,6 +39,7 @@ export default function StarterPackPage() {
 
   return (
     <div className="relative min-h-screen bg-white">
+      <FloatingLogo />
       <PublicHeader />
 
       {/* Hero Section */}
@@ -46,7 +48,7 @@ export default function StarterPackPage() {
           <section 
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-6"
             style={{
-              backgroundImage: 'url(/images/cosmic-timetraveler-pYyOZ8q7AII-unsplash.jpg)',
+              backgroundImage: 'url(/images/istockphoto-1127245421-612x612.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}

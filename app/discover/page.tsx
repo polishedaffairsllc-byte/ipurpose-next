@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
@@ -17,6 +18,9 @@ export const metadata: Metadata = {
 export default function DiscoverPage() {
   return (
     <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
       {/* Public Header */}
       <PublicHeader />
       
@@ -121,25 +125,6 @@ export default function DiscoverPage() {
               <span><strong>AI:</strong> provides supportive guidance once clarity is established</span>
             </li>
           </ul>
-        </section>
-
-        {/* Ready to Begin - Clarity Check Emphasis */}
-        <section className="bg-gradient-to-r from-lavenderViolet/10 via-salmonPeach/5 to-lavenderViolet/10 rounded-2xl p-6 sm:p-8 md:p-10 border border-lavenderViolet/20">
-          <div className="text-center space-y-4 sm:space-y-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal">
-              Ready to begin?
-            </h2>
-            <p className="text-warmCharcoal/75 text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto">
-              Start with a 2-minute reflection to understand where you are right now.
-            </p>
-            <Link
-              href="/clarity-check"
-              className="inline-block px-8 sm:px-10 py-3 sm:py-4 rounded-full font-marcellus text-white hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
-            >
-              Take the Clarity Check
-            </Link>
-          </div>
         </section>
 
         {/* Start Here */}

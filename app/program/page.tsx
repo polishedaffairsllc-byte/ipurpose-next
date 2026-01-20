@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import FloatingLogo from '../components/FloatingLogo';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
@@ -18,6 +19,9 @@ export const metadata: Metadata = {
 export default function ProgramPage() {
   return (
     <div className="relative min-h-screen bg-white">
+      {/* Floating Logo */}
+      <FloatingLogo />
+      
       {/* Public Header */}
       <PublicHeader />
       
@@ -27,7 +31,7 @@ export default function ProgramPage() {
           <section 
             className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
             style={{
-              backgroundImage: 'url(/images/cosmic-timetraveler-XPraChyTx68-unsplash.jpg)',
+              backgroundImage: 'url(/images/gettyimages-1729677718-640x640.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}

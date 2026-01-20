@@ -4,12 +4,12 @@
  */
 
 import { NextResponse } from 'next/server';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { checkOpenAIHealth } from '../gpt/utils/openai-client';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  // Ultra-fast health check that won't hang
-  // Returns immediately without waiting for external services
   const checks = {
     timestamp: new Date().toISOString(),
     status: 'healthy' as 'healthy' | 'degraded' | 'unhealthy',
@@ -20,7 +20,36 @@ export async function GET() {
     },
   };
 
-  // Check Environment Variables Only (no external calls)
+  // Check Firebase
+  try {
+    const start = Date.now();
+    await firebaseAdmin.firestore().collection('_health').doc('check').set({
+      timestamp: new Date(),
+    }, { merge: true });
+    checks.checks.firebase = {
+      status: 'ok',
+      latency: Date.now() - start,
+    };
+  } catch (error) {
+    checks.checks.firebase = { status: 'error', latency: 0 };
+    checks.status = 'degraded';
+  }
+
+  // Check OpenAI
+  try {
+    const start = Date.now();
+    const openaiHealthy = await checkOpenAIHealth();
+    checks.checks.openai = {
+      status: openaiHealthy ? 'ok' : 'error',
+      latency: Date.now() - start,
+    };
+    if (!openaiHealthy) checks.status = 'degraded';
+  } catch (error) {
+    checks.checks.openai = { status: 'error', latency: 0 };
+    checks.status = 'degraded';
+  }
+
+  // Check Environment Variables
   const required = [
     'OPENAI_API_KEY',
     'FIREBASE_SERVICE_ACCOUNT_KEY',
@@ -33,23 +62,9 @@ export async function GET() {
     missing,
   };
   
-  if (missing.length > 0) {
-    checks.status = 'degraded';
-  }
+  if (missing.length > 0) checks.status = 'unhealthy';
 
-  // Quick Firebase availability check
-  checks.checks.firebase = {
-    status: process.env.FIREBASE_SERVICE_ACCOUNT ? 'ok' : 'unknown',
-    latency: 0,
-  };
-
-  // Quick OpenAI availability check
-  checks.checks.openai = {
-    status: process.env.OPENAI_API_KEY ? 'ok' : 'unknown',
-    latency: 0,
-  };
-
-  const statusCode = checks.status === 'healthy' ? 200 : 207;
+  const statusCode = checks.status === 'healthy' ? 200 : checks.status === 'degraded' ? 207 : 503;
 
   return NextResponse.json(checks, { status: statusCode });
 }
