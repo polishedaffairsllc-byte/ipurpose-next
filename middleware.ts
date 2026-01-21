@@ -5,6 +5,16 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('FirebaseSession');
   const path = request.nextUrl.pathname;
+  const userAgent = request.headers.get('user-agent') || '';
+  
+  // Don't redirect search engine crawlers
+  const isBot = /bot|crawler|spider|crawl|googlebot|bingbot|slurp/i.test(userAgent);
+  
+  if (isBot) {
+    const response = NextResponse.next();
+    response.headers.set('x-pathname', path);
+    return response;
+  }
 
   // 1. If a session exists, allow access to all routes (including dashboard)
   if (sessionCookie) {
