@@ -5,6 +5,7 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import VideoBackground from './components/VideoBackground';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
+import WelcomePopup from './components/WelcomePopup';
 
 export default async function Home() {
   // Check if user is logged in
@@ -37,6 +38,9 @@ export default async function Home() {
     <div className="relative w-full bg-white">
       {/* Background Video */}
       <VideoBackground src="/videos/water-reflection.mp4" poster="" />
+      
+      {/* Welcome Popup */}
+      <WelcomePopup />
       
       {/* Public Header Navigation */}
       <PublicHeader />

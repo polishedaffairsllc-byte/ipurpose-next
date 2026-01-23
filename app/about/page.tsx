@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import FloatingLogo from "../components/FloatingLogo";
 import PublicHeader from "../components/PublicHeader";
 import Footer from "../components/Footer";
 
@@ -19,9 +18,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="relative min-h-screen bg-white">
-      {/* Floating Logo */}
-      <FloatingLogo />
-      
       {/* Public Header */}
       <PublicHeader />
       

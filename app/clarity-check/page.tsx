@@ -56,7 +56,7 @@ export default function ClarityCheckPage() {
             <section 
               className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-8"
               style={{
-                backgroundImage: 'url(/images/pngtree-compass-in-water-navigation-tool-direction-finder-adventure-concept-image_21106843.webp)',
+                backgroundImage: 'url(/images/cosmic-timetraveler-Gg6Oz8026C8-unsplash.jpg)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}

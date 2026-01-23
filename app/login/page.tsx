@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { getFirebaseAuth } from "../../lib/firebaseClient";
@@ -59,17 +58,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Home Button */}
-      <div className="p-4 sm:p-6 flex justify-start">
-        <Link 
-          href="/" 
-          className="px-4 py-2 rounded-full text-sm font-semibold transition-all hover:opacity-80"
-          style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}
-        >
-          Home
-        </Link>
-      </div>
-
       {/* Hero Section with Background Image */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32">
@@ -116,12 +104,12 @@ export default function LoginPage() {
                   <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs text-center">{error}</div>
                 )}
                 <button type="submit" disabled={loading} className="ipurpose-button-gradient w-full text-base">{loading ? "Logging in..." : "Login"}</button>
-              </form>
-              <div className="mt-3 text-center w-full">
-                <p className="text-xs text-warmCharcoal/60">Don't have an account?{' '}
-                  <a href="/signup" className="text-lavenderViolet font-marcellus hover:text-indigoDeep transition-colors">Sign up</a>
-                </p>
-              </div>
+            </form>
+            <div className="mt-3 text-center w-full">
+              <p className="text-xs text-warmCharcoal/60">Don't have an account?{' '}
+                <a href="/signup" className="text-lavenderViolet font-marcellus hover:text-indigoDeep transition-colors">Sign up</a>
+              </p>
+            </div>
             </div>
           </div>
         </div>
