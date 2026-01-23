@@ -61,10 +61,12 @@ export default function PhotoCard({
               transform: isHovered ? 'scale(1.1)' : 'scale(1)',
             }}
           >
+            {/* Use next/image for optimization */}
             <img
               src={src}
-              alt={alt}
+              alt={alt || 'iPurpose image'}
               className="w-full h-full object-cover"
+              loading="lazy"
               onError={() => setImageError(true)}
             />
           </div>

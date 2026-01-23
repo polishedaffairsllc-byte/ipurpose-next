@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Add to your leads collection
-    const { getFirebaseAdmin } = await import('@/lib/firebaseAdmin');
-    const db = getFirebaseAdmin().firestore();
+    const { firebaseAdmin } = await import('@/lib/firebaseAdmin');
+    const db = firebaseAdmin.firestore();
 
     await db.collection('leads').add({
       email,

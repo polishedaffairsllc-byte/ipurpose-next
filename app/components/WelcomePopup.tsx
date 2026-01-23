@@ -54,16 +54,28 @@ export default function WelcomePopup() {
                 >
                   Explore Discover
                 </Link>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full text-warmCharcoal/70 font-marcellus py-3 px-4 rounded hover:bg-warmCharcoal/5 transition text-center"
-                >
-                  I'll explore on my own
-                </button>
-              </div>
-            </div>
-        </div>
-      </div>
-    </>
-  );
-}
+                                <Link
+                                  href="/clarity-check"
+                                  onClick={() => setIsOpen(false)}
+                                  className="block w-full bg-lavenderViolet font-marcellus py-3 px-4 rounded hover:opacity-90 transition text-center"
+                                  style={{ color: '#ffffff' }}
+                                  aria-label="Take the Clarity Check assessment"
+                                >
+                                  Take the Clarity Check
+                                </Link>
+                                <Link
+                                  href="/discover"
+                                  onClick={() => setIsOpen(false)}
+                                  className="block w-full border-2 border-lavenderViolet font-marcellus py-3 px-4 rounded hover:bg-lavenderViolet/5 transition text-center"
+                                  style={{ color: '#ffffff' }}
+                                  aria-label="Explore Discover section"
+                                >
+                                  Explore Discover
+                                </Link>
+                                <button
+                                  onClick={() => setIsOpen(false)}
+                                  className="block w-full text-warmCharcoal/70 font-marcellus py-3 px-4 rounded hover:bg-warmCharcoal/5 transition text-center"
+                                  aria-label="Dismiss welcome popup"
+                                >
+                                  I'll explore on my own
+                                </button>

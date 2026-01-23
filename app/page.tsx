@@ -35,9 +35,39 @@ export default async function Home() {
   }
 
   return (
-    <div className="relative w-full bg-white">
-      {/* Background Video */}
-      <VideoBackground src="/videos/water-reflection.mp4" poster="" />
+    <>
+      {/* SEO Meta Tags */}
+      <head>
+        <title>iPurpose™ | Clarity, Connection, and Purpose</title>
+        <meta name="description" content="Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters." />
+        <link rel="canonical" href="https://www.ipurposesoul.com/" />
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="iPurpose™ | Clarity, Connection, and Purpose" />
+        <meta property="og:description" content="Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters." />
+        <meta property="og:url" content="https://www.ipurposesoul.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://www.ipurposesoul.com/images/og-image.jpg" />
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="iPurpose™ | Clarity, Connection, and Purpose" />
+        <meta name="twitter:description" content="Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters." />
+        <meta name="twitter:image" content="https://www.ipurposesoul.com/images/og-image.jpg" />
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "iPurpose",
+          "url": "https://www.ipurposesoul.com/",
+          "logo": "https://www.ipurposesoul.com/images/logo.png",
+          "sameAs": [
+            "https://www.facebook.com/ipurposesoul",
+            "https://www.instagram.com/ipurposesoul"
+          ]
+        }` }} />
+      </head>
+      <div className="relative w-full bg-white">
+        {/* Background Video */}
+        <VideoBackground src="/videos/water-reflection.mp4" poster="" />
       
       {/* Welcome Popup */}
       <WelcomePopup />
