@@ -41,7 +41,22 @@ export default async function DashboardPage() {
     const userDoc = await db.collection("users").doc(decoded.uid).get();
 
     if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
-      return <div style={{ color: 'red', padding: 32 }}>Entitlement missing or inactive. Redirecting to enrollment-required...</div>;
+      return (
+        <div className="min-h-[50vh] flex items-center justify-center p-6">
+          <div className="max-w-md text-center bg-white/80 backdrop-blur-sm border border-ip-border rounded-2xl p-8 shadow-sm">
+            <h2 className="text-2xl font-semibold text-warmCharcoal">Access not active</h2>
+            <p className="mt-3 text-sm text-warmCharcoal/70">
+              Your access isn’t active yet. Enroll to unlock the full dashboard experience.
+            </p>
+            <a
+              href="/enroll"
+              className="inline-flex items-center justify-center mt-6 px-5 py-2.5 rounded-full bg-ip-accent text-white font-medium"
+            >
+              Enroll now
+            </a>
+          </div>
+        </div>
+      );
     }
 
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
@@ -60,9 +75,6 @@ export default async function DashboardPage() {
 
     return (
       <div className="relative">
-        <div style={{ background: '#ffeeba', color: '#856404', padding: 16, marginBottom: 16, borderRadius: 8 }}>
-          <strong>Debug Info:</strong> User: {name}, Entitlement: {String(userDoc.data()?.entitlement?.status)}, Affirmation: {todaysAffirmation ? 'Loaded' : 'Missing'}
-        </div>
         {/* Hero Background */}
         <div className="relative h-[40vh] mb-10 overflow-hidden">
           <VideoBackground src="/videos/water-reflection.mp4" />
