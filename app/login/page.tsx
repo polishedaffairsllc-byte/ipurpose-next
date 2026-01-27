@@ -58,6 +58,15 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Home Button */}
+      <div className="w-full flex justify-start p-4">
+        <a href="/" className="inline-flex items-center px-4 py-2 rounded bg-lavenderViolet text-white font-marcellus shadow hover:bg-indigoDeep transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9M4.5 10.5V19a2.5 2.5 0 002.5 2.5h2A2.5 2.5 0 0011.5 19v-3.5a2.5 2.5 0 012.5-2.5h0a2.5 2.5 0 012.5 2.5V19a2.5 2.5 0 002.5 2.5h2A2.5 2.5 0 0021 19v-8.5" />
+          </svg>
+          Home
+        </a>
+      </div>
       {/* Hero Section with Background Image */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32">

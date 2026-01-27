@@ -16,7 +16,12 @@ type Props = {
  * Dashboard journal panel - displays affirmation and intention entries
  * Now with active "End Session" button with confirmation dialog
  */
-export default function DashboardJournalPanel({ todaysAffirmation, userName = "Friend" }: Props) {
+export default function DashboardJournalPanel(props: Props) {
+  console.log("DashboardJournalPanel mounted", props);
+  if (!props) {
+    return <div style={{color:"red"}}>Dashboard props undefined</div>;
+  }
+  const { todaysAffirmation, userName = "Friend" } = props;
   const router = useRouter();
   const [affirmationContent, setAffirmationContent] = useState("");
   const [intentionContent, setIntentionContent] = useState("");
