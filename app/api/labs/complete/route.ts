@@ -5,6 +5,29 @@ import { checkRateLimit, recordRequest } from "@/app/api/gpt/utils/rate-limiter"
 
 const validLabKeys = new Set(["identity", "meaning", "agency"]);
 
+export async function GET() {
+  try {
+    const cookieStore = await cookies();
+    const session = cookieStore.get("FirebaseSession")?.value;
+
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const docRef = firebaseAdmin.firestore().collection("labCompletion").doc(decoded.uid);
+    const docSnap = await docRef.get();
+
+    return NextResponse.json({
+      success: true,
+      data: docSnap.exists ? docSnap.data() : {},
+    });
+  } catch (error) {
+    console.error("Lab completion GET error:", error);
+    return NextResponse.json({ error: "Failed to load completion" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();

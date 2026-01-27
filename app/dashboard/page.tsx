@@ -1,17 +1,14 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
-import { redirect } from "next/navigation";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
-import PageTitle from "../components/PageTitle";
 import PathBanner from "@/app/components/PathBanner";
 import Card from "../components/Card";
-import TiltCard from "../components/TiltCard";
 import ScrollReveal from "../components/ScrollReveal";
-import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
 import DashboardJournalPanel from "../components/DashboardJournalPanel";
+import DashboardOrientationStatus from "../components/DashboardOrientationStatus";
 
 export default async function DashboardPage() {
   console.log("Dashboard server render reached");
@@ -101,6 +98,9 @@ export default async function DashboardPage() {
             <SectionHeading level="h2" className="mb-8">
               Choose your path
             </SectionHeading>
+            <div className="mb-8">
+              <DashboardOrientationStatus />
+            </div>
             <div className="space-y-4 max-w-2xl mx-auto w-full">
               <PathBanner 
                 href="/soul"
