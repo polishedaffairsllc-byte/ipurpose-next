@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
+import ErrorBoundary from "@/app/components/ErrorBoundary";
 import PageTitle from "../components/PageTitle";
 import PathBanner from "@/app/components/PathBanner";
 import Card from "../components/Card";
@@ -14,6 +15,17 @@ import DashboardJournalPanel from "../components/DashboardJournalPanel";
 
 export default async function DashboardPage() {
   console.log("Dashboard server render reached");
+  const SAFE_MODE = process.env.NEXT_PUBLIC_DASHBOARD_SAFE_MODE === "1";
+
+  if (SAFE_MODE) {
+    return (
+      <div style={{ padding: 24 }}>
+        <h2>Dashboard SAFE MODE</h2>
+        <p>Routing is working. Dashboard children are bypassed.</p>
+        <p>Set NEXT_PUBLIC_DASHBOARD_SAFE_MODE=0 to re-enable full rendering.</p>
+      </div>
+    );
+  }
   const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
 
@@ -37,7 +49,8 @@ export default async function DashboardPage() {
     try {
       todaysAffirmation = await getTodaysAffirmation();
     } catch (err) {
-      return <div style={{ color: 'red', padding: 32 }}>Error fetching today's affirmation: {String(err)}</div>;
+      console.error("Dashboard data fetch failed (affirmation)", err);
+      throw new Error("Dashboard data fetch failed (affirmation)");
     }
 
     // Render checkpoint: all data loaded
@@ -65,7 +78,9 @@ export default async function DashboardPage() {
         <ScrollReveal delay={200}>
           <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2 relative z-10">
             <Card accent="lavender">
-              <DashboardJournalPanel todaysAffirmation={todaysAffirmation} userName={name} />
+              <ErrorBoundary>
+                <DashboardJournalPanel todaysAffirmation={todaysAffirmation} userName={name} />
+              </ErrorBoundary>
             </Card>
           </div>
         </ScrollReveal>
@@ -120,6 +135,7 @@ export default async function DashboardPage() {
       </div>
     );
   } catch (e) {
-    return <div style={{ color: 'red', padding: 32 }}>Error: {String(e)}</div>;
+    console.error("Dashboard server error:", e);
+    throw e instanceof Error ? e : new Error(String(e));
   }
 }

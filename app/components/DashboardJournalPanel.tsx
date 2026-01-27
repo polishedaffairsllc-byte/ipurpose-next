@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { JournalEntry, Session } from "@/lib/types/journal";
 import { JournalEntryBox } from "./JournalEntryBox";
@@ -17,11 +17,8 @@ type Props = {
  * Now with active "End Session" button with confirmation dialog
  */
 export default function DashboardJournalPanel(props: Props) {
-  console.log("DashboardJournalPanel mounted", props);
-  if (!props) {
-    return <div style={{color:"red"}}>Dashboard props undefined</div>;
-  }
-  const { todaysAffirmation, userName = "Friend" } = props;
+  const safeProps = props ?? ({} as Props);
+  const { todaysAffirmation, userName = "Friend" } = safeProps;
   const router = useRouter();
   const [affirmationContent, setAffirmationContent] = useState("");
   const [intentionContent, setIntentionContent] = useState("");
@@ -29,6 +26,18 @@ export default function DashboardJournalPanel(props: Props) {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [sessionStartTime] = useState(new Date());
+
+  useEffect(() => {
+    console.log("DashboardJournalPanel mounted", props);
+  }, [props]);
+
+  if (!props) {
+    return <div style={{ color: "red" }}>Dashboard props undefined</div>;
+  }
+
+  if (!todaysAffirmation) {
+    return <div>Loading dashboard data...</div>;
+  }
 
   // In a full implementation, these would be real entries from getOrCreateDraftEntry()
   const mockAffirmationEntry: JournalEntry & { id: string } = {

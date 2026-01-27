@@ -83,7 +83,9 @@ export function SessionSummaryModal({
     URL.revokeObjectURL(url);
   }, [session, entries]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return <div style={{ padding: "0.25rem 0", fontSize: "0.75rem", opacity: 0.7 }}>Session summary closed</div>;
+  }
 
   return (
     <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }} data-print-modal>
