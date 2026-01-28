@@ -3,6 +3,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { User, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth"; // Renamed signOut to firebaseSignOut to avoid conflict
 import { doc, onSnapshot, DocumentData } from 'firebase/firestore'; 
 import { getFirebaseAuth, getFirebaseFirestore } from "@/lib/firebaseClient";
@@ -46,6 +47,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const [nextAttemptIn, setNextAttemptIn] = useState(0);
   const maxPollAttempts = 5;
   const pollIntervalSec = 3;
+  const pathname = usePathname();
+  const isPublicRoute = pathname?.startsWith("/orientation") || pathname?.startsWith("/ethics");
 
   // Logout Function
   const logout = async () => {
@@ -180,7 +183,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     };
   }, [timedOut, polling]);
 
-  if (loading || user === undefined) {
+  if ((loading || user === undefined) && !isPublicRoute) {
       if (timedOut) {
         return (
           <main className="min-h-screen flex items-center justify-center bg-ip-surface text-ip-muted p-6">
@@ -226,7 +229,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   }
 
   const value: AuthContextType = {
-    user,
+    user: user ?? null,
     userData, // ⭐️ Exporting the new data
     loading,
     logout,

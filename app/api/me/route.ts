@@ -1,35 +1,30 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { ok, fail } from "@/lib/http";
+import { requireUid } from "@/lib/firebase/requireUser";
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("FirebaseSession")?.value;
-
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const uid = await requireUid();
     const db = firebaseAdmin.firestore();
-    const userDoc = await db.collection("users").doc(decoded.uid).get();
+    const userDoc = await db.collection("users").doc(uid).get();
     const userData = userDoc.exists ? userDoc.data() : {};
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        userId: decoded.uid,
-        entitlement: userData?.entitlement ?? null,
-        profile: {
-          displayName: userData?.profile?.displayName ?? null,
-          timezone: userData?.profile?.timezone ?? null,
-        },
-        acceptedTermsAt: userData?.acceptedTermsAt ?? null,
+    return ok({
+      userId: uid,
+      roleKeys: userData?.roleKeys ?? ["visitor"],
+      profile: {
+        displayName: userData?.displayName ?? null,
+        timezone: userData?.timezone ?? null,
+      },
+      state: {
+        stage: userData?.stage ?? "Orientation",
+        stageNote: userData?.stageNote ?? null,
       },
     });
   } catch (error) {
+    const status = (error as { status?: number })?.status ?? 500;
+    if (status === 401) return fail("UNAUTHENTICATED", "Log in to continue.", 401);
     console.error("/api/me GET error:", error);
-    return NextResponse.json({ error: "Failed to load user" }, { status: 500 });
+    return fail("SERVER_ERROR", "Failed to load user.", 500);
   }
 }

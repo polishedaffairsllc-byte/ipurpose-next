@@ -4,81 +4,46 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 
 type Progress = {
-  currentStep?: string;
-  completedSteps?: string[];
+  currentStep?: string | null;
 };
 
-type LabData = { text?: string };
-
-type Completion = {
-  identity?: boolean;
-  meaning?: boolean;
-  agency?: boolean;
-};
-
-type Integration = {
-  coreTruth?: string;
-  primaryDirection?: string;
-  internalShift?: string;
-  sevenDayPlan?: string[];
+type DashboardData = {
+  identityStatus?: "not_started" | "in_progress" | "complete";
+  meaningStatus?: "not_started" | "in_progress" | "complete";
+  agencyStatus?: "not_started" | "in_progress" | "complete";
 };
 
 const labKeys = ["identity", "meaning", "agency"] as const;
 
-function getLabStatus(text?: string, completed?: boolean) {
-  if (completed) return "Complete";
-  if (text && text.trim().length > 0) return "In progress";
+function formatStatus(status?: string) {
+  if (status === "complete") return "Complete";
+  if (status === "in_progress") return "In progress";
   return "Not started";
-}
-
-function isIntegrationComplete(data?: Integration | null) {
-  if (!data) return false;
-  const hasCore = data.coreTruth?.trim().length;
-  const hasDirection = data.primaryDirection?.trim().length;
-  const hasShift = data.internalShift?.trim().length;
-  const hasPlan = Array.isArray(data.sevenDayPlan) && data.sevenDayPlan.some((item) => item?.trim().length);
-  return Boolean(hasCore && hasDirection && hasShift && hasPlan);
 }
 
 export default function DashboardOrientationStatus() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
-  const [labs, setLabs] = useState<Record<string, LabData>>({});
-  const [completion, setCompletion] = useState<Completion | null>(null);
-  const [integration, setIntegration] = useState<Integration | null>(null);
+  const [labs, setLabs] = useState<DashboardData | null>(null);
 
   useEffect(() => {
     let isActive = true;
 
     async function loadAll() {
       try {
-        const [progressRes, identityRes, meaningRes, agencyRes, completionRes, integrationRes] = await Promise.all([
-          fetch("/api/orientation/progress"),
-          fetch("/api/labs/identity"),
-          fetch("/api/labs/meaning"),
-          fetch("/api/labs/agency"),
-          fetch("/api/labs/complete", { method: "GET" }).catch(() => null),
-          fetch("/api/integration"),
+        const [progressRes, dashboardRes] = await Promise.all([
+          fetch("/api/learning-path/orientation"),
+          fetch("/api/dashboard"),
         ]);
 
         const progressJson = progressRes.ok ? await progressRes.json() : null;
-        const identityJson = identityRes.ok ? await identityRes.json() : null;
-        const meaningJson = meaningRes.ok ? await meaningRes.json() : null;
-        const agencyJson = agencyRes.ok ? await agencyRes.json() : null;
-        const completionJson = completionRes && completionRes.ok ? await completionRes.json() : null;
-        const integrationJson = integrationRes.ok ? await integrationRes.json() : null;
+        const dashboardJson = dashboardRes.ok ? await dashboardRes.json() : null;
 
         if (!isActive) return;
 
         setProgress(progressJson?.data ?? null);
-        setLabs({
-          identity: identityJson?.data ?? {},
-          meaning: meaningJson?.data ?? {},
-          agency: agencyJson?.data ?? {},
-        });
-        setCompletion(completionJson?.data ?? null);
-        setIntegration(integrationJson?.data ?? null);
+        setLabs(dashboardJson?.data ?? null);
       } catch (err) {
         if (isActive) setError(err instanceof Error ? err.message : "Failed to load status");
       } finally {
@@ -118,18 +83,11 @@ export default function DashboardOrientationStatus() {
               <div key={labKey} className="flex items-center justify-between text-sm">
                 <span className="capitalize text-warmCharcoal">{labKey}</span>
                 <span className="text-warmCharcoal/70">
-                  {getLabStatus(labs[labKey]?.text, completion?.[labKey])}
+                  {formatStatus(labs?.[`${labKey}Status` as keyof DashboardData] as string | undefined)}
                 </span>
               </div>
             ))}
           </div>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-warmCharcoal">Integration</h4>
-          <p className="text-sm text-warmCharcoal/70">
-            {isIntegrationComplete(integration) ? "Saved" : "Not started"}
-          </p>
         </div>
       </div>
     </Card>

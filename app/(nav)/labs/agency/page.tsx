@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Button from "@/app/components/Button";
 
 export default function AgencyLabPage() {
-  const [text, setText] = useState("");
+  const [awarenessPatterns, setAwarenessPatterns] = useState("");
+  const [decisionPatterns, setDecisionPatterns] = useState("");
+  const [actionPatterns, setActionPatterns] = useState("");
+  const [completeEnough, setCompleteEnough] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -14,10 +17,14 @@ export default function AgencyLabPage() {
 
     async function load() {
       try {
-        const res = await fetch("/api/labs/agency");
+        const res = await fetch("/api/labs/agency/active");
         const json = await res.json();
         if (isActive) {
-          setText(json?.data?.text || "");
+          const map = json?.data?.map;
+          setAwarenessPatterns(map?.awarenessPatterns || "");
+          setDecisionPatterns(map?.decisionPatterns || "");
+          setActionPatterns(map?.actionPatterns || "");
+          setCompleteEnough(Boolean(map?.completeEnough));
         }
       } catch {
         if (isActive) setStatus("Failed to load lab");
@@ -37,10 +44,15 @@ export default function AgencyLabPage() {
     setSaving(true);
     setStatus(null);
     try {
-      const res = await fetch("/api/labs/agency", {
+      const res = await fetch("/api/labs/agency/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({
+          awarenessPatterns,
+          decisionPatterns,
+          actionPatterns,
+          completeEnough,
+        }),
       });
       if (!res.ok) {
         const textRes = await res.text();
@@ -57,10 +69,9 @@ export default function AgencyLabPage() {
   const markComplete = async () => {
     setStatus(null);
     try {
-      const res = await fetch("/api/labs/complete", {
+      const res = await fetch("/api/labs/agency/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ labKey: "agency" }),
       });
       if (!res.ok) {
         const textRes = await res.text();
@@ -83,13 +94,44 @@ export default function AgencyLabPage() {
         <p className="mt-6 text-sm text-warmCharcoal/60">Loading...</p>
       ) : (
         <div className="mt-6 space-y-4">
-          <textarea
-            rows={8}
-            className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
-            placeholder="Where do you feel ready to take aligned action right now?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-warmCharcoal">Awareness Patterns</label>
+            <textarea
+              rows={6}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              placeholder="When do you notice yourself reacting or becoming alert?"
+              value={awarenessPatterns}
+              onChange={(e) => setAwarenessPatterns(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-warmCharcoal">Decision Patterns</label>
+            <textarea
+              rows={6}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              placeholder="How do you make decisions when it matters?"
+              value={decisionPatterns}
+              onChange={(e) => setDecisionPatterns(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-warmCharcoal">Action Patterns</label>
+            <textarea
+              rows={6}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              placeholder="How do you follow through once you decide?"
+              value={actionPatterns}
+              onChange={(e) => setActionPatterns(e.target.value)}
+            />
+          </div>
+          <label className="flex items-center gap-2 text-sm text-warmCharcoal/70">
+            <input
+              type="checkbox"
+              checked={completeEnough}
+              onChange={(e) => setCompleteEnough(e.target.checked)}
+            />
+            This is complete enough for now.
+          </label>
           {status ? <div className="text-sm text-warmCharcoal/70">{status}</div> : null}
           <div className="flex gap-3">
             <Button onClick={save} disabled={saving}>

@@ -1,39 +1,32 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { ok, fail } from "@/lib/http";
+import { requireUid } from "@/lib/firebase/requireUser";
 
 export async function PATCH(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("FirebaseSession")?.value;
-
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const uid = await requireUid();
     const body = await request.json();
 
     const displayName = typeof body?.displayName === "string" ? body.displayName : null;
     const timezone = typeof body?.timezone === "string" ? body.timezone : null;
 
     const db = firebaseAdmin.firestore();
-    const userRef = db.collection("users").doc(decoded.uid);
+    const userRef = db.collection("users").doc(uid);
 
     await userRef.set(
       {
-        profile: {
-          displayName,
-          timezone,
-        },
+        displayName,
+        timezone,
         profileUpdatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }
     );
 
-    return NextResponse.json({ success: true });
+    return ok({ profile: { displayName, timezone } });
   } catch (error) {
+    const status = (error as { status?: number })?.status ?? 500;
+    if (status === 401) return fail("UNAUTHENTICATED", "Log in to continue.", 401);
     console.error("/api/me/profile PATCH error:", error);
-    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
+    return fail("SERVER_ERROR", "Failed to update profile.", 500);
   }
 }
