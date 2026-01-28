@@ -62,7 +62,7 @@ const AUTH_REQUIRED_ROUTES = [
   "/learning-path",
 ];
 
-const INTERNAL_ROUTES = ["/api/auth"];
+const INTERNAL_ROUTES = []; // No explicit internal routes in crawl (security by obscurity)
 
 if (!BASE_URL) {
   console.error("Missing BASE_URL. Example: BASE_URL=https://<preview>.vercel.app npm run crawl");

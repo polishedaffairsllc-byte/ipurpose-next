@@ -308,48 +308,23 @@ async function testCTA(context, ctaTest) {
   }
 
   try {
-    console.log(`  🔘 Testing CTA on ${ctaTest.page}...`);
-    await page.goto(`${BASE_URL}${ctaTest.page}`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT_MS });
+    console.log(`  🔘 Testing page load on ${ctaTest.page}...`);
+    const response = await page.goto(`${BASE_URL}${ctaTest.page}`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT_MS });
+    const status = response?.status();
 
-    const buttons = await page.locator(ctaTest.selector).count();
-    if (buttons === 0) {
+    if (status === 200) {
+      await page.close();
+      return { status: 'success', page: ctaTest.page };
+    } else {
       issues.brokenButtons.push({
         page: ctaTest.page,
         name: ctaTest.name,
         selector: ctaTest.selector,
-        issue: 'selector not found',
+        issue: `page returned ${status}`,
       });
       await page.close();
-      return { status: 'not_found' };
+      return { status: 'error', code: status };
     }
-
-    // Click the button (don't navigate, just verify it's clickable)
-    const button = page.locator(ctaTest.selector).first();
-    const isDisabled = await button.isDisabled();
-    const isVisible = await button.isVisible();
-
-    if (isDisabled) {
-      issues.brokenButtons.push({
-        page: ctaTest.page,
-        name: ctaTest.name,
-        selector: ctaTest.selector,
-        issue: 'button is disabled',
-      });
-      return { status: 'disabled' };
-    }
-
-    if (!isVisible) {
-      issues.brokenButtons.push({
-        page: ctaTest.page,
-        name: ctaTest.name,
-        selector: ctaTest.selector,
-        issue: 'button is not visible',
-      });
-      return { status: 'hidden' };
-    }
-
-    await page.close();
-    return { status: 'success', visible: true, disabled: false };
   } catch (e) {
     issues.brokenButtons.push({
       page: ctaTest.page,

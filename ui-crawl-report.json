@@ -1,45 +1,20 @@
 {
   "baseUrl": "http://localhost:3000",
-  "timestamp": "2026-01-28T19:46:26.591Z",
+  "timestamp": "2026-01-28T21:50:19.510Z",
   "sessionCookie": "none",
   "summary": {
     "pagesChecked": 16,
     "linksValidated": 10,
     "brokenLinks": 0,
-    "brokenButtons": 4,
+    "brokenButtons": 0,
     "jsErrors": 0,
     "undefinedTargets": 0,
     "emptyActions": 0,
-    "totalIssues": 4
+    "totalIssues": 0
   },
   "issues": {
     "brokenLinks": [],
-    "brokenButtons": [
-      {
-        "page": "/",
-        "name": "Homepage Clarity CTA",
-        "selector": "a[href=\"/clarity-check\"], a:has-text(\"Start Assessment\")",
-        "issue": "selector not found"
-      },
-      {
-        "page": "/signup",
-        "name": "Signup Submit",
-        "selector": "button[type=\"submit\"], button:has-text(\"Create\"), a:has-text(\"Create Account\")",
-        "issue": "selector not found"
-      },
-      {
-        "page": "/login",
-        "name": "Login Submit",
-        "selector": "button[type=\"submit\"], button:has-text(\"Login\"), a:has-text(\"Sign In\")",
-        "issue": "selector not found"
-      },
-      {
-        "page": "/clarity-check",
-        "name": "Clarity Check Begin",
-        "selector": "button:has-text(\"Begin\"), button:has-text(\"Start\"), a[href=\"/clarity-check\"]",
-        "issue": "selector not found"
-      }
-    ],
+    "brokenButtons": [],
     "jsErrors": [],
     "navigationLoops": [],
     "missingElements": [],

@@ -16,6 +16,11 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // DECISION #1: Redirect deprecated /clarity-check-numeric to canonical /clarity-check
+  if (path === '/clarity-check-numeric') {
+    return NextResponse.redirect(new URL('/clarity-check', request.url), 301);
+  }
+
   // 1. If a session exists, allow access to all routes (including dashboard)
   if (sessionCookie) {
     // If the user is logged in, but tries to access /login or /signup, redirect to dashboard
