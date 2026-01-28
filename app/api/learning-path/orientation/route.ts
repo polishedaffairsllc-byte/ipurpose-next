@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { ok, fail } from "@/lib/http";
+import { requireUid, requireRole } from "@/lib/firebase/requireUser";
 
 const steps = [
   "orientation_intro",
@@ -13,34 +13,50 @@ const steps = [
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("FirebaseSession")?.value;
+    const uid = await requireUid();
+    await requireRole(uid, "explorer");
+    const db = firebaseAdmin.firestore();
+    const docRef = db.collection("learning_path_progress").doc(uid);
+    const progressDoc = await docRef.get();
+    const progressData = progressDoc.data();
 
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!progressDoc.exists || !progressData) {
+      const initial = {
+        uid,
+        arcKey: "orientation",
+        currentStep: "orientation_intro",
+        completedSteps: [],
+        percentComplete: 0,
+        createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+      };
+      await docRef.set(initial, { merge: true });
+      return ok({
+        path: { key: "orientation_path", title: "Orientation Path" },
+        progress: {
+          currentStep: initial.currentStep,
+          completedSteps: [],
+          percentComplete: 0,
+        },
+      });
     }
 
-    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const db = firebaseAdmin.firestore();
-    const progressDoc = await db.collection("userProgress").doc(decoded.uid).collection("orientation").doc("status").get();
+    const completedSteps = Array.isArray(progressData.completedSteps) ? progressData.completedSteps : [];
+    const percentComplete = typeof progressData.percentComplete === "number" ? progressData.percentComplete : 0;
 
-    const progress = progressDoc.exists ? progressDoc.data() : { currentStep: null, completedSteps: [] };
-    const completedSteps = Array.isArray(progress.completedSteps) ? progress.completedSteps : [];
-    const percentComplete = steps.length ? Math.round((completedSteps.length / steps.length) * 100) : 0;
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        path: { key: "orientation_path", title: "Orientation" },
-        progress: {
-          currentStep: progress.currentStep || null,
-          completedSteps,
-          percentComplete,
-        },
+    return ok({
+      path: { key: "orientation_path", title: "Orientation Path" },
+      progress: {
+        currentStep: progressData.currentStep ?? null,
+        completedSteps,
+        percentComplete,
       },
     });
   } catch (error) {
+    const status = (error as { status?: number })?.status ?? 500;
+    if (status === 401) return fail("UNAUTHENTICATED", "Log in to continue.", 401);
+    if (status === 403) return fail("FORBIDDEN", "You don’t have access to this path.", 403);
     console.error("/api/learning-path/orientation GET error:", error);
-    return NextResponse.json({ error: "Failed to load learning path" }, { status: 500 });
+    return fail("SERVER_ERROR", "Failed to load learning path.", 500);
   }
 }
