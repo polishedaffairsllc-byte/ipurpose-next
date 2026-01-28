@@ -34,11 +34,11 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 - **Route:** `/orientation/map`
 - **Component:** `app/(nav)/orientation/map/page.tsx`
 - **Access:** Public ✅
-- **Functional:** Yes (assume)
+- **Functional:** Unverified (needs smoke test)
 - **Alignment:** Core journey (visual/navigation aid)
 - **Duplicate:** No
 - **Legacy:** No
-- **Description:** Visual journey map (likely for reference during orientation).
+- **Description:** Visual journey map (for reference during orientation). **Status:** Verify runtime functionality.
 
 ### Ethics & Community Charter
 - **Route:** `/ethics`
@@ -63,12 +63,18 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 ### Clarity Check Numeric
 - **Route:** `/clarity-check-numeric`
 - **Component:** `app/clarity-check-numeric/page.tsx`
-- **Access:** Public ✅
-- **Functional:** Yes (assume)
+- **Access:** Public (deprecated)
+- **Functional:** Yes (present in repo)
 - **Alignment:** Lead capture (variant)
 - **Duplicate:** Yes (overlaps with /clarity-check)
-- **Legacy:** Maybe (potential A/B test remnant)
-- **Description:** Alternative clarity assessment. Unclear if still used or a/b test variant.
+- **Legacy:** Yes (A/B test remnant)
+- **Description:** Alternative clarity assessment. **DEPRECATED.** Redirect to `/clarity-check` as canonical.
+
+**Deprecation Directive:**
+- Canonical route: `/clarity-check`
+- `/clarity-check-numeric` → 301 redirect to `/clarity-check`
+- Remove from navigation
+- Mark route for removal after 30-day deprecation period
 
 ### Starter Pack
 - **Route:** `/starter-pack`
@@ -236,15 +242,25 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 - **Legacy:** No
 - **Description:** Overview and nav for all three labs.
 
-### Learning Path / Orientation Progress
-- **Route:** `/learning-path` or `/learning-path/orientation`
-- **Component:** `app/(nav)/learning-path/page.tsx`
-- **Access:** Gated (auth required) ✅
-- **Functional:** Yes (has API: `/api/learning-path/orientation/route.ts`, `/api/learning-path/orientation/progress/route.ts`)
-- **Alignment:** Journey scaffolding
-- **Duplicate:** Possibly overlaps with labs
-- **Legacy:** Maybe (check if labs replaced this)
-- **Description:** Structured learning path (may be pre-labs onboarding or alternate flow).
+### Learning Path (UI Route)
+- **Route:** `/learning-path` (if exists)
+- **Component:** `app/(nav)/learning-path/page.tsx` (if exists)
+- **Access:** Gated (auth required)
+- **Functional:** Unverified (needs code audit)
+- **Alignment:** Journey scaffolding (wrapper, NOT core spine)
+- **Duplicate:** Yes (overlaps with Labs)
+- **Legacy:** Yes (structurally superseded by Labs)
+- **Description:** Learning path wrapper. **NOT canonical.** Core journey spine is Labs.
+
+**Structure Clarification:**
+- **Canonical spine:** Labs (Orientation → Identity → Meaning → Agency → Integration)
+- Learning Path is a wrapper/onboarding layer, not the primary journey engine
+- Labs define transformation logic
+
+### Learning Path APIs
+- **GET /api/learning-path/orientation** — Orientation progress
+- **GET /api/learning-path/orientation/progress** — Track progress
+- **Status:** Unverified (needs audit for relationship to labs APIs)
 
 ### Integration
 - **Route:** `/integration`
@@ -294,27 +310,37 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 
 ## SOUL LAYER (Gated)
 
-> New feature area (Jan 2026). Archetypal + reflective tools.
+> Reflective wing, accessed post-Integration. Not part of core journey spine.
 
-### Soul Chat
-- **Route:** `/soul/chat`
-- **Component:** `app/soul/chat/page.tsx`
-- **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes (has API: `/api/soul/checkin/route.ts`, `/api/soul/practice/route.ts`, `/api/soul/archetype/route.ts`)
-- **Alignment:** Introspective tool (new)
-- **Duplicate:** No
-- **Legacy:** No
-- **Description:** Archetypal chat tool. Check-in reflections. Practices/affirmations.
+**Structure:** Dedicated reflective domain, accessible post-Integration
 
 ### Soul Home
 - **Route:** `/soul`
 - **Component:** `app/soul/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Introspective hub (new)
+- **Functional:** Unverified (needs smoke test)
+- **Alignment:** Reflective wing hub (post-integration optional)
 - **Duplicate:** No
 - **Legacy:** No
 - **Description:** Soul/archetype overview and navigation.
+
+### Soul Chat
+- **Route:** `/soul/chat`
+- **Component:** `app/soul/chat/page.tsx`
+- **Access:** Gated (auth required) ✅
+- **Functional:** Unverified (needs smoke test)
+- **Alignment:** Reflective tool (post-integration optional)
+- **Duplicate:** No
+- **Legacy:** No
+- **Description:** Archetypal chat tool. Check-in reflections. Practices/affirmations.
+
+**Soul Positioning (APPROVED):**
+- Soul is NOT part of core journey spine
+- Core spine: Orientation → Labs → Integration → Community
+- Soul is a reflective wing accessed post-integration
+- Structurally: Post-Integration, optional
+- Economic tier: NOT premium-gated by default (available to all authenticated users)
+- Soul APIs: `/api/soul/checkin`, `/api/soul/practice`, `/api/soul/archetype`
 
 ---
 
@@ -322,82 +348,87 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 
 > AI coaching, streaming, advanced tools.
 
-### AI Tools
-- **Route:** `/ai-tools`
+### AI Tools (Canonical)
+- **Route:** `/ai-tools` (canonical AI hub)
 - **Component:** `app/ai-tools/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Yes
-- **Alignment:** Tool hub
+- **Functional:** Verified (compiled, route active)
+- **Alignment:** Core AI tool hub
 - **Duplicate:** No
 - **Legacy:** No
-- **Description:** AI tool navigation/discovery.
+- **Description:** Main AI tools hub. Single canonical entry point for AI coaching.
 
-### AI Tools Chat
-- **Route:** `/ai-tools/chat`
+### AI Tools Chat (Canonical)
+- **Route:** `/ai-tools/chat` (canonical AI chat)
 - **Component:** `app/ai-tools/chat/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Yes (has API: `/api/gpt/stream/route.ts`)
+- **Functional:** Verified (API present)
 - **Alignment:** Core AI feature
 - **Duplicate:** No
 - **Legacy:** No
-- **Description:** Main AI chat interface (streaming).
+- **Description:** Main AI chat interface with streaming support. **API note:** Currently uses `/api/gpt/stream`; should migrate to `/api/ai/stream` (canonical AI namespace).
 
-### AI (Legacy or Overview)
+### AI (Deprecated Hub)
 - **Route:** `/ai`
 - **Component:** `app/ai/page.tsx`
-- **Access:** Gated (auth required) ✅
-- **Functional:** Yes
-- **Alignment:** Tool overview (may be redundant)
-- **Duplicate:** Possibly with /ai-tools
-- **Legacy:** Maybe
-- **Description:** AI overview or navigation. Check if /ai-tools replaced this.
+- **Access:** Gated (auth required)
+- **Functional:** Yes (present in repo)
+- **Alignment:** Tool overview (redundant)
+- **Duplicate:** Yes (superseded by /ai-tools)
+- **Legacy:** Yes
+- **Description:** Old AI hub. **DEPRECATED.** Use `/ai-tools` as canonical.
 
-### Systems Chat
-- **Route:** `/systems/chat`
-- **Component:** `app/systems/chat/page.tsx`
-- **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Systems thinking tool
-- **Duplicate:** No
-- **Legacy:** No
-- **Description:** Specialized chat for systems thinking / design.
+**Deprecation Directive:**
+- Canonical route: `/ai-tools` (and `/ai-tools/chat`)
+- `/ai` → 301 redirect to `/ai-tools`
+- Remove from navigation
 
 ### Systems Hub
 - **Route:** `/systems`
 - **Component:** `app/systems/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Tool hub (specialized)
+- **Functional:** Unverified (needs smoke test)
+- **Alignment:** Optional advanced tool (post-integration)
 - **Duplicate:** No
 - **Legacy:** No
 - **Description:** Systems thinking tool overview.
 
-### Insights Chat
-- **Route:** `/insights/chat`
-- **Component:** `app/insights/chat/page.tsx`
+### Systems Chat
+- **Route:** `/systems/chat`
+- **Component:** `app/systems/chat/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Analytics / reflection tool
+- **Functional:** Unverified (needs smoke test)
+- **Alignment:** Optional advanced tool (post-integration)
 - **Duplicate:** No
 - **Legacy:** No
-- **Description:** Personalized insights and analysis chat.
+- **Description:** Specialized chat for systems thinking / design.
 
 ### Insights Hub
 - **Route:** `/insights`
 - **Component:** `app/insights/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Analytics hub
+- **Functional:** Unverified (needs smoke test)
+- **Alignment:** Optional advanced tool (post-integration)
 - **Duplicate:** No
 - **Legacy:** No
 - **Description:** Insights overview.
+
+### Insights Chat
+- **Route:** `/insights/chat`
+- **Component:** `app/insights/chat/page.tsx`
+- **Access:** Gated (auth required) ✅
+- **Functional:** Unverified (needs smoke test)
+- **Alignment:** Optional advanced tool (post-integration)
+- **Duplicate:** No
+- **Legacy:** No
+- **Description:** Personalized insights and analysis chat.
 
 ### Interpretation
 - **Route:** `/interpretation`
 - **Component:** `app/interpretation/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Yes
-- **Alignment:** Specialized tool
+- **Functional:** Verified (present in repo)
+- **Alignment:** Optional advanced tool (post-integration)
 - **Duplicate:** No
 - **Legacy:** No
 - **Description:** Guided interpretation/meaning-making tool.
@@ -406,11 +437,17 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 - **Route:** `/creation`
 - **Component:** `app/creation/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Yes
-- **Alignment:** Creative/output tool
+- **Functional:** Verified (present in repo)
+- **Alignment:** Optional advanced tool (post-integration)
 - **Duplicate:** No
 - **Legacy:** No
 - **Description:** Guided creation/authoring tool.
+
+**Advanced Tools Classification (APPROVED):**
+- Systems, Insights, Creation, Interpretation are optional advanced tools
+- NOT part of core journey spine
+- Core journey: Orientation → Labs → Integration → Community
+- These tools are post-integration deepening options for interested users
 
 ---
 
@@ -464,25 +501,41 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 
 > Stripe payment, session management, entitlement gating.
 
-### Enroll (Create Account)
+### Enroll / Create Account (Secondary System Route)
 - **Route:** `/enroll/create-account`
 - **Component:** `app/enroll/create-account/page.tsx`
-- **Access:** Mixed (may be public for signup or gated post-free trial)
-- **Functional:** Yes (has API: `/api/auth/create-user-with-entitlement/route.ts`)
-- **Alignment:** Monetization entry (account + entitlement creation)
-- **Duplicate:** Possibly with `/signup`
+- **Access:** System-only (not primary user entry)
+- **Functional:** Verified (API present)
+- **Alignment:** Monetization system route (post-checkout)
+- **Duplicate:** Yes (overlaps with /signup)
 - **Legacy:** No
-- **Description:** Sign up with payment/entitlement creation.
+- **Description:** System route for post-payment account creation. **NOT canonical user entry.**
 
-### Signup
-- **Route:** `/signup`
+**Usage Directive:**
+- Canonical public entry: `/signup`
+- `/enroll/create-account` is secondary, system-only
+- Use only for:
+  - Post-Stripe checkout flows
+  - Entitlement assignment flows
+  - Internal account creation
+- If accessed directly by users → redirect to `/signup`
+- Remove from primary navigation
+
+### Signup (Canonical Account Creation)
+- **Route:** `/signup` (canonical public signup)
 - **Component:** `app/signup/page.tsx`
 - **Access:** Public (if no session) / redirects to dashboard if logged in
-- **Functional:** Yes (has API: `/api/auth/login/route.ts` handles signup)
-- **Alignment:** Auth entry
-- **Duplicate:** Possibly with /enroll/create-account
+- **Functional:** Verified (API present, route active)
+- **Alignment:** Primary auth entry
+- **Duplicate:** No (canonical)
 - **Legacy:** No
-- **Description:** Standard signup form.
+- **Description:** Canonical account creation route for all users.
+
+**Canonical Directive:**
+- `/signup` is the single canonical public account creation entry point
+- All user signups start here
+- After payment, route to `/enroll/create-account` for entitlement assignment
+- All docs and marketing reference `/signup` as primary
 
 ### Login
 - **Route:** `/login`
@@ -536,49 +589,66 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 
 ---
 
-## LEGACY / DEPRECATED LAYER
+## LEGACY / DEPRECATED LAYER (Scheduled for Removal)
 
-> Old features, pre-ecosystem flows, or candidates for removal.
+> Old features, pre-ecosystem flows, or candidates for removal. **APPROVED REMOVALS.**
 
-### Legacy Zone
+### Legacy Zone (APPROVED FOR REMOVAL)
 - **Route:** `/legacy`
 - **Component:** `app/legacy/page.tsx`
 - **Access:** Gated (auth required) ✅
-- **Functional:** Placeholder (locked, shows link back to orientation)
+- **Functional:** Verified (placeholder page exists)
 - **Alignment:** Orphaned
 - **Duplicate:** No
 - **Legacy:** Yes (explicitly labeled as legacy)
-- **Description:** Holds old content. Gated as placeholder.
+- **Description:** Dead placeholder. Serves no purpose. **APPROVED FOR REMOVAL.**
 
-### 6-Week Program
-- **Route:** `/ipurpose-6-week`
-- **Component:** `app/ipurpose-6-week/page.tsx`
-- **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Old program model
-- **Duplicate:** Yes (overlaps with current labs/journey)
-- **Legacy:** Maybe (check if still actively used)
-- **Description:** Old 6-week structured program. May have been superseded by new labs.
+**Removal Directive:**
+- Remove `/legacy` route from build
+- No 301 redirect needed (dead placeholder, no legitimate traffic)
 
-### Development
-- **Route:** `/development`
-- **Component:** `app/development/page.tsx`
-- **Access:** Gated (auth required) ✅
-- **Functional:** Assume yes
-- **Alignment:** Internal/dev testing?
-- **Duplicate:** Unknown
-- **Legacy:** Maybe
-- **Description:** Unclear purpose. May be internal dev tool or orphaned feature.
-
-### Test Page
+### Test Page (APPROVED FOR REMOVAL)
 - **Route:** `/test`
 - **Component:** `app/test/page.tsx`
 - **Access:** Gated (auth required) ✅
 - **Functional:** Yes (testing image rendering)
-- **Alignment:** Internal only (marked `noindex, nofollow`)
+- **Alignment:** Internal utility only (marked `noindex, nofollow`)
 - **Duplicate:** No
-- **Legacy:** No (utility for testing, not user-facing)
-- **Description:** Internal test page for image/rendering validation.
+- **Legacy:** No (internal tool, not legacy product)
+- **Description:** Internal test page for image/rendering validation. **APPROVED FOR REMOVAL.**
+
+**Removal Directive:**
+- Remove `/test` route from user-facing build
+- Migrate image tests to Jest/Cypress suite
+- No 301 redirect needed (internal only, not user-facing)
+
+### Development (APPROVED FOR REMOVAL)
+- **Route:** `/development`
+- **Component:** `app/development/page.tsx`
+- **Access:** Gated (auth required) ✅
+- **Functional:** Unverified (needs code audit)
+- **Alignment:** Internal/dev testing
+- **Duplicate:** Unknown
+- **Legacy:** Yes (orphaned feature)
+- **Description:** Unclear purpose. Orphaned feature with no active use case. **APPROVED FOR REMOVAL.**
+
+**Removal Directive:**
+- Remove `/development` route from build
+- No 301 redirect needed (internal/orphaned)
+
+### 6-Week Program (APPROVED FOR REMOVAL)
+- **Route:** `/ipurpose-6-week`
+- **Component:** `app/ipurpose-6-week/page.tsx`
+- **Access:** Gated (auth required) ✅
+- **Functional:** Unverified (needs audit)
+- **Alignment:** Old program model (superseded)
+- **Duplicate:** Yes (overlaps with current labs/journey)
+- **Legacy:** Yes (pre-labs program structure)
+- **Description:** Old 6-week structured program. Superseded by new Identity/Meaning/Agency labs. **APPROVED FOR REMOVAL.**
+
+**Removal Directive:**
+- Remove `/ipurpose-6-week` route from build
+- No 301 redirect needed (legacy feature, users on new labs path)
 
 ---
 
@@ -681,59 +751,85 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 
 > GPT integration, AI responses, streaming output.
 
-### GPT
-- **API:** `/api/gpt` (POST)
-- **Access:** Gated (auth required)
-- **Functional:** Yes
-- **Alignment:** AI core
-- **Description:** Single-request GPT call (non-streaming).
+### AI Endpoints (Canonical Intelligence Layer)
 
-### GPT Stream
-- **API:** `/api/gpt/stream` (POST)
-- **Access:** Gated (auth required)
-- **Functional:** Yes
-- **Alignment:** AI core (streaming)
-- **Description:** Streaming GPT response.
+**Canonical AI Namespace: `/api/ai*`**
 
-### AI Stream (Alias?)
-- **API:** `/api/ai/stream` (POST)
-- **Access:** Gated (auth required)
-- **Functional:** Yes (assume)
-- **Alignment:** AI
-- **Duplicate:** Possibly with `/api/gpt/stream`
-- **Description:** May be alias or variant of GPT stream.
-
-### AI (Non-stream)
+#### AI (Non-stream, Canonical)
 - **API:** `/api/ai` (POST)
 - **Access:** Gated (auth required)
-- **Functional:** Yes (assume)
-- **Alignment:** AI
-- **Duplicate:** Possibly with `/api/gpt`
-- **Description:** May be alias or variant of GPT endpoint.
+- **Functional:** Unverified (needs runtime test)
+- **Alignment:** Canonical AI core
+- **Relationship:** Canonical endpoint for synchronous AI queries
+- **Description:** Single-request AI endpoint. Canonical entry point for synchronous AI queries.
+
+#### AI Stream (Canonical)
+- **API:** `/api/ai/stream` (POST)
+- **Access:** Gated (auth required)
+- **Functional:** Unverified (needs runtime test)
+- **Alignment:** Canonical AI streaming
+- **Relationship:** Canonical endpoint for streaming AI responses
+- **Description:** Streaming AI response endpoint. Canonical for real-time AI conversations.
+
+**AI API Canonicalization (APPROVED):**
+- Canonical namespace: `/api/ai*` (intelligence layer)
+- Legacy namespace: `/api/gpt*` (deprecate)
+- Migration: All AI integrations should use `/api/ai*`
+- `/api/gpt*` endpoints should be:
+  - Internal thin wrappers, OR
+  - Deprecated with 30-day sunset, OR
+  - Documented as non-canonical
+- Public API docs reference `/api/ai*` only
+
+### GPT Endpoints (Legacy, Non-Canonical)
+
+**Status:** `/api/gpt*` are non-canonical. Use `/api/ai*` instead.
+
+#### GPT (Non-stream, Legacy)
+- **API:** `/api/gpt` (POST)
+- **Access:** Gated (auth required)
+- **Functional:** Verified (present in repo)
+- **Alignment:** Legacy AI namespace (non-canonical)
+- **Relationship:** Non-canonical. Should migrate to `/api/ai`
+- **Description:** Deprecated single-request endpoint. **Use `/api/ai` instead.**
+
+#### GPT Stream (Legacy)
+- **API:** `/api/gpt/stream` (POST)
+- **Access:** Gated (auth required)
+- **Functional:** Verified (present in repo)
+- **Alignment:** Legacy AI namespace (non-canonical)
+- **Relationship:** Non-canonical. Should migrate to `/api/ai/stream`
+- **Description:** Deprecated streaming endpoint. **Use `/api/ai/stream` instead.**
+
+**Migration Directive:**
+- `/api/gpt*` are non-canonical legacy endpoints
+- Currently used in `/ai-tools/chat` but should migrate to `/api/ai*`
+- Mark `/api/gpt*` for deprecation
+- Set 30-day sunset period
 
 ---
 
 ## SUMMARY BY CATEGORY
 
-### Public Entry (11 routes)
+### Public Entry (14 routes)
 ✅ **Fully Aligned & Active:**
 - `/` (home)
-- `/orientation`
-- `/ethics`
-- `/clarity-check`
-- `/starter-pack`
-- `/ai-blueprint`
-- `/info-session`
+- `/discover`
 - `/about`
 - `/program`
-- `/discover`
-- `/contact`
+- `/ai-blueprint`
+- `/clarity-check` (canonical Clarity Check)
+- `/starter-pack`
+- `/info-session`
+- `/ethics`
 - `/privacy`
 - `/terms`
+- `/contact`
 - `/google-review`
+- `/orientation` (public entry to labs)
 
-🔶 **Duplicates / Needs Review:**
-- `/clarity-check-numeric` — variant of clarity-check; unclear if still active
+🔴 **Deprecated:**
+- `/clarity-check-numeric` → redirect to `/clarity-check` (APPROVED FOR REMOVAL)
 
 ### Journey Core (7 routes)
 ✅ **Fully Aligned & Active:**
@@ -752,16 +848,27 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 - `/community` (feed)
 - `/community/post/[id]` (thread)
 
-### AI & Intelligence (6 routes)
-✅ **Active:**
-- `/ai-tools`, `/ai-tools/chat`
-- `/systems`, `/systems/chat`
-- `/insights`, `/insights/chat`
-- `/interpretation`
-- `/creation`
+### AI & Intelligence (9 routes)
+✅ **Canonical AI Routes:**
+- `/ai-tools` (AI tools hub)
+- `/ai-tools/chat` (main AI chat interface)
 
-🔶 **Duplicates:**
-- `/ai` — Possibly redundant with `/ai-tools`
+✅ **Optional Advanced Tools (Post-Integration):**
+- `/systems` (systems thinking hub)
+- `/systems/chat` (systems thinking chat)
+- `/insights` (personalized analytics hub)
+- `/insights/chat` (insights dialogue)
+- `/interpretation` (guided meaning-making)
+- `/creation` (guided creative authoring)
+
+🔴 **Deprecated:**
+- `/ai` → redirect to `/ai-tools` (APPROVED FOR REMOVAL)
+
+**Classification:**
+- AI tools are core tool layer (unlocked post-integration)
+- Systems, Insights, Creation, Interpretation are optional advanced tools
+- These are NOT part of core journey spine (Labs → Integration → Community)
+- Positioned as post-integration deepening tools
 
 ### Account & Preferences (3 routes)
 ✅ **Active:**
@@ -818,31 +925,56 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 
 ## KEY FINDINGS
 
-### Critical Duplicates to Clarify
-1. **Clarity Checks:** `/clarity-check` vs. `/clarity-check-numeric`
-   - Are both active? A/B test? Alternative for mobile?
-   - Recommendation: Consolidate or explicitly mark one as deprecated.
+### Critical Decisions — Locked & Approved
 
-2. **Signup Flow:** `/signup` vs. `/enroll/create-account`
-   - Both create accounts. Do they differ in entitlement handling?
-   - Recommendation: Clarify the distinction or merge.
+**Decision #1: Clarity Check Canonical Route**
+- **Canonical:** `/clarity-check`
+- **Deprecated:** `/clarity-check-numeric` → 301 redirect
+- **Status:** ✅ LOCKED & APPROVED
+- **Rationale:** Single unified clarity assessment experience
 
-3. **Learning Path:** `/learning-path` vs. `/labs`
-   - Are these two different flows or does learning-path wrap labs?
-   - Recommendation: Clarify sequencing. If learning-path is deprecated, remove.
+**Decision #2: Signup Flow Canonical Entry**
+- **Canonical (Public):** `/signup`
+- **Secondary (System-Only):** `/enroll/create-account` (post-Stripe checkout only)
+- **Status:** ✅ LOCKED & APPROVED
+- **Rationale:** Clear public entry point; system routes for internal use
 
-4. **AI Endpoints:** `/api/gpt*` vs. `/api/ai*`
-   - Are `/api/ai` and `/api/ai/stream` aliases or different implementations?
-   - Recommendation: Consolidate to single naming convention.
+**Decision #3: Core Journey Spine (4 Steps)**
+- **Canonical Core:** Orientation → Labs → Integration → Community
+- **Learning Path:** UX scaffolding, NOT canonical spine
+- **Soul:** Post-Integration reflective wing, NOT core spine
+- **Optional Tools:** Systems, Insights, Creation, Interpretation (post-integration only)
+- **Status:** ✅ LOCKED & APPROVED
+- **Rationale:** Labs define transformation engine; keep core focused
 
-5. **Insights/Systems/Creation/Interpretation:** Are these core tools or experimental?
-   - Recommendation: Clarify placement in journey vs. optional tooling.
+**Decision #4: AI API Namespace Canonicalization**
+- **Canonical:** `/api/ai/*` (primary intelligence layer)
+- **Legacy (Deprecate):** `/api/gpt/*` (30-day sunset)
+- **Status:** ✅ LOCKED & APPROVED
+- **Rationale:** Single canonical namespace for all AI/intelligence features
 
-### Alignment Issues
-- **`/test`, `/legacy`, `/development`:** Should be removed or explicitly admin-only
-- **`/google-review`:** Single-purpose redirect. Could be simplified to link or metric call
-- **Community only gated:** Should community be accessible to free users or only accelerator tier?
-- **Soul tools (new):** Clear positioning. When are users directed here? After which step?
+**Decision #5: Optional Tools Classification**
+- **Classification:** Systems, Insights, Creation, Interpretation = optional post-integration tools
+- **Status:** ✅ LOCKED & APPROVED
+- **Rationale:** Not core spine; offered as deepening tools post-integration
+
+**Decision #6: Soul Positioning & Gating**
+- **Classification:** Post-Integration Reflective Wing
+- **Economic Gating:** NOT premium-gated (accessible to all authenticated users)
+- **Status:** ✅ LOCKED & APPROVED
+- **Rationale:** Introspective deepening for interested users, not forced onto journey
+
+### Alignment Issues (Resolved by Locked Decisions)
+
+✅ **Legacy/Deprecated Routes (Decision #3, #6):** `/test`, `/legacy`, `/development` approved for removal. See "LEGACY / DEPRECATED LAYER" section for details.
+
+✅ **Google Review Route:** Single-purpose redirect. Can be simplified post-launch.
+
+✅ **Community Gating (Decision #3):** Community accessible to all post-Integration (no additional tier gating).
+
+✅ **Soul Positioning (Decision #6):** Post-Integration reflective wing. Users directed after integration completion. Not premium-gated.
+
+✅ **Optional Tools (Decision #5):** Systems, Insights, Creation, Interpretation positioned as post-integration deepening tools. Not core spine.
 
 ### Access Control Quality
 ✅ Public routes properly gated by middleware  
