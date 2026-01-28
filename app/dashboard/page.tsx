@@ -126,6 +126,12 @@ export default async function DashboardPage() {
                 description="Review reflections, trends, and alignment reports."
                 color="#4B4E6D"
               />
+              <PathBanner 
+                href="/community"
+                title="Community"
+                description="Connect with the iPurpose community and group reflections."
+                color="#F8C9D3"
+              />
             </div>
           </div>
         </ScrollReveal>

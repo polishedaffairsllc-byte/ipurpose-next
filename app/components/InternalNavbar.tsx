@@ -18,8 +18,9 @@ export default function InternalNavbar() {
 
   // Hide on public pages
   const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/terms' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/clarity-check-numeric' || pathname === '/program' || pathname === '/google-review' || pathname === '/info-session' || pathname === '/ipurpose-6-week' || pathname === '/starter-pack' || pathname === '/ai-blueprint';
+  const isNavRoute = pathname === '/orientation' || pathname.startsWith('/orientation/') || pathname === '/labs' || pathname.startsWith('/labs/') || pathname === '/learning-path' || pathname === '/ethics' || pathname === '/community' || pathname.startsWith('/community/') || pathname === '/integration' || pathname === '/onboarding';
   
-  if (isPublicPage) return null;
+  if (isPublicPage || isNavRoute) return null;
 
   return (
     <>

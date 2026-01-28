@@ -11,10 +11,8 @@ const steps = [
 ];
 
 type Progress = {
-  currentStep: string;
-  completedSteps: string[];
-  startedAt?: string;
-  updatedAt?: string;
+  currentStep?: string;
+  completedSteps?: string[];
 };
 
 export default function OrientationMapPage() {
@@ -62,7 +60,7 @@ export default function OrientationMapPage() {
           </p>
         </div>
         <Link href="/orientation" className="text-sm text-ip-accent underline">
-          Back to Overview
+          Back to Orientation
         </Link>
       </div>
 
