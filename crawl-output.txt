@@ -1,0 +1,94 @@
+🔍 iPurpose Route & API Crawler
+
+BASE_URL: https://ipurpose-fix-api-params-and-public-routes.vercel.app
+Inventory: /Users/renita.hamilton/Desktop/ipurpose-next/SYSTEM_INVENTORY.md
+Concurrency: 8
+Auth mode: ❌ disabled
+
+📋 Found 0 routes and 21 APIs in inventory
+
+🚀 Starting crawl (37 routes + 21 APIs)...
+
+📍 Unauthenticated pass: FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.F... done
+🔌 API pass: ..................... done
+
+📊 Report saved to crawl-report.json
+
+╔═══════════════════════════════════════════════════════════╗
+║          🎯 ROUTE & API CRAWL SUMMARY                    ║
+╚═══════════════════════════════════════════════════════════╝
+
+✅ Successes: 25/58 (43.1%)
+❌ Failures:  33/58
+
+📈 By Category:
+   • Public Routes:  17
+   • Auth Routes:    15
+   • Legacy Routes:  4
+   • APIs:           21
+
+🔴 FAILURES DETECTED:
+
+  route:/
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/discover
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/about
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/program
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/orientation
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/ethics
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/clarity-check
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/clarity-check-numeric
+    [unauth] 404 | Expected: 301/302/307/308 → /clarity-check
+    Reason: Decision #1: Canonical clarity check
+  route:/signup
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/login
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/starter-pack
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/ai-blueprint
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/info-session
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/contact
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/privacy
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/terms
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/google-review
+    [unauth] 404 | Expected: 200 (public)
+    Reason: Public route should be accessible without auth
+  route:/dashboard
+    [unauth] 404 | Expected: redirect to /login (auth-required)
+    Reason: Auth-required route should redirect to /login when unauthenticated
+  route:/labs
+    [unauth] 404 | Expected: redirect to /login (auth-required)
+    Reason: Auth-required route should redirect to /login when unauthenticated
+  route:/integration
+    [unauth] 404 | Expected: redirect to /login (auth-required)
+    Reason: Auth-required route should redirect to /login when unauthenticated
+
+  ... and 13 more failures (see crawl-report.json for full list)
+

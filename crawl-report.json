@@ -1,0 +1,52 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "inventoryPath": "/Users/renita.hamilton/Desktop/ipurpose-next/SYSTEM_INVENTORY.md",
+  "timestamp": "2026-01-28T19:41:11.811Z",
+  "sessionCookie": "none",
+  "counts": {
+    "total": 58,
+    "successes": 56,
+    "failures": 2,
+    "routes": 37,
+    "apis": 21
+  },
+  "summary": {
+    "successRate": "96.6%",
+    "publicRoutesChecked": 17,
+    "authRoutesChecked": 15,
+    "legacyRoutesChecked": 4
+  },
+  "failures": [
+    {
+      "type": "route",
+      "route": "/clarity-check-numeric",
+      "mode": "unauth",
+      "status": 200,
+      "expected": "301/302/307/308 → /clarity-check",
+      "reason": "Decision #1: Canonical clarity check",
+      "location": "(no redirect)",
+      "url": "http://localhost:3000/clarity-check-numeric"
+    },
+    {
+      "type": "route",
+      "route": "/api/auth",
+      "mode": "unauth",
+      "status": 404,
+      "expected": "401/403 or redirect (internal-only)",
+      "reason": "Internal-only route should not be publicly accessible",
+      "location": "(no redirect)",
+      "url": "http://localhost:3000/api/auth"
+    }
+  ],
+  "lockedDecisions": {
+    "Decision #1": "Clarity Check: /clarity-check canonical, /clarity-check-numeric → 301",
+    "Decision #4": "AI API: /api/ai/* canonical, /api/gpt/* → redirect (30-day sunset)",
+    "Decision #6": "AI Routes: /ai-tools canonical, /ai → 301",
+    "legacyApprovedForRemoval": [
+      "/legacy",
+      "/development",
+      "/ipurpose-6-week",
+      "/test"
+    ]
+  }
+}

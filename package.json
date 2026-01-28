@@ -7,7 +7,13 @@
     "prepare": "npx husky install || true",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "crawl": "node scripts/crawl-routes.mjs",
+    "crawl:vercel": "BASE_URL=https://ipurpose-fix-api-params-and-public-routes.vercel.app node scripts/crawl-routes.mjs",
+    "crawl:local": "BASE_URL=http://localhost:3000 node scripts/crawl-routes.mjs",
+    "crawl:ui": "node scripts/crawl-ui.mjs",
+    "crawl:ui:vercel": "BASE_URL=https://ipurpose-fix-api-params-and-public-routes.vercel.app node scripts/crawl-ui.mjs",
+    "crawl:ui:local": "BASE_URL=http://localhost:3000 node scripts/crawl-ui.mjs"
   },
   "engines": {
     "node": "20.x"
@@ -26,6 +32,7 @@
     "stripe": "^20.1.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^20.19.25",
     "@types/react": "^19",
@@ -34,9 +41,12 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.6",
     "husky": "^8.0.0",
+    "p-limit": "^7.2.0",
+    "playwright": "^1.58.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "typescript": "^5",
+    "undici": "^7.19.2",
     "vercel": "^49.1.1"
   }
 }

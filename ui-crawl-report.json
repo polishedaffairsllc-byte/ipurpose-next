@@ -1,0 +1,155 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "timestamp": "2026-01-28T19:46:26.591Z",
+  "sessionCookie": "none",
+  "summary": {
+    "pagesChecked": 16,
+    "linksValidated": 10,
+    "brokenLinks": 0,
+    "brokenButtons": 4,
+    "jsErrors": 0,
+    "undefinedTargets": 0,
+    "emptyActions": 0,
+    "totalIssues": 4
+  },
+  "issues": {
+    "brokenLinks": [],
+    "brokenButtons": [
+      {
+        "page": "/",
+        "name": "Homepage Clarity CTA",
+        "selector": "a[href=\"/clarity-check\"], a:has-text(\"Start Assessment\")",
+        "issue": "selector not found"
+      },
+      {
+        "page": "/signup",
+        "name": "Signup Submit",
+        "selector": "button[type=\"submit\"], button:has-text(\"Create\"), a:has-text(\"Create Account\")",
+        "issue": "selector not found"
+      },
+      {
+        "page": "/login",
+        "name": "Login Submit",
+        "selector": "button[type=\"submit\"], button:has-text(\"Login\"), a:has-text(\"Sign In\")",
+        "issue": "selector not found"
+      },
+      {
+        "page": "/clarity-check",
+        "name": "Clarity Check Begin",
+        "selector": "button:has-text(\"Begin\"), button:has-text(\"Start\"), a[href=\"/clarity-check\"]",
+        "issue": "selector not found"
+      }
+    ],
+    "jsErrors": [],
+    "navigationLoops": [],
+    "missingElements": [],
+    "undefinedTargets": [],
+    "emptyActions": [],
+    "accessibilityIssues": []
+  },
+  "navigationMap": {
+    "/": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose™ | Clarity, Connection, and Purpose"
+    },
+    "/discover": {
+      "links": [],
+      "status": 200,
+      "title": "Discover iPurpose™ — Soul, Systems, and Thoughtful AI"
+    },
+    "/about": {
+      "links": [],
+      "status": 200,
+      "title": "About iPurpose — Built for Clarity, Structure, and Sustainable Progress"
+    },
+    "/program": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose Accelerator™ — From Insight to Action"
+    },
+    "/orientation": {
+      "links": [
+        "/",
+        "/orientation",
+        "/learning-path",
+        "/labs",
+        "/ethics",
+        "/community",
+        "/dashboard",
+        "/login",
+        "/signup",
+        "/labs/identity",
+        "/learning-path",
+        "/signup"
+      ],
+      "status": 200,
+      "title": "iPurpose — Where Inner Alignment Becomes Coherent Action"
+    },
+    "/ethics": {
+      "links": [
+        "/",
+        "/orientation",
+        "/learning-path",
+        "/labs",
+        "/ethics",
+        "/community",
+        "/dashboard",
+        "/login",
+        "/signup"
+      ],
+      "status": 200,
+      "title": "iPurpose — Where Inner Alignment Becomes Coherent Action"
+    },
+    "/clarity-check": {
+      "links": [],
+      "status": 200,
+      "title": "Clarity Check — Find Your Next Aligned Step"
+    },
+    "/startup-pack": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose — Where Inner Alignment Becomes Coherent Action"
+    },
+    "/ai-blueprint": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose Blueprint | Use AI with Intention"
+    },
+    "/info-session": {
+      "links": [],
+      "status": 200,
+      "title": "Info Session | iPurpose Program"
+    },
+    "/contact": {
+      "links": [],
+      "status": 200,
+      "title": "Contact — iPurpose"
+    },
+    "/privacy": {
+      "links": [],
+      "status": 200,
+      "title": "Privacy Policy — iPurpose"
+    },
+    "/terms": {
+      "links": [],
+      "status": 200,
+      "title": "Terms of Service — iPurpose"
+    },
+    "/google-review": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose — Google Review"
+    },
+    "/login": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose — Where Inner Alignment Becomes Coherent Action"
+    },
+    "/signup": {
+      "links": [],
+      "status": 200,
+      "title": "iPurpose — Where Inner Alignment Becomes Coherent Action"
+    }
+  }
+}
