@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Button from "@/app/components/Button";
 
 export default function IdentityLabPage() {
-  const [text, setText] = useState("");
+  const [selfPerceptionMap, setSelfPerceptionMap] = useState("");
+  const [selfConceptMap, setSelfConceptMap] = useState("");
+  const [selfNarrativeMap, setSelfNarrativeMap] = useState("");
+  const [completeEnough, setCompleteEnough] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -14,10 +17,14 @@ export default function IdentityLabPage() {
 
     async function load() {
       try {
-        const res = await fetch("/api/labs/identity");
+        const res = await fetch("/api/labs/identity/active");
         const json = await res.json();
         if (isActive) {
-          setText(json?.data?.text || "");
+          const map = json?.data?.map;
+          setSelfPerceptionMap(map?.selfPerceptionMap || "");
+          setSelfConceptMap(map?.selfConceptMap || "");
+          setSelfNarrativeMap(map?.selfNarrativeMap || "");
+          setCompleteEnough(Boolean(map?.completeEnough));
         }
       } catch {
         if (isActive) setStatus("Failed to load lab");
@@ -37,10 +44,15 @@ export default function IdentityLabPage() {
     setSaving(true);
     setStatus(null);
     try {
-      const res = await fetch("/api/labs/identity", {
+      const res = await fetch("/api/labs/identity/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({
+          selfPerceptionMap,
+          selfConceptMap,
+          selfNarrativeMap,
+          completeEnough,
+        }),
       });
       if (!res.ok) {
         const textRes = await res.text();
@@ -57,10 +69,9 @@ export default function IdentityLabPage() {
   const markComplete = async () => {
     setStatus(null);
     try {
-      const res = await fetch("/api/labs/complete", {
+      const res = await fetch("/api/labs/identity/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ labKey: "identity" }),
       });
       if (!res.ok) {
         const textRes = await res.text();
@@ -83,13 +94,44 @@ export default function IdentityLabPage() {
         <p className="mt-6 text-sm text-warmCharcoal/60">Loading...</p>
       ) : (
         <div className="mt-6 space-y-4">
-          <textarea
-            rows={8}
-            className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
-            placeholder="What feels most true about who you are right now?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-warmCharcoal">Self-Perception Map</label>
+            <textarea
+              rows={6}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              placeholder="How do you experience yourself when no one is listening?"
+              value={selfPerceptionMap}
+              onChange={(e) => setSelfPerceptionMap(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-warmCharcoal">Self-Concept Map</label>
+            <textarea
+              rows={6}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              placeholder="What do you believe about who you are?"
+              value={selfConceptMap}
+              onChange={(e) => setSelfConceptMap(e.target.value)}
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-warmCharcoal">Self-Narrative Map</label>
+            <textarea
+              rows={6}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              placeholder="What story do you tell about your life so far?"
+              value={selfNarrativeMap}
+              onChange={(e) => setSelfNarrativeMap(e.target.value)}
+            />
+          </div>
+          <label className="flex items-center gap-2 text-sm text-warmCharcoal/70">
+            <input
+              type="checkbox"
+              checked={completeEnough}
+              onChange={(e) => setCompleteEnough(e.target.checked)}
+            />
+            This is complete enough for now.
+          </label>
           {status ? <div className="text-sm text-warmCharcoal/70">{status}</div> : null}
           <div className="flex gap-3">
             <Button onClick={save} disabled={saving}>

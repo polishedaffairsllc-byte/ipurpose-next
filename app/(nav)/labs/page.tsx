@@ -6,11 +6,9 @@ import Link from "next/link";
 type LabStatus = "not_started" | "in_progress" | "complete";
 
 type DashboardData = {
-  labs?: {
-    identity?: LabStatus;
-    meaning?: LabStatus;
-    agency?: LabStatus;
-  };
+  identityStatus?: LabStatus;
+  meaningStatus?: LabStatus;
+  agencyStatus?: LabStatus;
 };
 
 const labMeta = [
@@ -43,9 +41,9 @@ export default function LabsHubPage() {
         const json = (await res.json()) as { data?: DashboardData };
         if (isActive) {
           setLabs({
-            identity: json?.data?.labs?.identity || "not_started",
-            meaning: json?.data?.labs?.meaning || "not_started",
-            agency: json?.data?.labs?.agency || "not_started",
+            identity: json?.data?.identityStatus || "not_started",
+            meaning: json?.data?.meaningStatus || "not_started",
+            agency: json?.data?.agencyStatus || "not_started",
           });
         }
       } catch (err) {

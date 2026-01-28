@@ -1,4 +1,5 @@
 
+import type { Metadata } from "next";
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
@@ -6,6 +7,30 @@ import VideoBackground from './components/VideoBackground';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
 import HomeClient from './components/HomeClient';
+
+export const metadata: Metadata = {
+  title: "iPurpose™ | Clarity, Connection, and Purpose",
+  description:
+    "Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters.",
+  alternates: {
+    canonical: "https://www.ipurposesoul.com/",
+  },
+  openGraph: {
+    title: "iPurpose™ | Clarity, Connection, and Purpose",
+    description:
+      "Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters.",
+    url: "https://www.ipurposesoul.com/",
+    type: "website",
+    images: ["https://www.ipurposesoul.com/images/og-image.jpg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "iPurpose™ | Clarity, Connection, and Purpose",
+    description:
+      "Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters.",
+    images: ["https://www.ipurposesoul.com/images/og-image.jpg"],
+  },
+};
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -26,33 +51,7 @@ export default async function Home() {
     }
   }
   return (
-    <>
-      <head>
-        <title>iPurpose™ | Clarity, Connection, and Purpose</title>
-        <meta name="description" content="Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters." />
-        <link rel="canonical" href="https://www.ipurposesoul.com/" />
-        <meta property="og:title" content="iPurpose™ | Clarity, Connection, and Purpose" />
-        <meta property="og:description" content="Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters." />
-        <meta property="og:url" content="https://www.ipurposesoul.com/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://www.ipurposesoul.com/images/og-image.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="iPurpose™ | Clarity, Connection, and Purpose" />
-        <meta name="twitter:description" content="Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters." />
-        <meta name="twitter:image" content="https://www.ipurposesoul.com/images/og-image.jpg" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "iPurpose",
-          "url": "https://www.ipurposesoul.com/",
-          "logo": "https://www.ipurposesoul.com/images/logo.png",
-          "sameAs": [
-            "https://www.facebook.com/ipurposesoul",
-            "https://www.instagram.com/ipurposesoul"
-          ]
-        }` }} />
-      </head>
-      <div className="relative w-full bg-white">
+    <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />
         <HomeClient />
         <PublicHeader />
@@ -104,6 +103,5 @@ export default async function Home() {
         </div>
         <Footer />
       </div>
-    </>
   );
 }
