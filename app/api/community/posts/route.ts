@@ -2,6 +2,7 @@ import { ok, fail } from "@/lib/http";
 import { clampText } from "@/lib/validators";
 import { requireUid, requireRole } from "@/lib/firebase/requireUser";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
 
 const POST_COOLDOWN_MS = 20_000;
 
@@ -15,7 +16,11 @@ const parseCursor = (cursor: string | null) => {
 
 export async function GET(request: Request) {
   try {
-    const uid = await requireUid();
+    // Decision #7: Community requires BASIC_PAID entitlement
+    const tierCheck = await requireBasicPaid();
+    if (tierCheck.error) return tierCheck.error;
+    const { uid } = tierCheck as { uid: string };
+
     await requireRole(uid, "explorer");
 
     const { searchParams } = new URL(request.url);
@@ -68,7 +73,11 @@ type CreateBody = { spaceKey?: string; title?: string; body?: string };
 
 export async function POST(request: Request) {
   try {
-    const uid = await requireUid();
+    // Decision #7: Community requires BASIC_PAID entitlement
+    const tierCheck = await requireBasicPaid();
+    if (tierCheck.error) return tierCheck.error;
+    const { uid } = tierCheck as { uid: string };
+
     await requireRole(uid, "explorer");
 
     const body = (await request.json().catch(() => ({}))) as CreateBody;

@@ -964,17 +964,78 @@ This inventory categorizes every route, page, and API endpoint in the iPurpose e
 - **Status:** ✅ LOCKED & APPROVED
 - **Rationale:** Introspective deepening for interested users, not forced onto journey
 
+**Decision #7: Community Entitlement Boundary** ⭐ PHASE 2
+- **Tier Access:** PAID-ONLY (active paid entitlement required)
+- **Routes Gated:** `/community`, `/community/post/[id]`, `/api/community/*`
+- **Unauthorized Redirect:** `/enrollment-required`
+- **Rationale:** Minimize trolling/moderation load; community as premium feature
+- **Status:** ✅ LOCKED & APPROVED (Choice B)
+- **Note:** `/ethics` remains PUBLIC (values/preview page)
+
+**Decision #8: Soul Entitlement Gating** ⭐ PHASE 2
+- **Classification:** Post-Integration Reflective Wing + Deepening-Tier Continuity Layer
+- **Tier Access:** Deepening tier ($99/mo) and above ONLY
+- **Routes Gated:** `/soul`, `/soul/chat`, soul APIs
+- **Not Available To:** Free users, basic paid tiers
+- **Unauthorized Redirect:** `/enrollment-required`
+- **Status:** ✅ LOCKED & APPROVED (Choice B)
+- **Rationale:** Soul as premium reflective deepening tool
+
+**Decision #9: Advanced Tools Entitlement Gating** ⭐ PHASE 2
+- **Classification:** Advanced Tools – Deepening Tier Continuity Layer
+- **Routes Gated:** `/systems`, `/systems/chat`, `/insights`, `/insights/chat`, `/creation`, `/interpretation`
+- **Tier Access:** Deepening tier ($99/mo) and above ONLY
+- **Not Available To:** Free users, basic paid tiers
+- **Unauthorized Redirect:** `/enrollment-required`
+- **API Enforcement:** All related APIs require entitlement checks
+- **UI Enforcement:** Navigation hidden for unauthorized users
+- **Status:** ✅ LOCKED & APPROVED (Choice B)
+
+**Decision #10: AI Tools Entitlement Gating** ⭐ PHASE 2
+- **Classification:** Core Paid Intelligence Layer
+- **Routes Gated:** `/ai-tools`, `/ai-tools/chat`
+- **APIs Gated:** `/api/ai/*`, `/api/ai/stream`
+- **Tier Access:** ALL paid tiers (not free users)
+- **Not Available To:** Free users only
+- **Unauthorized Redirect:** `/enrollment-required`
+- **Status:** ✅ LOCKED & APPROVED (Choice B)
+- **Rationale:** AI intelligence as core paid feature, accessible to all paying tiers
+
+**Decision #11: Labs Access Boundary** ⭐ PHASE 2
+- **Classification:** Core Journey Layer – Free Access (Auth Required)
+- **Routes:** `/labs`, `/labs/identity`, `/labs/meaning`, `/labs/agency`
+- **Tier Access:** ALL logged-in users (free + paid)
+- **Entitlement Gating:** NONE (no monetization on labs)
+- **Status:** ✅ LOCKED & APPROVED (Choice A)
+- **Rationale:** Labs are transformation engine; free to all to enable core journey
+
+**Decision #12: Integration Monetization Boundary** ⭐ PHASE 2
+- **Classification:** Monetization Bridge Layer (Identity formation → Paid embodiment & action)
+- **Routes:** `/integration` and related APIs
+- **Tier Access:** ANY paid entitlement required (not free users)
+- **Conversion Logic:** Labs → free access. Integration → paid gating forces upgrade decision.
+- **Unauthorized Redirect:** `/enrollment-required` (before Integration, after Labs completion)
+- **API Enforcement:** `/api/integration*` endpoints require entitlement
+- **Status:** ✅ LOCKED & APPROVED (Choice B)
+- **Rationale:** Integration is conversion bridge; labs alone insufficient for paid tier
+
 ### Alignment Issues (Resolved by Locked Decisions)
 
 ✅ **Legacy/Deprecated Routes (Decision #3, #6):** `/test`, `/legacy`, `/development` approved for removal. See "LEGACY / DEPRECATED LAYER" section for details.
 
 ✅ **Google Review Route:** Single-purpose redirect. Can be simplified post-launch.
 
-✅ **Community Gating (Decision #3):** Community accessible to all post-Integration (no additional tier gating).
+✅ **Community Gating (Decision #7):** Community PAID-ONLY. Accessible only to users with active paid entitlements. Prevents trolling/low-quality content.
 
-✅ **Soul Positioning (Decision #6):** Post-Integration reflective wing. Users directed after integration completion. Not premium-gated.
+✅ **Soul Positioning (Decision #8):** Post-Integration reflective wing + Deepening-tier continuity layer. Gated by Deepening tier ($99/mo+).
 
-✅ **Optional Tools (Decision #5):** Systems, Insights, Creation, Interpretation positioned as post-integration deepening tools. Not core spine.
+✅ **Optional Tools (Decision #9):** Systems, Insights, Creation, Interpretation positioned as Advanced Tools – Deepening tier continuity layer. Gated by Deepening tier.
+
+✅ **AI Tools (Decision #10):** Core Paid Intelligence Layer. Available to ALL paid tiers (not free). Gated at middleware + API level.
+
+✅ **Labs (Decision #11):** Core Journey Layer – FREE access to all authenticated users (no entitlement gating). Labs are transformation engine accessible to all.
+
+✅ **Integration (Decision #12):** Monetization Bridge Layer. Requires ANY paid entitlement. Forces upgrade decision after free labs completion. Gated at middleware + API level.
 
 ### Access Control Quality
 ✅ Public routes properly gated by middleware  

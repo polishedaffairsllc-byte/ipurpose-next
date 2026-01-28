@@ -1,0 +1,34 @@
+🔍 iPurpose Route & API Crawler
+
+BASE_URL: https://ipurpose-next-cuq7zewjx-ipurposes-projects-3d90a718.vercel.app
+Inventory: /Users/renita.hamilton/Desktop/ipurpose-next/SYSTEM_INVENTORY.md
+Concurrency: 8
+Auth mode: ❌ disabled
+
+📋 Found 0 routes and 21 APIs in inventory
+
+🚀 Starting crawl (36 routes + 21 APIs)...
+
+📍 Unauthenticated pass: ..F................................. done
+🔌 API pass: ..................... done
+
+📊 Report saved to crawl-report.json
+
+╔═══════════════════════════════════════════════════════════╗
+║          🎯 ROUTE & API CRAWL SUMMARY                    ║
+╚═══════════════════════════════════════════════════════════╝
+
+✅ Successes: 56/57 (98.2%)
+❌ Failures:  1/57
+
+📈 By Category:
+   • Public Routes:  17
+   • Auth Routes:    15
+   • Legacy Routes:  4
+   • APIs:           21
+
+🔴 FAILURES DETECTED:
+
+  route:/clarity-check-numeric
+    [unauth] 200 | Expected: 301/302/307/308 → /clarity-check
+    Reason: Decision #1: Canonical clarity check
