@@ -15,6 +15,12 @@ Based on the **SYSTEM_INVENTORY.md** and **USER_JOURNEY_SEQUENCE.md**, this docu
 - **Orphaned pages** with no clear purpose
 - **Broken navigation** patterns
 
+## Tech Debt (Local Warnings — log only)
+
+- Next.js metadata export warning during local crawl (no prod impact; revisit when adjusting metadata).
+- `/startup-pack` 404 locally (likely typo of `/starter-pack`; verify and align routing).
+- Local build error: `Unexpected token export` (track and clean up in next maintenance pass).
+
 ---
 
 ## CONSOLIDATION CANDIDATES

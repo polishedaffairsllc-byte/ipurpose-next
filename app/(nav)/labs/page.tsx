@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 type LabStatus = "not_started" | "in_progress" | "complete";
 
@@ -24,6 +25,8 @@ function getButtonLabel(status?: LabStatus) {
 }
 
 export default function LabsHubPage() {
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
   const [loading, setLoading] = useState(true);
   const [labs, setLabs] = useState<Record<string, LabStatus>>({});
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +69,9 @@ export default function LabsHubPage() {
       <p className="mt-3 text-sm text-warmCharcoal/70">
         Complete the Identity, Meaning, and Agency labs to unlock integration.
       </p>
+      {message === "complete-labs" ? (
+        <p className="mt-2 text-sm text-amber-700">Complete Labs to continue to Integration.</p>
+      ) : null}
 
       {loading ? <p className="mt-6 text-sm text-warmCharcoal/70">Loading...</p> : null}
       {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
@@ -86,6 +92,17 @@ export default function LabsHubPage() {
           </div>
         ))}
       </div>
+
+      {labs.identity === "complete" && labs.meaning === "complete" && labs.agency === "complete" ? (
+        <div className="mt-8">
+          <Link
+            href="/integration?from=labs"
+            className="inline-flex px-4 py-2 rounded-full bg-ip-accent text-white text-sm"
+          >
+            Continue to Integration
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

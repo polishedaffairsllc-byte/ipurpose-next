@@ -81,7 +81,7 @@ export default function OrientationMapPage() {
                 <p className="text-xs text-warmCharcoal/70">Status: {statusLabel}</p>
               </div>
               <Link
-                href={step.key === "integration" ? "/integration" : `/labs/${step.key}`}
+                href={step.key === "integration" ? "/integration?from=labs" : `/labs/${step.key}`}
                 className="text-sm text-ip-accent underline"
               >
                 Open

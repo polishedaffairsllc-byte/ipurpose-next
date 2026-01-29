@@ -13,7 +13,7 @@ const steps = [
   { key: "identity_lab", title: "Identity Lab", type: "lab", href: "/labs/identity" },
   { key: "meaning_lab", title: "Meaning Lab", type: "lab", href: "/labs/meaning" },
   { key: "agency_lab", title: "Agency Lab", type: "lab", href: "/labs/agency" },
-  { key: "integration_reflection", title: "Integration Reflection", type: "write", href: "/integration" },
+  { key: "integration_reflection", title: "Integration Reflection", type: "write", href: "/integration?from=labs" },
   { key: "community_reflection", title: "Community Reflection (Optional)", type: "community", href: "/community" },
 ];
 

@@ -1,7 +1,7 @@
 # Phase 2: Entitlement Gating Implementation Guide
 
 **Date:** January 28, 2026  
-**Status:** ✅ FOUNDATION COMPLETE (Phase 2A)  
+**Status:** ✅ Phase 2B COMPLETE (Routes & APIs)  
 **Scope:** Tier-based access control for all gated routes & APIs
 
 ---
@@ -159,7 +159,7 @@ Tier comparison & upgrade page:
 
 ---
 
-## 📋 Implementation Checklist (Phase 2A Complete)
+## 📋 Implementation Checklist (Phase 2B Complete)
 
 ### ✅ Infrastructure
 - [x] Create `EntitlementTier` type
@@ -173,14 +173,14 @@ Tier comparison & upgrade page:
 - [x] Lock Decisions #7-12 in `SYSTEM_INVENTORY.md`
 - [x] Create this implementation guide
 
-### ⏳ Phase 2B (Routes & APIs)
-- [ ] Gate community API routes (`/api/community/*`)
+### ✅ Phase 2B (Routes & APIs)
+- [x] Gate community API routes (`/api/community/*`)
   - [x] `/api/community/posts` (GET/POST)
-  - [ ] `/api/community/posts/[id]/*`
-  - [ ] `/api/community/spaces/*`
-- [ ] Gate AI API routes (`/api/ai/*`)
-- [ ] Gate integration API routes (`/api/integration/*`)
-- [ ] Test all gating with curl/Postman
+  - [x] `/api/community/posts/[id]/*`
+  - [x] `/api/community/spaces/*`
+- [x] Gate AI API routes (`/api/ai/*`)
+- [x] Gate integration API routes (`/api/integration/*`)
+- [x] Test all gating with curl/Postman + prod crawls (2026-01-29)
 
 ### ⏳ Phase 2C (User Tier Assignment)
 - [ ] Add `entitlementTier` field to Firestore user schema
@@ -299,14 +299,14 @@ Add to user document:
 
 ---
 
-## 🚀 Next Steps (Phase 2B)
+## 🚀 Next Steps (Phase 3 — Activation Architecture)
 
-1. **Gate remaining API routes** (community, AI, integration)
-2. **Test all tier redirects** against local dev server
-3. **Test production crawlers** with tier-aware session
-4. **Integrate with Stripe** for tier assignment on purchase
-5. **Add tier display** to user profile/settings
-6. **Create admin panel** for tier management
+1. **Define activation events** across Orientation → Labs → Integration → Community; instrument checkpoints for completion and upgrade intent.
+2. **Design activation funnel UX** so Labs completion flows seamlessly into paid Integration checkout (keeps `/integration?from=labs` path canonical).
+3. **Map entitlement signals to product surfaces** (nav visibility, prompts, CTAs) to reinforce activation milestones without new routes.
+4. **Add telemetry + reporting hooks** for activation KPIs (labs completion rate, integration checkout starts/completes, community activation).
+5. **Plan tier assignment (Phase 2C)**: Stripe webhook → entitlementTier persistence, profile display, admin overrides.
+6. **Prepare crawl and QA scripts** to validate activation gates and redirects post-implementation.
 
 ---
 
@@ -326,6 +326,6 @@ Add to user document:
 
 ---
 
-**Status:** Phase 2A foundation complete ✅  
-**Next Phase:** Phase 2B (API route gating)  
-**Timeline:** 2 weeks to completion
+**Status:** Phase 2B complete ✅  
+**Next Phase:** Phase 3 (Activation Architecture)  
+**Timeline:** Activation plan + Phase 2C entitlement wiring to be scheduled

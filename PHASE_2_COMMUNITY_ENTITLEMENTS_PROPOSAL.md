@@ -1,7 +1,7 @@
 # Phase 2: Community Entitlements Decision
 
 **Date:** January 28, 2026  
-**Status:** Ready for Decision Lock  
+**Status:** ✅ Decision Locked (Hybrid+ accepted)  
 **Decision:** Define Community access boundary (Free vs. Paid vs. Hybrid)
 
 ---
@@ -10,7 +10,9 @@
 
 Community is currently unimplemented but scheduled for post-integration phase. This decision defines whether free users, paid users, or both can access reading/posting/space creation.
 
-**Your leaning:** Hybrid (free read-only + paid posting/spaces)
+**Decision (Phase 2B):** Hybrid+ accepted (free read + limited posts, paid unlocks spaces/unlimited posts)
+
+**Phase 3 Decision #1:** Activation Architecture proceeds with Hybrid+ as the baseline community model.
 
 **This proposal** recommends a **Hybrid+ model** with three tiers, balancing user engagement with monetization.
 
@@ -248,40 +250,42 @@ function getUserTier(user) {
 **Questions for Lock:**
 
 1. **Post Quota:** Free users 5 posts/month per category?
-   - [ ] Yes (recommended)
-   - [ ] Modify to: _____
-   - [ ] Remove quota (Option C instead)
+  - [x] Yes (recommended)
+  - [ ] Modify to: _____
+  - [ ] Remove quota (Option C instead)
 
 2. **Space Creation:** Free users can't create spaces?
-   - [ ] Yes (recommended)
-   - [ ] Free users get 1 space
-   - [ ] All tiers can create unlimited spaces
+  - [x] Yes (recommended)
+  - [ ] Free users get 1 space
+  - [ ] All tiers can create unlimited spaces
 
 3. **Tier Pricing:** Pro $19/mo, Premium $49/mo?
-   - [ ] Yes
-   - [ ] Modify Pro to: $___
-   - [ ] Modify Premium to: $___
+  - [x] Yes
+  - [ ] Modify Pro to: $___
+  - [ ] Modify Premium to: $___
 
 4. **Space Limits:** Pro users max 2 spaces?
-   - [ ] Yes
-   - [ ] Modify to: ___
-   - [ ] Premium unlimited + Pro unlimited
+  - [x] Yes
+  - [ ] Modify to: ___
+  - [ ] Premium unlimited + Pro unlimited
 
 5. **Default Model:** Use Hybrid+ (read-free, post-quota, space-paid)?
-   - [ ] Yes (Hybrid+ recommended)
-   - [ ] Use Option C (read-free, post-paid only)
-   - [ ] Use Option B (paid-only)
+  - [x] Yes (Hybrid+ recommended)
+  - [ ] Use Option C (read-free, post-paid only)
+  - [ ] Use Option B (paid-only)
 
 ---
 
 ## Next Actions (Post-Decision)
 
-1. **Lock Decision:** Confirm tier model + pricing
-2. **Update SYSTEM_INVENTORY.md:** Add Decision #7 (Community Tiers)
-3. **Create Firestore schema update:** Add `tier` + quota fields
-4. **Create Stripe products:** If tier pricing differs from current 6-week
-5. **Implement `/api/community/access` endpoint**
-6. **Begin Phase 2A implementation**
+- [x] Lock Decision: Hybrid+ model with quotas and space gating
+- [x] Update `SYSTEM_INVENTORY.md`: Decision #7 recorded (community tiers)
+- [ ] Create Firestore schema update: add `tier` + quota fields
+- [ ] Create Stripe products: align with Pro/Premium pricing if SKUs differ
+- [ ] Implement `/api/community/access` endpoint
+- [ ] Begin Phase 2A/2C implementation sequence (tier persistence, quotas)
+
+**Note:** Phase 3 Activation Architecture starts from this Hybrid+ decision; activation UX should surface quotas and upgrade prompts accordingly.
 
 ---
 

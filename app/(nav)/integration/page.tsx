@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Button from "@/app/components/Button";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 type LabData = { text?: string };
 
@@ -48,6 +49,8 @@ async function startCheckout() {
 
 export default function IntegrationPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromLabs = searchParams.get("from") === "labs";
   const [identity, setIdentity] = useState<LabData | null>(null);
   const [meaning, setMeaning] = useState<LabData | null>(null);
   const [agency, setAgency] = useState<LabData | null>(null);
@@ -74,7 +77,11 @@ export default function IntegrationPage() {
           return;
         }
         if (integrationRes.status === 403) {
-          await startCheckout();
+          if (fromLabs) {
+            await startCheckout();
+          } else {
+            router.replace("/labs?message=complete-labs");
+          }
           return;
         }
 
