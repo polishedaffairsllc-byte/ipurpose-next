@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "@/app/components/Button";
+import { useRouter } from "next/navigation";
 
 type LabData = { text?: string };
 
@@ -19,7 +20,34 @@ const emptyIntegration: IntegrationData = {
   sevenDayPlan: ["", "", "", "", "", "", ""],
 };
 
+async function startCheckout() {
+  try {
+    const res = await fetch("/api/stripe/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ product: "accelerator" }),
+    });
+
+    if (!res.ok) {
+      throw new Error(await res.text());
+    }
+
+    const json = await res.json();
+    const url = json?.url;
+    if (url) {
+      window.location.href = url;
+    } else {
+      throw new Error("Checkout URL missing");
+    }
+  } catch (err) {
+    console.error("Checkout error", err);
+    // As a fallback, send to enrollment-required
+    window.location.href = "/enrollment-required";
+  }
+}
+
 export default function IntegrationPage() {
+  const router = useRouter();
   const [identity, setIdentity] = useState<LabData | null>(null);
   const [meaning, setMeaning] = useState<LabData | null>(null);
   const [agency, setAgency] = useState<LabData | null>(null);
@@ -39,6 +67,16 @@ export default function IntegrationPage() {
           fetch("/api/labs/agency"),
           fetch("/api/integration"),
         ]);
+
+        // Gate: if integration API says unauth or forbidden, trigger the right next step
+        if (integrationRes.status === 401) {
+          router.replace("/login");
+          return;
+        }
+        if (integrationRes.status === 403) {
+          await startCheckout();
+          return;
+        }
 
         const [identityJson, meaningJson, agencyJson, integrationJson] = await Promise.all([
           identityRes.json(),

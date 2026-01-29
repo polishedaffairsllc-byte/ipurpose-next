@@ -32,6 +32,8 @@ export async function requireTier(requiredTier: EntitlementTier) {
             code: 'Forbidden',
             message: `This feature requires ${requiredTier} tier. You have ${tier} tier.`,
             requiredTier,
+            userTier: tier,
+            upgradePath: '/enrollment-required',
           },
         },
         { status: 403 }

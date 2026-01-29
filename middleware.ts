@@ -128,11 +128,17 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
+    // Allow Integration page to render for authenticated users even if tier is insufficient.
+    // The page will trigger direct checkout (Decision #1 Choice A) instead of showing a comparison.
+    if (path === '/integration' || path.startsWith('/integration/')) {
+      const response = NextResponse.next();
+      response.headers.set('x-pathname', path);
+      response.headers.set('x-user-tier', getTierFromRequest(request));
+      return response;
+    }
+
     // Check entitlement gating for protected routes
     const requiredTier = getRequiredTier(path);
-    
-    // For now, assume authenticated user is at least BASIC_PAID
-    // (In Phase 2A, this will fetch actual tier from user document)
     const userTier = getTierFromRequest(request);
 
     if (!canAccessTier(userTier, requiredTier)) {
@@ -148,7 +154,7 @@ export async function middleware(request: NextRequest) {
 
   // 2. If NO session exists AND the path is protected, redirect to /login
   const requiredTier = getRequiredTier(path);
-  if (requiredTier !== 'FREE') {
+  if (requiredTier !== 'FREE' || path === '/integration' || path.startsWith('/integration/')) {
     // Gated route requires authentication
     return NextResponse.redirect(new URL('/login', request.url));
   }
