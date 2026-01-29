@@ -1,20 +1,14 @@
-import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { requireDeepening } from "@/lib/apiEntitlementHelper";
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("FirebaseSession")?.value;
-
-    if (!session) {
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const userId = decodedClaims.uid;
+    const entitlement = await requireDeepening();
+    if (entitlement.error) return entitlement.error;
+    const { uid: userId } = entitlement as { uid: string };
     const { primary, secondary } = await request.json();
 
     const db = firebaseAdmin.firestore();

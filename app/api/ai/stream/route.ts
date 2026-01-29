@@ -1,5 +1,10 @@
+import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
+
 export async function POST(request: Request) {
   try {
+    const entitlement = await requireBasicPaid();
+    if (entitlement.error) return entitlement.error;
+
     const { prompt, model } = await request.json();
     if (!prompt) return new Response("Missing prompt", { status: 400 });
 

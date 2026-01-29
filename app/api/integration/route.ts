@@ -1,19 +1,15 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { checkRateLimit, recordRequest } from "@/app/api/gpt/utils/rate-limiter";
+import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("FirebaseSession")?.value;
+    const entitlement = await requireBasicPaid();
+    if (entitlement.error) return entitlement.error;
+    const { uid } = entitlement as { uid: string };
 
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const docRef = firebaseAdmin.firestore().collection("integration").doc(decoded.uid);
+    const docRef = firebaseAdmin.firestore().collection("integration").doc(uid);
     const docSnap = await docRef.get();
 
     return NextResponse.json({
@@ -28,15 +24,11 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("FirebaseSession")?.value;
+    const entitlement = await requireBasicPaid();
+    if (entitlement.error) return entitlement.error;
+    const { uid } = entitlement as { uid: string };
 
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const rateLimit = await checkRateLimit(decoded.uid);
+    const rateLimit = await checkRateLimit(uid);
 
     if (!rateLimit.allowed) {
       return NextResponse.json({ error: rateLimit.reason || "Rate limited" }, { status: 429 });
@@ -48,7 +40,7 @@ export async function POST(request: Request) {
     const internalShift = typeof body?.internalShift === "string" ? body.internalShift : "";
     const sevenDayPlan = Array.isArray(body?.sevenDayPlan) ? body.sevenDayPlan : [];
 
-    const docRef = firebaseAdmin.firestore().collection("integration").doc(decoded.uid);
+    const docRef = firebaseAdmin.firestore().collection("integration").doc(uid);
     await docRef.set(
       {
         coreTruth,
@@ -60,7 +52,7 @@ export async function POST(request: Request) {
       { merge: true }
     );
 
-    await recordRequest(decoded.uid, 1);
+    await recordRequest(uid, 1);
 
     return NextResponse.json({ success: true });
   } catch (error) {

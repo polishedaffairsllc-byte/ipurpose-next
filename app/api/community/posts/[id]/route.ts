@@ -1,14 +1,17 @@
 import { ok, fail } from "@/lib/http";
 import { clampText } from "@/lib/validators";
-import { requireUid, requireRole } from "@/lib/firebase/requireUser";
+import { requireRole } from "@/lib/firebase/requireUser";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
 
 type Body = { title?: string; body?: string; isDeleted?: boolean };
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
-    const uid = await requireUid();
+    const entitlement = await requireBasicPaid();
+    if (entitlement.error) return entitlement.error;
+    const { uid } = entitlement as { uid: string };
     await requireRole(uid, "explorer");
 
     const db = firebaseAdmin.firestore();
@@ -42,7 +45,9 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
-    const uid = await requireUid();
+    const entitlement = await requireBasicPaid();
+    if (entitlement.error) return entitlement.error;
+    const { uid } = entitlement as { uid: string };
     await requireRole(uid, "explorer");
 
     const body = (await request.json().catch(() => ({}))) as Body;

@@ -10,6 +10,7 @@ import {
   inferLensFromMessage,
   ResponseMode,
 } from "@/lib/ai/prompts/ipurposeMentorPrompts";
+import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -32,6 +33,9 @@ interface ChatRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    const entitlement = await requireBasicPaid();
+    if (entitlement.error) return entitlement.error;
+
     const body = (await request.json()) as ChatRequest;
     const { message, responseMode, model = "gpt-4o-mini", conversationHistory = [] } = body;
 
