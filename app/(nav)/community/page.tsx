@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Post = {
   id: string;
@@ -31,6 +32,7 @@ const guidelinesBySpace: Record<string, string[]> = {
 };
 
 export default function CommunityPage() {
+  const router = useRouter();
   const [spaceKey, setSpaceKey] = useState("general");
   const [posts, setPosts] = useState<Post[]>([]);
   const [title, setTitle] = useState("");
@@ -79,8 +81,35 @@ export default function CommunityPage() {
   };
 
   useEffect(() => {
-    setNextCursor(null);
-    loadPosts(spaceKey);
+    let cancelled = false;
+    const gateAndLoad = async () => {
+      try {
+        // Probe entitlement via API; API returns 401/403 JSON (no redirects)
+        const probe = await fetch(`/api/community/posts?spaceKey=${spaceKey}&limit=1`);
+        if (probe.status === 401) {
+          router.replace("/login");
+          return;
+        }
+        if (probe.status === 403) {
+          router.replace("/enrollment-required");
+          return;
+        }
+        if (!cancelled) {
+          setNextCursor(null);
+          await loadPosts(spaceKey);
+        }
+      } catch (err) {
+        // If probe fails unexpectedly, route to enrollment as a safe default
+        router.replace("/enrollment-required");
+      }
+    };
+
+    gateAndLoad();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spaceKey]);
 
   const submitPost = async () => {

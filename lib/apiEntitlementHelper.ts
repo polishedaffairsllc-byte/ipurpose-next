@@ -26,10 +26,14 @@ export async function requireTier(requiredTier: EntitlementTier) {
   if (!canAccessTier(tier, requiredTier)) {
     return {
       error: NextResponse.json(
-        fail(
-          'Forbidden',
-          `This feature requires ${requiredTier} tier. You have ${tier} tier.`
-        ),
+        {
+          ok: false,
+          error: {
+            code: 'Forbidden',
+            message: `This feature requires ${requiredTier} tier. You have ${tier} tier.`,
+            requiredTier,
+          },
+        },
         { status: 403 }
       ),
     };

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
+import { canAccessTier, getTierFromUser } from "@/app/lib/auth/entitlements";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
 import PathBanner from "@/app/components/PathBanner";
 import Card from "../components/Card";
@@ -36,6 +37,8 @@ export default async function DashboardPage() {
     const user = await firebaseAdmin.auth().getUser(decoded.uid);
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(decoded.uid).get();
+    const tier = getTierFromUser(userDoc.data() ?? {});
+    const canAccessCommunity = canAccessTier(tier, "BASIC_PAID");
 
     if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
       return (
@@ -126,12 +129,14 @@ export default async function DashboardPage() {
                 description="Review reflections, trends, and alignment reports."
                 color="#4B4E6D"
               />
-              <PathBanner 
-                href="/community"
-                title="Community"
-                description="Connect with the iPurpose community and group reflections."
-                color="#F8C9D3"
-              />
+              {canAccessCommunity ? (
+                <PathBanner 
+                  href="/community"
+                  title="Community"
+                  description="Connect with the iPurpose community and group reflections."
+                  color="#F8C9D3"
+                />
+              ) : null}
             </div>
           </div>
         </ScrollReveal>

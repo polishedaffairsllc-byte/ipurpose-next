@@ -1,10 +1,14 @@
 import Link from "next/link";
+import { canAccessTier, type EntitlementTier } from "@/app/lib/auth/entitlements";
 
 type TopNavProps = {
   isAuthed: boolean;
+  userTier?: EntitlementTier;
 };
 
-export default function TopNav({ isAuthed }: TopNavProps) {
+export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
+  const canSeeCommunity = canAccessTier(userTier, "BASIC_PAID");
+
   return (
     <header className="w-full border-b border-ip-border bg-white/80 backdrop-blur-sm">
       <div className="container max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -17,7 +21,9 @@ export default function TopNav({ isAuthed }: TopNavProps) {
           <Link href="/learning-path" className="hover:text-warmCharcoal">Learning Path</Link>
           <Link href="/labs" className="hover:text-warmCharcoal">Labs</Link>
           <Link href="/ethics" className="hover:text-warmCharcoal">Ethics</Link>
-          <Link href="/community" className="hover:text-warmCharcoal">Community</Link>
+          {canSeeCommunity ? (
+            <Link href="/community" className="hover:text-warmCharcoal">Community</Link>
+          ) : null}
           <Link href="/dashboard" className="hover:text-warmCharcoal">Dashboard</Link>
         </nav>
 
