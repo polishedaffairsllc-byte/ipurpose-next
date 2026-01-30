@@ -3,12 +3,25 @@ import { firebaseAdmin } from "@/lib/firebaseAdmin";
 
 export async function requireUid() {
   const cookieStore = await cookies();
-  const session = cookieStore.get("FirebaseSession")?.value;
+  // Prefer HttpOnly session cookie
+  let session = cookieStore.get("FirebaseSession")?.value;
+
+  // Dev fallback: allow non-HttpOnly session (only in non-production)
+  if (!session && process.env.NODE_ENV !== "production") {
+    session = cookieStore.get("FirebaseSessionDev")?.value;
+  }
+
+  // Header fallback (for testing)
+  if (!session && process.env.NODE_ENV !== "production") {
+    session = (cookieStore as any).get("x-firebase-session")?.value;
+  }
+
   if (!session) {
     const error = new Error("Unauthorized");
     (error as { status?: number }).status = 401;
     throw error;
   }
+
   const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
   return decoded.uid;
 }

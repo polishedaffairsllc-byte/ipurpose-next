@@ -77,6 +77,16 @@ export async function POST(req: Request) {
     console.log("[LOGIN] Setting FirebaseSession cookie via response.cookies.set");
     response.cookies.set("FirebaseSession", sessionCookie, setCookieOpts);
 
+    // Dev helper cookie (non-HttpOnly) to unblock local testing if HttpOnly is dropped
+    if (!secure) {
+      response.cookies.set("FirebaseSessionDev", sessionCookie, {
+        maxAge: maxAgeSeconds,
+        path: "/",
+        secure,
+        sameSite,
+      });
+    }
+
     if (isFounder) {
       console.log("[LOGIN] Setting x-founder cookie via response.cookies.set");
       response.cookies.set("x-founder", "true", {
@@ -92,6 +102,12 @@ export async function POST(req: Request) {
       "Set-Cookie",
       `FirebaseSession=${encodeURIComponent(sessionCookie)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}; HttpOnly`
     );
+    if (!secure) {
+      response.headers.append(
+        "Set-Cookie",
+        `FirebaseSessionDev=${encodeURIComponent(sessionCookie)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
+      );
+    }
     if (isFounder) {
       response.headers.append(
         "Set-Cookie",
