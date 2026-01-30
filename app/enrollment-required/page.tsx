@@ -159,9 +159,12 @@ export default function EnrollmentRequiredPage() {
                 <span>Advanced tools (deepening tier)</span>
               </li>
             </ul>
-            <button className="w-full bg-lavenderViolet text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-indigoDeep transition">
+            <Link
+              href="/program?plan=pro"
+              className="w-full inline-block text-center bg-lavenderViolet text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-indigoDeep transition"
+            >
               Upgrade to Pro
-            </button>
+            </Link>
           </div>
 
           {/* Premium Tier */}
@@ -186,9 +189,12 @@ export default function EnrollmentRequiredPage() {
                 <span>1-on-1 guidance (coming soon)</span>
               </li>
             </ul>
-            <button className="w-full bg-warmCharcoal text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-warmCharcoal/80 transition">
+            <Link
+              href="/program?plan=premium"
+              className="w-full inline-block text-center bg-warmCharcoal text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-warmCharcoal/80 transition"
+            >
               Upgrade to Premium
-            </button>
+            </Link>
           </div>
         </div>
 

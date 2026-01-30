@@ -197,7 +197,19 @@ export function getTierFromUser(user: {
   entitlementTier?: EntitlementTier;
   stripeSubscriptionId?: string;
   tier?: EntitlementTier;
+  role?: string;
+  isFounder?: boolean;
+  customClaims?: Record<string, any>;
 }): EntitlementTier {
+  // Founder access maps to the highest tier (DEEPENING)
+  // Check Firestore fields first
+  if (user.isFounder || user.role === 'founder' || user.entitlementTier === 'FOUNDER') {
+    return 'DEEPENING';
+  }
+  // Check custom claims (from Firebase Auth)
+  if (user.customClaims?.isFounder || user.customClaims?.role === 'founder') {
+    return 'DEEPENING';
+  }
   // Priority: explicit tier field > compute from subscription > default FREE
   if (user.entitlementTier) {
     return user.entitlementTier;

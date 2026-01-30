@@ -7,7 +7,15 @@ type TopNavProps = {
 };
 
 export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
-  const canSeeCommunity = canAccessTier(userTier, "BASIC_PAID");
+  const navLinks: { label: string; href: string; required: EntitlementTier }[] = [
+    { label: "Overview", href: "/dashboard", required: "FREE" },
+    { label: "Soul", href: "/soul", required: "DEEPENING" },
+    { label: "Systems", href: "/systems", required: "DEEPENING" },
+    { label: "AI Coach", href: "/ai", required: "BASIC_PAID" },
+    { label: "Insights", href: "/insights", required: "DEEPENING" },
+    { label: "Labs", href: "/labs", required: "FREE" },
+    { label: "Community", href: "/community", required: "BASIC_PAID" },
+  ];
 
   return (
     <header className="w-full border-b border-ip-border bg-white/80 backdrop-blur-sm">
@@ -17,14 +25,13 @@ export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
         </Link>
 
         <nav className="flex items-center gap-4 text-sm text-warmCharcoal/80">
-          <Link href="/orientation" className="hover:text-warmCharcoal">Orientation</Link>
-          <Link href="/learning-path" className="hover:text-warmCharcoal">Learning Path</Link>
-          <Link href="/labs" className="hover:text-warmCharcoal">Labs</Link>
-          <Link href="/ethics" className="hover:text-warmCharcoal">Ethics</Link>
-          {canSeeCommunity ? (
-            <Link href="/community" className="hover:text-warmCharcoal">Community</Link>
-          ) : null}
-          <Link href="/dashboard" className="hover:text-warmCharcoal">Dashboard</Link>
+          {navLinks
+            .filter((link) => canAccessTier(userTier, link.required))
+            .map((link) => (
+              <Link key={link.href} href={link.href} className="hover:text-warmCharcoal">
+                {link.label}
+              </Link>
+            ))}
         </nav>
 
         <div className="flex items-center gap-3">

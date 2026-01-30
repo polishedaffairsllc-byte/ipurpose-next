@@ -14,7 +14,8 @@ export default async function NavLayout({ children }: { children: React.ReactNod
     try {
       const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
       const userDoc = await firebaseAdmin.firestore().collection("users").doc(decoded.uid).get();
-      userTier = getTierFromUser(userDoc.data() ?? {});
+      const customClaims = decoded.customClaims || {};
+      userTier = getTierFromUser({ ...userDoc.data(), customClaims });
     } catch (err) {
       console.error("TopNav tier resolve error", err);
       userTier = "FREE";

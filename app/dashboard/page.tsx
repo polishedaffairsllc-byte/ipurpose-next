@@ -37,16 +37,19 @@ export default async function DashboardPage() {
     const user = await firebaseAdmin.auth().getUser(decoded.uid);
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(decoded.uid).get();
-    const tier = getTierFromUser(userDoc.data() ?? {});
+    const customClaims = decoded.customClaims || {};
+    const tier = getTierFromUser({ ...userDoc.data(), customClaims });
     const canAccessCommunity = canAccessTier(tier, "BASIC_PAID");
 
-    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+    // Skip entitlement check for founders
+    const isFounder = customClaims.isFounder || customClaims.role === 'founder';
+    if (!isFounder && (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active")) {
       return (
         <div className="min-h-[50vh] flex items-center justify-center p-6">
           <div className="max-w-md text-center bg-white/80 backdrop-blur-sm border border-ip-border rounded-2xl p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-warmCharcoal">Access not active</h2>
             <p className="mt-3 text-sm text-warmCharcoal/70">
-              Your access isn’t active yet. Enroll to unlock the full dashboard experience.
+              Your access isn't active yet. Enroll to unlock the full dashboard experience.
             </p>
             <a
               href="/enroll"
