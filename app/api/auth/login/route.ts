@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 // Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 /**
  * Login route: accepts an idToken from the client, exchanges it for a
@@ -65,23 +66,37 @@ export async function POST(req: Request) {
     const secure = process.env.NODE_ENV === "production";
     const sameSite = secure ? "none" : "lax";
 
-    console.log("[LOGIN] Setting FirebaseSession cookie via response.cookies.set");
-    response.cookies.set("FirebaseSession", sessionCookie, {
+    const setCookieOpts = {
       maxAge: maxAgeSeconds,
+      path: "/",
       httpOnly: true,
       secure,
-      path: "/",
       sameSite,
-    });
+    } as const;
+
+    console.log("[LOGIN] Setting FirebaseSession cookie via response.cookies.set");
+    response.cookies.set("FirebaseSession", sessionCookie, setCookieOpts);
 
     if (isFounder) {
       console.log("[LOGIN] Setting x-founder cookie via response.cookies.set");
       response.cookies.set("x-founder", "true", {
         maxAge: maxAgeSeconds,
-        secure,
         path: "/",
+        secure,
         sameSite,
       });
+    }
+
+    // Also append Set-Cookie headers manually as a fallback for dev/turbopack
+    response.headers.append(
+      "Set-Cookie",
+      `FirebaseSession=${encodeURIComponent(sessionCookie)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}; HttpOnly`
+    );
+    if (isFounder) {
+      response.headers.append(
+        "Set-Cookie",
+        `x-founder=true; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
+      );
     }
 
     console.log("[LOGIN] Response Set-Cookie headers:", response.headers.getSetCookie());
