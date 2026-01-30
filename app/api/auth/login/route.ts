@@ -49,9 +49,22 @@ export async function POST(req: Request) {
     try {
       const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
       isFounder = decoded.customClaims?.isFounder === true || decoded.customClaims?.role === 'founder';
-      console.log(`User ${decoded.email} founder status: ${isFounder}`);
+      console.log(`[LOGIN] User ${decoded.email} UID ${decoded.uid}`);
+      console.log(`[LOGIN] ID Token Custom Claims:`, decoded.customClaims);
+      console.log(`[LOGIN] Founder status: ${isFounder}`);
+      
+      // Also check Firestore for founder status as a fallback
+      const userDoc = await firebaseAdmin.firestore().collection('users').doc(decoded.uid).get();
+      if (userDoc.exists) {
+        const firestoreIsFounder = userDoc.data()?.isFounder || userDoc.data()?.role === 'founder';
+        console.log(`[LOGIN] Firestore founder status: ${firestoreIsFounder}`);
+        console.log(`[LOGIN] Firestore data:`, userDoc.data());
+        if (firestoreIsFounder) {
+          isFounder = true;
+        }
+      }
     } catch (err) {
-      console.error("Error verifying idToken for custom claims:", err);
+      console.error("[LOGIN] Error verifying idToken for custom claims:", err);
     }
 
     // Get cookie store and set cookie. `await cookies()` ensures we have the store with `.set`.
