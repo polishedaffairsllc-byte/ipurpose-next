@@ -45,6 +45,9 @@ export default function LoginPage() {
       const data = await res.json().catch(() => ({}));
       console.log("✅ API response data:", data);
 
+      // Wait a brief moment for cookies to be processed by the browser
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       // Redirect to dashboard
       console.log("✅ Redirecting to dashboard...");
       router.push("/dashboard");

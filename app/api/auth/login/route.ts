@@ -91,7 +91,9 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json({ success: true, isFounder }, { status: 200 });
+    console.log("[LOGIN] Session cookie and founder cookie set successfully");
+    const response = NextResponse.json({ success: true, isFounder }, { status: 200 });
+    return response;
   } catch (error: any) {
     console.error("API Error creating session:", error);
     const status = error?.code === "auth/argument-error" ? 400 : 500;
