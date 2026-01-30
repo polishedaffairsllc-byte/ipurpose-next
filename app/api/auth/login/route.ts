@@ -44,6 +44,16 @@ export async function POST(req: Request) {
     // Create session cookie using auth().createSessionCookie()
     const sessionCookie = await firebaseAdmin.auth().createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
 
+    // Verify the idToken to extract custom claims and check for founder status
+    let isFounder = false;
+    try {
+      const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
+      isFounder = decoded.customClaims?.isFounder === true || decoded.customClaims?.role === 'founder';
+      console.log(`User ${decoded.email} founder status: ${isFounder}`);
+    } catch (err) {
+      console.error("Error verifying idToken for custom claims:", err);
+    }
+
     // Get cookie store and set cookie. `await cookies()` ensures we have the store with `.set`.
     const cookieStore = await cookies();
     cookieStore.set({
@@ -56,7 +66,19 @@ export async function POST(req: Request) {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    // Set founder cookie if user is a founder (non-httpOnly so middleware can read it)
+    if (isFounder) {
+      cookieStore.set({
+        name: "x-founder",
+        value: "true",
+        maxAge: Math.floor(SESSION_EXPIRES_IN / 1000),
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      });
+    }
+
+    return NextResponse.json({ success: true, isFounder }, { status: 200 });
   } catch (error: any) {
     console.error("API Error creating session:", error);
     const status = error?.code === "auth/argument-error" ? 400 : 500;

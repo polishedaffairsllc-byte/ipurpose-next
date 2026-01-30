@@ -97,6 +97,7 @@ function getTierFromRequest(request: NextRequest): EntitlementTier {
 
 export async function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('FirebaseSession');
+  const founderCookie = request.cookies.get('x-founder')?.value === 'true'; // Simple founder flag
   const path = request.nextUrl.pathname;
   const userAgent = request.headers.get('user-agent') || '';
   
@@ -126,6 +127,15 @@ export async function middleware(request: NextRequest) {
     // If the user is logged in, but tries to access /login or /signup, redirect to dashboard
     if (path.startsWith('/login') || path.startsWith('/signup')) {
       return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+
+    // FOUNDER BYPASS: If user is a founder, skip all entitlement gating
+    if (founderCookie) {
+      const response = NextResponse.next();
+      response.headers.set('x-pathname', path);
+      response.headers.set('x-user-tier', 'DEEPENING');
+      response.headers.set('x-founder', 'true');
+      return response;
     }
 
     // Allow Integration page to render for authenticated users even if tier is insufficient.
