@@ -1,15 +1,10 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 /**
  * Login route: accepts an idToken from the client, exchanges it for a
  * Firebase session cookie via the Admin SDK, and sets an HttpOnly cookie.
- *
- * Fixes applied:
- * - Use a tolerant `any`-based adminModule accessor to avoid TypeScript errors
- *   when the firebase admin initializer exports different names.
- * - `await cookies()` to ensure we get the cookie store object with `.set`.
- * - Ensure cookie has SameSite=None; Secure; HttpOnly attributes.
  */
 
 const SESSION_EXPIRES_IN = 5 * 24 * 60 * 60 * 1000; // 5 days in ms
@@ -18,23 +13,17 @@ export async function POST(req: Request) {
   try {
     const { idToken } = await req.json();
     if (!idToken) {
+      console.error("[LOGIN] Missing idToken");
       return NextResponse.json({ success: false, error: "missing-idToken" }, { status: 400 });
     }
+
+    console.log("[LOGIN] idToken received, length:", idToken.length);
 
     // Import the firebaseAdmin instance
     const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     
-    // Debug logs to diagnose the issue
-    console.log("firebaseAdmin:", !!firebaseAdmin);
-    console.log("admin.auth exists:", typeof firebaseAdmin.auth === "function");
-    try {
-      console.log("createSessionCookie:", typeof firebaseAdmin.auth().createSessionCookie);
-    } catch (err) {
-      console.error("admin.auth() threw:", err);
-    }
-    
     if (!firebaseAdmin || !firebaseAdmin.auth) {
-      console.error("Firebase admin not properly initialized");
+      console.error("[LOGIN] Firebase admin not properly initialized");
       return NextResponse.json(
         { success: false, error: "Server Firebase Admin not configured." },
         { status: 500 }
@@ -42,7 +31,9 @@ export async function POST(req: Request) {
     }
 
     // Create session cookie using auth().createSessionCookie()
+    console.log("[LOGIN] Creating session cookie...");
     const sessionCookie = await firebaseAdmin.auth().createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
+    console.log("[LOGIN] Session cookie created, length:", sessionCookie.length);
 
     // Verify the idToken to extract custom claims and check for founder status
     let isFounder = false;
@@ -51,55 +42,52 @@ export async function POST(req: Request) {
       isFounder = decoded.customClaims?.isFounder === true || decoded.customClaims?.role === 'founder';
       console.log(`[LOGIN] User ${decoded.email} UID ${decoded.uid}`);
       console.log(`[LOGIN] ID Token Custom Claims:`, decoded.customClaims);
-      console.log(`[LOGIN] Founder status: ${isFounder}`);
+      console.log(`[LOGIN] Founder status from token: ${isFounder}`);
       
       // Also check Firestore for founder status as a fallback
       const userDoc = await firebaseAdmin.firestore().collection('users').doc(decoded.uid).get();
       if (userDoc.exists) {
         const firestoreIsFounder = userDoc.data()?.isFounder || userDoc.data()?.role === 'founder';
         console.log(`[LOGIN] Firestore founder status: ${firestoreIsFounder}`);
-        console.log(`[LOGIN] Firestore data:`, userDoc.data());
-        if (firestoreIsFounder) {
+        if (firestoreIsFounder && !isFounder) {
           isFounder = true;
+          console.log("[LOGIN] Using Firestore founder status");
         }
       }
     } catch (err) {
       console.error("[LOGIN] Error verifying idToken for custom claims:", err);
     }
 
-    // Get cookie store and set cookie. `await cookies()` ensures we have the store with `.set`.
-    const cookieStore = await cookies();
-    
-    console.log("[LOGIN] Setting FirebaseSession cookie...");
-    cookieStore.set({
-      name: "FirebaseSession",
-      value: sessionCookie,
+    // Create response and set cookies via Set-Cookie headers
+    const response = NextResponse.json(
+      { success: true, isFounder, message: "Login successful" },
+      { status: 200 }
+    );
+
+    // Set the FirebaseSession cookie
+    const cookieOptions: Partial<ResponseCookie> = {
       maxAge: Math.floor(SESSION_EXPIRES_IN / 1000),
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    });
+      sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as "strict" | "lax" | "none",
+    };
 
-    // Set founder cookie if user is a founder (non-httpOnly so middleware can read it)
+    console.log("[LOGIN] Setting FirebaseSession cookie with options:", { ...cookieOptions, value: "***" });
+    response.cookies.set("FirebaseSession", sessionCookie, cookieOptions);
+
+    // Set founder cookie if applicable
     if (isFounder) {
-      console.log("[LOGIN] Setting x-founder cookie...");
-      cookieStore.set({
-        name: "x-founder",
-        value: "true",
+      console.log("[LOGIN] Setting x-founder cookie");
+      response.cookies.set("x-founder", "true", {
         maxAge: Math.floor(SESSION_EXPIRES_IN / 1000),
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as "strict" | "lax" | "none",
       });
     }
 
-    console.log("[LOGIN] All cookies set successfully");
-    const response = NextResponse.json({ success: true, isFounder, message: "Login successful" }, { status: 200 });
-    
-    // Explicitly log the response headers
-    console.log("[LOGIN] Response headers:", Object.fromEntries(response.headers.entries()));
-    
+    console.log("[LOGIN] Response Set-Cookie headers:", response.headers.getSetCookie());
     return response;
   } catch (error: any) {
     console.error("API Error creating session:", error);
