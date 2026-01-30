@@ -1,6 +1,4 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 /**
  * Login route: accepts an idToken from the client, exchanges it for a
@@ -58,34 +56,55 @@ export async function POST(req: Request) {
       console.error("[LOGIN] Error verifying idToken for custom claims:", err);
     }
 
-    // Create response and set cookies via Set-Cookie headers
-    const response = NextResponse.json(
-      { success: true, isFounder, message: "Login successful" },
-      { status: 200 }
-    );
+    // Build Set-Cookie headers manually to ensure they reach the client
+    const cookies: string[] = [];
+    const maxAgeSeconds = Math.floor(SESSION_EXPIRES_IN / 1000);
+    const secure = process.env.NODE_ENV === "production";
+    const sameSite = secure ? "None" : "Lax";
 
-    // Set the FirebaseSession cookie
-    const cookieOptions: Partial<ResponseCookie> = {
-      maxAge: Math.floor(SESSION_EXPIRES_IN / 1000),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as "strict" | "lax" | "none",
+    // Helper to serialize cookies
+    const serializeCookie = (name: string, value: string, options: { httpOnly?: boolean; secure?: boolean; path?: string; sameSite?: "None" | "Lax" | "Strict"; maxAge?: number; }) => {
+      const parts = [
+        `${name}=${value}`,
+        options.path ? `Path=${options.path}` : "",
+        options.httpOnly ? "HttpOnly" : "",
+        options.secure ? "Secure" : "",
+        options.sameSite ? `SameSite=${options.sameSite}` : "",
+        options.maxAge ? `Max-Age=${options.maxAge}` : "",
+      ].filter(Boolean);
+      return parts.join("; ");
     };
 
-    console.log("[LOGIN] Setting FirebaseSession cookie with options:", { ...cookieOptions, value: "***" });
-    response.cookies.set("FirebaseSession", sessionCookie, cookieOptions);
-
-    // Set founder cookie if applicable
-    if (isFounder) {
-      console.log("[LOGIN] Setting x-founder cookie");
-      response.cookies.set("x-founder", "true", {
-        maxAge: Math.floor(SESSION_EXPIRES_IN / 1000),
-        secure: process.env.NODE_ENV === "production",
+    cookies.push(
+      serializeCookie("FirebaseSession", encodeURIComponent(sessionCookie), {
+        httpOnly: true,
+        secure,
         path: "/",
-        sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as "strict" | "lax" | "none",
-      });
+        sameSite,
+        maxAge: maxAgeSeconds,
+      })
+    );
+
+    if (isFounder) {
+      cookies.push(
+        serializeCookie("x-founder", "true", {
+          secure,
+          path: "/",
+          sameSite,
+          maxAge: maxAgeSeconds,
+        })
+      );
     }
+
+    const response = NextResponse.json(
+      { success: true, isFounder, message: "Login successful" },
+      {
+        status: 200,
+        headers: {
+          "Set-Cookie": cookies,
+        },
+      }
+    );
 
     console.log("[LOGIN] Response Set-Cookie headers:", response.headers.getSetCookie());
     return response;
