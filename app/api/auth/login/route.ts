@@ -60,62 +60,40 @@ export async function POST(req: Request) {
       console.error("[LOGIN] Error verifying idToken for custom claims:", err);
     }
 
-    const response = NextResponse.json({ success: true, isFounder, message: "Login successful" }, { status: 200 });
-
     const maxAgeSeconds = Math.floor(SESSION_EXPIRES_IN / 1000);
     const secure = process.env.NODE_ENV === "production";
-    const sameSite = secure ? "none" : "lax";
+    const sameSite = secure ? "None" : "Lax"; // Capitalization required for browsers
 
-    const setCookieOpts = {
-      maxAge: maxAgeSeconds,
-      path: "/",
-      httpOnly: true,
-      secure,
-      sameSite,
-    } as const;
+    // Manually serialize cookies to avoid any framework bugs
+    const cookies: string[] = [];
 
-    console.log("[LOGIN] Setting FirebaseSession cookie via response.cookies.set");
-    response.cookies.set("FirebaseSession", sessionCookie, setCookieOpts);
+    cookies.push(
+      `FirebaseSession=${encodeURIComponent(sessionCookie)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}; HttpOnly`
+    );
 
     // Dev helper cookie (non-HttpOnly) to unblock local testing if HttpOnly is dropped
     if (!secure) {
-      response.cookies.set("FirebaseSessionDev", sessionCookie, {
-        maxAge: maxAgeSeconds,
-        path: "/",
-        secure,
-        sameSite,
-      });
-    }
-
-    if (isFounder) {
-      console.log("[LOGIN] Setting x-founder cookie via response.cookies.set");
-      response.cookies.set("x-founder", "true", {
-        maxAge: maxAgeSeconds,
-        path: "/",
-        secure,
-        sameSite,
-      });
-    }
-
-    // Also append Set-Cookie headers manually as a fallback for dev/turbopack
-    response.headers.append(
-      "Set-Cookie",
-      `FirebaseSession=${encodeURIComponent(sessionCookie)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}; HttpOnly`
-    );
-    if (!secure) {
-      response.headers.append(
-        "Set-Cookie",
+      cookies.push(
         `FirebaseSessionDev=${encodeURIComponent(sessionCookie)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
       );
     }
+
     if (isFounder) {
-      response.headers.append(
-        "Set-Cookie",
+      cookies.push(
         `x-founder=true; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
       );
     }
 
-    console.log("[LOGIN] Response Set-Cookie headers:", response.headers.getSetCookie());
+    const response = new Response(JSON.stringify({ success: true, isFounder, message: "Login successful" }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+        "Set-Cookie": cookies,
+      },
+    });
+
+    console.log("[LOGIN] Response Set-Cookie headers:", cookies);
     return response;
   } catch (error: any) {
     console.error("API Error creating session:", error);
