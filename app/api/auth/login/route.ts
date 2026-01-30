@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+// Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
+export const runtime = "nodejs";
+
 /**
  * Login route: accepts an idToken from the client, exchanges it for a
  * Firebase session cookie via the Admin SDK, and sets an HttpOnly cookie.
@@ -56,55 +59,30 @@ export async function POST(req: Request) {
       console.error("[LOGIN] Error verifying idToken for custom claims:", err);
     }
 
-    // Build Set-Cookie headers manually to ensure they reach the client
-    const cookies: string[] = [];
+    const response = NextResponse.json({ success: true, isFounder, message: "Login successful" }, { status: 200 });
+
     const maxAgeSeconds = Math.floor(SESSION_EXPIRES_IN / 1000);
     const secure = process.env.NODE_ENV === "production";
-    const sameSite = secure ? "None" : "Lax";
+    const sameSite = secure ? "none" : "lax";
 
-    // Helper to serialize cookies
-    const serializeCookie = (name: string, value: string, options: { httpOnly?: boolean; secure?: boolean; path?: string; sameSite?: "None" | "Lax" | "Strict"; maxAge?: number; }) => {
-      const parts = [
-        `${name}=${value}`,
-        options.path ? `Path=${options.path}` : "",
-        options.httpOnly ? "HttpOnly" : "",
-        options.secure ? "Secure" : "",
-        options.sameSite ? `SameSite=${options.sameSite}` : "",
-        options.maxAge ? `Max-Age=${options.maxAge}` : "",
-      ].filter(Boolean);
-      return parts.join("; ");
-    };
+    console.log("[LOGIN] Setting FirebaseSession cookie via response.cookies.set");
+    response.cookies.set("FirebaseSession", sessionCookie, {
+      maxAge: maxAgeSeconds,
+      httpOnly: true,
+      secure,
+      path: "/",
+      sameSite,
+    });
 
-    cookies.push(
-      serializeCookie("FirebaseSession", encodeURIComponent(sessionCookie), {
-        httpOnly: true,
+    if (isFounder) {
+      console.log("[LOGIN] Setting x-founder cookie via response.cookies.set");
+      response.cookies.set("x-founder", "true", {
+        maxAge: maxAgeSeconds,
         secure,
         path: "/",
         sameSite,
-        maxAge: maxAgeSeconds,
-      })
-    );
-
-    if (isFounder) {
-      cookies.push(
-        serializeCookie("x-founder", "true", {
-          secure,
-          path: "/",
-          sameSite,
-          maxAge: maxAgeSeconds,
-        })
-      );
+      });
     }
-
-    const response = NextResponse.json(
-      { success: true, isFounder, message: "Login successful" },
-      {
-        status: 200,
-        headers: {
-          "Set-Cookie": cookies,
-        },
-      }
-    );
 
     console.log("[LOGIN] Response Set-Cookie headers:", response.headers.getSetCookie());
     return response;

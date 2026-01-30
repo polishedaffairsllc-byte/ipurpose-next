@@ -7,14 +7,15 @@ type TopNavProps = {
 };
 
 export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
-  const navLinks: { label: string; href: string; required: EntitlementTier }[] = [
-    { label: "Overview", href: "/dashboard", required: "FREE" },
-    { label: "Soul", href: "/soul", required: "DEEPENING" },
-    { label: "Systems", href: "/systems", required: "DEEPENING" },
-    { label: "AI Coach", href: "/ai", required: "BASIC_PAID" },
-    { label: "Insights", href: "/insights", required: "DEEPENING" },
-    { label: "Labs", href: "/labs", required: "FREE" },
-    { label: "Community", href: "/community", required: "BASIC_PAID" },
+  // Show full navigation; gating happens at route level
+  const navLinks: { label: string; href: string }[] = [
+    { label: "Overview", href: "/dashboard" },
+    { label: "Soul", href: "/soul" },
+    { label: "Systems", href: "/systems" },
+    { label: "AI Coach", href: "/ai" },
+    { label: "Insights", href: "/insights" },
+    { label: "Labs", href: "/labs" },
+    { label: "Community", href: "/community" },
   ];
 
   return (
@@ -25,13 +26,11 @@ export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
         </Link>
 
         <nav className="flex items-center gap-4 text-sm text-warmCharcoal/80">
-          {navLinks
-            .filter((link) => canAccessTier(userTier, link.required))
-            .map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-warmCharcoal">
-                {link.label}
-              </Link>
-            ))}
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="hover:text-warmCharcoal">
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-3">
