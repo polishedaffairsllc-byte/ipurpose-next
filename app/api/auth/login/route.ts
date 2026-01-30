@@ -69,6 +69,8 @@ export async function POST(req: Request) {
 
     // Get cookie store and set cookie. `await cookies()` ensures we have the store with `.set`.
     const cookieStore = await cookies();
+    
+    console.log("[LOGIN] Setting FirebaseSession cookie...");
     cookieStore.set({
       name: "FirebaseSession",
       value: sessionCookie,
@@ -81,6 +83,7 @@ export async function POST(req: Request) {
 
     // Set founder cookie if user is a founder (non-httpOnly so middleware can read it)
     if (isFounder) {
+      console.log("[LOGIN] Setting x-founder cookie...");
       cookieStore.set({
         name: "x-founder",
         value: "true",
@@ -91,8 +94,12 @@ export async function POST(req: Request) {
       });
     }
 
-    console.log("[LOGIN] Session cookie and founder cookie set successfully");
-    const response = NextResponse.json({ success: true, isFounder }, { status: 200 });
+    console.log("[LOGIN] All cookies set successfully");
+    const response = NextResponse.json({ success: true, isFounder, message: "Login successful" }, { status: 200 });
+    
+    // Explicitly log the response headers
+    console.log("[LOGIN] Response headers:", Object.fromEntries(response.headers.entries()));
+    
     return response;
   } catch (error: any) {
     console.error("API Error creating session:", error);
