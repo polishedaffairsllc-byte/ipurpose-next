@@ -324,12 +324,14 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
       userDoc.data()?.workflowBuilder?.createdAt
     );
     const workflowFlag = Boolean(userDoc.data()?.systems?.workflowBuilderHasSystem);
+    const workflowSnapshot = await db.collection("workflowSystems").where("uid", "==", decodedClaims.uid).limit(1).get();
+    const hasWorkflowRecord = !workflowSnapshot.empty;
     // Unlock when at least one workflow/system exists or the fallback flag is set on the user profile.
-    const isUnlocked = hasWorkflow || workflowFlag;
+    const isUnlocked = hasWorkflow || workflowFlag || hasWorkflowRecord;
 
     if (slug === "workflows") {
-      const buildHref = "/systems/workflows/build"; // TODO: wire to the live 30-minute builder flow
-      const deepenHref = "/systems/workflows/deepen"; // TODO: wire to deepen/scale experience when available
+      const buildHref = "/systems/workflow-builder/build";
+      const deepenHref = "/systems/workflow-builder/deepen";
       return (
         <div className="bg-neutral-50 min-h-screen">
           <div className="relative h-[34vh] flex items-center justify-center overflow-hidden mb-10">
