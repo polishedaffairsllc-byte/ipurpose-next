@@ -27,6 +27,8 @@ interface GPTChatProps {
   maxTokens?: number;
   className?: string;
   hideUsageMeta?: boolean;
+  hideHeader?: boolean;
+  hideEmptyState?: boolean;
 }
 
 export default function GPTChat({
@@ -38,6 +40,8 @@ export default function GPTChat({
   maxTokens,
   className = '',
   hideUsageMeta = false,
+  hideHeader = false,
+  hideEmptyState = false,
 }: GPTChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -156,33 +160,35 @@ export default function GPTChat({
   return (
     <div className={`flex flex-col h-full bg-white rounded-lg shadow-lg ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-          {systemContext && (
-            <p className="text-sm text-gray-500 mt-1">{systemContext}</p>
-          )}
-        </div>
-        {!hideUsageMeta && (
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-600">
-              <span className="font-semibold">{totalTokensUsed}</span> tokens used
-            </div>
-            {messages.length > 0 && (
-              <button
-                onClick={clearChat}
-                className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                Clear
-              </button>
+      {!hideHeader && (
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+            {systemContext && (
+              <p className="text-sm text-gray-500 mt-1">{systemContext}</p>
             )}
           </div>
-        )}
-      </div>
+          {!hideUsageMeta && (
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-gray-600">
+                <span className="font-semibold">{totalTokensUsed}</span> tokens used
+              </div>
+              {messages.length > 0 && (
+                <button
+                  onClick={clearChat}
+                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-        {messages.length === 0 && !isStreaming && (
+        {messages.length === 0 && !isStreaming && !hideEmptyState && (
           <div className="flex items-center justify-center h-full text-gray-400">
             <div className="text-center">
               <p className="text-lg mb-2">Start a conversation</p>

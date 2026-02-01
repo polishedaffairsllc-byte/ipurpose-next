@@ -468,6 +468,8 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
                   "Suggest automation opportunities.",
                 ]}
                 hideUsageMeta
+                hideChatHeader
+                hideChatEmpty
               />
             </div>
           </div>

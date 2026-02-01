@@ -9,9 +9,11 @@ type SystemAIPanelProps = {
   placeholder?: string;
   examples?: string[];
   hideUsageMeta?: boolean;
+  hideChatHeader?: boolean;
+  hideChatEmpty?: boolean;
 };
 
-export default function SystemAIPanel({ systemName, context, subtitle, placeholder, examples, hideUsageMeta }: SystemAIPanelProps) {
+export default function SystemAIPanel({ systemName, context, subtitle, placeholder, examples, hideUsageMeta, hideChatHeader, hideChatEmpty }: SystemAIPanelProps) {
   const promptPlaceholder = placeholder ?? `Ask anything about your ${systemName.toLowerCase()} system`;
   const systemContext = context ?? `Building and refining the ${systemName} system`;
   const promptExamples = examples ?? [
@@ -25,10 +27,7 @@ export default function SystemAIPanel({ systemName, context, subtitle, placehold
   return (
     <div className="sticky top-6 space-y-3 rounded-2xl border border-lavenderViolet/20 bg-white/90 p-4 shadow-soft-md">
       <div className="space-y-2">
-        <div>
-          <p className="text-xs font-semibold tracking-wide text-indigoDeep/70 uppercase">Ask AI About This System</p>
-          <h3 className="text-lg font-marcellus text-warmCharcoal">{systemName}</h3>
-        </div>
+        <p className="text-xs font-semibold tracking-wide text-indigoDeep/70 uppercase">Ask AI About This System</p>
         <p className="text-sm text-warmCharcoal/70">{subhead}</p>
         <ul className="space-y-1 text-xs text-warmCharcoal/70">
           {promptExamples.map((item) => (
@@ -42,12 +41,14 @@ export default function SystemAIPanel({ systemName, context, subtitle, placehold
       <div className="h-[460px]">
         <GPTChat
           domain="systems"
-          title="Systems Builder"
+          title="Workflow Assistant"
           placeholder={promptPlaceholder}
           systemContext={systemContext}
           temperature={0.5}
           className="h-full"
           hideUsageMeta={hideUsageMeta}
+          hideHeader={hideChatHeader}
+          hideEmptyState={hideChatEmpty}
         />
       </div>
     </div>
