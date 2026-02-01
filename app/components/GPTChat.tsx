@@ -26,6 +26,7 @@ interface GPTChatProps {
   temperature?: number;
   maxTokens?: number;
   className?: string;
+  hideUsageMeta?: boolean;
 }
 
 export default function GPTChat({
@@ -36,6 +37,7 @@ export default function GPTChat({
   temperature,
   maxTokens,
   className = '',
+  hideUsageMeta = false,
 }: GPTChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -161,19 +163,21 @@ export default function GPTChat({
             <p className="text-sm text-gray-500 mt-1">{systemContext}</p>
           )}
         </div>
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-gray-600">
-            <span className="font-semibold">{totalTokensUsed}</span> tokens used
+        {!hideUsageMeta && (
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-gray-600">
+              <span className="font-semibold">{totalTokensUsed}</span> tokens used
+            </div>
+            {messages.length > 0 && (
+              <button
+                onClick={clearChat}
+                className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                Clear
+              </button>
+            )}
           </div>
-          {messages.length > 0 && (
-            <button
-              onClick={clearChat}
-              className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
-            >
-              Clear
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Messages */}
@@ -200,19 +204,21 @@ export default function GPTChat({
               }`}
             >
               <div className="whitespace-pre-wrap break-words">{message.content}</div>
-              <div
-                className={`text-xs mt-2 ${
-                  message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
-                }`}
-              >
-                {message.timestamp.toLocaleTimeString()}
-                {message.tokensUsed && (
-                  <span className="ml-2">• {message.tokensUsed} tokens</span>
-                )}
-                {message.model && (
-                  <span className="ml-2">• {message.model}</span>
-                )}
-              </div>
+              {!hideUsageMeta && (
+                <div
+                  className={`text-xs mt-2 ${
+                    message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
+                  }`}
+                >
+                  {message.timestamp.toLocaleTimeString()}
+                  {message.tokensUsed && (
+                    <span className="ml-2">• {message.tokensUsed} tokens</span>
+                  )}
+                  {message.model && (
+                    <span className="ml-2">• {message.model}</span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         ))}
