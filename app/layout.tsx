@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AuthContextProvider } from './context/AuthContext';
 import BackgroundLayer from "./components/BackgroundLayer";
 import InternalNavbar from "./components/InternalNavbar";
+import VideoBackground from "./components/VideoBackground";
 
 export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
@@ -30,6 +31,9 @@ export default function RootLayout({
         ` }} />
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal">
+        <div className="fixed inset-0 -z-40">
+          <VideoBackground src="/videos/water-reflection.mp4" />
+        </div>
         <BackgroundLayer />
         <AuthContextProvider>
           <InternalNavbar />

@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
-import TopNav from "@/app/components/TopNav";
 import { getTierFromUser, type EntitlementTier } from "@/app/lib/auth/entitlements";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -33,7 +32,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <ErrorBoundary>
       <div className="flex flex-col h-screen bg-dashboard overflow-hidden">
-        <TopNav isAuthed userTier={userTier} />
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Scrollable Content */}

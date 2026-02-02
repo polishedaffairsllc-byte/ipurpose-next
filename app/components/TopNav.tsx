@@ -12,22 +12,25 @@ export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
     { label: "Overview", href: "/dashboard" },
     { label: "Soul", href: "/soul" },
     { label: "Systems", href: "/systems" },
-    { label: "AI Coach", href: "/ai" },
+    { label: "Compass", href: "/ai" },
     { label: "Insights", href: "/insights" },
     { label: "Labs", href: "/labs" },
     { label: "Community", href: "/community" },
   ];
 
   return (
-    <header className="w-full border-b border-ip-border bg-white/80 backdrop-blur-sm">
+    <header
+      className="w-full border-b border-white/10 text-white"
+      style={{ backgroundColor: '#0f1017' }}
+    >
       <div className="container max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href={isAuthed ? "/dashboard" : "/"} className="text-xl font-semibold text-warmCharcoal">
+        <Link href={isAuthed ? "/dashboard" : "/"} className="text-xl font-semibold text-white">
           iPurpose
         </Link>
 
-        <nav className="flex items-center gap-4 text-sm text-warmCharcoal/80">
+        <nav className="flex items-center gap-4 text-sm text-white/75">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-warmCharcoal">
+            <Link key={link.href} href={link.href} className="hover:text-white">
               {link.label}
             </Link>
           ))}
@@ -36,30 +39,30 @@ export default function TopNav({ isAuthed, userTier = "FREE" }: TopNavProps) {
         <div className="flex items-center gap-3">
           {!isAuthed ? (
             <>
-              <Link href="/login" className="text-sm text-warmCharcoal/70 hover:text-warmCharcoal">
+              <Link href="/login" className="text-sm text-white/75 hover:text-white">
                 Login
               </Link>
               <Link
                 href="/signup"
-                className="px-3 py-1.5 rounded-full bg-ip-accent text-white text-sm"
+                className="px-3 py-1.5 rounded-full bg-lavenderViolet text-[#0f1017] text-sm font-semibold hover:brightness-110"
               >
                 Signup
               </Link>
             </>
           ) : (
             <details className="relative">
-              <summary className="cursor-pointer list-none px-3 py-1.5 rounded-full border border-ip-border text-sm">
+              <summary className="cursor-pointer list-none px-3 py-1.5 rounded-full border border-white/15 text-sm text-white/85">
                 Account
               </summary>
-              <div className="absolute right-0 mt-2 w-40 rounded-xl border border-ip-border bg-white shadow-sm p-2 text-sm">
-                <Link href="/settings" className="block px-3 py-2 rounded-lg hover:bg-ip-surface">
+              <div className="absolute right-0 mt-2 w-40 rounded-xl border border-white/10 bg-[#111324] shadow-lg p-2 text-sm text-white/80">
+                <Link href="/settings" className="block px-3 py-2 rounded-lg hover:bg-white/5">
                   Settings
                 </Link>
-                <Link href="/profile" className="block px-3 py-2 rounded-lg hover:bg-ip-surface">
+                <Link href="/profile" className="block px-3 py-2 rounded-lg hover:bg-white/5">
                   Profile
                 </Link>
                 <form action="/api/auth/logout" method="post">
-                  <button type="submit" className="w-full text-left px-3 py-2 rounded-lg hover:bg-ip-surface">
+                  <button type="submit" className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5">
                     Logout
                   </button>
                 </form>

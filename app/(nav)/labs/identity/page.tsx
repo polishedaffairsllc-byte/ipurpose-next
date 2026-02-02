@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/app/components/Button";
 
 export default function IdentityLabPage() {
+  const router = useRouter();
   const [selfPerceptionMap, setSelfPerceptionMap] = useState("");
   const [selfConceptMap, setSelfConceptMap] = useState("");
   const [selfNarrativeMap, setSelfNarrativeMap] = useState("");
@@ -78,6 +80,8 @@ export default function IdentityLabPage() {
         throw new Error(textRes || "Failed to mark complete");
       }
       setStatus("Marked complete");
+      // Navigate to the next lab (Meaning Lab)
+      router.push("/labs/meaning");
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Completion failed");
     }

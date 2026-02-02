@@ -8,10 +8,9 @@ const POST_COOLDOWN_MS = 20_000;
 
 const parseCursor = (cursor: string | null) => {
   if (!cursor) return null;
-  const [millisPart, idPart] = cursor.split("_");
-  const millis = Number(millisPart);
-  if (!Number.isFinite(millis) || !idPart) return null;
-  return { millis, id: idPart };
+  const millis = Number(cursor);
+  if (!Number.isFinite(millis)) return null;
+  return millis;
 };
 
 export async function GET(request: Request) {
@@ -26,7 +25,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const spaceKey = (searchParams.get("spaceKey") ?? "general").slice(0, 50);
     const limit = Math.max(1, Math.min(50, Number(searchParams.get("limit") ?? 20)));
-    const cursor = parseCursor(searchParams.get("cursor"));
+    const cursorMillis = parseCursor(searchParams.get("cursor"));
 
     const db = firebaseAdmin.firestore();
     let query = db
@@ -34,11 +33,10 @@ export async function GET(request: Request) {
       .where("spaceKey", "==", spaceKey)
       .where("isDeleted", "==", false)
       .orderBy("createdAt", "desc")
-      .orderBy(firebaseAdmin.firestore.FieldPath.documentId(), "desc")
       .limit(limit);
 
-    if (cursor) {
-      query = query.startAfter(firebaseAdmin.firestore.Timestamp.fromMillis(cursor.millis), cursor.id);
+    if (cursorMillis) {
+      query = query.startAfter(firebaseAdmin.firestore.Timestamp.fromMillis(cursorMillis));
     }
 
     const snapshot = await query.get();
@@ -57,14 +55,18 @@ export async function GET(request: Request) {
 
     const lastDoc = snapshot.docs[snapshot.docs.length - 1];
     const lastCreatedAt = lastDoc?.data()?.createdAt?.toMillis?.();
-    const nextCursor = lastCreatedAt ? `${lastCreatedAt}_${lastDoc.id}` : null;
+    const nextCursor = lastCreatedAt ? `${lastCreatedAt}` : null;
 
     return ok({ items, nextCursor });
   } catch (error) {
     const status = (error as { status?: number })?.status ?? 500;
     if (status === 401) return fail("UNAUTHENTICATED", "Log in to continue.", 401);
-    if (status === 403) return fail("FORBIDDEN", "You don’t have access to this space.", 403);
+    if (status === 403) return fail("FORBIDDEN", "You don't have access to this space.", 403);
     console.error("/api/community/posts GET error:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return fail("SERVER_ERROR", "Failed to load posts.", 500);
   }
 }

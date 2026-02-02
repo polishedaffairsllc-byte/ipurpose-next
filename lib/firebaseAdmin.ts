@@ -4,13 +4,28 @@ function parseServiceAccount(): any | undefined {
   const raw =
     process.env.FIREBASE_SERVICE_ACCOUNT ||
     process.env.FIREBASE_ADMIN_CREDENTIALS ||
+    process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
     "";
   if (!raw) return undefined;
+
+  const tryParse = (value: string) => {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return undefined;
+    }
+  };
+
+  const direct = tryParse(raw);
+  if (direct) return direct;
+
   try {
-    return JSON.parse(raw);
+    const decoded = Buffer.from(raw, "base64").toString("utf8");
+    const parsed = JSON.parse(decoded);
+    return parsed;
   } catch {
     throw new Error(
-      "FIREBASE_SERVICE_ACCOUNT is set but is not valid JSON. Check your env variable."
+      "FIREBASE service account env is set but not valid JSON/base64. Supply the raw JSON string or base64 encoded JSON."
     );
   }
 }

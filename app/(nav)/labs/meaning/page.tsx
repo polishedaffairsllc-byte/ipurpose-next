@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/app/components/Button";
 
 export default function MeaningLabPage() {
+  const router = useRouter();
   const [valueStructure, setValueStructure] = useState("");
   const [coherenceStructure, setCoherenceStructure] = useState("");
   const [directionStructure, setDirectionStructure] = useState("");
@@ -78,6 +80,8 @@ export default function MeaningLabPage() {
         throw new Error(textRes || "Failed to mark complete");
       }
       setStatus("Marked complete");
+      // Navigate to the next lab (Agency Lab)
+      router.push("/labs/agency");
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Completion failed");
     }

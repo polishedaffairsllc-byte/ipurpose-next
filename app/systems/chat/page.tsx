@@ -5,12 +5,14 @@
  * Interactive chat for building workflows, offers, and business systems
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import GPTChat from '../../components/GPTChat';
 
 export default function SystemsGPTPage() {
   const [selectedSystem, setSelectedSystem] = useState<string | null>(null);
   const [showChat, setShowChat] = useState(false);
+  const searchParams = useSearchParams();
 
   const systems = [
     {
@@ -38,6 +40,28 @@ export default function SystemsGPTPage() {
       color: 'bg-amber-100 border-amber-300 hover:bg-amber-200',
     },
   ];
+
+  const systemLabels: Record<string, string> = {
+    workflows: 'Workflows',
+    offers: 'Offers',
+    boundaries: 'Boundaries',
+    processes: 'Processes',
+    monetization: 'Monetization Mode',
+    calendar: 'Calendar Sync',
+    content: 'Content Engine',
+    email: 'Email Sequences',
+    brand: 'Brand Assets',
+  };
+
+  useEffect(() => {
+    const systemParam = searchParams.get('system');
+    if (!systemParam) return;
+
+    const normalized = systemParam.toLowerCase();
+    const mapped = systemLabels[normalized] ?? systemParam;
+    setSelectedSystem(mapped);
+    setShowChat(true);
+  }, [searchParams]);
 
   const handleSystemSelect = (system: string) => {
     setSelectedSystem(system);

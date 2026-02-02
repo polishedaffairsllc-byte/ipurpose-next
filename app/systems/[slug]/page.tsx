@@ -8,6 +8,7 @@ import SystemAIPanel from "../components/SystemAIPanel";
 import OfferArchitectureClient from "../components/OfferArchitectureClient";
 import MonetizationClient from "../components/MonetizationClient";
 import CalendarOperationalClient from "../components/CalendarOperationalClient";
+import MissingFirebaseConfig from "../components/MissingFirebaseConfig";
 import { getOfferState, listOffersWithSeed } from "@/lib/offer-architecture";
 
 interface SystemContent {
@@ -298,15 +299,50 @@ const SYSTEMS: Record<string, SystemContent> = {
   },
 };
 
+const hasFirebaseAdminCreds = Boolean(
+  process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
+  process.env.FIREBASE_SERVICE_ACCOUNT ||
+  process.env.FIREBASE_ADMIN_CREDENTIALS
+);
+
 export default async function SystemDetailPage({ params }: { params: Promise<{ slug?: string }> }) {
   const resolvedParams = await params; // Next.js 16 passes params as a Promise in dynamic routes
   const slug = resolvedParams?.slug?.toLowerCase();
   const system = slug ? SYSTEMS[slug] : undefined;
   if (!system) return redirect("/systems");
 
+  if (!hasFirebaseAdminCreds) {
+    return <MissingFirebaseConfig />;
+  }
+
   const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
-  if (!session) return redirect("/login");
+  if (!session) {
+    const devBypass = process.env.NODE_ENV !== "production" && slug === "calendar";
+    if (devBypass) {
+      return (
+        <div className="bg-neutral-50 min-h-screen py-12">
+          <div className="container max-w-6xl mx-auto px-6 space-y-6">
+            <div className="space-y-2 text-center">
+              <p className="text-xs font-semibold tracking-[0.3em] uppercase text-warmCharcoal/60">Dev Harness</p>
+              <h1 className="text-3xl font-marcellus text-warmCharcoal">Calendar Sync — Auth Bypassed</h1>
+              <p className="text-sm text-warmCharcoal/70">
+                Rendering `CalendarOperationalClient` without Firebase session so automated tests can verify step switching locally.
+              </p>
+            </div>
+            <Card className="p-6">
+              <SectionHeading level="h2">Operational Client</SectionHeading>
+              <p className="text-sm text-warmCharcoal/70 mb-4">
+                This dev-only surface mirrors the systems page and preserves all instrumentation (debug box, console logs, mount markers).
+              </p>
+              <CalendarOperationalClient />
+            </Card>
+          </div>
+        </div>
+      );
+    }
+    return redirect("/login");
+  }
 
   try {
     const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
@@ -486,7 +522,7 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
             <div className="absolute inset-0 bg-gradient-to-br from-lavenderViolet/15 via-white to-salmonPeach/10" />
             <div className="relative z-10 text-center px-4 max-w-4xl space-y-2">
               <p className="text-xs font-semibold tracking-[0.35em] text-indigoDeep/70 uppercase">Systems Module</p>
-              <h1 className="heading-hero text-warmCharcoal drop-shadow-2xl">Calendar Sync (Operational Mode)</h1>
+              <h1 className="heading-hero text-warmCharcoal drop-shadow-2xl">Calendar Sync</h1>
               <p className="text-lg md:text-xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">Set up and protect your calendar using proven systems — with optional AI assistance. Automated integrations coming later.</p>
               <p className="text-xs text-warmCharcoal/60">Google/Outlook API sync not enabled in v1. Focus on copy/paste templates that produce real outcomes.</p>
             </div>

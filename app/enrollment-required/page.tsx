@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 export default function EnrollmentRequiredPage() {
   const router = useRouter();
   const [attemptedRoute, setAttemptedRoute] = useState<string>('');
+  const [checkingOut, setCheckingOut] = useState<'pro' | 'premium' | null>(null);
 
   useEffect(() => {
     // Get the intended route from URL params or fallback from referrer
@@ -27,6 +28,35 @@ export default function EnrollmentRequiredPage() {
     const intended = params.get('next') || document.referrer || '/program';
     setAttemptedRoute(intended);
   }, []);
+
+  const handleCheckout = async (plan: 'pro' | 'premium') => {
+    setCheckingOut(plan);
+    try {
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: plan === 'pro' ? 'pro' : 'premium',
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error || 'Failed to create checkout session');
+      }
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err: any) {
+      console.error('Checkout error:', err);
+      alert(err.message || 'Failed to start checkout');
+      setCheckingOut(null);
+    }
+  };
 
   // Map route to required tier and description
   const getTierInfo = (route: string) => {
@@ -159,12 +189,13 @@ export default function EnrollmentRequiredPage() {
                 <span>Advanced tools (deepening tier)</span>
               </li>
             </ul>
-            <Link
-              href="/program?plan=pro"
-              className="w-full inline-block text-center bg-lavenderViolet text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-indigoDeep transition"
+            <button
+              onClick={() => handleCheckout('pro')}
+              className="w-full inline-block text-center bg-lavenderViolet text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-indigoDeep transition disabled:opacity-50"
+              disabled={checkingOut === 'pro'}
             >
-              Upgrade to Pro
-            </Link>
+              {checkingOut === 'pro' ? 'Starting Checkout...' : 'Upgrade to Pro'}
+            </button>
           </div>
 
           {/* Premium Tier */}
@@ -189,12 +220,13 @@ export default function EnrollmentRequiredPage() {
                 <span>1-on-1 guidance (coming soon)</span>
               </li>
             </ul>
-            <Link
-              href="/program?plan=premium"
-              className="w-full inline-block text-center bg-warmCharcoal text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-warmCharcoal/80 transition"
+            <button
+              onClick={() => handleCheckout('premium')}
+              className="w-full inline-block text-center bg-warmCharcoal text-white font-marcellus font-semibold py-2 px-4 rounded-lg mt-6 hover:bg-warmCharcoal/80 transition disabled:opacity-50"
+              disabled={checkingOut === 'premium'}
             >
-              Upgrade to Premium
-            </Link>
+              {checkingOut === 'premium' ? 'Starting Checkout...' : 'Upgrade to Premium'}
+            </button>
           </div>
         </div>
 

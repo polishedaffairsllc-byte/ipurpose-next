@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import VideoBackground from "@/app/components/VideoBackground";
 
 type Post = {
   id: string;
@@ -135,10 +136,16 @@ export default function CommunityPage() {
 
   return (
     <div className="container max-w-5xl mx-auto px-6 md:px-10 py-10">
-      <h1 className="text-4xl font-semibold text-warmCharcoal">Community</h1>
-      <p className="mt-3 text-sm text-warmCharcoal/70">
-        A calm space for reflection and dialogue. Speak from lived experience.
-      </p>
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b0c14] text-white mb-8 h-[320px]">
+        <VideoBackground src="/videos/water-reflection.mp4" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
+        <div className="relative px-6 md:px-10 py-10 space-y-3 h-full flex flex-col justify-end text-center">
+          <h1 className="heading-hero mb-3 text-white drop-shadow-2xl">Community</h1>
+          <p className="text-xl md:text-2xl text-white/85 font-marcellus drop-shadow-lg max-w-3xl mx-auto">
+            A calm space for reflection and dialogue. Speak from lived experience.
+          </p>
+        </div>
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {spaces.map((space) => (

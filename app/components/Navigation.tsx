@@ -12,7 +12,7 @@ export default function Navigation() {
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Soul', href: '/soul' },
     { label: 'Systems', href: '/systems' },
-    { label: 'AI Coach', href: '/ai' },
+    { label: 'Compass', href: '/ai' },
     { label: 'Insights', href: '/insights' },
     { label: 'Labs', href: '/labs' },
     { label: 'Community', href: '/community' },

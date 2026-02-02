@@ -37,16 +37,21 @@ export async function checkEntitlement(): Promise<EntitlementResult> {
 
     const userData = userDoc.data();
     
+    // Check if user is a founder - founders have all access
+    const isFounder = userData?.isFounder === true || userData?.role === "founder" || userData?.entitlementTier === "founder";
+    
     // Determine tier from user data
     let tier: EntitlementTier = 'FREE';
-    if (userData?.entitlementTier) {
+    if (isFounder) {
+      tier = 'DEEPENING'; // Founders get highest tier
+    } else if (userData?.entitlementTier) {
       tier = userData.entitlementTier as EntitlementTier;
     } else if (userData?.tier) {
       tier = userData.tier as EntitlementTier;
     }
 
-    // User is entitled if they have a paid tier
-    const isEntitled = tier !== 'FREE' && userData?.entitlement?.status === 'active';
+    // User is entitled if they have a paid tier or are a founder
+    const isEntitled = (tier !== 'FREE' && userData?.entitlement?.status === 'active') || isFounder;
 
     return { uid, tier, isEntitled };
   } catch (error) {

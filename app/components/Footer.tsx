@@ -50,6 +50,14 @@ export default function Footer() {
                   Clarity Check
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/support"
+                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
+                >
+                  Support
+                </Link>
+              </li>
             </ul>
           </div>
 

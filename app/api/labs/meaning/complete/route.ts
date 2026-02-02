@@ -50,6 +50,29 @@ export async function POST() {
     const completionSnap = await completionRef.get();
     const completedAt = completionSnap.data()?.completedAt?.toDate?.() ?? null;
 
+    // Update learning_path_progress to sync with Learning Path page
+    const [identityCompletion, meaningCompletion, agencyCompletion] = await db.getAll(
+      db.collection("lab_completion").doc(`${uid}_identity`),
+      db.collection("lab_completion").doc(`${uid}_meaning`),
+      db.collection("lab_completion").doc(`${uid}_agency`)
+    );
+
+    const completedSteps: string[] = [];
+    if (identityCompletion.exists) completedSteps.push("identity_lab");
+    if (meaningCompletion.exists) completedSteps.push("meaning_lab");
+    if (agencyCompletion.exists) completedSteps.push("agency_lab");
+
+    const percentComplete = Math.round((completedSteps.length / 6) * 100); // 6 total steps including other activities
+
+    await db.collection("learning_path_progress").doc(uid).set(
+      {
+        completedSteps,
+        percentComplete,
+        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
     return ok({ labKey: "meaning", completedAt });
   } catch (error) {
     const status = (error as { status?: number })?.status ?? 500;

@@ -61,10 +61,37 @@ const PRACTICES: Practice[] = [
       "Complete this sentence: 'I exist to...'",
       "Write 3-5 versions. They don't need to be perfect.",
       "Choose the one that makes your body relax.",
-      "Test it: Does this guide my decisions?"
+      "Test it gently: Does this guide my decisions?"
     ]
   }
 ];
+
+type CheckinStats = {
+  last7Count: number;
+  latestCheckin: {
+    alignmentScore?: number;
+    emotions?: string[];
+  } | null;
+};
+
+function getSuggestedPracticeId(checkin: CheckinStats['latestCheckin']) {
+  if (!checkin) return null;
+
+  const emotions = checkin.emotions || [];
+  const alignment = checkin.alignmentScore ?? 5;
+
+  // Mirror the same rules we surface in the check-in confirmation.
+  if (alignment <= 4 || emotions.includes('Tired') || emotions.includes('Anxious')) {
+    return 'evening-integration'; // Rest
+  }
+  if (alignment <= 6 || emotions.includes('Uncertain')) {
+    return 'morning-reflection'; // Structure
+  }
+  if (alignment >= 7 || emotions.includes('Inspired') || emotions.includes('Energized')) {
+    return 'purpose-articulation'; // Expression
+  }
+  return 'value-mapping'; // Reflection
+}
 
 async function getUserArchetype(userId: string) {
   try {
@@ -101,6 +128,49 @@ async function hasCheckedInToday(userId: string) {
   }
 }
 
+async function getCheckinStats(userId: string): Promise<CheckinStats> {
+  try {
+    const db = firebaseAdmin.firestore();
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
+    const last7Snapshot = await db
+      .collection("users")
+      .doc(userId)
+      .collection("checkIns")
+      .orderBy("createdAt", "desc")
+      .where("createdAt", ">=", sevenDaysAgo)
+      .get();
+
+    const latestSnapshot = await db
+      .collection("users")
+      .doc(userId)
+      .collection("checkIns")
+      .orderBy("createdAt", "desc")
+      .limit(20)
+      .get();
+
+    const latestDoc = latestSnapshot.docs.find((doc) => doc.data()?.type === "daily");
+    const latestData = latestDoc?.data();
+
+    const last7Count = last7Snapshot.docs.filter((doc) => doc.data()?.type === "daily").length;
+
+    return {
+      last7Count,
+      latestCheckin: latestDoc
+        ? {
+            alignmentScore: latestData?.alignmentScore ?? undefined,
+            emotions: latestData?.emotions ?? undefined
+          }
+        : null
+    };
+  } catch {
+    return { last7Count: 0, latestCheckin: null };
+  }
+}
+
 export default async function SoulPage() {
   const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
@@ -120,6 +190,8 @@ export default async function SoulPage() {
     
     const archetype = await getUserArchetype(userId);
     const hasCheckedIn = await hasCheckedInToday(userId);
+    const checkinStats = await getCheckinStats(userId);
+    const suggestedPracticeId = getSuggestedPracticeId(checkinStats.latestCheckin);
 
     return (
       <div className="relative">
@@ -140,21 +212,35 @@ export default async function SoulPage() {
 
         <div className="container max-w-6xl mx-auto px-6 md:px-10 py-6 md:py-8 space-y-10">
 
-        {/* Philosophy Card */}
-        <div className="ipurpose-glow-container mb-12">
+        <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 mb-6">
+          <Card accent="salmon" className="flex flex-col justify-between">
+            <div className="space-y-3">
+              <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase font-marcellus">Orientation framing</p>
+              <h2 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal leading-tight">No need to hustle through this page.</h2>
+              <p className="text-sm text-warmCharcoal/75 font-marcellus">
+                Start where your body says yes today. If you feel foggy, begin with a quick check-in. If you feel clear, go straight to a practice.
+              </p>
+              <p className="text-sm text-warmCharcoal/60 font-marcellus">There’s nothing to complete here — just notice how you feel in your body.</p>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-4">
+              <Button href="#alignment-check">60-second check-in</Button>
+              <Button variant="secondary" href="#orientation">Choose a practice</Button>
+            </div>
+          </Card>
+
           <Card accent="lavender" className="relative">
             <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus">
               YOUR SOUL → SYSTEMS → AI™ FOUNDATION
             </p>
             <p className="text-lg text-warmCharcoal/75 leading-relaxed font-marcellus">
-              Soul work creates the foundation for everything. When you're aligned internally,
+              Soul work creates the foundation for everything you build. When you're aligned internally,
               your systems flow naturally and your AI tools amplify what truly matters.
             </p>
           </Card>
         </div>
 
         {/* Archetype Section */}
-        <div className="mb-12">
+        <div id="orientation" className="mb-12">
           {!archetype.primary ? (
             <ArchetypeSelector />
           ) : (
@@ -177,18 +263,58 @@ export default async function SoulPage() {
           )}
 
           {/* Daily Check-in */}
-          {!hasCheckedIn && <DailyCheckIn />}
+            <div id="alignment-check">
+              {!hasCheckedIn ? (
+                <DailyCheckIn checkinsLast7={checkinStats.last7Count} />
+              ) : (
+                <Card accent="salmon" className="mb-8">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">Check-in</p>
+                      <p className="font-marcellus text-warmCharcoal text-lg">You’re set for today.</p>
+                      <p className="text-sm text-warmCharcoal/70 font-marcellus">You’ve checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      <Button href="#practices">Go to practices</Button>
+                      <Button variant="ghost" href="#orientation">Adjust orientation</Button>
+                    </div>
+                  </div>
+                </Card>
+              )}
+            </div>
 
-          <SectionHeading level="h2" className="mb-6">
-            Daily Soul Practices
-          </SectionHeading>
-          <div className="grid md:grid-cols-2 gap-6">
-            {PRACTICES.map(practice => (
-              <PracticeCard
-                key={practice.id}
-                practice={practice}
-              />
-            ))}
+          <div id="practices">
+            <SectionHeading level="h2" className="mb-6">
+              Daily Soul Practices
+            </SectionHeading>
+            <p className="text-sm text-warmCharcoal/70 font-marcellus">Start with the suggested one based on today’s check-in.</p>
+            <p className="text-xs text-warmCharcoal/60 font-marcellus mb-4">Suggested based on your check-in and current alignment.</p>
+            <div className="grid md:grid-cols-2 gap-6">
+              {PRACTICES.map(practice => (
+                <PracticeCard
+                  key={practice.id}
+                  practice={practice}
+                  suggested={practice.id === suggestedPracticeId}
+                  defaultOpen={practice.id === suggestedPracticeId}
+                />
+              ))}
+            </div>
+
+            <Card accent="lavender" className="mt-10">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">Forward bridge</p>
+                  <p className="font-marcellus text-warmCharcoal text-lg">Choose your next move and capture what you learned.</p>
+                  <p className="text-sm text-warmCharcoal/70 font-marcellus">Your awareness here carries forward — nothing is lost.</p>
+                  <p className="text-sm text-warmCharcoal/70 font-marcellus">When you’re ready, hop into Labs to build, or Inner Compass to map your next aligned action. Or end the session with a quick micro-brief.</p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Button variant="secondary" href="/labs">Open Labs</Button>
+                  <Button href="/inner-compass">Inner Compass</Button>
+                  <Button variant="ghost" href="/dashboard">End session</Button>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
 

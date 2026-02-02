@@ -62,9 +62,39 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Home Button */}
-      <div className="w-full flex justify-start p-4">
-        <a href="/" className="inline-flex items-center px-4 py-2 rounded bg-lavenderViolet text-white font-marcellus shadow hover:bg-indigoDeep transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
+      <div className="w-full flex justify-start px-6 py-4 md:px-8 md:py-6">
+        <a 
+          href="/" 
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            paddingTop: '0.5rem',
+            paddingBottom: '0.5rem',
+            borderRadius: '0.5rem',
+            background: 'linear-gradient(135deg, #9C88FF 0%, #6B5B95 100%)',
+            color: 'white',
+            fontFamily: 'Marcellus, serif',
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            textDecoration: 'none',
+            boxShadow: '0 4px 12px rgba(156, 136, 255, 0.3)',
+            transition: 'all 0.3s ease-in-out',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 8px 20px rgba(156, 136, 255, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(156, 136, 255, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '1.25rem', height: '1.25rem' }}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9M4.5 10.5V19a2.5 2.5 0 002.5 2.5h2A2.5 2.5 0 0011.5 19v-3.5a2.5 2.5 0 012.5-2.5h0a2.5 2.5 0 012.5 2.5V19a2.5 2.5 0 002.5 2.5h2A2.5 2.5 0 0021 19v-8.5" />
           </svg>
           Home

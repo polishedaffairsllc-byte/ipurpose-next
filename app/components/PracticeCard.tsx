@@ -13,8 +13,14 @@ export interface Practice {
   icon: string;
 }
 
-export default function PracticeCard({ practice }: { practice: Practice }) {
-  const [isOpen, setIsOpen] = useState(false);
+interface Props {
+  practice: Practice;
+  defaultOpen?: boolean;
+  suggested?: boolean;
+}
+
+export default function PracticeCard({ practice, defaultOpen = false, suggested = false }: Props) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [step, setStep] = useState<'instructions' | 'reflection' | 'confirmation'>('instructions');
   const [reflection, setReflection] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,106 +52,104 @@ export default function PracticeCard({ practice }: { practice: Practice }) {
     }
   };
 
-  if (!isOpen) {
-    return (
-      <Card hover>
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl">{practice.icon}</span>
-          <h3 className="font-marcellus text-lg text-warmCharcoal">{practice.title}</h3>
-        </div>
-        <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
-          {practice.description}
-        </p>
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-warmCharcoal/50 font-marcellus">{practice.duration}-{practice.duration + 5} minutes</span>
-          <Button variant="ghost" size="sm" onClick={() => setIsOpen(true)}>
-            Begin Practice →
-          </Button>
-        </div>
-      </Card>
-    );
-  }
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-start justify-between mb-6">
+    <Card hover>
+      <div className="flex items-center justify-between gap-3 mb-2">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">{practice.icon}</span>
           <div>
-            <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-2 font-marcellus">Practice</p>
-            <h2 className="font-marcellus text-2xl text-warmCharcoal">{practice.title}</h2>
+            <h3 className="font-marcellus text-lg text-warmCharcoal flex items-center gap-2">
+              {practice.title}
+              {suggested && <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Suggested for today</span>}
+            </h3>
+            <p className="text-xs text-warmCharcoal/60 font-marcellus">{practice.duration}-{practice.duration + 5} minutes</p>
           </div>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-warmCharcoal/50 hover:text-warmCharcoal text-2xl"
-          >
-            ✕
-          </button>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setIsOpen((prev) => {
+              const next = !prev;
+              if (next) {
+                setStep('instructions');
+                setReflection('');
+              }
+              return next;
+            });
+          }}
+        >
+          {isOpen ? 'Collapse' : 'Begin'}
+        </Button>
+      </div>
 
-        {step === 'instructions' && (
-          <div className="space-y-6">
-            <div className="bg-lavenderViolet/5 p-4 rounded-lg">
-              <p className="text-sm text-warmCharcoal/70 font-marcellus">{practice.description}</p>
+      <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
+        {practice.description}
+      </p>
+
+      {isOpen && (
+        <div className="space-y-5">
+          {step === 'instructions' && (
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-3 font-marcellus">Instructions</p>
+                <ol className="space-y-3">
+                  {practice.instructions.map((instruction, idx) => (
+                    <li key={idx} className="flex gap-3">
+                      <span className="font-bold text-lavenderViolet flex-shrink-0">{idx + 1}</span>
+                      <p className="text-sm text-warmCharcoal/70 font-marcellus">{instruction}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div className="flex gap-4">
+                <Button variant="secondary" onClick={() => setIsOpen(false)} className="flex-1">
+                  Save for later
+                </Button>
+                <Button onClick={() => setStep('reflection')} className="flex-1">
+                  I'm Ready
+                </Button>
+              </div>
             </div>
+          )}
 
-            <div>
-              <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-3 font-marcellus">Instructions</p>
-              <ol className="space-y-3">
-                {practice.instructions.map((instruction, idx) => (
-                  <li key={idx} className="flex gap-3">
-                    <span className="font-bold text-lavenderViolet flex-shrink-0">{idx + 1}</span>
-                    <p className="text-sm text-warmCharcoal/70 font-marcellus">{instruction}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
+          {step === 'reflection' && (
+            <div className="space-y-4">
+              <div className="bg-salmonPeach/5 p-4 rounded-lg">
+                <p className="text-sm text-warmCharcoal/70 font-marcellus">
+                  Take your time. When you're done, come back here.
+                </p>
+              </div>
 
-            <div className="flex gap-4">
-              <Button variant="secondary" onClick={() => setIsOpen(false)} className="flex-1">
-                Not Now
+              <div>
+                <p className="text-sm font-marcellus text-warmCharcoal mb-2">Reflection (optional)</p>
+                <textarea
+                  value={reflection}
+                  onChange={(e) => setReflection(e.target.value)}
+                  placeholder="What came up for you? Any insights?"
+                  className="w-full px-3 py-2 rounded-lg border border-warmCharcoal/20 text-sm font-marcellus"
+                  rows={4}
+                />
+              </div>
+
+              <Button onClick={handleComplete} disabled={loading} className="w-full">
+                Complete Practice
               </Button>
-              <Button onClick={() => setStep('reflection')} className="flex-1">
-                I'm Ready
-              </Button>
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 'reflection' && (
-          <div className="space-y-6">
-            <div className="bg-salmonPeach/5 p-4 rounded-lg">
+          {step === 'confirmation' && (
+            <div className="text-center py-4 space-y-3">
+              <p className="text-3xl">🎉</p>
+              <p className="font-marcellus text-lg text-warmCharcoal">Practice complete</p>
               <p className="text-sm text-warmCharcoal/70 font-marcellus">
-                Take your time. When you're done, come back here.
+                You showed up for your soul. That’s enough for today.
               </p>
+              <p className="text-xs text-warmCharcoal/55 font-marcellus">Saved to your reflections.</p>
             </div>
-
-            <div>
-              <p className="text-sm font-marcellus text-warmCharcoal mb-2">Reflection (optional)</p>
-              <textarea
-                value={reflection}
-                onChange={(e) => setReflection(e.target.value)}
-                placeholder="What came up for you? Any insights?"
-                className="w-full px-3 py-2 rounded-lg border border-warmCharcoal/20 text-sm font-marcellus"
-                rows={4}
-              />
-            </div>
-
-            <Button onClick={handleComplete} disabled={loading} className="w-full">
-              Complete Practice
-            </Button>
-          </div>
-        )}
-
-        {step === 'confirmation' && (
-          <div className="text-center py-8 space-y-4">
-            <p className="text-3xl">🎉</p>
-            <p className="font-marcellus text-lg text-warmCharcoal">Practice complete</p>
-            <p className="text-sm text-warmCharcoal/70 font-marcellus">
-              You showed up for your soul. That's what matters.
-            </p>
-          </div>
-        )}
-      </Card>
-    </div>
+          )}
+        </div>
+      )}
+    </Card>
   );
 }

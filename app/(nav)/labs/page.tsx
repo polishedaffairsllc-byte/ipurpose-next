@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import VideoBackground from "@/app/components/VideoBackground";
 
 type LabStatus = "not_started" | "in_progress" | "complete";
 
@@ -65,10 +66,16 @@ export default function LabsHubPage() {
 
   return (
     <div className="container max-w-5xl mx-auto px-6 md:px-10 py-10">
-      <h1 className="text-4xl font-semibold text-warmCharcoal">Labs</h1>
-      <p className="mt-3 text-sm text-warmCharcoal/70">
-        Complete the Identity, Meaning, and Agency labs to unlock integration.
-      </p>
+      <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-8 rounded-3xl">
+        <VideoBackground src="/videos/water-reflection.mp4" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
+        <div className="relative z-10 text-center px-4 max-w-4xl">
+          <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Labs</h1>
+          <p className="text-xl md:text-2xl text-white/85 font-marcellus drop-shadow-lg">
+            Complete the Identity, Meaning, and Agency labs to unlock integration.
+          </p>
+        </div>
+      </div>
       {message === "complete-labs" ? (
         <p className="mt-2 text-sm text-amber-700">Complete Labs to continue to Integration.</p>
       ) : null}

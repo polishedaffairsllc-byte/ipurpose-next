@@ -6,8 +6,19 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
 import PhotoCard from "../components/PhotoCard";
+import MissingFirebaseConfig from "./components/MissingFirebaseConfig";
+
+const hasFirebaseAdminCreds = Boolean(
+  process.env.FIREBASE_SERVICE_ACCOUNT_KEY ||
+  process.env.FIREBASE_SERVICE_ACCOUNT ||
+  process.env.FIREBASE_ADMIN_CREDENTIALS
+);
 
 export default async function SystemsPage() {
+  if (!hasFirebaseAdminCreds) {
+    return <MissingFirebaseConfig />;
+  }
+
   const cookieStore = await cookies();
   const session = cookieStore.get("FirebaseSession")?.value ?? null;
   if (!session) return redirect("/login");
@@ -86,7 +97,7 @@ export default async function SystemsPage() {
                   Delivery workflows
                 </div>
               </div>
-              <Button variant="primary" size="sm" className="w-full">
+              <Button variant="primary" size="sm" className="w-full" href="/systems/offers">
                 Build Your Offers
               </Button>
             </Card>
@@ -116,7 +127,7 @@ export default async function SystemsPage() {
                   Integration library
                 </div>
               </div>
-              <Button variant="primary" size="sm" className="w-full">
+              <Button variant="primary" size="sm" className="w-full" href="/systems/workflows">
                 Open Workflow Builder
               </Button>
             </Card>
@@ -146,7 +157,7 @@ export default async function SystemsPage() {
                   Financial projections
                 </div>
               </div>
-              <Button variant="primary" size="sm" className="w-full">
+              <Button variant="primary" size="sm" className="w-full" href="/systems/monetization">
                 View Monetization
               </Button>
             </Card>
@@ -160,24 +171,24 @@ export default async function SystemsPage() {
               </div>
               <h3 className="font-marcellus text-xl text-warmCharcoal mb-3">Calendar Sync</h3>
               <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
-                Connect your scheduling systems and ensure your time reflects your priorities. Protect your energy and honor your rhythm.
+                Calendar setup (v1) focused on operational outcomes. Protect your energy and honor your rhythm without API integrations (coming later).
               </p>
               <div className="space-y-2 mb-6">
                 <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
-                  Multi-calendar sync
+                  Calendar setup (v1)
                 </div>
                 <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
-                  Booking automation
+                  Copy templates
                 </div>
                 <div className="flex items-center gap-2 text-xs text-warmCharcoal/60 font-marcellus">
                   <span className="w-1.5 h-1.5 bg-lavenderViolet rounded-full"></span>
-                  Time blocking
+                  Integration coming later
                 </div>
               </div>
-              <Button variant="primary" size="sm" className="w-full">
-                Connect Calendar
+              <Button variant="primary" size="sm" className="w-full" href="/systems/calendar">
+                Open Calendar Setup
               </Button>
             </Card>
           </div>
@@ -195,7 +206,7 @@ export default async function SystemsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Plan, organize, and document your content ideas with aligned strategy.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/systems/content">
                 Launch Engine →
               </Button>
             </Card>
@@ -206,7 +217,7 @@ export default async function SystemsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Craft nurturing sequences that serve your audience authentically.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/systems/email">
                 Build Sequences →
               </Button>
             </Card>
@@ -217,7 +228,7 @@ export default async function SystemsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Organize your visual identity, templates, and brand guidelines.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/systems/brand">
                 View Assets →
               </Button>
             </Card>

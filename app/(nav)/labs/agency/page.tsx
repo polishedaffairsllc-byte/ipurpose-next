@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/app/components/Button";
 
 export default function AgencyLabPage() {
+  const router = useRouter();
   const [awarenessPatterns, setAwarenessPatterns] = useState("");
   const [decisionPatterns, setDecisionPatterns] = useState("");
   const [actionPatterns, setActionPatterns] = useState("");
@@ -78,6 +80,8 @@ export default function AgencyLabPage() {
         throw new Error(textRes || "Failed to mark complete");
       }
       setStatus("Marked complete");
+      // Navigate back to Labs hub (all labs complete)
+      router.push("/labs");
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Completion failed");
     }

@@ -1,0 +1,80 @@
+
+=== Console Transcript ===
+1. %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+2. %c%s%c  [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /systems/[slug]. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  
+3. [HMR] connected
+4. [Fast Refresh] rebuilding
+5. [Fast Refresh] done in 211ms
+6. %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+7. %c%s%c  [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /systems/[slug]. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server  
+8. [HMR] connected
+9. [CALENDAR_SYNC_DEBUG] TimeArchitectureStep (Step 1) MOUNTED
+10. [CALENDAR_SYNC_DEBUG] State updated. Current step: 1
+11. [CALENDAR_SYNC_DEBUG] TimeArchitectureStep (Step 1) UNMOUNTED
+12. [CALENDAR_SYNC_DEBUG] TimeArchitectureStep (Step 1) MOUNTED
+13. [CALENDAR_SYNC_DEBUG] State updated. Current step: 1
+14. Video can play, duration: 66.026667
+15. Video playing
+16. [CALENDAR_SYNC_DEBUG] Step badge clicked. Index: 1 Locked: false Current step: 1
+17. [CALENDAR_SYNC_DEBUG] goToStep called with step: 1 current step: 1 key: undefined
+18. [CALENDAR_SYNC_DEBUG] Step badge clicked. Index: 2 Locked: false Current step: 1
+19. [CALENDAR_SYNC_DEBUG] goToStep called with step: 2 current step: 1 key: undefined
+20. [CALENDAR_SYNC_DEBUG] TimeArchitectureStep (Step 1) UNMOUNTED
+21. [CALENDAR_SYNC_DEBUG] BookingRulesStep (Step 2) MOUNTED
+22. [CALENDAR_SYNC_DEBUG] State updated. Current step: 2
+23. [CALENDAR_SYNC_DEBUG] BookingRulesStep (Step 2) UNMOUNTED
+24. [CALENDAR_SYNC_DEBUG] BookingRulesStep (Step 2) MOUNTED
+25. [CALENDAR_SYNC_DEBUG] Step badge clicked. Index: 3 Locked: false Current step: 2
+26. [CALENDAR_SYNC_DEBUG] goToStep called with step: 3 current step: 2 key: undefined
+27. [CALENDAR_SYNC_DEBUG] BookingRulesStep (Step 2) UNMOUNTED
+28. [CALENDAR_SYNC_DEBUG] FocusProtectionStep (Step 3) MOUNTED
+29. [CALENDAR_SYNC_DEBUG] State updated. Current step: 3
+30. [CALENDAR_SYNC_DEBUG] FocusProtectionStep (Step 3) UNMOUNTED
+31. [CALENDAR_SYNC_DEBUG] FocusProtectionStep (Step 3) MOUNTED
+32. [CALENDAR_SYNC_DEBUG] Step badge clicked. Index: 4 Locked: false Current step: 3
+33. [CALENDAR_SYNC_DEBUG] goToStep called with step: 4 current step: 3 key: undefined
+34. [CALENDAR_SYNC_DEBUG] FocusProtectionStep (Step 3) UNMOUNTED
+35. [CALENDAR_SYNC_DEBUG] WeeklyResetStep (Step 4) MOUNTED
+36. [CALENDAR_SYNC_DEBUG] State updated. Current step: 4
+37. [CALENDAR_SYNC_DEBUG] WeeklyResetStep (Step 4) UNMOUNTED
+38. [CALENDAR_SYNC_DEBUG] WeeklyResetStep (Step 4) MOUNTED
+
+=== Step Snapshots ===
+Step 1 (Initial (Step 1))
+  Debug Box: 🔍 DEBUG: activeStep = 1 | Completion: 1=, 2=, 3=, 4=
+  Mount Marker: ✅ Mounted: Step 1 (TimeArchitectureStep)
+  Step 1 Content Present: true
+Step 2 (After clicking Step 1)
+  Debug Box: 🔍 DEBUG: activeStep = 1 | Completion: 1=, 2=, 3=, 4=
+  Mount Marker: ✅ Mounted: Step 1 (TimeArchitectureStep)
+  Step 1 Content Present: true
+Step 3 (After clicking Step 2)
+  Debug Box: 🔍 DEBUG: activeStep = 2 | Completion: 1=, 2=, 3=, 4=
+  Mount Marker: ✅ Mounted: Step 2 (BookingRulesStep)
+  Step 1 Content Present: false
+Step 4 (After clicking Step 3)
+  Debug Box: 🔍 DEBUG: activeStep = 3 | Completion: 1=, 2=, 3=, 4=
+  Mount Marker: ✅ Mounted: Step 3 (FocusProtectionStep)
+  Step 1 Content Present: false
+Step 5 (After clicking Step 4)
+  Debug Box: 🔍 DEBUG: activeStep = 4 | Completion: 1=, 2=, 3=, 4=
+  Mount Marker: ✅ Mounted: Step 4 (WeeklyResetStep)
+  Step 1 Content Present: false
+
+=== Step 2 Computed Styles ===
+  display: block
+  visibility: visible
+  opacity: 1
+  height: 1220.86px
+  overflow: visible
+  position: static
+  zIndex: auto
+
+=== Step 2 UI Elements Observed ===
+  Audience options: Clients, Partners, Internal
+  Numeric inputs: 4
+  Allowed day buttons: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+  Copy buttons: Copy booking presets
+  Required checkbox label: I applied at least one booking rule

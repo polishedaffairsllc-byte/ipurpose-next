@@ -5,6 +5,7 @@ import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
+import VideoBackground from "../components/VideoBackground";
 
 // Data source helpers
 async function getUserInsights(userId: string) {
@@ -86,10 +87,17 @@ export default async function InsightsPage() {
 
     return (
       <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
-        
-        <PageTitle subtitle="Real data from your check-ins and practices. The more you use iPurpose, the smarter this becomes.">
-          Insights
-        </PageTitle>
+
+        <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-10 rounded-3xl">
+          <VideoBackground src="/videos/water-reflection.mp4" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
+          <div className="relative z-10 text-center px-4 max-w-4xl">
+            <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Insights</h1>
+            <p className="text-xl md:text-2xl text-white/85 font-marcellus drop-shadow-lg">
+              Real data from your check-ins and practices. The more you use iPurpose, the smarter this becomes.
+            </p>
+          </div>
+        </div>
 
         {/* Philosophy Card */}
         <Card accent="salmon" className="mb-12">

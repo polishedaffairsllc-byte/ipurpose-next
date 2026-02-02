@@ -36,6 +36,8 @@ export default function ArchetypeSelector() {
   const [selectedSecondary, setSelectedSecondary] = useState<keyof typeof ARCHETYPES | null>(null);
   const [loading, setLoading] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
+  const [showShadow, setShowShadow] = useState(false);
+  const [showShadowQuiz, setShowShadowQuiz] = useState(false);
 
   const questions = [
     {
@@ -117,29 +119,62 @@ export default function ArchetypeSelector() {
 
   return (
     <Card accent="lavender" className="mb-8">
-      <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
-        Find Your Archetype
-      </p>
+      <div className="flex flex-col gap-2 mb-4">
+        <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase font-marcellus">
+          Find Your Archetype
+        </p>
+        <p className="text-sm text-warmCharcoal/75 font-marcellus">This is a mirror, not a label. Your archetype can shift over time.</p>
+      </div>
 
       {step === 'quiz' ? (
         <div className="space-y-6">
           {questions.map(q => (
             <div key={q.id} className="space-y-3">
-              <p className="font-marcellus text-warmCharcoal">{q.question}</p>
-              <div className="space-y-2">
-                {q.options.map((opt, idx) => (
-                  <label key={idx} className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name={`q${q.id}`}
-                      checked={quizAnswers[q.id] === opt.archetype}
-                      onChange={() => handleQuizAnswer(q.id, opt.archetype)}
-                      className="w-4 h-4"
-                    />
-                    <span className="text-sm text-warmCharcoal/70 font-marcellus">{opt.text}</span>
-                  </label>
-                ))}
-              </div>
+              {q.id === 3 ? (
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowShadowQuiz((prev) => !prev)}
+                    className="w-full text-left text-xs text-indigoDeep hover:text-indigoDeep/80 font-marcellus underline"
+                  >
+                    {showShadowQuiz ? 'Hide when I’m out of alignment…' : 'When I’m out of alignment… (optional)'}
+                  </button>
+                  {showShadowQuiz && (
+                    <div className="space-y-2">
+                      {q.options.map((opt, idx) => (
+                        <label key={idx} className="flex items-center gap-3 cursor-pointer">
+                          <input
+                            type="radio"
+                            name={`q${q.id}`}
+                            checked={quizAnswers[q.id] === opt.archetype}
+                            onChange={() => handleQuizAnswer(q.id, opt.archetype)}
+                            className="w-4 h-4"
+                          />
+                          <span className="text-sm text-warmCharcoal/70 font-marcellus">{opt.text}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <p className="font-marcellus text-warmCharcoal">{q.question}</p>
+                  <div className="space-y-2">
+                    {q.options.map((opt, idx) => (
+                      <label key={idx} className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`q${q.id}`}
+                          checked={quizAnswers[q.id] === opt.archetype}
+                          onChange={() => handleQuizAnswer(q.id, opt.archetype)}
+                          className="w-4 h-4"
+                        />
+                        <span className="text-sm text-warmCharcoal/70 font-marcellus">{opt.text}</span>
+                      </label>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           ))}
           <Button
@@ -147,7 +182,7 @@ export default function ArchetypeSelector() {
             disabled={Object.keys(quizAnswers).length < 3}
             className="w-full"
           >
-            See Your Archetype
+            Reflect on My Orientation
           </Button>
         </div>
       ) : (
@@ -161,8 +196,22 @@ export default function ArchetypeSelector() {
                   <p className="font-marcellus text-lg text-warmCharcoal">{ARCHETYPES[selectedPrimary!].name}</p>
                 </div>
                 <p className="text-sm text-warmCharcoal/70 mb-3 font-marcellus">{ARCHETYPES[selectedPrimary!].strength}</p>
-                <p className="text-xs text-warmCharcoal/60 italic mb-2 font-marcellus">Shadow: "{ARCHETYPES[selectedPrimary!].shadow}"</p>
-                <p className="text-xs text-warmCharcoal/70 font-marcellus">{ARCHETYPES[selectedPrimary!].reframe}</p>
+                <div className="mt-3 border border-warmCharcoal/10 rounded-lg p-3 bg-white/60">
+                  <button
+                    type="button"
+                    onClick={() => setShowShadow((prev) => !prev)}
+                    className="w-full flex items-center justify-between text-xs text-indigoDeep hover:text-indigoDeep/80 font-marcellus"
+                  >
+                    <span>When I’m out of alignment… (optional)</span>
+                    <span>{showShadow ? 'Hide' : 'Show'}</span>
+                  </button>
+                  {showShadow && (
+                    <div className="mt-3 space-y-2 text-xs text-warmCharcoal/70 font-marcellus">
+                      <p className="italic">Shadow: "{ARCHETYPES[selectedPrimary!].shadow}"</p>
+                      <p className="text-warmCharcoal/80">{ARCHETYPES[selectedPrimary!].reframe}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

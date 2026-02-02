@@ -6,12 +6,17 @@ import Button from './Button';
 
 const EMOTIONS = ['Grounded', 'Energized', 'Uncertain', 'Tired', 'Inspired', 'Anxious', 'Peaceful'];
 
-export default function DailyCheckIn() {
+interface Props {
+  checkinsLast7: number;
+}
+
+export default function DailyCheckIn({ checkinsLast7 }: Props) {
   const [step, setStep] = useState<'form' | 'confirmation'>('form');
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
   const [alignment, setAlignment] = useState(5);
   const [need, setNeed] = useState('');
   const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const toggleEmotion = (emotion: string) => {
     setSelectedEmotions(prev =>
@@ -25,6 +30,20 @@ export default function DailyCheckIn() {
     e.preventDefault();
     setLoading(true);
 
+    const nextSuggestions: string[] = [];
+    if (alignment <= 4 || selectedEmotions.includes('Tired') || selectedEmotions.includes('Anxious')) {
+      nextSuggestions.push('Rest');
+    }
+    if (alignment <= 6 || selectedEmotions.includes('Uncertain')) {
+      nextSuggestions.push('Structure');
+    }
+    if (alignment >= 7 || selectedEmotions.includes('Inspired') || selectedEmotions.includes('Energized')) {
+      nextSuggestions.push('Expression');
+    }
+    if (!nextSuggestions.length) {
+      nextSuggestions.push('Reflection');
+    }
+    setSuggestions(Array.from(new Set(nextSuggestions)));
     try {
       const response = await fetch('/api/soul/checkin', {
         method: 'POST',
@@ -49,13 +68,23 @@ export default function DailyCheckIn() {
   if (step === 'confirmation') {
     return (
       <Card accent="salmon" className="mb-8">
-        <div className="text-center py-6">
-          <p className="text-2xl mb-3">✨</p>
-          <p className="font-marcellus text-lg text-warmCharcoal mb-2">Check-in saved</p>
-          <p className="text-sm text-warmCharcoal/70 font-marcellus">
-            You're showing up for yourself. That's the practice.
-          </p>
-        </div>
+          <div className="text-center py-6 space-y-3">
+            <p className="text-2xl mb-1">✨</p>
+            <p className="font-marcellus text-lg text-warmCharcoal mb-2">Check-in saved</p>
+            <p className="text-sm text-warmCharcoal/70 font-marcellus">
+              Thanks — today you might benefit from:
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 text-xs font-marcellus">
+              {['Rest', 'Structure', 'Reflection', 'Expression'].map((item) => (
+                <span
+                  key={item}
+                  className={`px-3 py-1 rounded-full border ${suggestions.includes(item) ? 'border-indigoDeep text-indigoDeep bg-indigoDeep/10' : 'border-warmCharcoal/15 text-warmCharcoal/70'}`}
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
       </Card>
     );
   }
@@ -63,8 +92,9 @@ export default function DailyCheckIn() {
   return (
     <Card accent="salmon" className="mb-8">
       <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
-        Today's Check-in
+          Today’s Alignment Check
       </p>
+      <p className="text-xs text-warmCharcoal/60 font-marcellus mb-4">You’ve checked in {checkinsLast7} of the last 7 days.</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Emotions */}
@@ -91,7 +121,7 @@ export default function DailyCheckIn() {
         {/* Alignment Slider */}
         <div>
           <p className="text-sm font-marcellus text-warmCharcoal mb-3">
-            Alignment with your purpose: <span className="font-bold">{alignment}/10</span>
+            Alignment with your purpose right now: <span className="font-bold">{alignment}/10</span>
           </p>
           <input
             type="range"

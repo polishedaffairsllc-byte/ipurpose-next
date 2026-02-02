@@ -87,6 +87,7 @@ export function getProductionRateLimiter(endpoint: string) {
       '/api/gpt': { requests: 30, window: 60000 }, // 30 req/min
       '/api/gpt/stream': { requests: 20, window: 60000 }, // 20 req/min
       '/api/preferences': { requests: 100, window: 60000 }, // 100 req/min
+      '/api/focus/apply-pattern': { requests: 20, window: 60000 }, // 20 req/min
       default: { requests: 60, window: 60000 }, // 60 req/min default
     };
 

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { Metadata } from "next";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import { canAccessTier, getTierFromUser } from "@/app/lib/auth/entitlements";
@@ -10,6 +11,11 @@ import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
 import DashboardJournalPanel from "../components/DashboardJournalPanel";
 import DashboardOrientationStatus from "../components/DashboardOrientationStatus";
+
+export const metadata: Metadata = {
+  title: "Orientation — iPurpose",
+  description: "Your personal orientation dashboard with affirmation, progress tracking, and guided labs.",
+};
 
 export default async function DashboardPage() {
   console.log("Dashboard server render reached");
@@ -91,12 +97,23 @@ export default async function DashboardPage() {
           </div>
         </div>
         <ScrollReveal delay={200}>
-          <div className="ipurpose-glow-container mb-12 animate-fade-in-up stagger-2 relative z-10">
-            <Card accent="lavender">
-              <ErrorBoundary>
-                <DashboardJournalPanel todaysAffirmation={todaysAffirmation} userName={name} />
-              </ErrorBoundary>
-            </Card>
+          <div className="mb-12 animate-fade-in-up stagger-2 relative z-10">
+            <div className="container max-w-6xl mx-auto px-6">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                {/* Left Column - Affirmation */}
+                <div className="ipurpose-glow-container">
+                  <Card accent="lavender">
+                    <ErrorBoundary>
+                      <DashboardJournalPanel todaysAffirmation={todaysAffirmation} userName={name} />
+                    </ErrorBoundary>
+                  </Card>
+                </div>
+                {/* Right Column - Orientation */}
+                <div>
+                  <DashboardOrientationStatus />
+                </div>
+              </div>
+            </div>
           </div>
         </ScrollReveal>
         <ScrollReveal delay={300}>
@@ -104,9 +121,6 @@ export default async function DashboardPage() {
             <SectionHeading level="h2" className="mb-8">
               Choose your path
             </SectionHeading>
-            <div className="mb-8">
-              <DashboardOrientationStatus />
-            </div>
             <div className="space-y-4 max-w-2xl mx-auto w-full">
               <PathBanner 
                 href="/soul"

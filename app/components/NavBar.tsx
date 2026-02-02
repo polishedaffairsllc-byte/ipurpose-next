@@ -17,7 +17,10 @@ export default async function NavBar() {
   }
 
   return (
-    <header className="bg-white/80 backdrop-blur-lg border-b border-lavenderViolet/10">
+    <header
+      className="border-b border-white/10 text-white"
+      style={{ backgroundColor: '#0f1017' }}
+    >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between gap-8">
           {/* Logo */}
@@ -33,25 +36,25 @@ export default async function NavBar() {
           <nav className="hidden md:flex items-center gap-1">
             <Link 
               href="/dashboard" 
-              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-colors"
             >
               Dashboard
             </Link>
             <Link 
               href="/soul" 
-              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-colors"
             >
               Soul
             </Link>
             <Link 
               href="/systems" 
-              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-colors"
             >
               Systems
             </Link>
             <Link 
               href="/ai" 
-              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-colors"
             >
               AI
             </Link>
@@ -61,14 +64,14 @@ export default async function NavBar() {
           <div className="flex items-center gap-3 ml-auto">
             <Link
               href="/settings"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-warmCharcoal hover:bg-lavenderViolet/10 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/5 transition-colors"
             >
               Settings
             </Link>
             <form action="/api/auth/logout" method="post" className="inline-block">
               <button 
                 type="submit" 
-                className="px-6 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-salmonPeach to-lavenderViolet hover:shadow-lg transition-all cursor-pointer border-none"
+                className="px-6 py-2 rounded-lg text-sm font-semibold text-[#0f1017] bg-gradient-to-r from-salmonPeach to-lavenderViolet hover:shadow-lg transition-all cursor-pointer border-none"
               >
                 Logout
               </button>

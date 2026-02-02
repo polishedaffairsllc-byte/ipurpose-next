@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const navItems = [
-  { href: '/dashboard', label: 'Overview' },
+  { href: '/dashboard', label: 'Orientation' },
   { href: '/soul', label: 'Soul' },
   { href: '/systems', label: 'Systems' },
-  { href: '/ai', label: 'AI Coach' },
-  { href: '/insights', label: 'Insights' },
+  { href: '/ai', label: 'Inner Compass' },
+  { href: '/insights', label: 'Reflections' },
   { href: '/labs', label: 'Labs' },
   { href: '/community', label: 'Community' },
   { href: '/settings', label: 'Settings' },
@@ -26,7 +26,10 @@ export default function InternalNavbar() {
 
   return (
     <>
-      <header className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/20 bg-gradient-to-r from-black/40 to-black/30 backdrop-blur-md">
+      <header
+        className="relative z-20 w-full flex items-center justify-between p-6 lg:p-12 border-b border-white/20 bg-black backdrop-blur-md"
+        style={{ backgroundColor: "#000" }}
+      >
       {/* Navigation Items */}
       <div className="flex items-center gap-3 flex-1 justify-center">
         {navItems.map((item, index) => {
