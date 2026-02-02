@@ -131,7 +131,7 @@ export default function OfferArchitectureClient({ initialOffers, initialState, c
     value == null ? "" : new Intl.NumberFormat("en-US", { style: "currency", currency: currency?.toUpperCase?.() || "USD", maximumFractionDigits: 0 }).format(value);
 
   const selectedReady = Boolean(selected?.name && selected?.tier && selected?.delivery && selected?.frequency);
-  const scopeDefined = Boolean(selected?.canvas?.scope?.trim());
+  const scopeDefined = Boolean(selected?.canvas?.problem?.trim());
   const deliveryUnlocked = selected ? selected.status === "active" || selected.delivery !== "automated" : false;
   const hasTwoOffers = offers.length >= 2;
 
@@ -192,14 +192,23 @@ export default function OfferArchitectureClient({ initialOffers, initialState, c
             {!selectedReady && <LockedMessage label={readinessHint} />}
             {selectedReady && selected && (
               <div className="grid md:grid-cols-2 gap-3 text-sm font-marcellus text-warmCharcoal/80">
-                <Field label="Scope" full>
-                  <textarea className={fieldInput} value={selected.canvas?.scope ?? ""} onChange={(e) => updateCanvas({ scope: e.target.value })} />
+                <Field label="Problem" full>
+                  <textarea className={fieldInput} value={selected.canvas?.problem ?? ""} onChange={(e) => updateCanvas({ problem: e.target.value })} />
                 </Field>
-                <Field label="Inclusions" full>
-                  <textarea className={fieldInput} value={selected.canvas?.inclusions ?? ""} onChange={(e) => updateCanvas({ inclusions: e.target.value })} />
+                <Field label="Audience" full>
+                  <textarea className={fieldInput} value={selected.canvas?.audience ?? ""} onChange={(e) => updateCanvas({ audience: e.target.value })} />
                 </Field>
-                <Field label="Exclusions" full>
-                  <textarea className={fieldInput} value={selected.canvas?.exclusions ?? ""} onChange={(e) => updateCanvas({ exclusions: e.target.value })} />
+                <Field label="Transformation" full>
+                  <textarea className={fieldInput} value={selected.canvas?.transformation ?? ""} onChange={(e) => updateCanvas({ transformation: e.target.value })} />
+                </Field>
+                <Field label="Promise" full>
+                  <textarea className={fieldInput} value={selected.canvas?.promise ?? ""} onChange={(e) => updateCanvas({ promise: e.target.value })} />
+                </Field>
+                <Field label="Boundaries" full>
+                  <textarea className={fieldInput} value={selected.canvas?.boundaries ?? ""} onChange={(e) => updateCanvas({ boundaries: e.target.value })} />
+                </Field>
+                <Field label="Support" full>
+                  <textarea className={fieldInput} value={selected.canvas?.support ?? ""} onChange={(e) => updateCanvas({ support: e.target.value })} />
                 </Field>
                 <Field label="Notes" full>
                   <textarea className={fieldInput} value={selected.notes ?? ""} onChange={(e) => updateSelected({ notes: e.target.value })} />

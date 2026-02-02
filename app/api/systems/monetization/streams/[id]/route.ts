@@ -13,12 +13,16 @@ async function requireUser() {
   return decoded.uid;
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await requireUser();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const body = await request.json();
-    const updated = await updateIncomeStream(userId, params.id, body || {});
+    const { id } = await params;
+    const updated = await updateIncomeStream(userId, id, body || {});
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
     console.error("Stream PATCH error", err);
@@ -26,11 +30,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await requireUser();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    await deleteIncomeStream(userId, params.id);
+    const { id } = await params;
+    await deleteIncomeStream(userId, id);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Stream DELETE error", err);

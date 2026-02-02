@@ -16,12 +16,16 @@ async function requireActiveUser() {
   return decoded.uid;
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await requireActiveUser();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const body = await request.json();
-    const updated = await updateOffer(userId, params.id, body || {});
+    const { id } = await params;
+    const updated = await updateOffer(userId, id, body || {});
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
     console.error("Offers PATCH error", err);
@@ -29,11 +33,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await requireActiveUser();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    await deleteOffer(userId, params.id);
+    const { id } = await params;
+    await deleteOffer(userId, id);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Offers DELETE error", err);

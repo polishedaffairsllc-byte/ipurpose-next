@@ -329,7 +329,7 @@ export default function MonetizationClient({
         <span className={`px-3 py-1 rounded-full border ${stripeState.connected ? "border-emerald-200 text-emerald-800 bg-emerald-50" : "border-amber-200 text-amber-800 bg-amber-50"}`}>
           {stripeState.connected ? "Stripe connected" : "Manual mode active (Stripe optional)"}
         </span>
-        <Button variant="ghost" size="xs" onClick={() => setShowStripeDetails((prev) => !prev)} className="text-indigoDeep">
+        <Button variant="ghost" size="sm" onClick={() => setShowStripeDetails((prev) => !prev)} className="text-indigoDeep">
           {showStripeDetails ? "Hide Stripe details" : "Connect Stripe"}
         </Button>
         {snapshotDateState && <span className="text-xs text-warmCharcoal/60">Last snapshot: {snapshotDateState.toLocaleString?.() || ""}</span>}
@@ -341,7 +341,9 @@ export default function MonetizationClient({
         <Card className="p-4 bg-white border border-amber-200 text-sm font-marcellus space-y-2">
           <p className="font-semibold text-warmCharcoal">Manual mode active. Stripe can be connected later to automate metrics.</p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="ghost" size="sm" href="https://dashboard.stripe.com" target="_blank" rel="noreferrer" className="text-indigoDeep">Open Stripe Dashboard</Button>
+            <a href="https://dashboard.stripe.com" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-lavenderViolet/40 focus:ring-offset-2 px-4 py-2 text-xs text-indigoDeep hover:bg-lavenderViolet/10 hover:shadow-soft-sm">
+              Open Stripe Dashboard
+            </a>
             {stripeState.error && <span className="text-xs text-amber-700">{stripeState.error}</span>}
           </div>
         </Card>

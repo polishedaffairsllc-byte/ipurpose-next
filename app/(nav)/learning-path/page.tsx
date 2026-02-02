@@ -151,8 +151,8 @@ export default function LearningPathPage() {
                               )}
                             </p>
                             {isCompleted && (
-                              <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#9C88FF', backgroundColor: 'rgba(156, 136, 255, 0.1)', padding: '0.25rem 0.5rem', borderRadius: '9999px' }}>
-                                {step.milestone}
+                              <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.1)', padding: '0.25rem 0.5rem', borderRadius: '9999px' }}>
+                                Completed
                               </span>
                             )}
                           </div>

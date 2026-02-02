@@ -154,7 +154,7 @@ async function seedStarterIncomeStream(userId: string) {
   }
 
   const now = firebaseAdmin.firestore.FieldValue.serverTimestamp();
-  const record: Partial<IncomeStream> & { createdAt: any; updatedAt: any } = {
+  const record = {
     name: "Core Stream (Starter)",
     type: "program",
     status: "building",
@@ -173,9 +173,9 @@ async function seedStarterIncomeStream(userId: string) {
     energy: null,
     stripe: null,
     notes: "Starter stream created automatically — edit anytime.",
-    createdAt: now,
-    updatedAt: now,
-  };
+    createdAt: now as any,
+    updatedAt: now as any,
+  } as Partial<IncomeStream> & { createdAt: any; updatedAt: any };
 
   await docRef.set(record);
   const saved = await docRef.get();
@@ -194,7 +194,6 @@ async function listInvoicesLast30d(stripe: Stripe) {
   const invoices = await stripe.invoices.list({
     limit: 100,
     created: { gte: thirtyDaysAgo },
-    status: "all",
   });
   return invoices.data;
 }
@@ -229,7 +228,8 @@ export async function fetchStripeSummary(): Promise<{
       if (inv.status === "paid") {
         rollingRevenue += total;
         invoicesPaid += 1;
-        if (inv.subscription) {
+        // Check if this invoice is associated with a subscription
+        if ((inv as any).subscription) {
           recurringRevenue += total;
         } else {
           oneTimeRevenue += total;

@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const db = firebaseAdmin.firestore();
   const userDoc = await db.collection("users").doc(decoded.uid).get();
-  const customClaims = decoded.customClaims || {};
+  const customClaims = (decoded as any).customClaims || {};
   const userTier: EntitlementTier = getTierFromUser({ ...userDoc.data(), customClaims });
 
   if (!userDoc.exists || !userDoc.data()?.acceptedTermsAt) {

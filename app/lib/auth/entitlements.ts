@@ -203,7 +203,7 @@ export function getTierFromUser(user: {
 }): EntitlementTier {
   // Founder access maps to the highest tier (DEEPENING)
   // Check Firestore fields first
-  if (user.isFounder || user.role === 'founder' || user.entitlementTier === 'FOUNDER') {
+  if (user.isFounder || user.role === 'founder') {
     return 'DEEPENING';
   }
   // Check custom claims (from Firebase Auth)

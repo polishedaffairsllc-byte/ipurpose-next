@@ -13,14 +13,15 @@ export async function GET() {
     console.log('[CHECK-COOKIES] Checking cookies...');
     console.log('[CHECK-COOKIES] FirebaseSession exists:', !!sessionCookie);
     console.log('[CHECK-COOKIES] x-founder exists:', !!founderCookie);
-    console.log('[CHECK-COOKIES] All cookies:', Array.from(cookieStore).map(c => c.name));
+    const allCookieNames = Array.from(cookieStore).map(([name]) => name);
+    console.log('[CHECK-COOKIES] All cookies:', allCookieNames);
 
     return NextResponse.json({
       hasSession: !!sessionCookie,
       hasFounder: !!founderCookie,
       sessionValue: sessionCookie?.value?.substring(0, 20) + '...',
       founderValue: founderCookie?.value,
-      allCookieNames: Array.from(cookieStore).map(c => c.name),
+      allCookieNames,
     });
   } catch (err: any) {
     return NextResponse.json({

@@ -13,12 +13,16 @@ async function requireUser() {
   return decoded.uid;
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const userId = await requireUser();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const body = await request.json();
-    const updated = await updatePricingPlan(userId, params.id, body || {});
+    const { id } = await params;
+    const updated = await updatePricingPlan(userId, id, body || {});
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
     console.error("Pricing plan PATCH error", err);

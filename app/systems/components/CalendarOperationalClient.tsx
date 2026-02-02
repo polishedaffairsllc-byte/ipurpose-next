@@ -11,6 +11,12 @@ import { FocusProtectionStep } from "./FocusProtectionStep";
 import { WeeklyResetStep } from "./WeeklyResetStep";
 import { CalendarWizardState, TimeCategory, AudienceSegment, SystemOfRecord } from "./calendarSyncTypes";
 
+const copyToClipboard = (text: string, setIsActive: (value: string | null) => void) => {
+  navigator.clipboard.writeText(text);
+  setIsActive(text);
+  setTimeout(() => setIsActive(null), 2000);
+};
+
 const defaultState: CalendarWizardState = {
   step: 1,
   timeArchitecture: {

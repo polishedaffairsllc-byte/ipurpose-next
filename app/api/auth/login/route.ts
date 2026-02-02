@@ -84,13 +84,18 @@ export async function POST(req: Request) {
       );
     }
 
+    const responseHeaders = new Headers({
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store",
+    });
+
+    for (const cookie of cookies) {
+      responseHeaders.append("Set-Cookie", cookie);
+    }
+
     const response = new Response(JSON.stringify({ success: true, isFounder, message: "Login successful" }), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store",
-        "Set-Cookie": cookies,
-      },
+      headers: responseHeaders,
     });
 
     console.log("[LOGIN] Response Set-Cookie headers:", cookies);
