@@ -262,7 +262,7 @@ export default function ClarityCheckNumericPage() {
             {/* CTA and Footer */}
             <div className="print-hide text-center pt-8">
               <a
-                href="/"
+                href="/programs"
                 className="inline-block px-8 py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-lg hover:opacity-90 transition-opacity mb-8"
               >
                 Explore Programs
