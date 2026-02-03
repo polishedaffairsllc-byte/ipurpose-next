@@ -66,14 +66,8 @@ test.describe("Insights Page - Read-Only Verification", () => {
       }
     }
 
-    expect(foundSoulLink || (await page.locator('a[href*="/soul"]').count()) > 0).toBe(
-      true,
-      "Should have navigation link to /soul"
-    );
-    expect(foundSystemsLink || (await page.locator('a[href*="/systems"]').count()) > 0).toBe(
-      true,
-      "Should have navigation link to /systems"
-    );
+    expect(foundSoulLink || (await page.locator('a[href*="/soul"]').count()) > 0).toBe(true);
+    expect(foundSystemsLink || (await page.locator('a[href*="/systems"]').count()) > 0).toBe(true);
   });
 
   test("should make no write calls (POST/PATCH/DELETE)", async ({ page }) => {
@@ -96,10 +90,7 @@ test.describe("Insights Page - Read-Only Verification", () => {
     await page.goto("/insights", { waitUntil: "networkidle" });
 
     // Assert no write requests were made to non-auth endpoints
-    expect(writeRequests).toEqual(
-      [],
-      `Insights page made unexpected write requests: ${writeRequests.join(", ")}`
-    );
+    expect(writeRequests).toEqual([]);
   });
 
   test("should display zero state gracefully when no data", async ({ page }) => {

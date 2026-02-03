@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import type { JournalEntry, Session } from "@/lib/types/journal";
+import { useJournalEntryAutosave } from "@/lib/journal/useJournalEntryAutosave";
 import { JournalEntryBox } from "./JournalEntryBox";
 import { SessionSummaryModal } from "./SessionSummaryModal";
 import Button from "./Button";
@@ -19,17 +19,57 @@ type Props = {
 export default function DashboardJournalPanel(props: Props) {
   const safeProps = props ?? ({} as Props);
   const { todaysAffirmation, userName = "Friend" } = safeProps;
-  const router = useRouter();
-  const [affirmationContent, setAffirmationContent] = useState("");
-  const [intentionContent, setIntentionContent] = useState("");
   const [isEndingSession, setIsEndingSession] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [sessionStartTime] = useState(new Date());
+  const [sessionData, setSessionData] = useState<(Session & { id: string }) | null>(null);
+  const [entryMap, setEntryMap] = useState<Partial<Record<string, JournalEntry & { id: string }>>>({});
+  const [sessionError, setSessionError] = useState<string | null>(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [isSessionFinalized, setIsSessionFinalized] = useState(false);
+  const [finalizedSession, setFinalizedSession] = useState<(Session & { id: string }) | null>(null);
+  const [finalizedEntries, setFinalizedEntries] = useState<(JournalEntry & { id: string })[]>([]);
 
   useEffect(() => {
     console.log("DashboardJournalPanel mounted", props);
   }, [props]);
+
+  const loadSession = useCallback(async () => {
+    setIsLoadingSession(true);
+    setSessionError(null);
+    try {
+      const res = await fetch("/api/journal/session", { cache: "no-store" });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Failed to load journal session");
+      }
+      const json = await res.json();
+      const data = json?.data as {
+        session?: Session & { id: string };
+        entries?: Partial<Record<string, JournalEntry & { id: string }>>;
+      };
+      if (!data?.session || !data?.entries) {
+        throw new Error("Incomplete journal payload");
+      }
+      setSessionData(data.session);
+      setEntryMap(data.entries ?? {});
+      setIsSessionFinalized(Boolean(data.session.endedAt));
+      if (!data.session.endedAt) {
+        setFinalizedSession(null);
+        setFinalizedEntries([]);
+      }
+    } catch (error) {
+      console.error("Journal session load error", error);
+      setSessionError(error instanceof Error ? error.message : "Failed to load journal session");
+    } finally {
+      setIsLoadingSession(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadSession();
+  }, [loadSession]);
 
   if (!props) {
     return <div style={{ color: "red" }}>Dashboard props undefined</div>;
@@ -39,32 +79,40 @@ export default function DashboardJournalPanel(props: Props) {
     return <div>Loading dashboard data...</div>;
   }
 
-  // In a full implementation, these would be real entries from getOrCreateDraftEntry()
-  const mockAffirmationEntry: JournalEntry & { id: string } = {
-    id: "affirmation-1",
-    type: "affirmation_reflection",
-    status: "draft",
-    content: affirmationContent,
-    createdAt: new Date() as any,
-    updatedAt: new Date() as any,
-    dateKey: new Date().toISOString().split("T")[0],
-    sessionId: "session-1",
-    source: "overview",
-    promptText: "What does today's affirmation mean to you?",
-  };
+  const affirmationEntry = entryMap.affirmation;
+  const intentionEntry = entryMap.intention;
 
-  const mockIntentionEntry: JournalEntry & { id: string } = {
-    id: "intention-1",
-    type: "intention",
-    status: "draft",
-    content: intentionContent,
-    createdAt: new Date() as any,
-    updatedAt: new Date() as any,
-    dateKey: new Date().toISOString().split("T")[0],
-    sessionId: "session-1",
-    source: "overview",
-    promptText: "What do you want to move forward today?",
-  };
+  const saveEntryContent = useCallback(async (entryId: string | null, newContent: string) => {
+    if (!entryId) return;
+    const res = await fetch(`/api/journal/entry/${entryId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: newContent }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to save entry");
+    }
+  }, []);
+
+  const affirmationAutosave = useJournalEntryAutosave(
+    affirmationEntry?.id ?? null,
+    affirmationEntry?.content ?? "",
+    (newContent) => saveEntryContent(affirmationEntry?.id ?? null, newContent)
+  );
+
+  const intentionAutosave = useJournalEntryAutosave(
+    intentionEntry?.id ?? null,
+    intentionEntry?.content ?? "",
+    (newContent) => saveEntryContent(intentionEntry?.id ?? null, newContent)
+  );
+
+  const journalReady = Boolean(sessionData && affirmationEntry && intentionEntry && !sessionError);
+  const journalStatusMessage = sessionError
+    ? sessionError
+    : isLoadingSession
+      ? "Loading journaling experience..."
+      : "Journal session unavailable. Please refresh.";
 
   const getSessionDuration = () => {
     const now = new Date();
@@ -74,24 +122,46 @@ export default function DashboardJournalPanel(props: Props) {
   };
 
   const handleEndSessionClick = () => {
-    console.log("End Session clicked!");
+    if (isSessionFinalized && finalizedSession) {
+      setShowSummary(true);
+      return;
+    }
+    if (!sessionData) {
+      alert("Session not ready yet.");
+      return;
+    }
     setShowConfirmation(true);
   };
 
   const handleConfirmEndSession = async () => {
+    if (!sessionData) {
+      alert("Session not ready yet.");
+      return;
+    }
     setIsEndingSession(true);
     setShowConfirmation(false);
 
     try {
-      // TODO: In production, call:
-      // await finalizeSession(uid, sessionId);
-      // const entries = await getSessionEntries(uid, sessionId);
-      // const session = await getSession(uid, sessionId);
-
-      // Simulate delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Show summary modal
+      const res = await fetch("/api/journal/session/finalize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: sessionData.id }),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Failed to finalize session");
+      }
+      const json = await res.json();
+      const data = json?.data as {
+        session?: Session & { id: string };
+        entries?: (JournalEntry & { id: string })[];
+      };
+      if (!data?.session) {
+        throw new Error("Session finalize payload missing");
+      }
+      setFinalizedSession(data.session);
+      setFinalizedEntries(data.entries ?? []);
+      setIsSessionFinalized(true);
       setShowSummary(true);
     } catch (error) {
       console.error("Error ending session:", error);
@@ -107,53 +177,6 @@ export default function DashboardJournalPanel(props: Props) {
 
   const sessionDuration = getSessionDuration();
 
-  // Mock session data for summary
-  const mockSession: Session & { id: string } = {
-    id: "session-1",
-    startedAt: sessionStartTime as any,
-    endedAt: new Date() as any,
-    dateKey: new Date().toISOString().split("T")[0],
-    summary: {
-      title: `A Beautiful Session`,
-      highlights: affirmationContent
-        ? [`Affirmation: ${affirmationContent.substring(0, 60)}`]
-        : [],
-      generatedAt: new Date() as any,
-      model: "user",
-    },
-  };
-
-  // Mock entries for summary
-  const mockEntries: (JournalEntry & { id: string })[] = [];
-  if (affirmationContent) {
-    mockEntries.push({
-      id: "affirmation-1",
-      type: "affirmation_reflection",
-      status: "final",
-      content: affirmationContent,
-      createdAt: new Date() as any,
-      updatedAt: new Date() as any,
-      dateKey: new Date().toISOString().split("T")[0],
-      sessionId: "session-1",
-      source: "overview",
-      promptText: "What does today's affirmation mean to you?",
-    });
-  }
-  if (intentionContent) {
-    mockEntries.push({
-      id: "intention-1",
-      type: "intention",
-      status: "final",
-      content: intentionContent,
-      createdAt: new Date() as any,
-      updatedAt: new Date() as any,
-      dateKey: new Date().toISOString().split("T")[0],
-      sessionId: "session-1",
-      source: "overview",
-      promptText: "What do you want to move forward today?",
-    });
-  }
-
   return (
     <div className="space-y-8">
       <div>
@@ -166,12 +189,19 @@ export default function DashboardJournalPanel(props: Props) {
           </p>
         </div>
 
-        <JournalEntryBox
-          entry={{ ...mockAffirmationEntry, content: affirmationContent }}
-          onContentChange={setAffirmationContent}
-          isSaving={false}
-          placeholder="What comes up for you as you sit with this?"
-        />
+        {journalReady && affirmationEntry ? (
+          <JournalEntryBox
+            entry={{ ...affirmationEntry, content: affirmationAutosave.content }}
+            onContentChange={affirmationAutosave.setContent}
+            isSaving={affirmationAutosave.autosaveState.isPending}
+            saveError={affirmationAutosave.autosaveState.error}
+            lastSavedAt={affirmationAutosave.autosaveState.lastSavedAt}
+            placeholder="What comes up for you as you sit with this?"
+            disabled={isSessionFinalized}
+          />
+        ) : (
+          <p className="text-sm text-warmCharcoal/70">{journalStatusMessage}</p>
+        )}
       </div>
 
       <div>
@@ -181,12 +211,19 @@ export default function DashboardJournalPanel(props: Props) {
           </p>
         </div>
 
-        <JournalEntryBox
-          entry={{ ...mockIntentionEntry, content: intentionContent }}
-          onContentChange={setIntentionContent}
-          isSaving={false}
-          placeholder="What do you want to move forward today?"
-        />
+        {journalReady && intentionEntry ? (
+          <JournalEntryBox
+            entry={{ ...intentionEntry, content: intentionAutosave.content }}
+            onContentChange={intentionAutosave.setContent}
+            isSaving={intentionAutosave.autosaveState.isPending}
+            saveError={intentionAutosave.autosaveState.error}
+            lastSavedAt={intentionAutosave.autosaveState.lastSavedAt}
+            placeholder="What do you want to move forward today?"
+            disabled={isSessionFinalized}
+          />
+        ) : (
+          <p className="text-sm text-warmCharcoal/70">{journalStatusMessage}</p>
+        )}
       </div>
 
       <div className="flex items-center justify-center gap-4 pt-4 border-t border-warmCharcoal/10">
@@ -194,9 +231,9 @@ export default function DashboardJournalPanel(props: Props) {
           variant="primary"
           size="md"
           onClick={handleEndSessionClick}
-          disabled={isEndingSession}
+          disabled={isEndingSession || !journalReady}
         >
-          End Session ({sessionDuration}m)
+          {isSessionFinalized ? "View Session Summary" : `End Session (${sessionDuration}m)`}
         </Button>
       </div>
 
@@ -230,13 +267,15 @@ export default function DashboardJournalPanel(props: Props) {
       )}
 
       {/* Session Summary Modal */}
-      <SessionSummaryModal
-        isOpen={showSummary}
-        session={mockSession}
-        entries={mockEntries}
-        onClose={() => setShowSummary(false)}
-        userName={userName}
-      />
+      {finalizedSession && (
+        <SessionSummaryModal
+          isOpen={showSummary}
+          session={finalizedSession}
+          entries={finalizedEntries}
+          onClose={() => setShowSummary(false)}
+          userName={userName}
+        />
+      )}
     </div>
   );
 }

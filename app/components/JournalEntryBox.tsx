@@ -10,6 +10,7 @@ interface JournalEntryBoxProps {
   saveError?: string;
   lastSavedAt?: Date;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -22,6 +23,7 @@ export function JournalEntryBox({
   saveError,
   lastSavedAt,
   placeholder,
+  disabled = false,
 }: JournalEntryBoxProps) {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -70,7 +72,8 @@ export function JournalEntryBox({
         value={entry.content}
         onChange={handleChange}
         placeholder={placeholder || "Start writing..."}
-        className="w-full h-32 p-4 border border-lavenderViolet/20 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-lavenderViolet focus:border-transparent resize-none"
+        disabled={disabled}
+        className="w-full h-32 p-4 border border-lavenderViolet/20 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-lavenderViolet focus:border-transparent resize-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-warmCharcoal/5"
       />
     </div>
   );
