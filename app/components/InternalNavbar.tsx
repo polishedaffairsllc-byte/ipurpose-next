@@ -5,13 +5,10 @@ import { usePathname, useRouter } from 'next/navigation';
 
 const navItems = [
   { href: '/dashboard', label: 'Orientation' },
-  { href: '/soul', label: 'Soul' },
-  { href: '/systems', label: 'Systems' },
   { href: '/ai', label: 'Compass' },
-  { href: '/insights', label: 'Reflections' },
   { href: '/labs', label: 'Labs' },
-  { href: '/community', label: 'Community' },
   { href: '/settings', label: 'Settings' },
+  { href: '/deepen', label: 'Deepen' },
 ];
 
 export default function InternalNavbar() {

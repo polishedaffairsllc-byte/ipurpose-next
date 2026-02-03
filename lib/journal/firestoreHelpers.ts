@@ -121,8 +121,8 @@ export async function getOrCreateDraftEntry(
     dateKey,
     sessionId,
     source,
-    promptText,
-    promptId,
+    ...(promptText ? { promptText } : {}),
+    ...(promptId ? { promptId } : {}),
   };
 
   await entryRef.set(newEntry);

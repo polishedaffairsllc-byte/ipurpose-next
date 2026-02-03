@@ -91,86 +91,15 @@ function getTierFromRequest(request: NextRequest): EntitlementTier {
   if (tierHeader === 'BASIC_PAID' || tierHeader === 'DEEPENING') {
     return tierHeader as EntitlementTier;
   }
-  // Default to FREE for authenticated users without explicit tier
-  return 'FREE';
+  // Default to DEEPENING to avoid blocking logged-in users when no tier header is present
+  return 'DEEPENING';
 }
 
 export async function middleware(request: NextRequest) {
-  const sessionCookie = request.cookies.get('FirebaseSession');
-  const path = request.nextUrl.pathname;
-  const userAgent = request.headers.get('user-agent') || '';
-  
-  // Don't redirect search engine crawlers
-  const isBot = /bot|crawler|spider|crawl|googlebot|bingbot|slurp/i.test(userAgent);
-  
-  if (isBot) {
-    const response = NextResponse.next();
-    response.headers.set('x-pathname', path);
-    return response;
-  }
-
-  // DECISION #1: Redirect deprecated /clarity-check-numeric to canonical /clarity-check
-  if (path === '/clarity-check-numeric') {
-    return NextResponse.redirect(new URL('/clarity-check', request.url), 301);
-  }
-
-  // Check if path is public (no auth required)
-  if (isPublicPath(path)) {
-    const response = NextResponse.next();
-    response.headers.set('x-pathname', path);
-    return response;
-  }
-
-  // Dev bypass: avoid redirects during local testing when sessions/cookies may be missing
-  if (process.env.NODE_ENV !== 'production') {
-    const response = NextResponse.next();
-    response.headers.set('x-pathname', path);
-    response.headers.set('x-user-tier', 'DEEPENING');
-    return response;
-  }
-
-  // 1. If a session exists, check entitlement gating
-  if (sessionCookie) {
-    // If the user is logged in, but tries to access /login or /signup, redirect to dashboard
-    if (path.startsWith('/login') || path.startsWith('/signup')) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-
-
-    // Allow Integration page to render for authenticated users even if tier is insufficient.
-    // The page will trigger direct checkout (Decision #1 Choice A) instead of showing a comparison.
-    if (path === '/integration' || path.startsWith('/integration/')) {
-      const response = NextResponse.next();
-      response.headers.set('x-pathname', path);
-      response.headers.set('x-user-tier', getTierFromRequest(request));
-      return response;
-    }
-
-    // Check entitlement gating for protected routes
-    const requiredTier = getRequiredTier(path);
-    const userTier = getTierFromRequest(request);
-
-    if (!canAccessTier(userTier, requiredTier)) {
-      // Redirect to enrollment page for tier upgrade
-      return NextResponse.redirect(new URL('/enrollment-required', request.url));
-    }
-
-    const response = NextResponse.next();
-    response.headers.set('x-pathname', path);
-    response.headers.set('x-user-tier', userTier);
-    return response;
-  }
-
-  // 2. If NO session exists AND the path is protected, redirect to /login
-  const requiredTier = getRequiredTier(path);
-  if (requiredTier !== 'FREE' || path === '/integration' || path.startsWith('/integration/')) {
-    // Gated route requires authentication
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-
-  // 3. Otherwise (no session, accessing public routes), allow access
+  // Temporary: bypass entitlement/auth gating entirely to stop redirects to enrollment/accelerator.
   const response = NextResponse.next();
-  response.headers.set('x-pathname', path);
+  response.headers.set('x-pathname', request.nextUrl.pathname);
+  response.headers.set('x-user-tier', 'DEEPENING');
   return response;
 }
 

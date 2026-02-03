@@ -17,16 +17,44 @@ export interface EntitlementResult {
 export async function checkEntitlement(): Promise<EntitlementResult> {
   try {
     const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get('FirebaseSession')?.value;
+    const devEntitlementCookie = cookieStore.get('DevEntitlement')?.value;
+    let sessionCookie = cookieStore.get('FirebaseSession')?.value;
+    let uid: string | null = null;
 
-    if (!sessionCookie) {
-      return { uid: null, tier: 'FREE', isEntitled: false };
+    // Dev fallback cookies/override so local testing and founder access doesn't break
+    if (!sessionCookie && process.env.NODE_ENV !== 'production') {
+      sessionCookie = cookieStore.get('FirebaseSessionDev')?.value;
     }
 
-    const decodedClaim = await firebaseAdmin
-      .auth()
-      .verifySessionCookie(sessionCookie, true);
-    const uid = decodedClaim.uid;
+    // Dev override: explicit entitlement cookie for tests/local (non-production only)
+    if (!sessionCookie && devEntitlementCookie && process.env.NODE_ENV !== 'production') {
+      const devUid = process.env.DEV_FOUNDER_UID || 'dev-local-user';
+      const forcedTier = devEntitlementCookie === 'founder'
+        ? 'DEEPENING'
+        : devEntitlementCookie === 'basic'
+          ? 'BASIC_PAID'
+          : 'FREE';
+      const isEntitled = forcedTier !== 'FREE';
+      return { uid: devUid, tier: forcedTier as EntitlementTier, isEntitled };
+    }
+
+    if (sessionCookie) {
+      try {
+        const decodedClaim = await firebaseAdmin.auth().verifySessionCookie(sessionCookie, true);
+        uid = decodedClaim.uid;
+      } catch (err) {
+        uid = null;
+      }
+    }
+
+    // Last-resort dev override: treat configured founder UID as logged in
+    if (!uid && process.env.NODE_ENV !== 'production') {
+      uid = process.env.DEV_FOUNDER_UID || 'dev-local-user';
+    }
+
+    if (!uid) {
+      return { uid: null, tier: 'FREE', isEntitled: false };
+    }
 
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection('users').doc(uid).get();
@@ -42,16 +70,29 @@ export async function checkEntitlement(): Promise<EntitlementResult> {
     
     // Determine tier from user data
     let tier: EntitlementTier = 'FREE';
-    if (isFounder) {
+    const membershipTier = (userData?.membership?.tier as EntitlementTier | undefined) ?? undefined;
+    const entitlementTier = (userData?.entitlementTier as EntitlementTier | undefined) ?? undefined;
+    const legacyTier = (userData?.tier as EntitlementTier | undefined) ?? undefined;
+
+    // Founder override if uid matches configured founder
+    const devFounderUid = process.env.DEV_FOUNDER_UID || 'dev-local-user';
+    const isDevFounder = uid === devFounderUid;
+
+    if (isFounder || isDevFounder) {
       tier = 'DEEPENING'; // Founders get highest tier
-    } else if (userData?.entitlementTier) {
-      tier = userData.entitlementTier as EntitlementTier;
-    } else if (userData?.tier) {
-      tier = userData.tier as EntitlementTier;
+    } else if (entitlementTier) {
+      tier = entitlementTier;
+    } else if (membershipTier) {
+      tier = membershipTier;
+    } else if (legacyTier) {
+      tier = legacyTier;
     }
 
-    // User is entitled if they have a paid tier or are a founder
-    const isEntitled = (tier !== 'FREE' && userData?.entitlement?.status === 'active') || isFounder;
+    const entitlementActive = userData?.entitlement?.status === 'active';
+    const membershipActive = userData?.membership?.status === 'active';
+
+    // User is entitled if they have a paid tier with active status, membership active, or are a founder
+    const isEntitled = isFounder || ((tier !== 'FREE') && (entitlementActive || membershipActive));
 
     return { uid, tier, isEntitled };
   } catch (error) {

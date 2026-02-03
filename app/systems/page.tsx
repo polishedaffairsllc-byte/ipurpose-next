@@ -1,7 +1,5 @@
-import { cookies } from "next/headers";
-import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
-import { isFounder } from "@/lib/isFounder";
+import { checkEntitlement } from "@/lib/entitlementCheck";
 import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -167,22 +165,16 @@ export default async function SystemsPage() {
     return <MissingFirebaseConfig />;
   }
 
-  const cookieStore = await cookies();
-  const session = cookieStore.get("FirebaseSession")?.value ?? null;
-  if (!session) return redirect("/login");
+  const entitlement = await checkEntitlement();
+
+  if (!entitlement.uid) return redirect("/login");
+  if (!entitlement.isEntitled) return redirect("/enrollment-required");
+
+  const userId = entitlement.uid;
 
   try {
-    const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
-
-    // Check entitlement
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     const db = firebaseAdmin.firestore();
-    const userDoc = await db.collection("users").doc(decodedClaims.uid).get();
-    const userData = userDoc.data() ?? {};
-    const founderBypass = isFounder(decodedClaims, userData);
-
-    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
-      return redirect("/enrollment-required");
-    }
 
     return (
       <div className="relative">

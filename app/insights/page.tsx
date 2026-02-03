@@ -1,7 +1,5 @@
-import { cookies } from "next/headers";
-import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
-import { isFounder } from "@/lib/isFounder";
+import { checkEntitlement } from "@/lib/entitlementCheck";
 import { getInsightsSummary } from "@/lib/insights/getInsightsSummary";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -9,23 +7,16 @@ import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
 
 export default async function InsightsPage() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("FirebaseSession")?.value ?? null;
-  if (!session) return redirect("/login");
+  const entitlement = await checkEntitlement();
+
+  if (!entitlement.uid) return redirect("/login");
+  if (!entitlement.isEntitled) return redirect("/enrollment-required");
+
+  const userId = entitlement.uid;
 
   try {
-    const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const userId = decodedClaims.uid;
-
-    // Check entitlement
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     const db = firebaseAdmin.firestore();
-    const userDoc = await db.collection("users").doc(userId).get();
-    const userData = userDoc.data() ?? {};
-    const founderBypass = isFounder(decodedClaims, userData);
-
-    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
-      return redirect("/enrollment-required");
-    }
 
     // Fetch read-only insights summary
     const summary = await getInsightsSummary(userId);
