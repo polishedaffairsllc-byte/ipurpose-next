@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     const docSnap = await docRef.get();
     if (docSnap.exists) {
       const sessionData = docSnap.data();
-      if (sessionData.isLocked) {
+      if (sessionData && sessionData.isLocked) {
         return NextResponse.json(
           { error: 'Session is locked' },
           { status: 403 }

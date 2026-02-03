@@ -44,7 +44,7 @@ export async function PATCH(
     }
 
     const sessionData = docSnap.data();
-    if (sessionData.isLocked) {
+    if (!sessionData || sessionData.isLocked) {
       return NextResponse.json(
         { error: 'Session is locked' },
         { status: 403 }

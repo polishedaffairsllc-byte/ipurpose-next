@@ -31,7 +31,6 @@ export async function GET(request: Request) {
     let query = db
       .collection("community_posts")
       .where("spaceKey", "==", spaceKey)
-      .where("isDeleted", "==", false)
       .orderBy("createdAt", "desc")
       .limit(limit);
 
@@ -40,8 +39,11 @@ export async function GET(request: Request) {
     }
 
     const snapshot = await query.get();
+    
+    // Filter out deleted posts in memory instead of in Firestore query
+    const allDocs = snapshot.docs.filter(doc => !doc.data()?.isDeleted);
 
-    const items = snapshot.docs.map((doc) => {
+    const items = allDocs.map((doc) => {
       const data = doc.data();
       return {
         id: doc.id,
@@ -53,7 +55,7 @@ export async function GET(request: Request) {
       };
     });
 
-    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    const lastDoc = allDocs[allDocs.length - 1];
     const lastCreatedAt = lastDoc?.data()?.createdAt?.toMillis?.();
     const nextCursor = lastCreatedAt ? `${lastCreatedAt}` : null;
 
