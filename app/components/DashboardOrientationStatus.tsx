@@ -212,15 +212,7 @@ export default function DashboardOrientationStatus() {
                 })}
               </div>
 
-              {/* CTA if not complete */}
-              {percentComplete < 100 && (
-                <Link
-                  href="/learning-path"
-                  className="inline-flex items-center justify-center px-4 py-2 mt-3 rounded-full bg-lavenderViolet text-white text-sm font-medium hover:bg-indigoDeep transition"
-                >
-                  Continue Learning Path
-                </Link>
-              )}
+
             </div>
           )}
         </div>
