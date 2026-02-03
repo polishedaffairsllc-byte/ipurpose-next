@@ -3,6 +3,7 @@ import Link from "next/link";
 import { checkEntitlement, canAccessTier, EntitlementTier } from "@/lib/entitlementCheck";
 import Card from "../components/Card";
 import SectionHeading from "../components/SectionHeading";
+import ModuleGuide from "../components/ModuleGuide";
 
 const premiumModules = [
   {
@@ -104,6 +105,7 @@ export default async function DeepenPage() {
           );
         })}
       </div>
+      <ModuleGuide moduleId="deepen" />
     </div>
   );
 }

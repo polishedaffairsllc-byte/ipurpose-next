@@ -87,6 +87,33 @@ export default function IdentityLabPage() {
     }
   };
 
+  const integrate = async () => {
+    setStatus(null);
+    try {
+      const summary = `Identity Lab snapshot: Self-Perception (${selfPerceptionMap.length} chars), Self-Concept (${selfConceptMap.length} chars), Self-Narrative (${selfNarrativeMap.length} chars)`;
+      const res = await fetch("/api/labs/identity/integrate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          summary,
+          fields: {
+            selfPerceptionMap,
+            selfConceptMap,
+            selfNarrativeMap,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const textRes = await res.text();
+        throw new Error(textRes || "Failed to integrate");
+      }
+      const data = await res.json();
+      setStatus(data.message || "Integrated");
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : "Integration failed");
+    }
+  };
+
   return (
     <div className="container max-w-4xl mx-auto px-6 md:px-10 py-10">
       <h1 className="text-4xl font-semibold text-warmCharcoal">Identity Lab</h1>
@@ -137,9 +164,12 @@ export default function IdentityLabPage() {
             This is complete enough for now.
           </label>
           {status ? <div className="text-sm text-warmCharcoal/70">{status}</div> : null}
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap">
             <Button onClick={save} disabled={saving}>
               {saving ? "Saving..." : "Save"}
+            </Button>
+            <Button variant="secondary" onClick={integrate}>
+              Integrate
             </Button>
             <Button variant="secondary" onClick={markComplete}>
               Mark complete

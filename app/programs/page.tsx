@@ -15,15 +15,15 @@ export default function ProgramsPage() {
       id: 'starter-pack',
       title: 'Starter Pack',
       subtitle: 'Your foundation for clarity',
-      price: 'TBD', // Pulled from STRIPE_PRICE_STARTER_PACK env
+      price: '$27',
       description:
         'A printable workbook + quick-start guide to help you establish your identity anchor, define what matters, and articulate your first aligned action.',
       includes: [
-        '20-page printable workbook',
-        'Identity anchor template',
-        'Meaning clarification prompts',
-        'Action planning guide',
-        'Lifetime access to updates',
+        'Printable PDF workbook (20 pages)',
+        'Identity anchor framework',
+        'Clarity prompts & worksheets',
+        'Action planning template',
+        'Lifetime re-download access',
       ],
       cta: 'Get Started',
       ctaLink: '/starter-pack',
@@ -34,15 +34,15 @@ export default function ProgramsPage() {
       id: 'ai-blueprint',
       title: 'AI Blueprint',
       subtitle: 'AI prompts for clarity work',
-      price: '$47', // STRIPE_PRICE_ID_AI_BLUEPRINT
+      price: '$47',
       description:
-        'A collection of carefully designed prompts you can use with ChatGPT, Claude, or any AI to guide your own clarity work. The blueprint includes domain-specific prompts for business, creative, and personal alignment.',
+        'A carefully curated collection of AI prompts you can use with ChatGPT, Claude, or any AI to guide your clarity work. Includes domain-specific variations and usage guidance.',
       includes: [
-        'Structured prompt templates',
-        'Domain-specific variations',
-        'Prompt chaining workflows',
-        'Integration guide',
-        'Community access',
+        'Downloadable prompt library (PDF)',
+        'Domain-specific prompt variations',
+        'Guidance on AI + iPurpose integration',
+        'Real-world examples',
+        'Lifetime re-download access',
       ],
       cta: 'Explore Blueprint',
       ctaLink: '/ai-blueprint',
@@ -53,21 +53,21 @@ export default function ProgramsPage() {
       id: 'accelerator',
       title: 'Accelerator',
       subtitle: 'The complete program',
-      price: 'Custom', // STRIPE_PRICE_ID_ACCELERATOR
+      price: '$1,497',
       description:
-        'A comprehensive program combining structured labs + AI tools + optional coaching + community access.',
+        'A comprehensive self-paced experience combining structured labs, AI tools, community access, and platform-native assets. Move at your own pace through Orientation, Soul, Systems, and Integration.',
       includes: [
-        'Complete online labs (self-paced)',
-        'AI prompt library',
+        'Complete labs (Identity, Meaning, Agency, Systems, Soul)',
+        'Platform assets (phased access)',
         'Private community',
         'Resources library',
-        'Optional: monthly 1:1 coaching sessions',
-        'Optional: live group sessions',
+        'Reflections & export tools',
+        'Optional: coaching add-ons available',
       ],
       cta: 'Learn More',
       ctaLink: '/program',
       accent: 'peach',
-      audience: 'For those ready for deep, supported transformation.',
+      audience: 'For those ready for deep, self-directed transformation.',
     },
   ];
 

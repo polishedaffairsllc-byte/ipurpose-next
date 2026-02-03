@@ -4,6 +4,7 @@ import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import DashboardJournalPanel from "@/app/components/DashboardJournalPanel";
 import Card from "@/app/components/Card";
+import ModuleGuide from "@/app/components/ModuleGuide";
 import OrientationClient from "./OrientationClient";
 
 export const metadata: Metadata = {
@@ -96,6 +97,7 @@ export default async function OrientationPage() {
           </div>
         </div>
       </div>
+      <ModuleGuide moduleId="orientation" />
     </div>
   );
 }

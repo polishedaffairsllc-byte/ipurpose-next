@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import VideoBackground from "@/app/components/VideoBackground";
+import ModuleGuide from "@/app/components/ModuleGuide";
 
 type LabStatus = "not_started" | "in_progress" | "complete";
 
@@ -147,6 +148,7 @@ export default function LabsHubPage() {
           </div>
         )}
       </div>
+      <ModuleGuide moduleId="labs" />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import IPSection from "@/app/components/IPSection";
 import IPCard from "@/app/components/IPCard";
 import IPButton from "@/app/components/IPButton";
 import LogoutButton from "@/app/components/LogoutButton";
+import ModuleGuide from "@/app/components/ModuleGuide";
 
 export default function ProfilePage() {
   return (
@@ -46,6 +47,7 @@ export default function ProfilePage() {
 
         </main>
       </div>
+      <ModuleGuide moduleId="settings" />
     </ProtectedRoute>
   );
 }

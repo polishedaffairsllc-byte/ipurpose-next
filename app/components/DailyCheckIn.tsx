@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Card from './Card';
 import Button from './Button';
+import { addCheckInToToday } from '@/lib/dailySessionClient';
 
 const EMOTIONS = ['Grounded', 'Energized', 'Uncertain', 'Tired', 'Inspired', 'Anxious', 'Peaceful'];
 
@@ -45,6 +46,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
     }
     setSuggestions(Array.from(new Set(nextSuggestions)));
     try {
+      // Save to Soul checkin endpoint
       const response = await fetch('/api/soul/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,7 +58,20 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
         })
       });
 
+      // Also save to daily session
       if (response.ok) {
+        try {
+          await addCheckInToToday({
+            emotions: selectedEmotions,
+            alignmentScore: alignment,
+            need,
+            type: 'daily',
+          });
+        } catch (err) {
+          console.error('Failed to save to daily session:', err);
+          // Don't fail the whole operation if daily session fails
+        }
+
         setStep('confirmation');
         setTimeout(() => window.location.reload(), 2000);
       }
