@@ -16,32 +16,38 @@ const db = admin.firestore();
 
 /**
  * Get or create user profile
+ * Uses a transaction to prevent race condition duplicates
  */
 export async function getOrCreateUserProfile(
   uid: string,
   email?: string
 ): Promise<UserProfile> {
   const userRef = db.collection("users").doc(uid);
-  const userSnap = await userRef.get();
 
-  if (userSnap.exists) {
-    return userSnap.data() as UserProfile;
-  }
+  // Use a transaction to make this atomic
+  return await db.runTransaction(async (transaction) => {
+    const userSnap = await transaction.get(userRef);
 
-  const newProfile: UserProfile = {
-    displayName: email?.split("@")[0] || "User",
-    email: email || "",
-    createdAt: admin.firestore.Timestamp.now(),
-    lastActiveAt: admin.firestore.Timestamp.now(),
-    timezone: "America/New_York",
-  };
+    if (userSnap.exists) {
+      return userSnap.data() as UserProfile;
+    }
 
-  await userRef.set(newProfile);
-  return newProfile;
+    const newProfile: UserProfile = {
+      displayName: email?.split("@")[0] || "User",
+      email: email || "",
+      createdAt: admin.firestore.Timestamp.now(),
+      lastActiveAt: admin.firestore.Timestamp.now(),
+      timezone: "America/New_York",
+    };
+
+    transaction.set(userRef, newProfile);
+    return newProfile;
+  });
 }
 
 /**
  * Get or create today's session
+ * Uses a transaction to prevent race condition duplicates
  */
 export async function getOrCreateSession(
   uid: string
@@ -49,35 +55,41 @@ export async function getOrCreateSession(
   const dateKey = getDateKey();
   const sessionsRef = db.collection("users").doc(uid).collection("sessions");
 
-  const snapshot = await sessionsRef.where("dateKey", "==", dateKey).get();
+  // Use a transaction to make this atomic
+  return await db.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(
+      sessionsRef.where("dateKey", "==", dateKey)
+    );
 
-  if (!snapshot.empty) {
-    const doc = snapshot.docs[0];
-    return {
-      id: doc.id,
-      ...(doc.data() as Session),
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return {
+        id: doc.id,
+        ...(doc.data() as Session),
+      };
+    }
+
+    // Create new session
+    const sessionId = generateSessionId();
+    const sessionRef = sessionsRef.doc(sessionId);
+    const newSession: Session = {
+      startedAt: admin.firestore.Timestamp.now(),
+      endedAt: null,
+      dateKey,
     };
-  }
 
-  // Create new session
-  const sessionId = generateSessionId();
-  const sessionRef = sessionsRef.doc(sessionId);
-  const newSession: Session = {
-    startedAt: admin.firestore.Timestamp.now(),
-    endedAt: null,
-    dateKey,
-  };
+    transaction.set(sessionRef, newSession);
 
-  await sessionRef.set(newSession);
-
-  return {
-    id: sessionId,
-    ...newSession,
-  };
+    return {
+      id: sessionId,
+      ...newSession,
+    };
+  });
 }
 
 /**
  * Get or create a draft entry for a given type
+ * Uses a transaction to prevent race condition duplicates
  */
 export async function getOrCreateDraftEntry(
   uid: string,
@@ -93,44 +105,48 @@ export async function getOrCreateDraftEntry(
     .doc(uid)
     .collection("journalEntries");
 
-  // Query for existing draft with same type and session
-  const snapshot = await entriesRef
-    .where("sessionId", "==", sessionId)
-    .where("type", "==", type)
-    .where("status", "==", "draft")
-    .get();
+  // Use a transaction to make this atomic and prevent race conditions
+  return await db.runTransaction(async (transaction) => {
+    // Query for existing draft with same type and session
+    const snapshot = await transaction.get(
+      entriesRef
+        .where("sessionId", "==", sessionId)
+        .where("type", "==", type)
+        .where("status", "==", "draft")
+    );
 
-  if (!snapshot.empty) {
-    const doc = snapshot.docs[0];
-    return {
-      id: doc.id,
-      ...(doc.data() as JournalEntry),
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return {
+        id: doc.id,
+        ...(doc.data() as JournalEntry),
+      };
+    }
+
+    // Create new entry
+    const entryId = generateEntryId();
+    const entryRef = entriesRef.doc(entryId);
+    const now = admin.firestore.Timestamp.now();
+    const newEntry: JournalEntry = {
+      type,
+      status: "draft",
+      content: "",
+      createdAt: now,
+      updatedAt: now,
+      dateKey,
+      sessionId,
+      source,
+      ...(promptText ? { promptText } : {}),
+      ...(promptId ? { promptId } : {}),
     };
-  }
 
-  // Create new entry
-  const entryId = generateEntryId();
-  const entryRef = entriesRef.doc(entryId);
-  const now = admin.firestore.Timestamp.now();
-  const newEntry: JournalEntry = {
-    type,
-    status: "draft",
-    content: "",
-    createdAt: now,
-    updatedAt: now,
-    dateKey,
-    sessionId,
-    source,
-    ...(promptText ? { promptText } : {}),
-    ...(promptId ? { promptId } : {}),
-  };
+    transaction.set(entryRef, newEntry);
 
-  await entryRef.set(newEntry);
-
-  return {
-    id: entryId,
-    ...newEntry,
-  };
+    return {
+      id: entryId,
+      ...newEntry,
+    };
+  });
 }
 
 /**
