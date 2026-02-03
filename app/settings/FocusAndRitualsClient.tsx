@@ -20,6 +20,12 @@ interface FocusAndRitualsClientProps {
 
 type PatternKey = "deep_work" | "client_day" | "recovery_day" | "custom";
 
+interface CustomPatternState {
+  isOpen: boolean;
+  name: string;
+  ai: AiSnapshot;
+}
+
 type InitiativeMode = "ask" | "suggest" | "auto";
 
 type AiSnapshot = {
@@ -106,11 +112,19 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
 
   const [selectedPattern, setSelectedPattern] = useState<PatternKey>("deep_work");
   const [appliedPattern, setAppliedPattern] = useState<PatternKey | null>(null);
+  const [appliedAt, setAppliedAt] = useState<string | null>(null);
   const [aiSnapshot, setAiSnapshot] = useState<AiSnapshot>(defaultAiSnapshot);
   const [initialSnapshot, setInitialSnapshot] = useState<AiSnapshot | null>(null);
   const [isApplying, setIsApplying] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
   const [loadingPreferences, setLoadingPreferences] = useState(true);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [customPattern, setCustomPattern] = useState<CustomPatternState>({
+    isOpen: false,
+    name: "Custom",
+    ai: { ...defaultAiSnapshot },
+  });
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -128,6 +142,11 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
         if (savedPattern) {
           setSelectedPattern(savedPattern);
           setAppliedPattern(savedPattern);
+        }
+        // Load appliedAt timestamp if available
+        if (rituals?.todayPattern?.appliedAt) {
+          const appliedDate = new Date(rituals.todayPattern.appliedAt);
+          setAppliedAt(appliedDate.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }));
         }
         const ai = rituals?.ai || {};
         const incomingSnapshot: AiSnapshot = {
@@ -213,18 +232,54 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
         throw new Error("Unable to apply pattern");
       }
 
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+
       setAppliedPattern(selectedPattern);
+      setAppliedAt(timeStr);
       setInitialSnapshot({
         tone: aiSnapshot.tone,
         detail: aiSnapshot.detail,
         initiative: aiSnapshot.initiative,
         modules: { ...aiSnapshot.modules },
       });
-      setStatusMessage({ type: "success", message: "Pattern applied. Calendar + nudges updated." });
+      const patternName = PATTERNS.find(p => p.key === selectedPattern)?.title || selectedPattern;
+      setStatusMessage({ type: "success", message: `Applied: ${patternName} at ${timeStr}` });
     } catch (error: any) {
-      setStatusMessage({ type: "error", message: error.message || "Something went wrong" });
+      setStatusMessage({ type: "error", message: error.message || "Couldn't apply. Try again." });
     } finally {
       setIsApplying(false);
+    }
+  };
+
+  const handleClear = async () => {
+    setIsClearing(true);
+    setStatusMessage(null);
+    try {
+      const response = await fetch("/api/focus/clear-pattern", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: isoDate,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to clear pattern");
+      }
+
+      // Reset UI to defaults
+      setAppliedPattern(null);
+      setAppliedAt(null);
+      setSelectedPattern("deep_work");
+      setAiSnapshot({ ...defaultAiSnapshot });
+      setInitialSnapshot({ ...defaultAiSnapshot });
+      setShowClearConfirm(false);
+      setStatusMessage({ type: "success", message: "Pattern cleared. Using neutral AI posture." });
+    } catch (error: any) {
+      setStatusMessage({ type: "error", message: error.message || "Couldn't clear. Try again." });
+    } finally {
+      setIsClearing(false);
     }
   };
 
@@ -241,14 +296,18 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
           <p className="text-sm tracking-[0.4em] uppercase text-white/60">Focus & Rituals</p>
           <h1 className="heading-hero text-white">Set the tone for today</h1>
           <p className="text-white/80 font-marcellus text-base md:text-lg">
-            Choose a pattern, update AI posture, and apply everything at once. Your calendar holds,
-            notifications, and co-processor preferences stay in sync.
+            Select a pattern and update your AI posture. Settings are stored in iPurpose for continuity.
           </p>
           <div className="flex flex-wrap gap-3 text-sm font-marcellus">
             <span className="px-4 py-1 rounded-full bg-white/15 border border-white/20">{todayLabel}</span>
             <span className="px-4 py-1 rounded-full bg-white border border-white/20 text-indigo-900">
               Today&apos;s Pattern: {appliedPattern ? PATTERNS.find(p => p.key === appliedPattern)?.title : "None"}
             </span>
+            {appliedAt && (
+              <span className="px-4 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-white">
+                Applied at {appliedAt}
+              </span>
+            )}
             {loadingPreferences && (
               <span className="px-4 py-1 rounded-full bg-black/30 border border-white/10 text-white/70">
                 Loading saved preferences…
@@ -270,11 +329,18 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
         <div className="grid gap-4 lg:grid-cols-2">
           {PATTERNS.map(pattern => {
             const isActive = selectedPattern === pattern.key;
+            const isApplied = appliedPattern === pattern.key;
             return (
               <button
                 key={pattern.key}
                 type="button"
-                onClick={() => setSelectedPattern(pattern.key)}
+                onClick={() => {
+                  if (pattern.key === "custom") {
+                    setCustomPattern(prev => ({ ...prev, isOpen: true }));
+                  } else {
+                    setSelectedPattern(pattern.key);
+                  }
+                }}
                 className={`text-left rounded-2xl border px-6 py-6 transition-all ${
                   isActive
                     ? "bg-white border-indigoDeep/30 shadow-soft-lg"
@@ -283,9 +349,14 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
               >
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-marcellus text-2xl text-warmCharcoal">{pattern.title}</h3>
-                  <span className={`text-xs font-semibold uppercase tracking-[0.3em] ${isActive ? "text-indigoDeep" : "text-warmCharcoal/50"}`}>
-                    {isActive ? "Selected" : "Tap to use"}
-                  </span>
+                  <div className="flex flex-col gap-1 items-end">
+                    <span className={`text-xs font-semibold uppercase tracking-[0.3em] ${isActive ? "text-indigoDeep" : "text-warmCharcoal/50"}`}>
+                      {isActive ? "Selected" : "Tap to use"}
+                    </span>
+                    {isApplied && (
+                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">Applied</span>
+                    )}
+                  </div>
                 </div>
                 <p className="text-sm text-warmCharcoal/70 font-marcellus mb-4">{pattern.description}</p>
                 <div className="space-y-2 text-sm font-mono text-warmCharcoal/80">
@@ -464,26 +535,184 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
         </details>
       </section>
 
-      <div className="flex flex-col gap-4 items-end">
-        {statusMessage && (
-          <div
-            className={`text-sm font-marcellus ${
-              statusMessage.type === "success" ? "text-green-700" : "text-red-600"
-            }`}
-          >
-            {statusMessage.message}
+      <section className="space-y-6 border-t border-warmCharcoal/10 pt-8">
+        <div className="space-y-4">
+          {statusMessage && (
+            <div
+              className={`rounded-xl border px-4 py-3 text-sm font-marcellus ${
+                statusMessage.type === "success" 
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-800" 
+                  : "border-red-200 bg-red-50 text-red-800"
+              }`}
+            >
+              {statusMessage.message}
+            </div>
+          )}
+          
+          {showClearConfirm && (
+            <div className="rounded-xl border border-warmCharcoal/20 bg-warmCharcoal/5 px-4 py-4">
+              <p className="text-sm font-marcellus text-warmCharcoal mb-3">Clear today's pattern and reset to neutral AI posture?</p>
+              <div className="flex gap-3">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  disabled={isClearing}
+                  onClick={handleClear}
+                >
+                  {isClearing ? "Clearing…" : "Clear"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowClearConfirm(false)}
+                  disabled={isClearing}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-3 items-center">
+            <Button
+              variant="primary"
+              size="md"
+              className="px-8"
+              disabled={!isDirty || isApplying || loadingPreferences || showClearConfirm}
+              onClick={handleApply}
+            >
+              {isApplying ? "Applying…" : isDirty ? "Apply Today's Pattern" : "Applied"}
+            </Button>
+            {appliedPattern && !showClearConfirm && (
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={() => setShowClearConfirm(true)}
+                disabled={isClearing}
+              >
+                Clear today
+              </Button>
+            )}
           </div>
-        )}
-        <Button
-          variant="primary"
-          size="md"
-          className="px-8"
-          disabled={!isDirty || isApplying || loadingPreferences}
-          onClick={handleApply}
-        >
-          {isApplying ? "Applying…" : isDirty ? "Apply Today’s Pattern" : "Applied"}
-        </Button>
-      </div>
+
+          <div className="rounded-xl border border-warmCharcoal/10 bg-warmCharcoal/5 px-4 py-3">
+            <p className="text-xs text-warmCharcoal/70 font-marcellus leading-relaxed">
+              <strong>v1 Note:</strong> Calendar holds are stored in iPurpose. Copy templates to your calendar when ready. AI posture preferences update instantly.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Custom Pattern Modal */}
+      {customPattern.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-warmCharcoal/10 bg-white p-6 shadow-2xl animate-in slide-in-from-bottom-4 sm:animate-in sm:slide-in-from-center">
+            <div className="mb-6">
+              <h2 className="font-marcellus text-2xl text-warmCharcoal mb-2">Custom Pattern</h2>
+              <p className="text-sm text-warmCharcoal/70 font-marcellus">Set your own AI posture for today.</p>
+            </div>
+
+            <div className="space-y-5">
+              <div>
+                <label className="block text-xs font-semibold text-warmCharcoal/70 mb-2">Pattern Name (optional)</label>
+                <input
+                  type="text"
+                  value={customPattern.name}
+                  onChange={(e) => setCustomPattern(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="e.g., Solo Friday"
+                  className="w-full px-4 py-2 border border-warmCharcoal/15 rounded-lg text-sm text-warmCharcoal font-marcellus focus:outline-none focus:ring-2 focus:ring-indigoDeep/20"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center justify-between text-xs font-semibold text-warmCharcoal/70 mb-2">
+                  <span>Tone: Supportive ↔ Direct</span>
+                  <span className="font-mono text-warmCharcoal/60">{toneValueToLabel(customPattern.ai.tone)}</span>
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={customPattern.ai.tone}
+                  onChange={(e) => setCustomPattern(prev => ({
+                    ...prev,
+                    ai: { ...prev.ai, tone: Number(e.target.value) }
+                  }))}
+                  className="w-full accent-indigoDeep"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center justify-between text-xs font-semibold text-warmCharcoal/70 mb-2">
+                  <span>Detail: Brief ↔ Thorough</span>
+                  <span className="font-mono text-warmCharcoal/60">{detailValueToLabel(customPattern.ai.detail)}</span>
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={customPattern.ai.detail}
+                  onChange={(e) => setCustomPattern(prev => ({
+                    ...prev,
+                    ai: { ...prev.ai, detail: Number(e.target.value) }
+                  }))}
+                  className="w-full accent-salmonPeach"
+                />
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold text-warmCharcoal/70 mb-2">Initiative</p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { key: "ask", label: "Only when I ask" },
+                    { key: "suggest", label: "Suggest when relevant" },
+                    { key: "auto", label: "Auto-trigger in modules" }
+                  ].map(option => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={() => setCustomPattern(prev => ({
+                        ...prev,
+                        ai: { ...prev.ai, initiative: option.key as InitiativeMode }
+                      }))}
+                      className={`px-3 py-1 rounded-full border text-xs font-marcellus transition ${
+                        customPattern.ai.initiative === option.key
+                          ? "border-indigoDeep bg-indigoDeep/10 text-indigoDeep"
+                          : "border-warmCharcoal/15 text-warmCharcoal/70 hover:border-indigoDeep/30"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
+                onClick={() => {
+                  setSelectedPattern("custom");
+                  setAiSnapshot(customPattern.ai);
+                  setCustomPattern(prev => ({ ...prev, isOpen: false }));
+                }}
+              >
+                Select for today
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex-1"
+                onClick={() => setCustomPattern(prev => ({ ...prev, isOpen: false }))}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
