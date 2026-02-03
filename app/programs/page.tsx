@@ -15,7 +15,7 @@ export default function ProgramsPage() {
       id: 'starter-pack',
       title: 'Starter Pack',
       subtitle: 'Your foundation for clarity',
-      price: '$27',
+      price: 'TBD', // Pulled from STRIPE_PRICE_STARTER_PACK env
       description:
         'A printable workbook + quick-start guide to help you establish your identity anchor, define what matters, and articulate your first aligned action.',
       includes: [
@@ -34,7 +34,7 @@ export default function ProgramsPage() {
       id: 'ai-blueprint',
       title: 'AI Blueprint',
       subtitle: 'AI prompts for clarity work',
-      price: '$17',
+      price: '$47', // STRIPE_PRICE_ID_AI_BLUEPRINT
       description:
         'A collection of carefully designed prompts you can use with ChatGPT, Claude, or any AI to guide your own clarity work. The blueprint includes domain-specific prompts for business, creative, and personal alignment.',
       includes: [
@@ -52,23 +52,22 @@ export default function ProgramsPage() {
     {
       id: 'accelerator',
       title: 'Accelerator',
-      subtitle: 'The complete program (coming soon)',
-      price: 'Custom',
+      subtitle: 'The complete program',
+      price: 'Custom', // STRIPE_PRICE_ID_ACCELERATOR
       description:
-        'A 12-week live cohort program combining the Starter Pack + AI Blueprint + weekly group sessions with Renita + monthly 1:1 coaching sessions.',
+        'A comprehensive program combining structured labs + AI tools + optional coaching + community access.',
       includes: [
-        'All Starter Pack + Blueprint content',
-        '12 weeks of live group sessions',
-        'Monthly 1:1 coaching',
+        'Complete online labs (self-paced)',
+        'AI prompt library',
         'Private community',
-        'Lifetime resource library',
-        'Completion certificate',
+        'Resources library',
+        'Optional: monthly 1:1 coaching sessions',
+        'Optional: live group sessions',
       ],
       cta: 'Learn More',
       ctaLink: '/program',
       accent: 'peach',
       audience: 'For those ready for deep, supported transformation.',
-      comingSoon: true,
     },
   ];
 
@@ -97,18 +96,9 @@ export default function ProgramsPage() {
             <Card
               key={program.id}
               accent={program.accent as any}
-              className={`flex flex-col h-full ${program.comingSoon ? 'opacity-75' : ''}`}
+              className="flex flex-col h-full"
             >
               <div className="flex-1">
-                {/* Badge */}
-                <div className="mb-4">
-                  {program.comingSoon && (
-                    <span className="inline-block px-3 py-1 bg-warmCharcoal/10 text-warmCharcoal text-xs font-semibold rounded-full">
-                      Coming Soon
-                    </span>
-                  )}
-                </div>
-
                 {/* Title & Price */}
                 <div className="mb-6">
                   <h2 className="text-2xl font-semibold text-warmCharcoal mb-1">{program.title}</h2>
@@ -141,21 +131,12 @@ export default function ProgramsPage() {
               </div>
 
               {/* CTA */}
-              {program.comingSoon ? (
-                <button
-                  disabled
-                  className="w-full py-3 px-4 rounded-lg font-semibold text-center transition bg-warmCharcoal/10 text-warmCharcoal/60 cursor-not-allowed"
-                >
-                  {program.cta}
-                </button>
-              ) : (
-                <Link
-                  href={program.ctaLink}
-                  className="w-full py-3 px-4 rounded-lg font-semibold text-center transition bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white hover:opacity-90 block"
-                >
-                  {program.cta}
-                </Link>
-              )}
+              <Link
+                href={program.ctaLink}
+                className="w-full py-3 px-4 rounded-lg font-semibold text-center transition bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white hover:opacity-90 block"
+              >
+                {program.cta}
+              </Link>
             </Card>
           ))}
         </div>
