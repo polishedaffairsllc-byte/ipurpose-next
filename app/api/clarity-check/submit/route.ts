@@ -50,6 +50,123 @@ function generateSummary(scores: ReturnType<typeof calculateDimensionScores>) {
   return { summary, nextStep };
 }
 
+async function sendFounderNotification(
+  userEmail: string,
+  scores: ReturnType<typeof calculateDimensionScores>,
+  summary: string,
+  submissionDocId: string
+) {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita.hamilton@polishedaffairsllc.com';
+
+  if (!resendApiKey) {
+    console.warn('RESEND_API_KEY not configured. Founder notification will not be sent.');
+    return false;
+  }
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(resendApiKey);
+
+    const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #2a2a2a; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { text-align: center; margin-bottom: 30px; }
+    .header h1 { font-size: 24px; color: #2a2a2a; margin: 0 0 10px 0; }
+    .section { margin-bottom: 20px; }
+    .info-row { display: flex; padding: 12px 0; border-bottom: 1px solid #eee; }
+    .info-label { font-weight: 600; width: 150px; color: #666; }
+    .info-value { flex: 1; color: #2a2a2a; }
+    .scores { background: #f5f5f5; padding: 15px; border-radius: 8px; }
+    .score-item { display: flex; justify-content: space-between; padding: 8px 0; }
+    .summary { background: #f9f5ff; padding: 15px; border-radius: 8px; border-left: 4px solid #a991d8; line-height: 1.6; }
+    .view-link { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #a991d8; color: white; text-decoration: none; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Clarity Check Submission</h1>
+    </div>
+
+    <div className="section">
+      <div className="info-row">
+        <div className="info-label">Email:</div>
+        <div className="info-value">${userEmail}</div>
+      </div>
+      <div className="info-row">
+        <div className="info-label">Submitted:</div>
+        <div className="info-value">${new Date().toLocaleString()}</div>
+      </div>
+    </div>
+
+    <div className="section">
+      <h3 style="margin: 0 0 15px 0;">Scores</h3>
+      <div className="scores">
+        <div className="score-item">
+          <span>Internal Clarity:</span>
+          <strong>${scores.internalClarity}/15</strong>
+        </div>
+        <div className="score-item">
+          <span>Readiness for Support:</span>
+          <strong>${scores.readinessForSupport}/15</strong>
+        </div>
+        <div className="score-item">
+          <span>Friction Between Insight & Action:</span>
+          <strong>${scores.frictionBetweenInsightAndAction}/15</strong>
+        </div>
+        <div className="score-item">
+          <span>Integration & Momentum:</span>
+          <strong>${scores.integrationAndMomentum}/15</strong>
+        </div>
+        <div className="score-item" style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 10px; margin-top: 10px;">
+          <span style="font-weight: 600;">Total Score:</span>
+          <strong>${scores.totalScore}/60</strong>
+        </div>
+      </div>
+    </div>
+
+    <div className="section">
+      <h3 style="margin: 0 0 10px 0;">Summary</h3>
+      <div className="summary">
+        ${summary}
+      </div>
+    </div>
+
+    <div>
+      <a href="https://ipurposesoul.com/deepen/admin/intake?submission=${submissionDocId}" className="view-link">
+        View Full Submission
+      </a>
+    </div>
+
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 12px; color: #999;">
+      <p>Submission ID: ${submissionDocId}</p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'info@ipurposesoul.com',
+      to: founderEmail,
+      subject: `New Clarity Check: ${userEmail}`,
+      html: emailHtml,
+    });
+
+    console.log('Founder notification sent successfully:', result);
+    return true;
+  } catch (error) {
+    console.error('Error sending founder notification:', error);
+    return false;
+  }
+}
+
 async function sendResultsEmail(
   email: string,
   scores: ReturnType<typeof calculateDimensionScores>,
@@ -200,30 +317,45 @@ export async function POST(request: NextRequest) {
     const scores = calculateDimensionScores(responses);
     const { summary, nextStep } = generateSummary(scores);
 
-    // Store in Firestore
+    // Store in clarityCheckSubmissions collection for founder intake
+    let submissionDocId = '';
     try {
-      await firebaseAdmin
+      const docRef = await firebaseAdmin
         .firestore()
-        .collection('clarity_checks')
+        .collection('clarityCheckSubmissions')
         .add({
           email,
           responses,
           scores,
-          summary,
-          nextStep,
-          timestamp: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+          resultSummary: summary,
+          resultDetail: nextStep,
+          source: 'clarity_check',
+          status: 'submitted',
+          createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
         });
+      submissionDocId = docRef.id;
+      console.log('Clarity check submission stored:', { id: submissionDocId, email });
     } catch (firestoreError) {
-      console.error('Firestore error:', firestoreError);
-      // Continue anyway—email is more important
+      console.error('Firestore error storing submission:', firestoreError);
+      // Continue anyway—we'll still try to send emails
     }
 
-    // Send email with results
+    // Send email with results to user
     try {
       await sendResultsEmail(email, scores, summary, nextStep);
+      console.log('User results email sent:', { email });
     } catch (emailError) {
-      console.error('Email error:', emailError);
+      console.error('Email error sending to user:', emailError);
       // Don't fail the request if email fails
+    }
+
+    // Send founder notification email
+    try {
+      await sendFounderNotification(email, scores, summary, submissionDocId);
+      console.log('Founder notification email sent for submission:', { id: submissionDocId });
+    } catch (founderEmailError) {
+      console.error('Error sending founder notification:', founderEmailError);
+      // Don't fail the request if founder email fails
     }
 
     return NextResponse.json(
