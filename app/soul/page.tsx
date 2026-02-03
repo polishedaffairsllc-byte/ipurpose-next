@@ -94,6 +94,7 @@ function getSuggestedPracticeId(checkin: CheckinStats['latestCheckin']) {
 
 async function getUserArchetype(userId: string) {
   try {
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     const db = firebaseAdmin.firestore();
     const doc = await db.collection("users").doc(userId).get();
     const data = doc.data();
@@ -108,6 +109,7 @@ async function getUserArchetype(userId: string) {
 
 async function hasCheckedInToday(userId: string) {
   try {
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     const db = firebaseAdmin.firestore();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -129,6 +131,7 @@ async function hasCheckedInToday(userId: string) {
 
 async function getCheckinStats(userId: string): Promise<CheckinStats> {
   try {
+    const { firebaseAdmin } = await import("@/lib/firebaseAdmin");
     const db = firebaseAdmin.firestore();
     const now = new Date();
     now.setHours(0, 0, 0, 0);
