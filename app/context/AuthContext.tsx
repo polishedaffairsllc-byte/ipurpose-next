@@ -14,11 +14,14 @@ import { getFirebaseAuth, getFirebaseFirestore } from "@/lib/firebaseClient";
 
 // Define the structure for the custom user data fetched from Firestore
 interface UserData extends DocumentData {
-    fullName?: string;
-    role?: 'user' | 'admin';
-    onboardingStep?: number;
-    createdAt?: object; // Using 'object' as Timestamp is complex to export
-    email?: string;
+  fullName?: string;
+  role?: string;
+  onboardingStep?: number;
+  createdAt?: object; // Using 'object' as Timestamp is complex to export
+  email?: string;
+  entitlementTier?: string;
+  tier?: string;
+  isFounder?: boolean;
 }
 
 // Define the structure for the entire context value

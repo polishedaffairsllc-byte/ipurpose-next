@@ -64,6 +64,8 @@ export default function LabsHubPage() {
     };
   }, []);
 
+  const allLabsComplete = labs.identity === "complete" && labs.meaning === "complete" && labs.agency === "complete";
+
   return (
     <div className="container max-w-5xl mx-auto px-6 md:px-10 py-10">
       <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-8 rounded-3xl">
@@ -76,13 +78,20 @@ export default function LabsHubPage() {
           </p>
         </div>
       </div>
+
+      {/* Orientation anchor */}
+      <p className="text-sm text-warmCharcoal/70 italic mb-6">
+        Labs turn insight into readiness. Complete all three to unlock Integration.
+      </p>
+
       {message === "complete-labs" ? (
-        <p className="mt-2 text-sm text-amber-700">Complete Labs to continue to Integration.</p>
+        <p className="mt-2 mb-6 text-sm text-amber-700">Complete Labs to continue to Integration.</p>
       ) : null}
 
       {loading ? <p className="mt-6 text-sm text-warmCharcoal/70">Loading...</p> : null}
       {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
 
+      {/* Labs grid: Identity, Meaning, Agency */}
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {labMeta.map((lab) => (
           <div key={lab.key} className="rounded-2xl border border-ip-border bg-white/80 p-6">
@@ -100,16 +109,44 @@ export default function LabsHubPage() {
         ))}
       </div>
 
-      {labs.identity === "complete" && labs.meaning === "complete" && labs.agency === "complete" ? (
-        <div className="mt-8">
+      {/* Integration preview card */}
+      <div className="mt-8">
+        {allLabsComplete ? (
           <Link
             href="/integration?from=labs"
-            className="inline-flex px-4 py-2 rounded-full bg-ip-accent text-white text-sm"
+            className="block rounded-2xl border border-ip-border bg-gradient-to-br from-ip-accent/10 to-ip-accent/5 p-6 hover:shadow-md transition-shadow"
           >
-            Continue to Integration
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-xl font-semibold text-warmCharcoal">Integration</h3>
+                <p className="mt-2 text-sm text-warmCharcoal/70">
+                  Synthesize your labs into a clear direction and 7-day plan.
+                </p>
+              </div>
+              <div className="ml-4 px-3 py-1 rounded-full bg-ip-accent text-white text-xs font-semibold">
+                Ready
+              </div>
+            </div>
+            <div className="mt-4 inline-flex px-4 py-2 rounded-full bg-ip-accent text-white text-sm">
+              Continue to Integration →
+            </div>
           </Link>
-        </div>
-      ) : null}
+        ) : (
+          <div className="rounded-2xl border border-ip-border/40 bg-white/40 p-6 opacity-60">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-xl font-semibold text-warmCharcoal/60">🔒 Integration</h3>
+                <p className="mt-2 text-sm text-warmCharcoal/50">
+                  Complete Identity, Meaning, and Agency to unlock Integration.
+                </p>
+              </div>
+              <div className="ml-4 px-3 py-1 rounded-full bg-warmCharcoal/20 text-warmCharcoal/60 text-xs font-semibold">
+                Locked
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

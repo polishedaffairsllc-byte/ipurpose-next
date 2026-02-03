@@ -4,6 +4,7 @@ import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import Card from "../../../components/Card";
 import SectionHeading from "../../../components/SectionHeading";
 import Button from "../../../components/Button";
+import { isFounder } from "@/lib/isFounder";
 
 export const dynamic = "force-dynamic";
 
@@ -15,12 +16,14 @@ export default async function WorkflowDeepenPage() {
   const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
   const db = firebaseAdmin.firestore();
   const userDoc = await db.collection("users").doc(decoded.uid).get();
-  if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+  const userData = userDoc.data() ?? {};
+  const founderBypass = isFounder(decoded, userData);
+  if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
     return redirect("/enrollment-required");
   }
 
   const workflowSnapshot = await db.collection("workflowSystems").where("uid", "==", decoded.uid).get();
-  const hasWorkflows = !workflowSnapshot.empty || Boolean(userDoc.data()?.systems?.workflowBuilderHasSystem);
+  const hasWorkflows = !workflowSnapshot.empty || Boolean(userData?.systems?.workflowBuilderHasSystem);
   if (!hasWorkflows) {
     return redirect("/systems/workflows?locked=1");
   }

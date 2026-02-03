@@ -4,6 +4,7 @@ import Card from "../../components/Card";
 import SectionHeading from "../../components/SectionHeading";
 import Button from "../../components/Button";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { isFounder } from "@/lib/isFounder";
 import SystemAIPanel from "../components/SystemAIPanel";
 import OfferArchitectureClient from "../components/OfferArchitectureClient";
 import MonetizationClient from "../components/MonetizationClient";
@@ -348,18 +349,20 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
     const decodedClaims = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(decodedClaims.uid).get();
+    const userData = userDoc.data() ?? {};
+    const founderBypass = isFounder(decodedClaims, userData);
 
-    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
       return redirect("/enrollment-required");
     }
 
     const hasWorkflow = Boolean(
-      userDoc.data()?.systems?.workflowBuilder?.created ||
-      userDoc.data()?.systems?.workflowBuilder?.createdAt ||
-      userDoc.data()?.workflowBuilder?.created ||
-      userDoc.data()?.workflowBuilder?.createdAt
+      userData?.systems?.workflowBuilder?.created ||
+      userData?.systems?.workflowBuilder?.createdAt ||
+      userData?.workflowBuilder?.created ||
+      userData?.workflowBuilder?.createdAt
     );
-    const workflowFlag = Boolean(userDoc.data()?.systems?.workflowBuilderHasSystem);
+    const workflowFlag = Boolean(userData?.systems?.workflowBuilderHasSystem);
     const workflowSnapshot = await db.collection("workflowSystems").where("uid", "==", decodedClaims.uid).limit(1).get();
     const hasWorkflowRecord = !workflowSnapshot.empty;
     // Unlock when at least one workflow/system exists or the fallback flag is set on the user profile.

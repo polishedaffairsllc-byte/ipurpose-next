@@ -6,6 +6,7 @@ import SectionHeading from "../../../components/SectionHeading";
 import Button from "../../../components/Button";
 import Link from "next/link";
 import BuildWorkflowForm from "./BuildWorkflowForm";
+import { isFounder } from "@/lib/isFounder";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,9 @@ export default async function WorkflowBuildPage() {
   const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
   const db = firebaseAdmin.firestore();
   const userDoc = await db.collection("users").doc(decoded.uid).get();
-  if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+  const userData = userDoc.data() ?? {};
+  const founderBypass = isFounder(decoded, userData);
+  if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
     return redirect("/enrollment-required");
   }
 

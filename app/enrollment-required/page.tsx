@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * /enrollment-required page
@@ -19,15 +20,45 @@ import { useEffect, useState } from 'react';
 
 export default function EnrollmentRequiredPage() {
   const router = useRouter();
-  const [attemptedRoute, setAttemptedRoute] = useState<string>('');
+  const { userData } = useAuth();
+  const [attemptedRoute, setAttemptedRoute] = useState<string | null>(null);
   const [checkingOut, setCheckingOut] = useState<'pro' | 'premium' | null>(null);
+  const founderBypass = Boolean(
+    userData?.isFounder ||
+    userData?.role === 'founder' ||
+    userData?.entitlementTier === 'founder'
+  );
 
   useEffect(() => {
     // Get the intended route from URL params or fallback from referrer
+    if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
-    const intended = params.get('next') || document.referrer || '/program';
+    const queryNext = params.get('next');
+    let intended = queryNext?.startsWith('/') ? queryNext : '';
+
+    if (!intended && document.referrer) {
+      try {
+        const refUrl = new URL(document.referrer);
+        if (refUrl.origin === window.location.origin) {
+          intended = `${refUrl.pathname}${refUrl.search}${refUrl.hash}`;
+        }
+      } catch {
+        intended = '';
+      }
+    }
+
+    if (!intended) {
+      intended = '/program';
+    }
+
     setAttemptedRoute(intended);
   }, []);
+
+  useEffect(() => {
+    if (!founderBypass || !attemptedRoute) return;
+    const safeTarget = attemptedRoute.startsWith('/') ? attemptedRoute : '/dashboard';
+    router.replace(safeTarget);
+  }, [founderBypass, attemptedRoute, router]);
 
   const handleCheckout = async (plan: 'pro' | 'premium') => {
     setCheckingOut(plan);
@@ -109,7 +140,28 @@ export default function EnrollmentRequiredPage() {
     };
   };
 
-  const tierInfo = getTierInfo(attemptedRoute);
+  const tierInfo = getTierInfo(attemptedRoute ?? '');
+
+  if (founderBypass) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-lavenderViolet/10 px-6">
+        <div className="max-w-md w-full text-center bg-white/85 backdrop-blur rounded-2xl border border-lavenderViolet/20 p-8">
+          <h1 className="text-2xl font-marcellus text-warmCharcoal mb-3">You're already unlocked</h1>
+          <p className="text-sm text-warmCharcoal/70">
+            Founder access includes every feature. Redirecting you now.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={(attemptedRoute && attemptedRoute.startsWith('/')) ? attemptedRoute : '/dashboard'}
+              className="px-5 py-2 rounded-full bg-lavenderViolet text-white font-marcellus"
+            >
+              Continue
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-lavenderViolet/10">

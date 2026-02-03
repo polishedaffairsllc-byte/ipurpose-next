@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { deriveFounderContext } from "@/lib/isFounder";
 
 // Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
 export const runtime = "nodejs";
@@ -37,24 +38,42 @@ export async function POST(req: Request) {
     const sessionCookie = await firebaseAdmin.auth().createSessionCookie(idToken, { expiresIn: SESSION_EXPIRES_IN });
     console.log("[LOGIN] Session cookie created, length:", sessionCookie.length);
 
+    const db = firebaseAdmin.firestore();
+
     // Verify the idToken to extract custom claims and check for founder status
-    let isFounder = false;
+    let uid = '';
+    let founderContext = deriveFounderContext(null, null);
     try {
       const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
-      isFounder = decoded.customClaims?.isFounder === true || decoded.customClaims?.role === 'founder';
-      console.log(`[LOGIN] User ${decoded.email} UID ${decoded.uid}`);
+      uid = decoded.uid;
+      const userRef = db.collection('users').doc(uid);
+      const userDoc = await userRef.get();
+      const userData = userDoc.exists ? userDoc.data() : null;
+
+      console.log(`[LOGIN] User ${decoded.email} UID ${uid}`);
       console.log(`[LOGIN] ID Token Custom Claims:`, decoded.customClaims);
-      console.log(`[LOGIN] Founder status from token: ${isFounder}`);
-      
-      // Also check Firestore for founder status as a fallback
-      const userDoc = await firebaseAdmin.firestore().collection('users').doc(decoded.uid).get();
-      if (userDoc.exists) {
-        const firestoreIsFounder = userDoc.data()?.isFounder || userDoc.data()?.role === 'founder';
-        console.log(`[LOGIN] Firestore founder status: ${firestoreIsFounder}`);
-        if (firestoreIsFounder && !isFounder) {
-          isFounder = true;
-          console.log("[LOGIN] Using Firestore founder status");
-        }
+
+      founderContext = deriveFounderContext(decoded, userData);
+      console.log(`[LOGIN] Founder context resolved:`, founderContext);
+
+      // If founder detected, ensure Firestore is synced with canonical founder fields
+      if (founderContext.isFounder) {
+        await userRef.set(
+          {
+            isFounder: true,
+            role: 'founder',
+            entitlementTier: 'founder',
+            updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
+        // Ensure role/tier are not null for downstream consumers
+        founderContext = {
+          isFounder: true,
+          role: founderContext.role ?? 'founder',
+          entitlementTier: founderContext.entitlementTier ?? 'founder',
+        };
+        console.log(`[LOGIN] Synced founder fields to Firestore for UID ${uid}`);
       }
     } catch (err) {
       console.error("[LOGIN] Error verifying idToken for custom claims:", err);
@@ -78,7 +97,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (isFounder) {
+    if (founderContext.isFounder) {
       cookies.push(
         `x-founder=true; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
       );
@@ -93,7 +112,15 @@ export async function POST(req: Request) {
       responseHeaders.append("Set-Cookie", cookie);
     }
 
-    const response = new Response(JSON.stringify({ success: true, isFounder, message: "Login successful" }), {
+    const responsePayload = {
+      success: true,
+      isFounder: founderContext.isFounder,
+      role: founderContext.role,
+      entitlementTier: founderContext.entitlementTier,
+      message: "Login successful",
+    };
+
+    const response = new Response(JSON.stringify(responsePayload), {
       status: 200,
       headers: responseHeaders,
     });

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
+import { isFounder } from "@/lib/isFounder";
 import FocusAndRitualsClient from "./FocusAndRitualsClient";
 
 export default async function SettingsPage() {
@@ -14,12 +15,14 @@ export default async function SettingsPage() {
     // Check entitlement
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(decodedClaims.uid).get();
+    const userData = userDoc.data() ?? {};
+    const founderBypass = isFounder(decodedClaims, userData);
 
-    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
       return redirect("/enrollment-required");
     }
 
-    const membershipData = userDoc.data()?.membership || {};
+    const membershipData = userData?.membership || {};
     const membership = {
       tier: membershipData.tier ?? null,
       renewalDate: membershipData.renewalDate ?? null,

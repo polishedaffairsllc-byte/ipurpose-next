@@ -1,70 +1,12 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
-import PageTitle from "../components/PageTitle";
+import { isFounder } from "@/lib/isFounder";
+import { getInsightsSummary } from "@/lib/insights/getInsightsSummary";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
-
-// Data source helpers
-async function getUserInsights(userId: string) {
-  try {
-    const db = firebaseAdmin.firestore();
-    
-    // Get check-ins (for Soul Alignment)
-    const checkInsSnapshot = await db
-      .collection("users")
-      .doc(userId)
-      .collection("checkIns")
-      .where("createdAt", ">=", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-      .orderBy("createdAt", "desc")
-      .get();
-    
-    const checkIns = checkInsSnapshot.docs.map(doc => ({
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt)
-    }));
-    
-    // Get practices (for Active Practices)
-    const practicesSnapshot = await db
-      .collection("users")
-      .doc(userId)
-      .collection("practices")
-      .where("completedAt", ">=", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-      .get();
-    
-    const activePractices = practicesSnapshot.docs.length;
-    
-    // Calculate alignment consistency
-    const alignmentConsistency = checkIns.length > 0 
-      ? Math.round((Math.min(checkIns.length, 7) / 7) * 100)
-      : 0;
-    
-    // Get last 7 days activity for streak
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const recentActivity = checkIns.filter(c => new Date(c.createdAt) >= sevenDaysAgo);
-    
-    return {
-      checkIns,
-      activePractices,
-      alignmentConsistency,
-      recentActivityCount: recentActivity.length,
-      hasCheckIns: checkIns.length > 0,
-      hasPractices: activePractices > 0
-    };
-  } catch (error) {
-    console.error("Error fetching user insights:", error);
-    return {
-      checkIns: [],
-      activePractices: 0,
-      alignmentConsistency: 0,
-      recentActivityCount: 0,
-      hasCheckIns: false,
-      hasPractices: false
-    };
-  }
-}
 
 export default async function InsightsPage() {
   const cookieStore = await cookies();
@@ -78,16 +20,20 @@ export default async function InsightsPage() {
     // Check entitlement
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(userId).get();
+    const userData = userDoc.data() ?? {};
+    const founderBypass = isFounder(decodedClaims, userData);
 
-    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
       return redirect("/enrollment-required");
     }
 
-    const insights = await getUserInsights(userId);
+    // Fetch read-only insights summary
+    const summary = await getInsightsSummary(userId);
 
     return (
       <div className="container max-w-6xl mx-auto px-6 md:px-10 py-8 md:py-12">
 
+        {/* Hero Section */}
         <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-10 rounded-3xl">
           <VideoBackground src="/videos/water-reflection.mp4" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
@@ -99,13 +45,14 @@ export default async function InsightsPage() {
           </div>
         </div>
 
-        {/* Philosophy Card */}
+        {/* How This Works */}
         <Card accent="salmon" className="mb-12">
           <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">
             HOW THIS WORKS
           </p>
           <p className="text-sm text-warmCharcoal/75 leading-relaxed font-marcellus">
-            Insights are based on your check-ins and practices in iPurpose. Every number here comes from your real activity. Start with a check-in to unlock your data.
+            Insights are based on your check-ins and practices in iPurpose. Every number here comes from your real activity. 
+            No preferences to save here—Insights is purely interpretive. Start with a check-in to unlock your data.
           </p>
         </Card>
 
@@ -115,54 +62,54 @@ export default async function InsightsPage() {
             Your Progress
           </SectionHeading>
           <div className="grid md:grid-cols-3 gap-5">
-            {/* Alignment Consistency */}
+            {/* Alignment Consistency (7 days) */}
             <Card accent="lavender">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-marcellus">
                 Alignment Consistency
               </p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">
-                  {insights.alignmentConsistency}%
+                <span className="text-4xl font-marcellus text-warmCharcoal">
+                  {summary.alignmentConsistency7d}%
                 </span>
               </div>
               <p className="text-xs text-warmCharcoal/50 font-marcellus">
-                Check-ins last 7 days
+                Days with check-ins last 7 days
               </p>
-              {!insights.hasCheckIns && (
+              {summary.checkinsLast30d === 0 && (
                 <p className="text-xs text-warmCharcoal/40 mt-3 italic font-marcellus">
-                  Start a check-in to build your data
+                  Start a check-in to build your alignment data.
                 </p>
               )}
             </Card>
 
-            {/* Active Practices */}
+            {/* Practices Completed (30 days) */}
             <Card accent="salmon">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-marcellus">
                 Practices Completed
               </p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">
-                  {insights.activePractices}
+                <span className="text-4xl font-marcellus text-warmCharcoal">
+                  {summary.practicesLast30d}
                 </span>
               </div>
               <p className="text-xs text-warmCharcoal/50 font-marcellus">
                 Last 30 days
               </p>
-              {!insights.hasPractices && (
+              {summary.practicesLast30d === 0 && (
                 <p className="text-xs text-warmCharcoal/40 mt-3 italic font-marcellus">
-                  Build your first practice to get started
+                  Build systems to start tracking practices.
                 </p>
               )}
             </Card>
 
-            {/* Check-in Count */}
+            {/* Check-ins Logged (30 days) */}
             <Card accent="gold">
               <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-2 font-marcellus">
                 Check-ins Logged
               </p>
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-marcellus text-warmCharcoal">
-                  {insights.checkIns.length}
+                <span className="text-4xl font-marcellus text-warmCharcoal">
+                  {summary.checkinsLast30d}
                 </span>
               </div>
               <p className="text-xs text-warmCharcoal/50 font-marcellus">
@@ -172,7 +119,7 @@ export default async function InsightsPage() {
           </div>
         </div>
 
-        {/* Soul & Growth Analytics */}
+        {/* Your Journey: Check-Ins */}
         <div className="mb-16">
           <SectionHeading level="h2" className="mb-6">
             Your Journey
@@ -189,13 +136,16 @@ export default async function InsightsPage() {
                 <span className="text-2xl">✨</span>
               </div>
               
-              {insights.hasCheckIns ? (
+              {summary.checkinsLast30d > 0 ? (
                 <div className="space-y-3">
                   <p className="text-sm text-warmCharcoal/70 font-marcellus">
-                    You've logged <strong>{insights.checkIns.length} check-ins</strong> in the last 30 days.
+                    You've logged <strong>{summary.checkinsLast30d} check-ins</strong> in the last 30 days.
                   </p>
-                  <div className="text-xs text-warmCharcoal/60 space-y-1 font-marcellus">
-                    <p>Most recent: {new Date(insights.checkIns[0]?.createdAt).toLocaleDateString()}</p>
+                  <div className="text-xs text-warmCharcoal/60 space-y-2 font-marcellus">
+                    <p>Most recent: <strong>{summary.mostRecentCheckinDate ?? "—"}</strong></p>
+                    {summary.streakDays > 0 && (
+                      <p>Current streak: <strong>{summary.streakDays} day{summary.streakDays !== 1 ? "s" : ""}</strong></p>
+                    )}
                   </div>
                   <Button variant="ghost" size="sm" href="/soul">
                     Review Your Check-Ins →
@@ -232,10 +182,10 @@ export default async function InsightsPage() {
                 <span className="text-2xl">⚙️</span>
               </div>
               
-              {insights.hasPractices ? (
+              {summary.practicesLast30d > 0 ? (
                 <div className="space-y-3">
                   <p className="text-sm text-warmCharcoal/70 font-marcellus">
-                    You've completed <strong>{insights.activePractices} practices</strong> in the last 30 days.
+                    You've completed <strong>{summary.practicesLast30d} practice{summary.practicesLast30d !== 1 ? "s" : ""}</strong> in the last 30 days.
                   </p>
                   <Button variant="ghost" size="sm" href="/systems">
                     View Your Systems →
@@ -256,7 +206,7 @@ export default async function InsightsPage() {
         </div>
 
         {/* Coming Soon Features */}
-        <div className="mb-16">
+        <div>
           <SectionHeading level="h2" className="mb-6">
             Coming Soon
           </SectionHeading>
@@ -266,13 +216,13 @@ export default async function InsightsPage() {
                 <div>
                   <h3 className="font-marcellus text-lg text-warmCharcoal">Alignment Trends</h3>
                   <p className="text-xs text-warmCharcoal/55 font-marcellus">
-                    30-day visualization (building soon)
+                    30-day visualization
                   </p>
                 </div>
                 <span className="text-2xl">📈</span>
               </div>
               <p className="text-xs text-warmCharcoal/50 font-marcellus">
-                We're building this feature to show how your alignment scores trend over time.
+                Track how your alignment scores trend over time.
               </p>
             </Card>
 
@@ -281,13 +231,13 @@ export default async function InsightsPage() {
                 <div>
                   <h3 className="font-marcellus text-lg text-warmCharcoal">Custom Dashboards</h3>
                   <p className="text-xs text-warmCharcoal/55 font-marcellus">
-                    Build your own view (building soon)
+                    Build your own view
                   </p>
                 </div>
                 <span className="text-2xl">🎯</span>
               </div>
               <p className="text-xs text-warmCharcoal/50 font-marcellus">
-                Create personalized dashboards for metrics that matter most to you.
+                Create personalized dashboards for the metrics that matter most.
               </p>
             </Card>
           </div>

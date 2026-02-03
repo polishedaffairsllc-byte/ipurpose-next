@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import { canAccessTier, getTierFromUser } from "@/app/lib/auth/entitlements";
+import { isFounder as isFounderUser } from "@/lib/isFounder";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
 import PathBanner from "@/app/components/PathBanner";
 import Card from "../components/Card";
@@ -43,13 +44,15 @@ export default async function DashboardPage() {
     const user = await firebaseAdmin.auth().getUser(decoded.uid);
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(decoded.uid).get();
+    const userData = userDoc.data() ?? {};
     const customClaims = decoded.customClaims || {};
-    const tier = getTierFromUser({ ...userDoc.data(), customClaims });
+    const tier = getTierFromUser({ ...userData, customClaims });
     const canAccessCommunity = canAccessTier(tier, "BASIC_PAID");
 
+    const founderBypass = isFounderUser(decoded, userData);
+
     // Skip entitlement check for founders
-    const isFounder = customClaims.isFounder || customClaims.role === 'founder';
-    if (!isFounder && (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active")) {
+    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
       return (
         <div className="min-h-[50vh] flex items-center justify-center p-6">
           <div className="max-w-md text-center bg-white/80 backdrop-blur-sm border border-ip-border rounded-2xl p-8 shadow-sm">

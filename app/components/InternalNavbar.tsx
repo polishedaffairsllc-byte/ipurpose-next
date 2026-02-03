@@ -7,7 +7,7 @@ const navItems = [
   { href: '/dashboard', label: 'Orientation' },
   { href: '/soul', label: 'Soul' },
   { href: '/systems', label: 'Systems' },
-  { href: '/ai', label: 'Inner Compass' },
+  { href: '/ai', label: 'Compass' },
   { href: '/insights', label: 'Reflections' },
   { href: '/labs', label: 'Labs' },
   { href: '/community', label: 'Community' },

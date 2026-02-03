@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
+import { isFounder } from "@/lib/isFounder";
 import PageTitle from "../components/PageTitle";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -183,8 +184,10 @@ export default async function SoulPage() {
     // Check entitlement
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(userId).get();
+    const userData = userDoc.data() ?? {};
+    const founderBypass = isFounder(decodedClaims, userData);
 
-    if (!userDoc.exists || userDoc.data()?.entitlement?.status !== "active") {
+    if (!founderBypass && (!userDoc.exists || userData?.entitlement?.status !== "active")) {
       return redirect("/enrollment-required");
     }
     
