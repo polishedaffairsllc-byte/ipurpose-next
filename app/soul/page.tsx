@@ -308,12 +308,12 @@ export default async function SoulPage() {
                 <div>
                   <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">Forward bridge</p>
                   <p className="font-marcellus text-warmCharcoal text-lg">Choose your next move and capture what you learned.</p>
-                  <p className="text-sm text-warmCharcoal/70 font-marcellus">Your awareness here carries forward — nothing is lost.</p>
-                  <p className="text-sm text-warmCharcoal/70 font-marcellus">When you’re ready, hop into Labs to build, or Inner Compass to map your next aligned action. Or end the session with a quick micro-brief.</p>
+                  <p className="text-sm text-warmCharcoal/70 font-marcellus">Your awareness here is saved to your Soul record. Over time, these patterns shape your Insights and future guidance.</p>
+                  <p className="text-sm text-warmCharcoal/70 font-marcellus">When you’re ready, hop into Inner Compass to map your next aligned action, open Labs to build, or end the session with a quick micro-brief.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Button variant="secondary" href="/labs">Open Labs</Button>
                   <Button href="/inner-compass">Inner Compass</Button>
+                  <Button variant="secondary" href="/labs">Open Labs</Button>
                   <Button variant="ghost" href="/dashboard">End session</Button>
                 </div>
               </div>

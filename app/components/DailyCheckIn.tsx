@@ -70,7 +70,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
       <Card accent="salmon" className="mb-8">
           <div className="text-center py-6 space-y-3">
             <p className="text-2xl mb-1">✨</p>
-            <p className="font-marcellus text-lg text-warmCharcoal mb-2">Check-in saved</p>
+            <p className="font-marcellus text-lg text-warmCharcoal mb-1">Saved. Your check-in is part of your ongoing Soul record.</p>
             <p className="text-sm text-warmCharcoal/70 font-marcellus">
               Thanks — today you might benefit from:
             </p>

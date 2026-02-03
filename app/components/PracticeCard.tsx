@@ -44,6 +44,7 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
       if (response.ok) {
         setStep('confirmation');
         setTimeout(() => {
+          setIsOpen(false);
           window.location.reload();
         }, 2000);
       }
@@ -107,7 +108,7 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
                   Save for later
                 </Button>
                 <Button onClick={() => setStep('reflection')} className="flex-1">
-                  I'm Ready
+                  Start reflection
                 </Button>
               </div>
             </div>
@@ -132,20 +133,25 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
                 />
               </div>
 
-              <Button onClick={handleComplete} disabled={loading} className="w-full">
-                Complete Practice
-              </Button>
+              <div className="space-y-2">
+                <Button onClick={handleComplete} disabled={loading} className="w-full">
+                  I'm Ready
+                </Button>
+                <p className="text-xs text-warmCharcoal/60 text-center font-marcellus">
+                  This saves your reflection and closes the practice.
+                </p>
+              </div>
             </div>
           )}
 
           {step === 'confirmation' && (
             <div className="text-center py-4 space-y-3">
               <p className="text-3xl">🎉</p>
-              <p className="font-marcellus text-lg text-warmCharcoal">Practice complete</p>
+              <p className="font-marcellus text-lg text-warmCharcoal">Practice saved</p>
               <p className="text-sm text-warmCharcoal/70 font-marcellus">
-                You showed up for your soul. That’s enough for today.
+                This reflection will be available in your Soul history and Insights.
               </p>
-              <p className="text-xs text-warmCharcoal/55 font-marcellus">Saved to your reflections.</p>
+              <p className="text-xs text-warmCharcoal/55 font-marcellus">Take a breath, then choose what’s next.</p>
             </div>
           )}
         </div>
