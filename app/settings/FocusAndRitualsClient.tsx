@@ -293,7 +293,7 @@ export default function FocusAndRitualsClient({ membership }: FocusAndRitualsCli
     <div className="space-y-12">
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-warmCharcoal/80 to-salmonPeach/30 text-white p-8 md:p-12">
         <div className="max-w-3xl space-y-4">
-          <p className="text-sm tracking-[0.4em] uppercase text-white/60">Focus & Rituals</p>
+          <p className="text-sm tracking-[0.4em] uppercase text-white/60">Focus</p>
           <h1 className="heading-hero text-white">Set the tone for today</h1>
           <p className="text-white/80 font-marcellus text-base md:text-lg">
             Select a pattern and update your AI posture. Settings are stored in iPurpose for continuity.
