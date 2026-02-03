@@ -29,7 +29,7 @@ export default async function InsightsPage() {
           <VideoBackground src="/videos/water-reflection.mp4" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
           <div className="relative z-10 text-center px-4 max-w-4xl">
-            <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Insights</h1>
+            <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Reflections</h1>
             <p className="text-xl md:text-2xl text-white/85 font-marcellus drop-shadow-lg">
               Real data from your check-ins and practices. The more you use iPurpose, the smarter this becomes.
             </p>
@@ -42,8 +42,8 @@ export default async function InsightsPage() {
             HOW THIS WORKS
           </p>
           <p className="text-sm text-warmCharcoal/75 leading-relaxed font-marcellus">
-            Insights are based on your check-ins and practices in iPurpose. Every number here comes from your real activity. 
-            No preferences to save here—Insights is purely interpretive. Start with a check-in to unlock your data.
+            Reflections are based on your check-ins and practices in iPurpose. Every number here comes from your real activity. 
+            No preferences to save here—Reflections is purely interpretive. Start with a check-in to unlock your data.
           </p>
         </Card>
 

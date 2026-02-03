@@ -46,6 +46,12 @@ export default async function AIPage() {
         <div className="container max-w-4xl mx-auto px-6 md:px-10 py-6 md:py-8 space-y-10">
 
           <div className="space-y-3">
+            <p className="text-base text-warmCharcoal/70 font-marcellus italic">
+              Compass asks questions. You find the answers.
+            </p>
+          </div>
+
+          <div className="space-y-3">
             <SectionHeading>iPurpose Mentor</SectionHeading>
             <p className="text-base text-warmCharcoal/80 leading-relaxed">
               A structured AI support tool to help you think, reflect, and build with clarity.
@@ -71,6 +77,18 @@ export default async function AIPage() {
           <p className="text-sm text-warmCharcoal/75 leading-relaxed">
             The Compass doesn't decide for you — it helps you clarify, structure, and reflect on your own decisions.
           </p>
+        </Card>
+
+        <Card accent="lavender" className="mb-8">
+          <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/55 uppercase mb-2">
+            Want to Recalibrate?
+          </p>
+          <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-4">
+            Revisit how iPurpose works and the learning path that shapes your journey.
+          </p>
+          <a href="/orientation" className="text-sm text-lavenderViolet font-semibold hover:opacity-80 transition-opacity">
+            Recalibrate Your Learning Path →
+          </a>
         </Card>
 
         <AIClient initialName={name} userId={decoded.uid} />

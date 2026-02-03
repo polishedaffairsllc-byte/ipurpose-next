@@ -22,7 +22,7 @@ const premiumModules = [
   {
     key: "reflections",
     name: "Reflections",
-    description: "Insights dashboard and read-only metrics.",
+    description: "Reflections dashboard and read-only metrics.",
     href: "/insights",
     requiredTier: "DEEPENING" as EntitlementTier,
   },
