@@ -8,9 +8,11 @@ import Footer from '../components/Footer';
 export default function ClarityCheckPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState(''); // Honeypot
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function ClarityCheckPage() {
       const res = await fetch('/api/leads/clarity-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ name, email, website }),
       });
 
       const data = await res.json();
@@ -33,7 +35,12 @@ export default function ClarityCheckPage() {
       }
 
       if (data.ok) {
-        setSubmitted(true);
+        setShowConfirmation(true);
+        // Hide confirmation after 3 seconds, then show submitted state
+        setTimeout(() => {
+          setShowConfirmation(false);
+          setSubmitted(true);
+        }, 3000);
       } else {
         throw new Error(data.error || 'Failed to submit clarity check');
       }
@@ -51,6 +58,13 @@ export default function ClarityCheckPage() {
       
       {/* Main Content */}
       <div className="container max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
+        {/* Confirmation Banner */}
+        {showConfirmation && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm sm:text-base">
+            ✓ Saved. Your Clarity Check is recorded.
+          </div>
+        )}
+
         {!submitted ? (
           <div>
             <section 
@@ -98,6 +112,22 @@ export default function ClarityCheckPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 text-sm sm:text-base"
                   placeholder="sarah@example.com"
+                />
+              </div>
+
+              {/* Honeypot field - hidden via CSS, not type="hidden" */}
+              <div style={{ display: 'none' }}>
+                <label className="block text-xs sm:text-sm font-medium text-warmCharcoal mb-2">
+                  Website
+                </label>
+                <input
+                  type="text"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 text-sm sm:text-base"
+                  placeholder="https://yoursite.com"
+                  autoComplete="off"
+                  tabIndex={-1}
                 />
               </div>
 
