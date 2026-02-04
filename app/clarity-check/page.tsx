@@ -81,14 +81,14 @@ export default function ClarityCheckPage() {
               <h1 className="heading-hero mb-6 text-white relative z-10 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                 Take Your Clarity Check
               </h1>
-              <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-base sm:text-lg md:text-xl lg:text-2xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+              <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-[40px]" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
                 Five questions to unlock your direction
               </p>
             </section>
 
             <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-warmCharcoal mb-2">
+                <label className="block font-medium text-warmCharcoal mb-2 text-[40px]">
                   Your Name
                 </label>
                 <input
@@ -96,13 +96,13 @@ export default function ClarityCheckPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 text-[40px]"
                   placeholder="E.g., Sarah"
                 />
               </div>
 
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-warmCharcoal mb-2">
+                <label className="block font-medium text-warmCharcoal mb-2 text-[40px]">
                   Your Email
                 </label>
                 <input
@@ -110,7 +110,7 @@ export default function ClarityCheckPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 text-sm sm:text-base"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 text-[40px]"
                   placeholder="sarah@example.com"
                 />
               </div>
@@ -140,7 +140,7 @@ export default function ClarityCheckPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-2 sm:py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled text-sm sm:text-base"
+                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-2 sm:py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled text-[40px]"
               >
                 {loading ? 'Submitting...' : 'Take the Clarity Check'}
               </button>
@@ -152,7 +152,7 @@ export default function ClarityCheckPage() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal mb-3 sm:mb-4">
               You're in.
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/75 mb-8 sm:mb-12">
+            <p className="text-warmCharcoal/75 mb-8 sm:mb-12 text-4xl">
               Now take the assessment. 12 quick questions to understand where you truly stand.
             </p>
             <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">

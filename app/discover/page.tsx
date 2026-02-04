@@ -21,7 +21,7 @@ export default function DiscoverPage() {
       <PublicHeader />
       
       {/* Main Content */}
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-20">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 space-y-16 sm:space-y-20 pb-0">
         
         {/* Hero */}
         <section 
@@ -36,133 +36,199 @@ export default function DiscoverPage() {
           <div className="absolute inset-0 bg-black/50"></div>
           
           <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-            Discover iPurpose™
+            Discover iPurpose<span style={{ fontSize: '0.3em', verticalAlign: 'super' }}>™</span>
           </h1>
-          <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
-            Soul + Systems + AI™
-          </p>
+          <div className="flex justify-center">
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '60px' }}>
+              Soul + Systems + AI™
+            </p>
+          </div>
         </section>
+
+        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-4 py-8">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          <span style={{ fontSize: '24px', color: '#9C88FF' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+        </div>
 
         {/* What iPurpose Is */}
-        <section className="space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal">
+        <section className="bg-gradient-to-br from-lavenderViolet/5 to-transparent rounded-2xl p-8 sm:p-12 border border-lavenderViolet/10">
+          <h2 className="font-marcellus text-warmCharcoal mb-6 text-center" style={{ fontSize: '50px' }}>
             What iPurpose is
           </h2>
-          <p className="text-warmCharcoal/75 text-sm sm:text-base md:text-lg lg:text-xl">
-            iPurpose is a framework for orienting yourself when what you're building no longer feels coherent.
-          </p>
-          <p className="text-warmCharcoal/75 text-sm sm:text-base md:text-lg lg:text-xl">
-            It integrates inner alignment (Soul), practical structure (Systems), and supportive technology (AI) to help people make decisions that are both meaningful and sustainable.
-          </p>
+          <div className="flex gap-8 items-center">
+            <img 
+              src="/images/discover-page/person-standing-on-path-by-water.jpg" 
+              alt="Peaceful water and nature" 
+              className="object-cover flex-shrink-0"
+              style={{ width: '400px', height: '300px', marginRight: '52px' }}
+            />
+            <div className="space-y-4 sm:space-y-6 text-left">
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                iPurpose is an orientation framework for moments when what you're building no longer feels coherent.
+              </p>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                It's for people who are capable, thoughtful, and trying to do something meaningful—yet feel internally scattered, misaligned, or unsure how to move forward without burning themselves out.
+              </p>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                iPurpose integrates three layers of development:
+              </p>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                <strong>Soul</strong> — understanding who you are, what matters to you, and how you naturally move through the world
+              </p>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                <strong>Systems</strong> — translating that clarity into structures, workflows, and decisions that are sustainable in real life
+              </p>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                <strong>AI</strong> — offering supportive guidance that reinforces clarity rather than replacing personal responsibility
+              </p>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                The goal isn't optimization or reinvention.<br />
+              The goal is coherence—so the way you live, work, and build no longer contradicts who you are.
+            </p>
+            </div>
+          </div>
         </section>
+        
+        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-4 py-8">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #FCC4B7, transparent)' }}></div>
+          <span style={{ fontSize: '24px', color: '#FCC4B7' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #FCC4B7, transparent)' }}></div>
+        </div>
 
         {/* Who It's For */}
-        <section className="space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal">
+        <section className="bg-gradient-to-br from-salmonPeach/5 to-transparent rounded-2xl p-8 sm:p-12 border border-salmonPeach/10">
+          <h2 className="font-marcellus text-warmCharcoal mb-6 text-center" style={{ fontSize: '50px' }}>
             Who it's for
           </h2>
-          <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75 text-sm sm:text-base md:text-lg lg:text-xl">
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
-              <span>You're capable, but you feel scattered or stuck</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
-              <span>You're building something, but it doesn't feel fully true — like the vision makes sense, yet something hasn't fully settled into place.</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
-              <span>You want clarity without burnout</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">✓</span>
-              <span>You want structure that supports your real life</span>
-            </li>
-          </ul>
-        </section>
+          <div className="flex gap-8 items-center">
+            <div className="space-y-4 sm:space-y-6 text-left">
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+                iPurpose may be for you if:
+              </p>
+              <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75" style={{ fontSize: '35px', listStyle: 'none', padding: 0 }}>
+                <li>You're building something, but it doesn't fully feel settled or true yet</li>
+                <li>The vision makes sense, but your inner alignment hasn't quite caught up</li>
+                <li>You want clarity without burnout</li>
+                <li>You want structure that supports your actual life—not an idealized version of it</li>
+              </ul>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+              This work is especially supportive for people who want to act ethically, live with intention, and become better stewards of their time, energy, and responsibilities.
+            </p>
+            </div>
+            <img 
+              src="/images/discover-page/man-on-rocky-shore-gazing-at-ocean-sunset-horizon..jpg" 
+              alt="Ripples in water" 
+              className="object-cover flex-shrink-0"
+              style={{ width: '400px', height: '300px', marginLeft: '52px' }}
+            />
+          </div>
+        </section>        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-4 py-8">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #4B4E6D, transparent)' }}></div>
+          <span style={{ fontSize: '24px', color: '#4B4E6D' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #4B4E6D, transparent)' }}></div>
+        </div>
 
         {/* This May Not Be For You */}
-        <section className="space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal">
+        <section className="bg-gradient-to-br from-warmCharcoal/5 to-transparent rounded-2xl p-8 sm:p-12 border border-warmCharcoal/10">
+          <h2 className="font-marcellus text-warmCharcoal mb-6 text-center" style={{ fontSize: '50px' }}>
             This may not be for you if…
           </h2>
-          <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75 text-sm sm:text-base md:text-lg lg:text-xl">
-            <li className="flex gap-3">
-              <span className="text-warmCharcoal/50 font-bold flex-shrink-0">✕</span>
-              <span>You're looking for quick fixes or hype-driven motivation</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-warmCharcoal/50 font-bold flex-shrink-0">✕</span>
-              <span>You want tactics without reflection</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-warmCharcoal/50 font-bold flex-shrink-0">✕</span>
-              <span>You expect automation to replace personal responsibility</span>
-            </li>
-          </ul>
-        </section>
+          <div className="flex gap-8 items-center">
+            <img 
+              src="/images/discover-page/DSC01432.webp" 
+              alt="Compass in water" 
+              className="object-cover flex-shrink-0"
+              style={{ width: '400px', height: '300px', marginRight: '52px' }}
+            />
+            <div className="space-y-4 sm:space-y-6 text-left">
+              <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75 inline-block" style={{ fontSize: '35px', listStyle: 'none', padding: 0 }}>
+                <li>You're looking for quick fixes, hype, or constant motivation</li>
+                <li>You want tactics without reflection</li>
+                <li>You expect automation, systems, or AI to replace self-awareness or accountability</li>
+              </ul>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+              iPurpose is designed for people who want to do the right thing—starting with themselves.
+            </p>
+            </div>
+          </div>
+        </section>        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-4 py-8">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #88B04B, transparent)' }}></div>
+          <span style={{ fontSize: '24px', color: '#88B04B' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #88B04B, transparent)' }}></div>
+        </div>
 
         {/* How It Works */}
-        <section className="space-y-4 sm:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-marcellus text-warmCharcoal">
+        <section className="bg-gradient-to-br from-green-50 to-transparent rounded-2xl p-8 sm:p-12 border border-green-100">
+          <h2 className="font-marcellus text-warmCharcoal mb-6 text-center" style={{ fontSize: '50px' }}>
             How it works
           </h2>
-          <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75 text-sm sm:text-base md:text-lg lg:text-xl">
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">→</span>
-              <span><strong>Soul:</strong> focuses on internal clarity and values</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">→</span>
-              <span><strong>Systems:</strong> addresses structure, follow-through, and sustainability</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-lavenderViolet font-bold flex-shrink-0">→</span>
-              <span><strong>AI:</strong> provides supportive guidance once clarity is established</span>
-            </li>
-          </ul>
-        </section>
+          <div className="flex gap-8 items-center">
+            <div className="space-y-4 sm:space-y-6 text-left">
+              <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75 inline-block" style={{ fontSize: '35px', listStyle: 'none', padding: 0 }}>
+                <li><strong>Soul</strong> helps you clarify identity, values, and internal alignment</li>
+                <li><strong>Systems</strong> helps you apply that clarity through structure, follow-through, and practical design</li>
+                <li><strong>AI</strong> provides support and perspective once clarity is established—not before</li>
+              </ul>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+              Together, these layers help you move from self-understanding to ethical, sustainable action.
+            </p>
+            </div>
+            <img 
+              src="/images/discover-page/W6RS98jvVvjPVRrRAl0m09G1C1AGTDLnQvYa60BaCRlXEVvHLZu0LZPRK6mD2BDaHgHFSDCPSJsCAUDyH4EHulYiXXmMJ7My_TMuJigaG0E.jpeg" 
+              alt="Alignment and clarity" 
+              className="object-cover flex-shrink-0"
+              style={{ width: '400px', height: '300px', marginLeft: '52px' }}
+            />
+          </div>
+        </section>        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-4 py-8">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
+          <span style={{ fontSize: '24px', color: '#E6C87C' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
+        </div>
 
         {/* Start Here */}
-        <section className="space-y-6 sm:space-y-8 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
-          <h2 className="font-marcellus text-warmCharcoal text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-            Start here
-          </h2>
+        <section className="space-y-6 sm:space-y-8 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10 mb-0">
           <div className="space-y-3 sm:space-y-4 flex flex-col">
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSdeqCKVGTFlVma5ws5cHIICSqU74dR6ZbpTzawj-Cx4_wcApQ/viewform?usp=sharing&ouid=108847680085116613841"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
             >
               Discover Your Soul iPurpose Alignment Type
             </a>
             <Link
               href="/starter-pack"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
-              style={{ background: 'linear-gradient(to right, #D4A373, rgba(212, 163, 115, 0))' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px' }}
             >
               Get the Starter Pack — $27
             </Link>
             <Link
               href="/ai-blueprint"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
             >
               Get the AI Blueprint — $47
             </Link>
             <Link
               href="/program"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
-              style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '35px' }}
             >
               Explore the iPurpose Accelerator
             </Link>
             <Link
               href="/about"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity text-sm sm:text-base md:text-lg"
-              style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', fontSize: '35px' }}
             >
               About iPurpose
             </Link>

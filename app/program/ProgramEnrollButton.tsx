@@ -43,7 +43,7 @@ export default function ProgramEnrollButton() {
       onClick={handleEnroll}
       disabled={loading}
       className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-      style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '24px' }}
+      style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '35px' }}
     >
       {loading ? 'Starting Enrollment...' : 'Enroll Now'}
     </button>

@@ -16,143 +16,139 @@ export default function Footer() {
   if (!mounted) return null;
 
   return (
-    <footer className="mt-20 bg-black/40 backdrop-blur-sm border-t border-white/10">
+    <footer className="relative border-t border-white/10" style={{ zIndex: 10, backgroundColor: '#4b4e6d' }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-        {/* Footer Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
-          {/* Column 1 - Start Here */}
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
-              Start Here
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/starter-pack"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Starter Pack
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/ai-blueprint"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  AI Blueprint
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/clarity-check"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Clarity Check
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/support"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Support
-                </Link>
-              </li>
-            </ul>
+        {/* Footer Grid - Horizontal Layout */}
+        <div className="flex flex-col items-center gap-8 mb-8">
+          
+          {/* Brand Anchor */}
+          <div className="text-center">
+            <Link 
+              href="/" 
+              className="inline-block hover:opacity-80 transition-colors"
+            >
+              <img 
+                src="/images/my-logo.png" 
+                alt="iPurpose Logo" 
+                style={{ height: '160px', width: 'auto', margin: '0 auto', display: 'block' }}
+              />
+              <h3 className="font-semibold tracking-wide" style={{ fontSize: '40px', fontFamily: 'Italiana', color: '#FFFFFF', marginBottom: '0', marginTop: '0' }}>
+                iPurpose<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span>
+              </h3>
+            </Link>
+            <p className="leading-relaxed" style={{ fontSize: '28px', fontFamily: 'Marcellus', color: 'rgba(255, 255, 255, 0.9)', marginTop: '0' }}>
+              Where inner alignment becomes coherent action.
+            </p>
           </div>
 
-          {/* Column 2 - Platform */}
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
-              Platform
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/discover"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Discover
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/program"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  iPurpose Accelerator
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  About
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3 - Legal */}
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
-              Legal
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4 - Account */}
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 mb-4 uppercase tracking-wide">
-              Account
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/login"
-                  className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                >
-                  Sign In
-                </Link>
-              </li>
-              {isAuthenticated && (
-                <li>
-                  <Link
-                    href="/dashboard"
-                    className="text-sm text-white/60 hover:text-white/80 transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-              )}
-            </ul>
+          {/* Navigation Links - Horizontal */}
+          <div className="flex flex-wrap justify-center items-center" style={{ gap: '1.5rem' }}>
+            <Link
+              href="/"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Orientation
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
+              href="/soul"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Soul
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
+              href="/systems"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Systems
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
+              href="/compass"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Compass
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
+              href="/program"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Accelerator
+            </Link>
+            
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            
+            <Link
+              href="/privacy"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Privacy Policy
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
+              href="/terms"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Terms of Use
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
+              href="/disclaimer"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Disclaimer
+            </Link>
+            
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            
+            <Link
+              href="/support"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Help Center
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <a
+              href="mailto:support@ipurpose.com"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Contact Us
+            </a>
           </div>
         </div>
 
         {/* Divider */}
         <div className="border-t border-white/10 pt-8">
-          {/* Footer Bottom */}
-          <p className="text-xs text-white/50 text-center">
-            © 2026 iPurpose. All rights reserved.
-          </p>
+          {/* Footer Bottom - All Horizontal */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 text-center">
+            <p style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.9)' }}>
+              © 2026 iPurpose. All rights reserved.
+            </p>
+            
+            <span className="hidden md:inline" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>•</span>
+            
+            <p className="italic" style={{ fontSize: '26px', color: 'rgba(255, 255, 255, 0.9)' }}>
+              This platform is designed to support—not replace—professional care.
+            </p>
+            
+            <span className="hidden md:inline" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>•</span>
+            
+            <p style={{ fontSize: '24px', color: 'rgba(255, 255, 255, 0.8)' }}>
+              Privacy-first by design
+            </p>
+          </div>
         </div>
       </div>
     </footer>

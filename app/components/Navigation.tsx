@@ -19,16 +19,16 @@ const orientationNav: NavItem = {
 };
 
 const deepenNav: NavItem[] = [
-  { label: 'Soul', href: '/soul', gradient: 'linear-gradient(90deg, #A78BFA, rgba(167, 139, 250, 0.25))', glow: 'rgba(167, 139, 250, 0.45)' },
-  { label: 'Community', href: '/community', gradient: 'linear-gradient(90deg, #7DD3FC, rgba(167, 139, 250, 0.15))', glow: 'rgba(125, 211, 252, 0.35)' },
-  { label: 'Insights', href: '/insights', gradient: 'linear-gradient(90deg, #E8967A, rgba(232, 150, 122, 0.25))', glow: 'rgba(232, 150, 122, 0.4)' },
+  { label: 'Soul', href: '/soul', gradient: 'linear-gradient(90deg, #9C88FF, rgba(156, 136, 255, 0.25))', glow: 'rgba(156, 136, 255, 0.45)' },
+  { label: 'Community', href: '/community', gradient: 'linear-gradient(90deg, #FCC4B7, rgba(252, 196, 183, 0.15))', glow: 'rgba(252, 196, 183, 0.35)' },
+  { label: 'Insights', href: '/insights', gradient: 'linear-gradient(90deg, #4B4E6D, rgba(75, 78, 109, 0.25))', glow: 'rgba(75, 78, 109, 0.4)' },
 ];
 
 const buildNav: NavItem[] = [
-  { label: 'Systems', href: '/systems', gradient: 'linear-gradient(90deg, #7DD3FC, rgba(125, 211, 252, 0.2))', glow: 'rgba(125, 211, 252, 0.35)' },
-  { label: 'Labs', href: '/labs', gradient: 'linear-gradient(90deg, #9C88FF, rgba(91, 75, 166, 0.15))', glow: 'rgba(156, 136, 255, 0.45)' },
-  { label: 'Compass', href: '/ai', gradient: 'linear-gradient(90deg, #5B4BA6, rgba(91, 75, 166, 0.25))', glow: 'rgba(91, 75, 166, 0.45)' },
-  { label: 'Settings', href: '/settings', gradient: 'linear-gradient(90deg, #E8967A, rgba(232, 150, 122, 0.15))', glow: 'rgba(232, 150, 122, 0.4)' },
+  { label: 'Systems', href: '/systems', gradient: 'linear-gradient(90deg, #88B04B, rgba(136, 176, 75, 0.2))', glow: 'rgba(136, 176, 75, 0.35)' },
+  { label: 'Labs', href: '/labs', gradient: 'linear-gradient(90deg, #9C88FF, rgba(156, 136, 255, 0.15))', glow: 'rgba(156, 136, 255, 0.45)' },
+  { label: 'Compass', href: '/ai', gradient: 'linear-gradient(90deg, #4B4E6D, rgba(75, 78, 109, 0.25))', glow: 'rgba(75, 78, 109, 0.45)' },
+  { label: 'Settings', href: '/settings', gradient: 'linear-gradient(90deg, #E6C87C, rgba(230, 200, 124, 0.15))', glow: 'rgba(230, 200, 124, 0.4)' },
 ];
 
 export default function Navigation() {

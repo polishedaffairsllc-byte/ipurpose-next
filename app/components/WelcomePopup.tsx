@@ -40,36 +40,44 @@ export default function WelcomePopup() {
           }}
         >
           {/* Modal Content Wrapper to avoid overlap */}
-          <div className="w-full flex flex-col items-center mt-16">
-            <h2 className="text-2xl font-marcellus mb-4" style={{ color: '#ffffff' }}>
-              Welcome to iPurpose
-            </h2>
-            <p className="mb-6 leading-relaxed" style={{ color: '#ffffff' }}>
+          <div className="w-full flex flex-col items-center mt-16 text-center">
+            <p className="font-italiana mb-4" style={{ color: '#ffffff', fontSize: '60px' }}>
+              Who am I really…
+            </p>
+            <p className="font-italiana mb-2" style={{ color: '#ffffff', fontSize: '99px' }}>
+              Welcome to iPurpose<sup style={{ fontSize: '0.4em' }}>™</sup>
+            </p>
+            <p className="mb-6 leading-relaxed font-italiana" style={{ color: '#ffffff', fontSize: '28px' }}>
+              We're going to help you understand who you are and how you're meant to move.
+              <br />
               There's no wrong place to start. Most people begin with our free Clarity Check, or you can explore Discover first.
             </p>
             {/* Buttons */}
-            <div className="space-y-3 w-full max-w-md">
+            <div className="w-full max-w-4xl flex flex-col items-center">
               <Link
                 href="/clarity-check"
                 onClick={() => setIsOpen(false)}
-                className="block w-full bg-lavenderViolet font-marcellus py-3 px-4 rounded hover:opacity-90 transition text-center"
-                style={{ color: '#ffffff' }}
+                className="inline-block px-8 py-4 rounded-full font-italiana font-bold text-center hover:opacity-90 transition-opacity"
+                style={{ background: '#9c88ff', color: '#000000', fontSize: '30px' }}
                 aria-label="Take the Clarity Check assessment"
               >
                 Take the Clarity Check
               </Link>
+              <br />
               <Link
                 href="/discover"
                 onClick={() => setIsOpen(false)}
-                className="block w-full border-2 border-lavenderViolet font-marcellus py-3 px-4 rounded hover:bg-lavenderViolet/5 transition text-center"
-                style={{ color: '#ffffff' }}
+                className="inline-block px-8 py-4 rounded-full font-italiana font-bold text-center hover:opacity-90 transition-opacity"
+                style={{ background: '#fcc4b7', color: '#000000', fontSize: '30px' }}
                 aria-label="Explore Discover section"
               >
                 Explore Discover
               </Link>
+              <br />
               <button
                 onClick={() => setIsOpen(false)}
-                className="block w-full text-warmCharcoal/70 font-marcellus py-3 px-4 rounded hover:bg-warmCharcoal/5 transition text-center"
+                className="inline-block px-8 py-4 rounded-full font-italiana font-bold text-center hover:opacity-90 transition-opacity"
+                style={{ background: '#e6c87c', color: '#000000', fontSize: '30px' }}
                 aria-label="Dismiss welcome popup"
               >
                 I'll explore on my own
