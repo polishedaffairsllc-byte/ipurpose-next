@@ -70,8 +70,8 @@ export default function Navigation() {
   );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#05010d]/90 backdrop-blur-xl shadow-[0_20px_45px_rgba(0,0,0,0.65)]">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <header className="sticky top-0 z-50 bg-[#05010d]/90 backdrop-blur-xl shadow-[0_20px_45px_rgba(0,0,0,0.65)]">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-b border-white/10">
         <div className="flex items-center justify-between gap-4">
           <Link href="/dashboard" className="flex items-center gap-3 group text-white">
             <div className="w-12 h-12 bg-lavenderViolet rounded-full flex items-center justify-center font-italiana text-2xl text-[#0f1017] group-hover:brightness-110 transition-all">
@@ -199,6 +199,9 @@ export default function Navigation() {
           </div>
         )}
       </div>
+
+      {/* Horizontal divider bar */}
+      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
     </header>
   );
 }
