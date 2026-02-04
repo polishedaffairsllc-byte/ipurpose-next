@@ -87,11 +87,3 @@ export default function CompassPage() {
     </div>
   );
 }
-          </div>
-        </div>
-      )}
-
-      <ModuleGuide moduleId="compass" />
-    </div>
-  );
-}
