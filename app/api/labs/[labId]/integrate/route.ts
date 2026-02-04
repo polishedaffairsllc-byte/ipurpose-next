@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireUid } from '@/lib/firebase/requireUser';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 /**
  * POST /api/labs/[labId]/integrate
@@ -26,13 +25,14 @@ export async function POST(
     }
 
     // Save to Reflections collection
-    const reflectionsRef = collection(db, `users/${uid}/reflections`);
-    const docRef = await addDoc(reflectionsRef, {
+    const db = firebaseAdmin.firestore();
+    const reflectionsRef = db.collection(`users/${uid}/reflections`);
+    const docRef = await reflectionsRef.add({
       labId: labId,
       labName: getLabDisplayName(labId),
       summary,
       fields,
-      integratedAt: serverTimestamp(),
+      integratedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
       type: 'lab-integration',
     });
 
