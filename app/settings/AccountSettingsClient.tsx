@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Button from '@/app/components/Button';
 import Card from '@/app/components/Card';
 
@@ -11,13 +12,50 @@ interface AccountSettingsClientProps {
 export default function AccountSettingsClient({ userEmail = 'user@example.com' }: AccountSettingsClientProps) {
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'notifications' | 'billing'>('profile');
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+  const [photoURL, setPhotoURL] = useState<string | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const res = await fetch('/api/profile');
+        if (res.ok) {
+          const data = await res.json();
+          setDisplayName(data.displayName || '');
+          setPhotoURL(data.photoURL || null);
+        }
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header with Profile Info */}
       <div className="mb-8">
-        <h1 className="text-4xl font-semibold text-warmCharcoal mb-2">Account Settings</h1>
-        <p className="text-sm text-warmCharcoal/70">Manage your account, security, and preferences.</p>
+        <div className="flex items-start gap-4">
+          {photoURL && (
+            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-lavenderViolet/20 bg-lavenderViolet/5 flex-shrink-0">
+              <img
+                src={photoURL}
+                alt={displayName}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+          <div className="flex-1">
+            <h1 className="text-4xl font-semibold text-warmCharcoal mb-2">
+              {loadingProfile ? 'Account Settings' : `Account Settings, ${displayName || 'Friend'}`}
+            </h1>
+            <p className="text-sm text-warmCharcoal/70">Manage your account, security, and preferences.</p>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -43,6 +81,18 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
         {activeTab === 'profile' && (
           <div className="space-y-6">
             <Card accent="lavender" className="p-6">
+              <h2 className="text-lg font-semibold text-warmCharcoal mb-4">Profile</h2>
+              <p className="text-sm text-warmCharcoal/70 mb-4">
+                Manage your display name and profile photo.
+              </p>
+              <Link href="/profile/edit">
+                <Button variant="secondary" className="text-sm">
+                  Edit Profile
+                </Button>
+              </Link>
+            </Card>
+
+            <Card accent="lavender" className="p-6">
               <h2 className="text-lg font-semibold text-warmCharcoal mb-4">Email Address</h2>
               <div className="space-y-3">
                 <div>
@@ -60,9 +110,11 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
               <p className="text-sm text-warmCharcoal/70 mb-4">
                 Update your name, photo, and other profile details.
               </p>
-              <Button variant="secondary" className="text-sm">
-                Edit Profile
-              </Button>
+              <Link href="/profile/edit">
+                <Button variant="secondary" className="text-sm">
+                  Edit Profile
+                </Button>
+              </Link>
             </Card>
           </div>
         )}
