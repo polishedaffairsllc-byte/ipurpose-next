@@ -55,11 +55,27 @@ export async function getOrCreateSession(
   const dateKey = getDateKey();
   const sessionsRef = db.collection("users").doc(uid).collection("sessions");
 
-  // Use a transaction to make this atomic
+  // First check if session exists (outside transaction)
+  const existingSnapshot = await sessionsRef
+    .where("dateKey", "==", dateKey)
+    .limit(1)
+    .get();
+
+  if (!existingSnapshot.empty) {
+    const doc = existingSnapshot.docs[0];
+    return {
+      id: doc.id,
+      ...(doc.data() as Session),
+    };
+  }
+
+  // Create new session with transaction
   return await db.runTransaction(async (transaction) => {
-    const snapshot = await transaction.get(
-      sessionsRef.where("dateKey", "==", dateKey)
-    );
+    // Double-check in transaction to prevent race condition
+    const snapshot = await sessionsRef
+      .where("dateKey", "==", dateKey)
+      .limit(1)
+      .get();
 
     if (!snapshot.empty) {
       const doc = snapshot.docs[0];
@@ -105,15 +121,31 @@ export async function getOrCreateDraftEntry(
     .doc(uid)
     .collection("journalEntries");
 
-  // Use a transaction to make this atomic and prevent race conditions
+  // First check if entry exists (outside transaction)
+  const existingSnapshot = await entriesRef
+    .where("sessionId", "==", sessionId)
+    .where("type", "==", type)
+    .where("status", "==", "draft")
+    .limit(1)
+    .get();
+
+  if (!existingSnapshot.empty) {
+    const doc = existingSnapshot.docs[0];
+    return {
+      id: doc.id,
+      ...(doc.data() as JournalEntry),
+    };
+  }
+
+  // Create new entry with transaction
   return await db.runTransaction(async (transaction) => {
-    // Query for existing draft with same type and session
-    const snapshot = await transaction.get(
-      entriesRef
-        .where("sessionId", "==", sessionId)
-        .where("type", "==", type)
-        .where("status", "==", "draft")
-    );
+    // Double-check in transaction to prevent race conditions
+    const snapshot = await entriesRef
+      .where("sessionId", "==", sessionId)
+      .where("type", "==", type)
+      .where("status", "==", "draft")
+      .limit(1)
+      .get();
 
     if (!snapshot.empty) {
       const doc = snapshot.docs[0];
