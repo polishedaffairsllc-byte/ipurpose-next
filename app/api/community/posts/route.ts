@@ -28,38 +28,78 @@ export async function GET(request: Request) {
     const cursorMillis = parseCursor(searchParams.get("cursor"));
 
     const db = firebaseAdmin.firestore();
-    let query = db
-      .collection("community_posts")
-      .where("spaceKey", "==", spaceKey)
-      .orderBy("createdAt", "desc")
-      .limit(limit);
-
-    if (cursorMillis) {
-      query = query.startAfter(firebaseAdmin.firestore.Timestamp.fromMillis(cursorMillis));
-    }
-
-    const snapshot = await query.get();
     
-    // Filter out deleted posts in memory instead of in Firestore query
-    const allDocs = snapshot.docs.filter(doc => !doc.data()?.isDeleted);
+    try {
+      let query = db
+        .collection("community_posts")
+        .where("spaceKey", "==", spaceKey)
+        .orderBy("createdAt", "desc")
+        .limit(limit);
 
-    const items = allDocs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        spaceKey: data.spaceKey,
-        title: data.title ?? null,
-        body: data.body ?? "",
-        userId: data.authorUid,
-        createdAt: data.createdAt?.toDate?.() ?? null,
-      };
-    });
+      if (cursorMillis) {
+        query = query.startAfter(firebaseAdmin.firestore.Timestamp.fromMillis(cursorMillis));
+      }
 
-    const lastDoc = allDocs[allDocs.length - 1];
-    const lastCreatedAt = lastDoc?.data()?.createdAt?.toMillis?.();
-    const nextCursor = lastCreatedAt ? `${lastCreatedAt}` : null;
+      const snapshot = await query.get();
+      
+      // Filter out deleted posts in memory instead of in Firestore query
+      const allDocs = snapshot.docs.filter(doc => !doc.data()?.isDeleted);
 
-    return ok({ items, nextCursor });
+      const items = allDocs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          spaceKey: data.spaceKey,
+          title: data.title ?? null,
+          body: data.body ?? "",
+          userId: data.authorUid,
+          createdAt: data.createdAt?.toDate?.() ?? null,
+        };
+      });
+
+      const lastDoc = allDocs[allDocs.length - 1];
+      const lastCreatedAt = lastDoc?.data()?.createdAt?.toMillis?.();
+      const nextCursor = lastCreatedAt ? `${lastCreatedAt}` : null;
+
+      return ok({ items, nextCursor });
+    } catch (queryError) {
+      // If composite index error, fall back to in-memory sort
+      console.warn("Firestore query error, falling back to in-memory sort:", queryError);
+      
+      const snapshot = await db
+        .collection("community_posts")
+        .where("spaceKey", "==", spaceKey)
+        .limit(limit * 3) // Get more to account for deleted docs
+        .get();
+      
+      // Filter out deleted posts and sort in memory
+      const allDocs = snapshot.docs
+        .filter(doc => !doc.data()?.isDeleted)
+        .sort((a, b) => {
+          const aTime = a.data().createdAt?.toMillis?.() ?? 0;
+          const bTime = b.data().createdAt?.toMillis?.() ?? 0;
+          return bTime - aTime; // descending
+        })
+        .slice(0, limit);
+
+      const items = allDocs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          spaceKey: data.spaceKey,
+          title: data.title ?? null,
+          body: data.body ?? "",
+          userId: data.authorUid,
+          createdAt: data.createdAt?.toDate?.() ?? null,
+        };
+      });
+
+      const lastDoc = allDocs[allDocs.length - 1];
+      const lastCreatedAt = lastDoc?.data()?.createdAt?.toMillis?.();
+      const nextCursor = lastCreatedAt ? `${lastCreatedAt}` : null;
+
+      return ok({ items, nextCursor });
+    }
   } catch (error) {
     const status = (error as { status?: number })?.status ?? 500;
     if (status === 401) return fail("UNAUTHENTICATED", "Log in to continue.", 401);
