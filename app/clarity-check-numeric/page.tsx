@@ -90,80 +90,43 @@ export default function ClarityCheckNumericPage() {
   ];
 
   const questions = [
-    // Dimension 1: Internal Clarity
+    // Internal Clarity (2 questions)
     {
       id: 1,
-      roman: 'I',
       text: 'I can clearly articulate what I am trying to build and why it matters to me.',
       dimension: 'Internal Clarity',
     },
     {
       id: 2,
-      roman: 'II',
       text: 'My decisions feel guided more by internal alignment than by external pressure.',
       dimension: 'Internal Clarity',
     },
+    // Readiness for Support (2 questions)
     {
       id: 3,
-      roman: 'III',
-      text: 'I trust my sense of direction, even when the path ahead is not fully defined.',
-      dimension: 'Internal Clarity',
-    },
-    // Dimension 2: Readiness for Support
-    {
-      id: 4,
-      roman: 'IV',
       text: 'I am open to receiving guidance or structure rather than trying to figure everything out alone.',
       dimension: 'Readiness for Support',
     },
     {
-      id: 5,
-      roman: 'V',
-      text: 'I recognize that my next level may require support I do not currently have.',
-      dimension: 'Readiness for Support',
-    },
-    {
-      id: 6,
-      roman: 'VI',
+      id: 4,
       text: 'I feel ready to invest time, attention, or resources into gaining clarity.',
       dimension: 'Readiness for Support',
     },
-    // Dimension 3: Friction Between Insight and Action
+    // Friction Between Insight and Action (2 questions)
     {
-      id: 7,
-      roman: 'VII',
+      id: 5,
       text: 'I often know what needs to change, but struggle to translate that insight into action.',
       dimension: 'Friction Between Insight and Action',
     },
     {
-      id: 8,
-      roman: 'VIII',
+      id: 6,
       text: 'I feel stalled not because of lack of ideas, but because I lack a clear container or process.',
       dimension: 'Friction Between Insight and Action',
     },
+    // Integration & Momentum (1 question)
     {
-      id: 9,
-      roman: 'IX',
-      text: 'When I gain insight, I sometimes feel overwhelmed about what to do next.',
-      dimension: 'Friction Between Insight and Action',
-    },
-    // Integration & Momentum
-    {
-      id: 10,
-      roman: 'X',
+      id: 7,
       text: 'I know what my most meaningful next step is right now.',
-      dimension: 'Integration & Momentum',
-    },
-    {
-      id: 11,
-      roman: 'XI',
-      text: 'I feel capable of taking that next step without forcing or burning myself out.',
-      dimension: 'Integration & Momentum',
-    },
-    {
-      id: 12,
-      roman: 'XII',
-      text: 'I feel supported by my current systems, tools, or environment.',
       dimension: 'Integration & Momentum',
     },
   ];
@@ -186,9 +149,9 @@ export default function ClarityCheckNumericPage() {
     }
 
     const answeredCount = Object.keys(responses).length;
-    if (answeredCount !== 12) {
-      const unansweredCount = 12 - answeredCount;
-      setError(`Please answer all 12 questions. You have ${unansweredCount} unanswered question${unansweredCount > 1 ? 's' : ''}. Scroll up to see highlighted questions.`);
+    if (answeredCount !== 7) {
+      const unansweredCount = 7 - answeredCount;
+      setError(`Please answer all 7 state questions. You have ${unansweredCount} unanswered question${unansweredCount > 1 ? 's' : ''}. Scroll up to see highlighted questions.`);
       
       // Scroll to first unanswered question
       const firstUnanswered = questions.find(q => !responses[q.id]);
@@ -312,7 +275,7 @@ export default function ClarityCheckNumericPage() {
             <div className="bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-lg p-12 mb-12 text-center">
               <p className="text-lg font-marcellus opacity-90 mb-3">Total Score</p>
               <p className="text-6xl font-italiana mb-2">{results.scores.totalScore}</p>
-              <p className="font-marcellus opacity-75">out of 60</p>
+              <p className="font-marcellus opacity-75">out of 35</p>
             </div>
 
             {/* Dimension Scores */}
@@ -326,7 +289,7 @@ export default function ClarityCheckNumericPage() {
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                     {results.scores.internalClarity}
                   </p>
-                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
                 </div>
 
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
@@ -336,7 +299,7 @@ export default function ClarityCheckNumericPage() {
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                     {results.scores.readinessForSupport}
                   </p>
-                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
                 </div>
 
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
@@ -346,7 +309,7 @@ export default function ClarityCheckNumericPage() {
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                     {results.scores.frictionBetweenInsightAndAction}
                   </p>
-                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
                 </div>
 
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
@@ -356,7 +319,7 @@ export default function ClarityCheckNumericPage() {
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                     {results.scores.integrationAndMomentum}
                   </p>
-                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                  <p className="text-xs font-marcellus text-warmCharcoal/50">out of 5</p>
                 </div>
               </div>
             </div>
@@ -451,7 +414,7 @@ export default function ClarityCheckNumericPage() {
             Where you are right now
           </p>
           <p className="text-warmCharcoal/65 mt-4" style={{ fontSize: '40px' }}>
-            A moment to reflect on your clarity, readiness, and momentum. Be honest—there are no wrong answers.
+            7 state questions + 5 identity questions. Be honest—there are no wrong answers.
           </p>
         </div>
 

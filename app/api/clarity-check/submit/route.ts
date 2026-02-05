@@ -10,10 +10,10 @@ interface ClarityCheckRequest {
 }
 
 function calculateDimensionScores(responses: Record<number, number>) {
-  const internalClarity = (responses[1] || 0) + (responses[2] || 0) + (responses[3] || 0);
-  const readinessForSupport = (responses[4] || 0) + (responses[5] || 0) + (responses[6] || 0);
-  const frictionBetweenInsightAndAction = (responses[7] || 0) + (responses[8] || 0) + (responses[9] || 0);
-  const integrationAndMomentum = (responses[10] || 0) + (responses[11] || 0) + (responses[12] || 0);
+  const internalClarity = (responses[1] || 0) + (responses[2] || 0);
+  const readinessForSupport = (responses[3] || 0) + (responses[4] || 0);
+  const frictionBetweenInsightAndAction = (responses[5] || 0) + (responses[6] || 0);
+  const integrationAndMomentum = (responses[7] || 0);
 
   const totalScore =
     internalClarity + readinessForSupport + frictionBetweenInsightAndAction + integrationAndMomentum;
@@ -70,12 +70,13 @@ function generateSummary(scores: ReturnType<typeof calculateDimensionScores>) {
   let nextStep = '';
 
   // Determine overall profile and next step
-  if (totalScore >= 50) {
+  // Updated thresholds for max score of 35: 29+ (high), 20-28 (medium), <20 (low)
+  if (totalScore >= 29) {
     summary =
       "You have real clarity and forward motion right now. Your direction feels grounded, and you're open to support. The next step is integration - turning what you already know into a steady rhythm.";
     detail = "You scored highly across all dimensions, showing strong internal clarity, readiness for support, and integration. This indicates you're in a good position to take aligned action.";
     nextStep = 'Choose one simple structure to protect your momentum this week (a weekly plan, a daily priority, or a decision filter).';
-  } else if (totalScore >= 35) {
+  } else if (totalScore >= 20) {
     summary =
       "You have insight, but there's a gap between knowing and doing. You can sense what needs to shift, and you're open to support. This isn't a knowledge problem - it's a structure and follow-through problem.";
     detail = "Your scores show clarity in some areas but friction in translating insight to action. With the right systems and support, you can bridge this gap.";
@@ -336,9 +337,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!responses || Object.keys(responses).length !== 12) {
+    if (!responses || Object.keys(responses).length !== 7) {
       return NextResponse.json(
-        { error: 'All 12 questions must be answered' },
+        { error: 'All 7 state questions must be answered' },
         { status: 400 }
       );
     }

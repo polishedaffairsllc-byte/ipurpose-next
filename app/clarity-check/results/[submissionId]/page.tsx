@@ -113,7 +113,7 @@ export default async function ClarityCheckResultsPage({ params }: PageProps) {
           <div className="bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-lg p-12 mb-12 text-center">
             <p className="text-lg font-marcellus opacity-90 mb-3">Total Score</p>
             <p className="text-6xl font-italiana mb-2">{submission.scores.totalScore}</p>
-            <p className="font-marcellus opacity-75">out of 60</p>
+            <p className="font-marcellus opacity-75">out of 35</p>
           </div>
 
           {/* Dimension Scores */}
@@ -127,7 +127,7 @@ export default async function ClarityCheckResultsPage({ params }: PageProps) {
                 <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                   {submission.scores.internalClarity}
                 </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
               </div>
 
               <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
@@ -137,7 +137,7 @@ export default async function ClarityCheckResultsPage({ params }: PageProps) {
                 <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                   {submission.scores.readinessForSupport}
                 </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
               </div>
 
               <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
@@ -147,7 +147,7 @@ export default async function ClarityCheckResultsPage({ params }: PageProps) {
                 <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                   {submission.scores.frictionBetweenInsightAndAction}
                 </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
               </div>
 
               <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
@@ -157,7 +157,7 @@ export default async function ClarityCheckResultsPage({ params }: PageProps) {
                 <p className="text-4xl font-italiana text-warmCharcoal mb-1">
                   {submission.scores.integrationAndMomentum}
                 </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 15</p>
+                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 5</p>
               </div>
             </div>
           </div>

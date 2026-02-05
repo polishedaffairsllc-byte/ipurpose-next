@@ -195,15 +195,13 @@ export default function DiscoverPage() {
         {/* Start Here */}
         <section className="space-y-6 sm:space-y-8 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10 mb-0">
           <div className="space-y-3 sm:space-y-4 flex flex-col">
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSdeqCKVGTFlVma5ws5cHIICSqU74dR6ZbpTzawj-Cx4_wcApQ/viewform?usp=sharing&ouid=108847680085116613841"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/clarity-check"
               className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
             >
-              Discover Your Soul iPurpose Alignment Type
-            </a>
+              Take the Clarity Check
+            </Link>
             <Link
               href="/starter-pack"
               className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
