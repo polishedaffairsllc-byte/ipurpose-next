@@ -337,7 +337,8 @@ export default async function SystemsPage() {
         </div>
 
         </div>
-      <Footer />
+        <Footer />
+      </div>
     );
   } catch (e) {
     return redirect("/login");
