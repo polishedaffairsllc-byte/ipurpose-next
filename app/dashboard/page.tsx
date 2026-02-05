@@ -74,6 +74,26 @@ export default async function DashboardPage() {
 
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
     
+    // Fetch identity type from Clarity Check submissions
+    let identityType = "";
+    try {
+      const clarityCheckQuery = await db
+        .collection("clarityCheckSubmissions")
+        .where("email", "==", user.email)
+        .orderBy("createdAt", "desc")
+        .limit(1)
+        .get();
+      
+      if (!clarityCheckQuery.empty) {
+        const latestSubmission = clarityCheckQuery.docs[0].data();
+        if (latestSubmission?.identityType) {
+          identityType = latestSubmission.identityType;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch identity type from Clarity Check", err);
+    }
+    
     // Fetch identity anchor from multiple sources
     let identityAnchor = "";
     try {
@@ -116,6 +136,11 @@ export default async function DashboardPage() {
               <h1 className="heading-hero mb-0 text-white drop-shadow-2xl text-5xl md:text-6xl lg:text-7xl">
                 Welcome back, {name}
               </h1>
+              {identityType && (
+                <p className="mt-3 text-xl md:text-2xl text-white/80 font-marcellus">
+                  The {identityType}
+                </p>
+              )}
               {identityAnchor && (
                 <p className="mt-4 text-2xl md:text-3xl text-white/90 font-italiana italic">
                   {identityAnchor}
