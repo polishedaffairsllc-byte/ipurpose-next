@@ -72,6 +72,25 @@ export default async function DashboardPage() {
     }
 
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
+    
+    // Fetch identity anchor from multiple sources
+    let identityAnchor = "";
+    try {
+      // First check user profile for identity anchor
+      if (userData?.identityAnchor) {
+        identityAnchor = userData.identityAnchor;
+      } else {
+        // Fallback to labs data
+        const labsDoc = await db.collection("labs").doc(decoded.uid).get();
+        const labsData = labsDoc.data();
+        if (labsData?.identity?.map?.selfNarrativeMap) {
+          identityAnchor = labsData.identity.map.selfNarrativeMap;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch identity anchor", err);
+    }
+    
     let todaysAffirmation = null;
     try {
       todaysAffirmation = await getTodaysAffirmation();
@@ -96,6 +115,11 @@ export default async function DashboardPage() {
               <h1 className="heading-hero mb-0 text-white drop-shadow-2xl text-5xl md:text-6xl lg:text-7xl">
                 Welcome back, {name}
               </h1>
+              {identityAnchor && (
+                <p className="mt-4 text-2xl md:text-3xl text-white/90 font-italiana italic">
+                  {identityAnchor}
+                </p>
+              )}
             </div>
           </div>
         </div>
