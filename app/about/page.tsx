@@ -201,22 +201,22 @@ export default function AboutPage() {
         </section>
 
         {/* Next Steps */}
-        <section className="space-y-6">
+        <section className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
           <h2 className="text-center font-marcellus text-warmCharcoal" style={{ fontSize: '60px' }}>
             Next Steps
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-3 sm:space-y-4 flex flex-col">
             <Link
               href="/discover"
-              className="block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
-              style={{ fontSize: '40px' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
             >
               Discover the iPurpose Framework
             </Link>
             <Link
               href="/program"
-              className="block w-full bg-gradient-to-r from-indigoDeep to-salmonPeach text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-center"
-              style={{ fontSize: '40px' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '35px' }}
             >
               Explore the iPurpose Accelerator
             </Link>

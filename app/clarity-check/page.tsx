@@ -140,7 +140,8 @@ export default function ClarityCheckPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-2 sm:py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled text-[40px]"
+                className="w-full px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
               >
                 {loading ? 'Submitting...' : 'Take the Clarity Check'}
               </button>

@@ -36,9 +36,9 @@ export default function ProgramPage() {
             <div className="absolute inset-0 bg-black/50"></div>
             
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-              iPurpose Accelerator™
+              iPurpose Accelerator<sup style={{ fontSize: '0.3em' }}>™</sup>
             </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
               Six weeks to clarify your purpose and build aligned systems
             </p>
           </section>
