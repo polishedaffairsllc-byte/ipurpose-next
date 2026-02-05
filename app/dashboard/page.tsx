@@ -6,6 +6,7 @@ import { canAccessTier, getTierFromUser } from "@/app/lib/auth/entitlements";
 import { isFounder as isFounderUser } from "@/lib/isFounder";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
 import PathBanner from "@/app/components/PathBanner";
+import Footer from "@/app/components/Footer";
 import Card from "../components/Card";
 import ScrollReveal from "../components/ScrollReveal";
 import SectionHeading from "../components/SectionHeading";
@@ -199,6 +200,7 @@ export default async function DashboardPage() {
             </Card>
           </div>
         </ScrollReveal>
+        <Footer />
       </div>
     );
   } catch (e) {

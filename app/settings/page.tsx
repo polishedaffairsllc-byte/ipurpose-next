@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { redirect } from "next/navigation";
 import AccountSettingsClient from "./AccountSettingsClient";
+import Footer from "../components/Footer";
 
 export default async function SettingsPage() {
   const cookieStore = await cookies();
@@ -29,8 +30,11 @@ export default async function SettingsPage() {
   if (!userId) return redirect("/login");
 
   return (
-    <div className="container max-w-5xl mx-auto px-6 md:px-10 py-8 md:py-12">
-      <AccountSettingsClient userEmail={userEmail} />
-    </div>
+    <>
+      <div className="container max-w-5xl mx-auto px-6 md:px-10 py-8 md:py-12">
+        <AccountSettingsClient userEmail={userEmail} />
+      </div>
+      <Footer />
+    </>
   );
 }
