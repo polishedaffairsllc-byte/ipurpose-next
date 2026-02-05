@@ -330,12 +330,9 @@ export async function POST(request: NextRequest) {
     const body: ClarityCheckRequest = await request.json();
     const { email, responses, identityResponses } = body;
 
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return NextResponse.json(
-        { error: 'Valid email address is required' },
-        { status: 400 }
-      );
-    }
+    // Email is now optional since we're not sending emails
+    // Use placeholder if not provided
+    const userEmail = email || 'anonymous@ipurposesoul.com';
 
     if (!responses || Object.keys(responses).length !== 7) {
       return NextResponse.json(
@@ -379,7 +376,7 @@ export async function POST(request: NextRequest) {
     let submissionDocId = '';
     try {
       const submissionData: any = {
-        email,
+        email: userEmail,
         responses,
         scores,
         resultSummary: summary,
@@ -402,7 +399,7 @@ export async function POST(request: NextRequest) {
         .collection('clarityCheckSubmissions')
         .add(submissionData);
       submissionDocId = docRef.id;
-      console.log('Clarity check submission stored:', { id: submissionDocId, email, identityType });
+      console.log('Clarity check submission stored:', { id: submissionDocId, email: userEmail, identityType });
     } catch (firestoreError) {
       console.error('Firestore error storing submission:', firestoreError);
       // Continue anyway—we'll still return results
