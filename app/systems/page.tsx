@@ -337,7 +337,6 @@ export default async function SystemsPage() {
         </div>
 
         </div>
-      </div>
       <Footer />
     );
   } catch (e) {
