@@ -1,5 +1,6 @@
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { notFound } from 'next/navigation';
+import PrintButton from '../PrintButton';
 
 interface PageProps {
   params: Promise<{
@@ -88,12 +89,7 @@ export default async function ClarityCheckResultsPage({ params }: PageProps) {
           >
             ← Back
           </a>
-          <button
-            onClick={() => window.print()}
-            className="px-6 py-3 bg-warmCharcoal text-white font-marcellus rounded-lg hover:bg-warmCharcoal/90 transition-colors"
-          >
-            Print / Save as PDF
-          </button>
+          <PrintButton />
         </div>
       </div>
 
