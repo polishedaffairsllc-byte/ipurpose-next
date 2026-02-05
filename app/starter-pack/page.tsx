@@ -57,15 +57,15 @@ export default function StarterPackPage() {
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
               iPurpose Starter Pack
             </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
               Your foundation for purpose-driven work
             </p>
           </section>
           <div className="text-center">
-            <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
+            <p className="text-[40px] text-warmCharcoal/80 mb-6 sm:mb-8">
               Get clear on your direction — without committing to a full program.
             </p>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
+            <p className="text-[40px] text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
               A short, guided starter experience to help you reconnect to what matters, name your purpose clearly, and take your next step with calm structure.
             </p>
 
@@ -74,22 +74,6 @@ export default function StarterPackPage() {
                 {error}
               </div>
             )}
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-base sm:text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Loading...' : 'Get the Starter Pack — $27'}
-            </button>
-            <Link
-              href="/clarity-check"
-              className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-lavenderViolet text-lavenderViolet rounded-full font-marcellus text-base sm:text-lg hover:bg-lavenderViolet/5 transition-colors"
-            >
-              Not ready? Try Clarity Check
-            </Link>
-            </div>
           </div>
         </div>
       </div>
@@ -104,7 +88,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Guided Soul Alignment Prompts
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               Reduce fog and overwhelm with intentional questions designed to reconnect you with what actually matters to you.
             </p>
           </div>
@@ -112,7 +96,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Purpose Statement Framework
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               Name your direction in plain language — not buzzwords. A simple template that helps you articulate what you're building, why it matters, and who it serves.
             </p>
           </div>
@@ -120,7 +104,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Simple Systems Map
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               See what supports you and what drains you. A visual exercise to understand your current environment so you can build with intention.
             </p>
           </div>
@@ -128,7 +112,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Next Step Pathway
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               Don't stall after insight. Get a concrete, grounded action you can take this week — no overwhelm, just clarity.
             </p>
           </div>
@@ -141,7 +125,7 @@ export default function StarterPackPage() {
           <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
             Who It's For
           </h2>
-          <div className="space-y-4 text-lg text-warmCharcoal/80">
+          <div className="space-y-4 text-[40px] text-warmCharcoal/80">
             <p>
               <strong>You feel called to build something</strong> but you're not clear what or how.
             </p>
@@ -171,7 +155,7 @@ export default function StarterPackPage() {
                 <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
                   A Clearer Sense of Direction
                 </h3>
-                <p className="text-warmCharcoal/70">
+                <p className="text-[40px] text-warmCharcoal/70">
                   Not perfect clarity, but real movement from fog to focus.
                 </p>
               </div>
@@ -182,7 +166,7 @@ export default function StarterPackPage() {
                 <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
                   Words for What You're Building
                 </h3>
-                <p className="text-warmCharcoal/70">
+                <p className="text-[40px] text-warmCharcoal/70">
                   Even if it's early and evolving, you'll have language to share it.
                 </p>
               </div>
@@ -195,7 +179,7 @@ export default function StarterPackPage() {
                 <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
                   A Grounded Next Step
                 </h3>
-                <p className="text-warmCharcoal/70">
+                <p className="text-[40px] text-warmCharcoal/70">
                   Something concrete you can take this week — no overwhelm.
                 </p>
               </div>
@@ -210,7 +194,7 @@ export default function StarterPackPage() {
           <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
             Delivery & Support
           </h2>
-          <div className="space-y-6 text-lg text-warmCharcoal/80">
+          <div className="space-y-6 text-[40px] text-warmCharcoal/80">
             <div>
               <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Format</h3>
               <p>Digital access via download</p>
@@ -237,7 +221,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Is this the full program?
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               No. This is a starter experience designed to give you clarity and momentum. The iPurpose Accelerator is our full cohort program with live mentorship.
             </p>
           </div>
@@ -245,7 +229,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Do I need any special knowledge?
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               No. This is designed for beginners. No prerequisite knowledge needed.
             </p>
           </div>
@@ -253,7 +237,7 @@ export default function StarterPackPage() {
             <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
               Can I apply this toward the Accelerator later?
             </h3>
-            <p className="text-warmCharcoal/70">
+            <p className="text-[40px] text-warmCharcoal/70">
               Keep your receipt. Occasionally we offer credit or discounts during launches—we'll reach out if you're eligible.
             </p>
           </div>
@@ -262,20 +246,30 @@ export default function StarterPackPage() {
 
       {/* Final CTA */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-6 py-20 text-center">
-          <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-8">
+        <div className="container max-w-4xl mx-auto px-6 py-20">
+          <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-8 text-center">
             Ready to Start?
           </h2>
-          <p className="text-xl text-warmCharcoal/70 mb-8 max-w-2xl mx-auto">
+          <p className="text-[40px] text-warmCharcoal/70 mb-8 max-w-2xl mx-auto text-center">
             Get clear on your direction in 60–90 minutes.
           </p>
-          <button
-            onClick={handleCheckout}
-            disabled={loading}
-            className="px-12 py-5 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-2xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Loading...' : 'Get the Starter Pack — $27'}
-          </button>
+          <div className="space-y-3 sm:space-y-4 flex flex-col">
+            <button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px' }}
+            >
+              {loading ? 'Loading...' : 'Get the Starter Pack — $27'}
+            </button>
+            <Link
+              href="/clarity-check"
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
+            >
+              Not ready? Try Clarity Check
+            </Link>
+          </div>
         </div>
       </div>
 

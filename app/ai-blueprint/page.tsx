@@ -55,15 +55,15 @@ export default function AIBlueprintPage() {
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
               iPurpose Blueprint
             </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
               Design your purpose-aligned systems with AI
             </p>
           </section>
           <div className="text-center">
-            <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl text-warmCharcoal/80 mb-6 sm:mb-8">
+            <p className="text-warmCharcoal/80 mb-6 sm:mb-8 text-[40px]">
               Use AI without losing your voice, values, or peace.
             </p>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
+            <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[40px]">
               A practical, beginner-friendly guide to help you integrate AI into your workflow ethically—so you can plan, write, organize, and create with more ease.
             </p>
 
@@ -72,22 +72,6 @@ export default function AIBlueprintPage() {
                 {error}
               </div>
             )}
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Loading...' : 'Get the AI Blueprint — $47'}
-            </button>
-            <Link
-              href="/starter-pack"
-              className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg border-2 border-lavenderViolet text-lavenderViolet rounded-full font-marcellus hover:bg-lavenderViolet/5 transition-colors"
-            >
-              Start with Purpose First
-            </Link>
-            </div>
           </div>
         </div>
       </div>
@@ -102,7 +86,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Plain-Language AI Explanation
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               No tech jargon. Just clarity on what AI can do, what it can't, and why that matters for your work and integrity.
             </p>
           </div>
@@ -110,7 +94,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Guided Prompts for Real Work
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               Ready-to-use templates for clarity, content, planning, and workflow. Designed for your actual projects, not hypotheticals.
             </p>
           </div>
@@ -118,7 +102,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Simple Examples You Can Copy
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               See how AI supports your work without replacing you. Real-world examples show what to automate and what to keep human.
             </p>
           </div>
@@ -126,7 +110,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Boundaries & Best Practices
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               Feel safe and grounded. Clear guidelines on ethical AI use so you're not just chasing trends.
             </p>
           </div>
@@ -139,7 +123,7 @@ export default function AIBlueprintPage() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-12 text-center">
             Who It's For
           </h2>
-          <div className="space-y-4 text-sm sm:text-base md:text-lg text-warmCharcoal/80">
+          <div className="space-y-4 text-warmCharcoal/80 text-[40px]">
             <p>
               <strong>You feel behind on AI</strong> and want a clean starting point that doesn't overwhelm.
             </p>
@@ -163,7 +147,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Do I need ChatGPT Plus or any paid tools?
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               No. This guide works with free versions of popular AI tools. You can start immediately.
             </p>
           </div>
@@ -171,7 +155,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Is this a full course?
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               No. It's a focused mini-offer and guide built for fast implementation. Not a 12-week program.
             </p>
           </div>
@@ -179,7 +163,7 @@ export default function AIBlueprintPage() {
             <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
               Will this teach advanced automation?
             </h3>
-            <p className="text-sm sm:text-base md:text-lg text-warmCharcoal/70">
+            <p className="text-warmCharcoal/70 text-[40px]">
               No. This is foundational and intentional—designed to help you feel confident and grounded, not overwhelmed by complexity.
             </p>
           </div>
@@ -188,20 +172,30 @@ export default function AIBlueprintPage() {
 
       {/* Final CTA */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-6 sm:mb-8">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-6 sm:mb-8 text-center">
             Ready to Use AI With Intention?
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
+          <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[40px] text-center">
             Get your practical blueprint today.
           </p>
-          <button
-            onClick={handleCheckout}
-            disabled={loading}
-            className="px-8 sm:px-12 py-3 sm:py-5 text-base sm:text-lg md:text-xl bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Loading...' : 'Get the AI Blueprint — $47'}
-          </button>
+          <div className="space-y-3 sm:space-y-4 flex flex-col">
+            <button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
+            >
+              {loading ? 'Loading...' : 'Get the AI Blueprint — $47'}
+            </button>
+            <Link
+              href="/starter-pack"
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px' }}
+            >
+              Start with Purpose First
+            </Link>
+          </div>
         </div>
       </div>
 

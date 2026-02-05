@@ -82,7 +82,7 @@ export default function ClarityCheckPage() {
                 Take Your Clarity Check
               </h1>
               <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-[40px]" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
-                Five questions to unlock your direction
+                Twelve questions to unlock your direction
               </p>
             </section>
 
@@ -155,16 +155,18 @@ export default function ClarityCheckPage() {
             <p className="text-warmCharcoal/75 mb-8 sm:mb-12 text-4xl">
               Now take the assessment. 12 quick questions to understand where you truly stand.
             </p>
-            <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+            <div className="space-y-3 sm:space-y-4 flex flex-col mb-6 sm:mb-8">
               <Link
                 href="/clarity-check-numeric"
-                className="inline-block w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-2 sm:py-3 px-6 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
               >
                 Take the Clarity Check Assessment
               </Link>
               <Link
                 href="/program"
-                className="inline-block w-full bg-white text-lavenderViolet font-marcellus py-2 sm:py-3 px-6 rounded-lg border border-lavenderViolet hover:bg-lavenderViolet/5 transition-colors text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '35px' }}
               >
                 Or explore the iPurpose Accelerator
               </Link>

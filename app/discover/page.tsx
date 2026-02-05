@@ -38,9 +38,9 @@ export default function DiscoverPage() {
           <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
             Discover iPurpose<span style={{ fontSize: '0.3em', verticalAlign: 'super' }}>™</span>
           </h1>
-          <div className="flex justify-center">
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '60px' }}>
-              Soul + Systems + AI™
+          <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', display: 'flex', justifyContent: 'center' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '60px', width: '100%', textAlign: 'center' }}>
+              Soul + Systems + AI<sup style={{ fontSize: '0.3em' }}>™</sup>
             </p>
           </div>
         </section>
