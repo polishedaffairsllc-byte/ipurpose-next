@@ -473,7 +473,7 @@ export default function ClarityCheckNumericPage() {
           <div className="space-y-8 pb-12 pt-8">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-italiana text-warmCharcoal mb-4">Discover Your Identity Type</h2>
-              <p className="text-warmCharcoal/65 font-marcellus text-lg">
+              <p className="text-warmCharcoal/65 font-marcellus" style={{ fontSize: '35px' }}>
                 These questions help us understand your natural approach and strengths.
               </p>
             </div>
@@ -488,25 +488,34 @@ export default function ClarityCheckNumericPage() {
                     : 'bg-white border-2 border-transparent'
                 }`}
               >
-                <p className="text-warmCharcoal font-marcellus text-xl font-semibold">
+                <p className="text-warmCharcoal font-marcellus font-semibold text-center" style={{ fontSize: '35px' }}>
                   {question.text}
                 </p>
                 <div className="space-y-3">
-                  {Object.entries(question.options).map(([key, value]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => handleIdentityResponse(question.id, key)}
-                      className={`w-full text-left px-6 py-4 rounded-lg font-marcellus transition-all ${
-                        identityResponses[question.id] === key
-                          ? 'bg-lavenderViolet text-white shadow-md'
-                          : 'bg-warmCharcoal/5 text-warmCharcoal hover:bg-warmCharcoal/10'
-                      }`}
-                    >
-                      <span className="font-semibold mr-3">{key}.</span>
-                      {value}
-                    </button>
-                  ))}
+                  {Object.entries(question.options).map(([key, value]) => {
+                    const isSelected = identityResponses[question.id] === key;
+                    const hasAnswer = identityResponses[question.id];
+                    const shouldShow = !hasAnswer || isSelected;
+                    
+                    if (!shouldShow) return null;
+                    
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => handleIdentityResponse(question.id, key)}
+                        className={`w-full text-center px-6 py-4 rounded-lg font-marcellus transition-all ${
+                          isSelected
+                            ? 'bg-lavenderViolet text-white shadow-md'
+                            : 'bg-warmCharcoal/5 text-warmCharcoal hover:bg-warmCharcoal/10'
+                        }`}
+                        style={{ fontSize: '35px' }}
+                      >
+                        <span className="font-semibold mr-3">{key}.</span>
+                        {value}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -514,9 +523,6 @@ export default function ClarityCheckNumericPage() {
 
           {/* Email Input */}
           <div className="space-y-4">
-            <label htmlFor="email" className="block font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>
-              Enter your email to receive your results
-            </label>
             <input
               type="email"
               id="email"
