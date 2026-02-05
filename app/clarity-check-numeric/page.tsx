@@ -143,11 +143,6 @@ export default function ClarityCheckNumericPage() {
     e.preventDefault();
     setError('');
 
-    if (!email) {
-      setError('Please enter your email address');
-      return;
-    }
-
     const answeredCount = Object.keys(responses).length;
     if (answeredCount !== 7) {
       const unansweredCount = 7 - answeredCount;
@@ -188,7 +183,7 @@ export default function ClarityCheckNumericPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email,
+          email: 'anonymous@ipurposesoul.com',
           responses,
           identityResponses: Object.values(identityResponses),
         }),
@@ -521,19 +516,6 @@ export default function ClarityCheckNumericPage() {
             ))}
           </div>
 
-          {/* Email Input */}
-          <div className="space-y-4">
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="w-full px-6 py-6 border border-warmCharcoal/20 rounded-lg font-marcellus text-warmCharcoal placeholder:text-warmCharcoal/40 focus:outline-none focus:border-lavenderViolet focus:ring-2 focus:ring-lavenderViolet/20"
-              style={{ fontSize: '40px' }}
-            />
-          </div>
-
           {/* Submit Button */}
           <div className="text-center pt-8">
             <button
@@ -544,9 +526,6 @@ export default function ClarityCheckNumericPage() {
             >
               {loading ? 'Submitting...' : 'Submit & Receive Your Results'}
             </button>
-            <p className="text-sm text-warmCharcoal/60 mt-4">
-              Your email will be used only to send your results. We don't share your data.
-            </p>
           </div>
         </form>
       </div>
