@@ -106,15 +106,15 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
   return (
     <Card accent="salmon" className="mb-8">
-      <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
-          Today’s Alignment Check
+      <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus" style={{ fontSize: '40px' }}>
+          Today's Alignment Check
       </p>
-      <p className="text-xs text-warmCharcoal/60 font-marcellus mb-4">You’ve checked in {checkinsLast7} of the last 7 days.</p>
+      <p className="text-warmCharcoal/60 font-marcellus mb-4" style={{ fontSize: '40px' }}>You've checked in {checkinsLast7} of the last 7 days.</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Emotions */}
         <div>
-          <p className="text-sm font-marcellus text-warmCharcoal mb-3">How are you feeling?</p>
+          <p className="font-marcellus text-warmCharcoal mb-3" style={{ fontSize: '40px' }}>How are you feeling?</p>
           <div className="flex flex-wrap gap-2">
             {EMOTIONS.map(emotion => (
               <button
@@ -135,7 +135,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Alignment Slider */}
         <div>
-          <p className="text-sm font-marcellus text-warmCharcoal mb-3">
+          <p className="font-marcellus text-warmCharcoal mb-3" style={{ fontSize: '40px' }}>
             Alignment with your purpose right now: <span className="font-bold">{alignment}/10</span>
           </p>
           <input
@@ -146,7 +146,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
             onChange={(e) => setAlignment(parseInt(e.target.value))}
             className="w-full"
           />
-          <div className="flex justify-between text-xs text-warmCharcoal/50 mt-2 font-marcellus">
+          <div className="flex justify-between text-warmCharcoal/50 mt-2 font-marcellus" style={{ fontSize: '40px' }}>
             <span>Off track</span>
             <span>Aligned</span>
           </div>
@@ -154,7 +154,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Need */}
         <div>
-          <p className="text-sm font-marcellus text-warmCharcoal mb-2">One thing you need today…</p>
+          <p className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>One thing you need today…</p>
           <input
             type="text"
             value={need}

@@ -74,14 +74,14 @@ export default function LabsHubPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Labs</h1>
-          <p className="text-xl md:text-2xl text-white/85 font-marcellus drop-shadow-lg">
+          <p className="text-white/85 font-marcellus drop-shadow-lg" style={{ fontSize: '40px' }}>
             Complete the Identity, Meaning, and Agency labs to unlock integration.
           </p>
         </div>
       </div>
 
       {/* Orientation anchor */}
-      <p className="text-sm text-warmCharcoal/70 italic mb-6">
+      <p className="text-warmCharcoal/70 italic mb-6" style={{ fontSize: '40px' }}>
         Labs turn insight into readiness. Complete all three to unlock Integration.
       </p>
 
@@ -96,8 +96,8 @@ export default function LabsHubPage() {
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {labMeta.map((lab) => (
           <div key={lab.key} className="rounded-2xl border border-ip-border bg-white/80 p-6">
-            <h2 className="text-xl font-semibold text-warmCharcoal">{lab.title}</h2>
-            <p className="mt-2 text-sm text-warmCharcoal/70">
+            <h2 className="font-semibold text-warmCharcoal" style={{ fontSize: '40px' }}>{lab.title}</h2>
+            <p className="mt-2 text-warmCharcoal/70" style={{ fontSize: '40px' }}>
               Status: {labs[lab.key] || "not_started"}
             </p>
             <Link
@@ -119,8 +119,8 @@ export default function LabsHubPage() {
           >
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-xl font-semibold text-warmCharcoal">Integration</h3>
-                <p className="mt-2 text-sm text-warmCharcoal/70">
+                <h3 className="font-semibold text-warmCharcoal" style={{ fontSize: '40px' }}>Integration</h3>
+                <p className="mt-2 text-warmCharcoal/70" style={{ fontSize: '40px' }}>
                   Synthesize your labs into a clear direction and 7-day plan.
                 </p>
               </div>
@@ -136,8 +136,8 @@ export default function LabsHubPage() {
           <div className="rounded-2xl border border-ip-border/40 bg-white/40 p-6 opacity-60">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-xl font-semibold text-warmCharcoal/60">🔒 Integration</h3>
-                <p className="mt-2 text-sm text-warmCharcoal/50">
+                <h3 className="font-semibold text-warmCharcoal/60" style={{ fontSize: '40px' }}>🔒 Integration</h3>
+                <p className="mt-2 text-warmCharcoal/50" style={{ fontSize: '40px' }}>
                   Complete Identity, Meaning, and Agency to unlock Integration.
                 </p>
               </div>

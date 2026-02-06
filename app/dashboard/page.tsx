@@ -133,12 +133,12 @@ export default async function DashboardPage() {
           <div className="absolute inset-0 bg-black/30"></div>
           <div className="relative z-10 container max-w-6xl mx-auto px-6 h-full flex flex-col justify-center items-center text-center">
             <div className="bg-black/25 backdrop-blur-sm rounded-2xl px-12 py-8">
-              <h1 className="heading-hero mb-0 text-white drop-shadow-2xl text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="heading-hero text-white drop-shadow-2xl text-5xl md:text-6xl lg:text-7xl leading-tight">
                 Welcome back, {name}
               </h1>
               {identityType && (
-                <p className="mt-3 text-xl md:text-2xl text-white/80 font-marcellus">
-                  The {identityType}
+                <p className="heading-hero text-white drop-shadow-2xl leading-tight" style={{ fontSize: '150px', marginTop: '-0.5rem' }}>
+                  the {identityType}
                 </p>
               )}
               {identityAnchor && (
@@ -180,24 +180,28 @@ export default async function DashboardPage() {
                 title="Soul Alignment"
                 description="Continue your inner clarity work and purpose alignment."
                 color="#9C88FF"
+                descriptionStyle={{ fontSize: '40px' }}
               />
               <PathBanner 
                 href="/systems"
                 title="Systems"
                 description="Structure your workflows, offers, and strategic foundation."
                 color="#F5E8C7"
+                descriptionStyle={{ fontSize: '40px' }}
               />
               <PathBanner 
                 href="/ai"
                 title="AI Mentor"
                 description="Expand your capacity with aligned automation and prompts."
                 color="#FCC4B7"
+                descriptionStyle={{ fontSize: '40px' }}
               />
               <PathBanner 
                 href="/insights"
                 title="Insights"
                 description="Review reflections, trends, and alignment reports."
                 color="#4B4E6D"
+                descriptionStyle={{ fontSize: '40px' }}
               />
               {canAccessCommunity ? (
                 <PathBanner 
@@ -205,6 +209,7 @@ export default async function DashboardPage() {
                   title="Community"
                   description="Connect with the iPurpose community and group reflections."
                   color="#F8C9D3"
+                  descriptionStyle={{ fontSize: '40px' }}
                 />
               ) : null}
             </div>
@@ -216,10 +221,10 @@ export default async function DashboardPage() {
               <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
                 RECENT ACTIVITY
               </p>
-              <p className="text-sm text-warmCharcoal/75 leading-relaxed mb-2">
+              <p className="text-warmCharcoal/75 leading-relaxed mb-2" style={{ fontSize: '40px' }}>
                 • Completed Soul Reflection
               </p>
-              <p className="text-sm text-warmCharcoal/75 leading-relaxed">
+              <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '40px' }}>
                 • Updated Systems Framework
               </p>
             </Card>

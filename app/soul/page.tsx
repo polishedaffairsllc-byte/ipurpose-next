@@ -204,9 +204,11 @@ export default async function SoulPage() {
           />
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">Soul Alignment</h1>
-            <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
-              Self-understanding over self-judgment. Your inner work is the foundation.
-            </p>
+            <div className="inline-block bg-black/25 backdrop-blur-sm rounded-2xl px-8 py-4">
+              <p className="text-warmCharcoal/80 font-marcellus drop-shadow-lg" style={{ fontSize: '55px' }}>
+                Self-understanding over self-judgment. Your inner work is the foundation.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -215,12 +217,12 @@ export default async function SoulPage() {
         <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 mb-6">
           <Card accent="salmon" className="flex flex-col justify-between">
             <div className="space-y-3">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase font-marcellus">Orientation framing</p>
-              <h2 className="text-3xl md:text-4xl font-marcellus text-warmCharcoal leading-tight">No need to hustle through this page.</h2>
-              <p className="text-sm text-warmCharcoal/75 font-marcellus">
+              <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase font-marcellus" style={{ fontSize: '40px' }}>Orientation framing</p>
+              <h2 className="font-marcellus text-warmCharcoal leading-tight" style={{ fontSize: '40px' }}>No need to hustle through this page.</h2>
+              <p className="text-warmCharcoal/75 font-marcellus" style={{ fontSize: '40px' }}>
                 Start where your body says yes today. If you feel foggy, begin with a quick check-in. If you feel clear, go straight to a practice.
               </p>
-              <p className="text-sm text-warmCharcoal/60 font-marcellus">There’s nothing to complete here — just notice how you feel in your body.</p>
+              <p className="text-warmCharcoal/60 font-marcellus" style={{ fontSize: '40px' }}>There's nothing to complete here — just notice how you feel in your body.</p>
             </div>
             <div className="flex flex-wrap gap-3 mt-4">
               <Button href="#alignment-check">60-second check-in</Button>
@@ -229,10 +231,10 @@ export default async function SoulPage() {
           </Card>
 
           <Card accent="lavender" className="relative">
-            <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus">
+            <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus" style={{ fontSize: '40px' }}>
               YOUR SOUL → SYSTEMS → AI™ FOUNDATION
             </p>
-            <p className="text-lg text-warmCharcoal/75 leading-relaxed font-marcellus">
+            <p className="text-warmCharcoal/75 leading-relaxed font-marcellus" style={{ fontSize: '40px' }}>
               Soul work creates the foundation for everything you build. When you're aligned internally,
               your systems flow naturally and your AI tools amplify what truly matters.
             </p>
@@ -245,17 +247,17 @@ export default async function SoulPage() {
             <ArchetypeSelector />
           ) : (
             <Card accent="lavender" className="mb-8">
-              <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus">
+              <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus" style={{ fontSize: '40px' }}>
                 Your Archetype
               </p>
               <div className="space-y-3">
-                <p className="font-marcellus text-warmCharcoal text-lg">
+                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>
                   {archetype.primary === 'visionary' && '✨ Visionary'}
                   {archetype.primary === 'builder' && '🎯 Builder'}
                   {archetype.primary === 'healer' && '💫 Healer'}
                   {archetype.secondary && ` + ${archetype.secondary === 'visionary' ? '✨ Visionary' : archetype.secondary === 'builder' ? '🎯 Builder' : '💫 Healer'}`}
                 </p>
-                <p className="text-sm text-warmCharcoal/70 font-marcellus">
+                <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>
                   Your archetype helps you understand your strengths and where you tend to judge yourself.
                 </p>
               </div>
@@ -270,9 +272,9 @@ export default async function SoulPage() {
                 <Card accent="salmon" className="mb-8">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">Check-in</p>
-                      <p className="font-marcellus text-warmCharcoal text-lg">You’re set for today.</p>
-                      <p className="text-sm text-warmCharcoal/70 font-marcellus">You’ve checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
+                      <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus" style={{ fontSize: '40px' }}>Check-in</p>
+                      <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>You're set for today.</p>
+                      <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>You've checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <Button href="#practices">Go to practices</Button>
@@ -287,8 +289,8 @@ export default async function SoulPage() {
             <SectionHeading level="h2" className="mb-6">
               Daily Soul Practices
             </SectionHeading>
-            <p className="text-sm text-warmCharcoal/70 font-marcellus">Start with the suggested one based on today’s check-in.</p>
-            <p className="text-xs text-warmCharcoal/60 font-marcellus mb-4">Suggested based on your check-in and current alignment.</p>
+            <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>Start with the suggested one based on today's check-in.</p>
+            <p className="text-warmCharcoal/60 font-marcellus mb-4" style={{ fontSize: '40px' }}>Suggested based on your check-in and current alignment.</p>
             <div className="grid md:grid-cols-2 gap-6">
               {PRACTICES.map(practice => (
                 <PracticeCard
@@ -303,10 +305,10 @@ export default async function SoulPage() {
             <Card accent="lavender" className="mt-10">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <p className="text-xs font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus">Forward bridge</p>
-                  <p className="font-marcellus text-warmCharcoal text-lg">Choose your next move and capture what you learned.</p>
-                  <p className="text-sm text-warmCharcoal/70 font-marcellus">Your awareness here is saved to your Soul record. Over time, these patterns shape your Insights and future guidance.</p>
-                  <p className="text-sm text-warmCharcoal/70 font-marcellus">When you’re ready, hop into Inner Compass to map your next aligned action, open Labs to build, or end the session with a quick micro-brief.</p>
+                  <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus" style={{ fontSize: '40px' }}>Forward bridge</p>
+                  <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>Choose your next move and capture what you learned.</p>
+                  <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>Your awareness here is saved to your Soul record. Over time, these patterns shape your Insights and future guidance.</p>
+                  <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>When you're ready, hop into Inner Compass to map your next aligned action, open Labs to build, or end the session with a quick micro-brief.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Button href="/inner-compass">Inner Compass</Button>

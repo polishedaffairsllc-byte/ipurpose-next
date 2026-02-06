@@ -142,6 +142,23 @@ export default function DashboardJournalPanel(props: Props) {
     setShowConfirmation(false);
 
     try {
+      // Force save any pending changes before finalizing
+      const savePromises: Promise<void>[] = [];
+      
+      if (affirmationEntry?.id && affirmationAutosave.content !== affirmationEntry.content) {
+        savePromises.push(saveEntryContent(affirmationEntry.id, affirmationAutosave.content));
+      }
+      
+      if (intentionEntry?.id && intentionAutosave.content !== intentionEntry.content) {
+        savePromises.push(saveEntryContent(intentionEntry.id, intentionAutosave.content));
+      }
+      
+      // Wait for all saves to complete
+      await Promise.all(savePromises);
+      
+      // Small delay to ensure Firestore writes complete
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       const res = await fetch("/api/journal/session/finalize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -181,10 +198,10 @@ export default function DashboardJournalPanel(props: Props) {
     <div className="space-y-8">
       <div>
         <div className="mb-4 text-center">
-          <p className="text-xs font-marcellus tracking-widest text-warmCharcoal/60 uppercase mb-4">
+          <p className="font-marcellus tracking-widest text-warmCharcoal/60 uppercase mb-4" style={{ fontSize: '40px' }}>
             TODAY'S AFFIRMATION
           </p>
-          <p className="text-2xl md:text-4xl font-marcellus text-warmCharcoal leading-relaxed mb-6">
+          <p className="font-marcellus text-warmCharcoal leading-relaxed mb-6" style={{ fontSize: '40px' }}>
             &quot;{todaysAffirmation}&quot;
           </p>
         </div>
@@ -198,15 +215,16 @@ export default function DashboardJournalPanel(props: Props) {
             lastSavedAt={affirmationAutosave.autosaveState.lastSavedAt}
             placeholder="What comes up for you as you sit with this?"
             disabled={isSessionFinalized}
+            textStyle={{ fontSize: '40px' }}
           />
         ) : (
-          <p className="text-sm text-warmCharcoal/70">{journalStatusMessage}</p>
+          <p className="text-warmCharcoal/70" style={{ fontSize: '40px' }}>{journalStatusMessage}</p>
         )}
       </div>
 
       <div>
         <div className="mb-4">
-          <p className="text-xs font-marcellus tracking-widest text-warmCharcoal/60 uppercase mb-4">
+          <p className="font-marcellus tracking-widest text-warmCharcoal/60 uppercase mb-4" style={{ fontSize: '40px' }}>
             Today's intention
           </p>
         </div>
@@ -220,9 +238,10 @@ export default function DashboardJournalPanel(props: Props) {
             lastSavedAt={intentionAutosave.autosaveState.lastSavedAt}
             placeholder="What do you want to move forward today?"
             disabled={isSessionFinalized}
+            textStyle={{ fontSize: '40px' }}
           />
         ) : (
-          <p className="text-sm text-warmCharcoal/70">{journalStatusMessage}</p>
+          <p className="text-warmCharcoal/70" style={{ fontSize: '40px' }}>{journalStatusMessage}</p>
         )}
       </div>
 

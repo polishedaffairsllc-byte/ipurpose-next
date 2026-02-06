@@ -11,6 +11,7 @@ interface JournalEntryBoxProps {
   lastSavedAt?: Date;
   placeholder?: string;
   disabled?: boolean;
+  textStyle?: React.CSSProperties;
 }
 
 /**
@@ -24,6 +25,7 @@ export function JournalEntryBox({
   lastSavedAt,
   placeholder,
   disabled = false,
+  textStyle,
 }: JournalEntryBoxProps) {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -63,7 +65,7 @@ export function JournalEntryBox({
       </div>
 
       {entry.promptText && (
-        <p className="text-sm text-warmCharcoal/60 italic">
+        <p className="text-warmCharcoal/60 italic" style={textStyle}>
           "{entry.promptText}"
         </p>
       )}
@@ -73,6 +75,7 @@ export function JournalEntryBox({
         onChange={handleChange}
         placeholder={placeholder || "Start writing..."}
         disabled={disabled}
+        style={textStyle}
         className="w-full h-32 p-4 border border-lavenderViolet/20 rounded-lg bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-lavenderViolet focus:border-transparent resize-none disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-warmCharcoal/5"
       />
     </div>

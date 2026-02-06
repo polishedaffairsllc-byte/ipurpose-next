@@ -9,13 +9,15 @@ interface PathBannerProps {
   title: string;
   description: string;
   color: string;
+  descriptionStyle?: React.CSSProperties;
 }
 
 export default function PathBanner({ 
   href, 
   title, 
   description, 
-  color
+  color,
+  descriptionStyle
 }: PathBannerProps) {
   const [isHovering, setIsHovering] = useState(false);
   const router = useRouter();
@@ -53,7 +55,7 @@ export default function PathBanner({
       />
       <div className="text-center flex-grow">
         <h3 className="font-marcellus text-2xl text-warmCharcoal mb-2">{title}</h3>
-        <p className="text-base text-warmCharcoal/70">{description}</p>
+        <p className="text-base text-warmCharcoal/70" style={descriptionStyle}>{description}</p>
       </div>
       <span className="text-warmCharcoal/50 group-hover:text-warmCharcoal transition-colors">→</span>
     </button>

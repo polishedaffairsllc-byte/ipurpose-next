@@ -103,25 +103,25 @@ export default function DashboardOrientationStatus() {
       <Card accent="lavender">
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold text-warmCharcoal mb-4">Orientation</h3>
-            <p className="text-sm text-warmCharcoal/70 mb-6">
+            <h3 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Orientation</h3>
+            <p className="text-warmCharcoal/70 mb-6" style={{ fontSize: '40px' }}>
               {progress?.currentStep ? `Current: ${progress.currentStep}` : "A guided development space to map Identity, Meaning, and Agency into something you can act on."}
             </p>
           </div>
 
           {loading ? (
-            <p className="text-sm text-warmCharcoal/70">Loading status...</p>
+            <p className="text-warmCharcoal/70" style={{ fontSize: '40px' }}>Loading status...</p>
           ) : error ? (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-red-600" style={{ fontSize: '40px' }}>{error}</p>
           ) : (
             <div className="space-y-4">
               {/* Info Table */}
-              <table className="w-full text-sm">
+              <table className="w-full">
                 <tbody className="divide-y divide-ip-border">
                   {orientationInfo.map((item, idx) => (
                     <tr key={idx} className="hover:bg-warmCharcoal/5 transition">
-                      <td className="py-3 pr-4 font-medium text-warmCharcoal whitespace-nowrap align-top">{item.label}</td>
-                      <td className="py-3 text-warmCharcoal/70">{item.value}</td>
+                      <td className="py-3 pr-4 font-medium text-warmCharcoal whitespace-nowrap align-top" style={{ fontSize: '40px' }}>{item.label}</td>
+                      <td className="py-3 text-warmCharcoal/70" style={{ fontSize: '40px' }}>{item.value}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -130,8 +130,8 @@ export default function DashboardOrientationStatus() {
               {/* Overall Progress Bar */}
               <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(42, 42, 42, 0.1)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: '500', color: 'rgba(42, 42, 42, 0.6)' }}>Lab Progress</span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#2A2A2A' }}>{percentComplete}%</span>
+                  <span style={{ fontSize: '40px', fontWeight: '500', color: 'rgba(42, 42, 42, 0.6)' }}>Lab Progress</span>
+                  <span style={{ fontSize: '40px', fontWeight: '600', color: '#2A2A2A' }}>{percentComplete}%</span>
                 </div>
                 <div style={{ width: '100%', height: '0.75rem', borderRadius: '9999px', backgroundColor: 'rgba(42, 42, 42, 0.1)', overflow: 'hidden' }}>
                   <div
@@ -148,7 +148,7 @@ export default function DashboardOrientationStatus() {
 
               {/* Lab Status with Progress Bars */}
               <div className="mt-6 space-y-3">
-                <h4 className="text-sm font-semibold text-warmCharcoal mb-3">Lab Status</h4>
+                <h4 className="font-semibold text-warmCharcoal mb-3" style={{ fontSize: '40px' }}>Lab Status</h4>
                 {labKeys.map((labKey) => {
                   const status = labs?.[`${labKey}Status` as keyof DashboardData] as string | undefined;
                   const isComplete = status === "complete";
@@ -189,10 +189,10 @@ export default function DashboardOrientationStatus() {
                       }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                        <span style={{ textTransform: 'capitalize', fontWeight: '500', color: '#2A2A2A', fontSize: '0.875rem' }}>
+                        <span style={{ textTransform: 'capitalize', fontWeight: '500', color: '#2A2A2A', fontSize: '40px' }}>
                           {labKey} Lab
                         </span>
-                        <span style={{ fontSize: '0.75rem', color: 'rgba(42, 42, 42, 0.7)', fontWeight: '500' }}>
+                        <span style={{ fontSize: '40px', color: 'rgba(42, 42, 42, 0.7)', fontWeight: '500' }}>
                           {formatStatus(status)}
                         </span>
                       </div>

@@ -120,10 +120,10 @@ export default function ArchetypeSelector() {
   return (
     <Card accent="lavender" className="mb-8">
       <div className="flex flex-col gap-2 mb-4">
-        <p className="text-xs font-medium tracking-widest text-warmCharcoal/45 uppercase font-marcellus">
+        <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase font-marcellus" style={{ fontSize: '40px' }}>
           Find Your Archetype
         </p>
-        <p className="text-sm text-warmCharcoal/75 font-marcellus">This is a mirror, not a label. Your archetype can shift over time.</p>
+        <p className="text-warmCharcoal/75 font-marcellus" style={{ fontSize: '40px' }}>This is a mirror, not a label. Your archetype can shift over time.</p>
       </div>
 
       {step === 'quiz' ? (
@@ -158,7 +158,7 @@ export default function ArchetypeSelector() {
                 </div>
               ) : (
                 <>
-                  <p className="font-marcellus text-warmCharcoal">{q.question}</p>
+                  <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>{q.question}</p>
                   <div className="space-y-2">
                     {q.options.map((opt, idx) => (
                       <label key={idx} className="flex items-center gap-3 cursor-pointer">
@@ -169,7 +169,7 @@ export default function ArchetypeSelector() {
                           onChange={() => handleQuizAnswer(q.id, opt.archetype)}
                           className="w-4 h-4"
                         />
-                        <span className="text-sm text-warmCharcoal/70 font-marcellus">{opt.text}</span>
+                        <span className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>{opt.text}</span>
                       </label>
                     ))}
                   </div>
@@ -189,13 +189,13 @@ export default function ArchetypeSelector() {
         <div className="space-y-6">
           <div className="space-y-4">
             <div>
-              <p className="text-xs uppercase tracking-widest text-warmCharcoal/55 mb-2 font-marcellus">Primary</p>
+              <p className="uppercase tracking-widest text-warmCharcoal/55 mb-2 font-marcellus" style={{ fontSize: '40px' }}>Primary</p>
               <div className="bg-lavenderViolet/5 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-2xl">{ARCHETYPES[selectedPrimary!].emoji}</span>
-                  <p className="font-marcellus text-lg text-warmCharcoal">{ARCHETYPES[selectedPrimary!].name}</p>
+                  <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>{ARCHETYPES[selectedPrimary!].name}</p>
                 </div>
-                <p className="text-sm text-warmCharcoal/70 mb-3 font-marcellus">{ARCHETYPES[selectedPrimary!].strength}</p>
+                <p className="text-warmCharcoal/70 mb-3 font-marcellus" style={{ fontSize: '40px' }}>{ARCHETYPES[selectedPrimary!].strength}</p>
                 <div className="mt-3 border border-warmCharcoal/10 rounded-lg p-3 bg-white/60">
                   <button
                     type="button"
