@@ -3,8 +3,8 @@
  *
  * Tiers:
  * - FREE: No paid features
- * - BASIC_PAID: Includes AI tools, integration, but NOT soul/systems/insights
- * - DEEPENING: Includes everything (soul, systems, insights, creation, interpretation)
+ * - BASIC_PAID: Includes Integration, Labs, Soul, and Settings (NOT Community)
+ * - DEEPENING: Includes everything (Community, Systems, Insights, Courses, Tools)
  *
  * Routes & API gating rules defined in routes config below.
  */
@@ -16,15 +16,15 @@ export type EntitlementTier = 'FREE' | 'BASIC_PAID' | 'DEEPENING';
  * Maps route patterns to required entitlement tier
  */
 export const ROUTE_GATING_CONFIG = {
-  // Decision #7: Community - PAID-ONLY
-  '/community': 'BASIC_PAID',
-  '/community/post/[id]': 'BASIC_PAID',
+  // Community - DEEPENING tier only
+  '/community': 'DEEPENING',
+  '/community/post/[id]': 'DEEPENING',
 
-  // Decision #8: Soul - DEEPENING tier only
-  '/soul': 'DEEPENING',
-  '/soul/chat': 'DEEPENING',
+  // Soul - BASIC_PAID and above (Accelerator entry point)
+  '/soul': 'BASIC_PAID',
+  '/soul/chat': 'BASIC_PAID',
 
-  // Decision #9: Advanced Tools - DEEPENING tier only
+  // Advanced Tools - DEEPENING tier only
   '/systems': 'DEEPENING',
   '/systems/chat': 'DEEPENING',
   '/insights': 'DEEPENING',
@@ -32,17 +32,17 @@ export const ROUTE_GATING_CONFIG = {
   '/creation': 'DEEPENING',
   '/interpretation': 'DEEPENING',
 
-  // Decision #10: AI Tools - ALL paid tiers (BASIC_PAID and above)
+  // AI Tools - ALL paid tiers (BASIC_PAID and above)
   '/ai-tools': 'BASIC_PAID',
   '/ai-tools/chat': 'BASIC_PAID',
 
-  // Decision #11: Labs - FREE (no gating, auth-required)
+  // Labs - FREE (no gating, auth-required)
   '/labs': 'FREE',
   '/labs/identity': 'FREE',
   '/labs/meaning': 'FREE',
   '/labs/agency': 'FREE',
 
-  // Decision #12: Integration - BASIC_PAID and above (monetization bridge)
+  // Integration - BASIC_PAID and above (monetization bridge)
   '/integration': 'BASIC_PAID',
 } as const;
 
@@ -51,14 +51,14 @@ export const ROUTE_GATING_CONFIG = {
  * Maps API route patterns to required entitlement tier
  */
 export const API_GATING_CONFIG = {
-  // Decision #7: Community APIs
-  '/api/community': 'BASIC_PAID',
+  // Community APIs - DEEPENING tier only
+  '/api/community': 'DEEPENING',
 
-  // Decision #10: AI APIs
+  // AI APIs - BASIC_PAID and above
   '/api/ai': 'BASIC_PAID',
   '/api/ai/stream': 'BASIC_PAID',
 
-  // Decision #12: Integration APIs
+  // Integration APIs - BASIC_PAID and above
   '/api/integration': 'BASIC_PAID',
 } as const;
 

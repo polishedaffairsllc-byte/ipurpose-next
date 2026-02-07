@@ -13,12 +13,32 @@ export async function GET() {
     }
 
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const docRef = firebaseAdmin.firestore().collection("users").doc(decoded.uid).collection("labs").doc("agency");
+    const docRef = firebaseAdmin.firestore().collection("agency_maps").doc(decoded.uid);
     const docSnap = await docRef.get();
+
+    if (!docSnap.exists) {
+      return NextResponse.json({
+        success: true,
+        data: { text: "" },
+      });
+    }
+
+    const data = docSnap.data();
+    const awarenessPatterns = data?.awarenessPatterns || "";
+    const decisionPatterns = data?.decisionPatterns || "";
+    const actionPatterns = data?.actionPatterns || "";
+
+    // Format as summary text for Integration display
+    const parts = [];
+    if (awarenessPatterns) parts.push(`Awareness: ${awarenessPatterns}`);
+    if (decisionPatterns) parts.push(`Decision: ${decisionPatterns}`);
+    if (actionPatterns) parts.push(`Action: ${actionPatterns}`);
+    
+    const text = parts.length > 0 ? parts.join(" | ") : "";
 
     return NextResponse.json({
       success: true,
-      data: docSnap.exists ? docSnap.data() : { text: "" },
+      data: { text },
     });
   } catch (error) {
     console.error("Agency lab GET error:", error);

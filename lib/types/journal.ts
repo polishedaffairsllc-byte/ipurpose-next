@@ -19,7 +19,8 @@ export type JournalEntryType =
   | "intention"
   | "free_journal"
   | "soul_reflection"
-  | "systems_note";
+  | "systems_note"
+  | "integration_reflection";
 
 export type JournalEntryStatus = "draft" | "final";
 

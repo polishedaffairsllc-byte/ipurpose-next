@@ -5,9 +5,9 @@ import Footer from "../components/Footer";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
-import ArchetypeSelector from "../components/ArchetypeSelector";
 import DailyCheckIn from "../components/DailyCheckIn";
 import PracticeCard, { type Practice } from "../components/PracticeCard";
+import { soulContentByArchetype } from "@/lib/archetypes/soulContent";
 
 const PRACTICES: Practice[] = [
   {
@@ -99,12 +99,9 @@ async function getUserArchetype(userId: string) {
     const db = firebaseAdmin.firestore();
     const doc = await db.collection("users").doc(userId).get();
     const data = doc.data();
-    return {
-      primary: data?.archetypePrimary || null,
-      secondary: data?.archetypeSecondary || null
-    };
+    return data?.archetypePrimary || null;
   } catch {
-    return { primary: null, secondary: null };
+    return null;
   }
 }
 
@@ -193,6 +190,11 @@ export default async function SoulPage() {
     const checkinStats = await getCheckinStats(userId);
     const suggestedPracticeId = getSuggestedPracticeId(checkinStats.latestCheckin);
 
+    // Select archetype-specific content
+    const content = soulContentByArchetype[archetype || 'neutral'] || soulContentByArchetype.neutral;
+    const userName = userData.displayName || userData.email?.split('@')[0] || 'Friend';
+    const welcomeMessage = content.welcomeAnchor.replace('{name}', userName);
+
     return (
       <div className="relative">
         {/* Hero Section */}
@@ -217,16 +219,16 @@ export default async function SoulPage() {
         <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 mb-6">
           <Card accent="salmon" className="flex flex-col justify-between">
             <div className="space-y-3">
-              <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase font-marcellus" style={{ fontSize: '40px' }}>Orientation framing</p>
-              <h2 className="font-marcellus text-warmCharcoal leading-tight" style={{ fontSize: '40px' }}>No need to hustle through this page.</h2>
-              <p className="text-warmCharcoal/75 font-marcellus" style={{ fontSize: '40px' }}>
-                Start where your body says yes today. If you feel foggy, begin with a quick check-in. If you feel clear, go straight to a practice.
+              <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase font-marcellus" style={{ fontSize: '40px' }}>
+                {welcomeMessage}
               </p>
-              <p className="text-warmCharcoal/60 font-marcellus" style={{ fontSize: '40px' }}>There's nothing to complete here — just notice how you feel in your body.</p>
+              <p className="text-warmCharcoal/75 font-marcellus" style={{ fontSize: '40px' }}>
+                {content.alignmentMessage}
+              </p>
             </div>
             <div className="flex flex-wrap gap-3 mt-4">
               <Button href="#alignment-check">60-second check-in</Button>
-              <Button variant="secondary" href="#orientation">Choose a practice</Button>
+              <Button variant="secondary" href="#practices">Choose a practice</Button>
             </div>
           </Card>
 
@@ -241,28 +243,25 @@ export default async function SoulPage() {
           </Card>
         </div>
 
-        {/* Archetype Section */}
+        {/* Archetype-Adaptive Growth Edge */}
         <div id="orientation" className="mb-12">
-          {!archetype.primary ? (
-            <ArchetypeSelector />
-          ) : (
-            <Card accent="lavender" className="mb-8">
-              <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus" style={{ fontSize: '40px' }}>
-                Your Archetype
-              </p>
-              <div className="space-y-3">
-                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>
-                  {archetype.primary === 'visionary' && '✨ Visionary'}
-                  {archetype.primary === 'builder' && '🎯 Builder'}
-                  {archetype.primary === 'healer' && '💫 Healer'}
-                  {archetype.secondary && ` + ${archetype.secondary === 'visionary' ? '✨ Visionary' : archetype.secondary === 'builder' ? '🎯 Builder' : '💫 Healer'}`}
-                </p>
-                <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>
-                  Your archetype helps you understand your strengths and where you tend to judge yourself.
-                </p>
+          <Card accent="lavender" className="mb-8">
+            <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus" style={{ fontSize: '40px' }}>
+              Your Growth Edge
+            </p>
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {content.growthEdgeFocus.map((focus, index) => (
+                  <span key={index} className="px-3 py-1 rounded-full bg-warmCharcoal/10 text-warmCharcoal font-marcellus" style={{ fontSize: '40px' }}>
+                    {focus}
+                  </span>
+                ))}
               </div>
-            </Card>
-          )}
+              <p className="text-warmCharcoal/70 font-marcellus mt-4" style={{ fontSize: '40px' }}>
+                These areas are where your archetype naturally grows. Notice them without forcing change.
+              </p>
+            </div>
+          </Card>
 
           {/* Daily Check-in */}
             <div id="alignment-check">
@@ -289,30 +288,51 @@ export default async function SoulPage() {
             <SectionHeading level="h2" className="mb-6">
               Daily Soul Practices
             </SectionHeading>
-            <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>Start with the suggested one based on today's check-in.</p>
-            <p className="text-warmCharcoal/60 font-marcellus mb-4" style={{ fontSize: '40px' }}>Suggested based on your check-in and current alignment.</p>
+            
+            {/* Archetype-Specific Reflection Prompts */}
+            <Card accent="salmon" className="mb-6">
+              <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus" style={{ fontSize: '40px' }}>
+                Reflection Prompts for You
+              </p>
+              <div className="space-y-2">
+                {content.reflectionPrompts.map((prompt, index) => (
+                  <p key={index} className="text-warmCharcoal/75 font-marcellus" style={{ fontSize: '40px' }}>
+                    • {prompt}
+                  </p>
+                ))}
+              </div>
+            </Card>
+
+            <p className="text-warmCharcoal/70 font-marcellus mb-4" style={{ fontSize: '40px' }}>
+              Suggested based on your check-in and archetype. Primary practices are most aligned for you.
+            </p>
             <div className="grid md:grid-cols-2 gap-6">
-              {PRACTICES.map(practice => (
-                <PracticeCard
-                  key={practice.id}
-                  practice={practice}
-                  suggested={practice.id === suggestedPracticeId}
-                  defaultOpen={practice.id === suggestedPracticeId}
-                />
-              ))}
+              {PRACTICES.map(practice => {
+                const isPrimary = content.practicePrimary.includes(practice.title);
+                const isSecondary = content.practiceSecondary.includes(practice.title);
+                return (
+                  <PracticeCard
+                    key={practice.id}
+                    practice={practice}
+                    suggested={practice.id === suggestedPracticeId || isPrimary}
+                    defaultOpen={practice.id === suggestedPracticeId}
+                  />
+                );
+              })}
             </div>
 
             <Card accent="lavender" className="mt-10">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus" style={{ fontSize: '40px' }}>Forward bridge</p>
-                  <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '40px' }}>Choose your next move and capture what you learned.</p>
+                  <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus" style={{ fontSize: '40px' }}>Ready to deepen?</p>
+                  <p className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>
+                    {content.labsBridgeText}
+                  </p>
                   <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>Your awareness here is saved to your Soul record. Over time, these patterns shape your Insights and future guidance.</p>
-                  <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>When you're ready, hop into Inner Compass to map your next aligned action, open Labs to build, or end the session with a quick micro-brief.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Button href="/inner-compass">Inner Compass</Button>
-                  <Button variant="secondary" href="/labs">Open Labs</Button>
+                  <Button href="/labs">Continue to Labs</Button>
+                  <Button variant="secondary" href="/inner-compass">Inner Compass</Button>
                   <Button variant="ghost" href="/dashboard">End session</Button>
                 </div>
               </div>

@@ -13,12 +13,32 @@ export async function GET() {
     }
 
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const docRef = firebaseAdmin.firestore().collection("users").doc(decoded.uid).collection("labs").doc("identity");
+    const docRef = firebaseAdmin.firestore().collection("identity_maps").doc(decoded.uid);
     const docSnap = await docRef.get();
+
+    if (!docSnap.exists) {
+      return NextResponse.json({
+        success: true,
+        data: { text: "" },
+      });
+    }
+
+    const data = docSnap.data();
+    const selfPerceptionMap = data?.selfPerceptionMap || "";
+    const selfConceptMap = data?.selfConceptMap || "";
+    const selfNarrativeMap = data?.selfNarrativeMap || "";
+
+    // Format as summary text for Integration display
+    const parts = [];
+    if (selfPerceptionMap) parts.push(`Self-Perception: ${selfPerceptionMap}`);
+    if (selfConceptMap) parts.push(`Self-Concept: ${selfConceptMap}`);
+    if (selfNarrativeMap) parts.push(`Self-Narrative: ${selfNarrativeMap}`);
+    
+    const text = parts.length > 0 ? parts.join(" | ") : "";
 
     return NextResponse.json({
       success: true,
-      data: docSnap.exists ? docSnap.data() : { text: "" },
+      data: { text },
     });
   } catch (error) {
     console.error("Identity lab GET error:", error);

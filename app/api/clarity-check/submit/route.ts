@@ -400,6 +400,40 @@ export async function POST(request: NextRequest) {
         .add(submissionData);
       submissionDocId = docRef.id;
       console.log('Clarity check submission stored:', { id: submissionDocId, email: userEmail, identityType });
+
+      // SYNC TO USER PROFILE: Save identityType to users.archetypePrimary
+      // This makes it accessible across all pages without querying clarityCheckSubmissions
+      if (identityType) {
+        try {
+          // Find user by email
+          const usersSnapshot = await firebaseAdmin
+            .firestore()
+            .collection('users')
+            .where('email', '==', userEmail)
+            .limit(1)
+            .get();
+
+          if (!usersSnapshot.empty) {
+            const userDoc = usersSnapshot.docs[0];
+            const userData = userDoc.data();
+            
+            // Only update if archetypePrimary is not already set
+            // (preserves existing archetype if user retakes Clarity Check)
+            if (!userData.archetypePrimary) {
+              await userDoc.ref.update({
+                archetypePrimary: identityType,
+                archetypeSecondary: null,
+                archetypeSource: 'clarity_check',
+                archetypeUpdatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+              });
+              console.log('Synced identityType to user profile:', { uid: userDoc.id, archetypePrimary: identityType });
+            }
+          }
+        } catch (syncError) {
+          console.error('Failed to sync identityType to user profile:', syncError);
+          // Don't fail the whole submission if profile sync fails
+        }
+      }
     } catch (firestoreError) {
       console.error('Firestore error storing submission:', firestoreError);
       // Continue anyway—we'll still return results

@@ -11,7 +11,7 @@ const premiumModules = [
     name: "Soul",
     description: "Alignment practices, archetypes, and daily check-ins.",
     href: "/soul",
-    requiredTier: "DEEPENING" as EntitlementTier,
+    requiredTier: "BASIC_PAID" as EntitlementTier,
   },
   {
     key: "systems",
@@ -32,7 +32,7 @@ const premiumModules = [
     name: "Community",
     description: "Private community spaces and conversations.",
     href: "/community",
-    requiredTier: "BASIC_PAID" as EntitlementTier,
+    requiredTier: "DEEPENING" as EntitlementTier,
   },
 ];
 

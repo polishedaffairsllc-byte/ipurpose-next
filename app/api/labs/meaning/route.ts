@@ -13,12 +13,32 @@ export async function GET() {
     }
 
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const docRef = firebaseAdmin.firestore().collection("users").doc(decoded.uid).collection("labs").doc("meaning");
+    const docRef = firebaseAdmin.firestore().collection("meaning_maps").doc(decoded.uid);
     const docSnap = await docRef.get();
+
+    if (!docSnap.exists) {
+      return NextResponse.json({
+        success: true,
+        data: { text: "" },
+      });
+    }
+
+    const data = docSnap.data();
+    const valueStructure = data?.valueStructure || "";
+    const coherenceStructure = data?.coherenceStructure || "";
+    const directionStructure = data?.directionStructure || "";
+
+    // Format as summary text for Integration display
+    const parts = [];
+    if (valueStructure) parts.push(`Values: ${valueStructure}`);
+    if (coherenceStructure) parts.push(`Coherence: ${coherenceStructure}`);
+    if (directionStructure) parts.push(`Direction: ${directionStructure}`);
+    
+    const text = parts.length > 0 ? parts.join(" | ") : "";
 
     return NextResponse.json({
       success: true,
-      data: docSnap.exists ? docSnap.data() : { text: "" },
+      data: { text },
     });
   } catch (error) {
     console.error("Meaning lab GET error:", error);

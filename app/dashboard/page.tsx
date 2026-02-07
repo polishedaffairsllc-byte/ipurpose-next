@@ -74,24 +74,56 @@ export default async function DashboardPage() {
 
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
     
-    // Fetch identity type from Clarity Check submissions
-    let identityType = "";
-    try {
-      const clarityCheckQuery = await db
-        .collection("clarityCheckSubmissions")
-        .where("email", "==", user.email)
-        .orderBy("createdAt", "desc")
-        .limit(1)
-        .get();
-      
-      if (!clarityCheckQuery.empty) {
-        const latestSubmission = clarityCheckQuery.docs[0].data();
-        if (latestSubmission?.identityType) {
-          identityType = latestSubmission.identityType;
+    // ONE-TIME BACKFILL: Sync Clarity Check identityType to user profile if missing
+    // This ensures existing users get their archetype populated from their Clarity Check
+    if (!userData.archetypePrimary && user.email) {
+      try {
+        const clarityCheckQuery = await db
+          .collection("clarityCheckSubmissions")
+          .where("email", "==", user.email)
+          .orderBy("createdAt", "desc")
+          .limit(1)
+          .get();
+        
+        if (!clarityCheckQuery.empty) {
+          const latestSubmission = clarityCheckQuery.docs[0].data();
+          if (latestSubmission?.identityType) {
+            await db.collection("users").doc(decoded.uid).update({
+              archetypePrimary: latestSubmission.identityType,
+              archetypeSecondary: null,
+              archetypeSource: 'clarity_check',
+              archetypeUpdatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+            });
+            userData.archetypePrimary = latestSubmission.identityType; // Update local copy
+            console.log('Backfilled archetypePrimary from Clarity Check:', { uid: decoded.uid, archetype: latestSubmission.identityType });
+          }
         }
+      } catch (err) {
+        console.error("Failed to backfill archetypePrimary from Clarity Check", err);
       }
-    } catch (err) {
-      console.error("Failed to fetch identity type from Clarity Check", err);
+    }
+    
+    // Read identity type from user profile (primary source)
+    // Fallback to Clarity Check submissions only if profile is empty
+    let identityType = userData.archetypePrimary || "";
+    if (!identityType) {
+      try {
+        const clarityCheckQuery = await db
+          .collection("clarityCheckSubmissions")
+          .where("email", "==", user.email)
+          .orderBy("createdAt", "desc")
+          .limit(1)
+          .get();
+        
+        if (!clarityCheckQuery.empty) {
+          const latestSubmission = clarityCheckQuery.docs[0].data();
+          if (latestSubmission?.identityType) {
+            identityType = latestSubmission.identityType;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch identity type from Clarity Check", err);
+      }
     }
     
     // Fetch identity anchor from multiple sources

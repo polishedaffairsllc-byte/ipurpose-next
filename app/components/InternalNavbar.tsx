@@ -27,8 +27,11 @@ export default function InternalNavbar() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
-  // Show specialized authenticated journey nav for orientation and integration ONLY
-  if (isOrientationRoute || isIntegrationRoute) {
+  // Integration renders its own nav; skip global nav
+  if (isIntegrationRoute) return null;
+
+  // Show specialized authenticated journey nav for orientation only
+  if (isOrientationRoute) {
     return (
       <nav className="sticky top-0 z-50 bg-[#141527]/95 backdrop-blur-sm border-b border-white/5">
         <div className="container max-w-7xl mx-auto px-6">
