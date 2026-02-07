@@ -198,8 +198,8 @@ export async function POST() {
       
       // Sort client-side to avoid Firestore composite index requirements
       journalEntries = entriesSnapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .sort((a, b) => {
+        .map(doc => ({ id: doc.id, ...doc.data() } as any))
+        .sort((a: any, b: any) => {
           const aTime = a?.createdAt?.toMillis ? a.createdAt.toMillis() : (a?.createdAt?._seconds ?? 0) * 1000;
           const bTime = b?.createdAt?.toMillis ? b.createdAt.toMillis() : (b?.createdAt?._seconds ?? 0) * 1000;
           return aTime - bTime;
