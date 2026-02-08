@@ -23,6 +23,7 @@ function getRequestContext(request: NextRequest) {
 
 async function sendParticipantConfirmation(name: string, email: string) {
   const resendApiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
   if (!resendApiKey) {
     console.warn('RESEND_API_KEY not configured. Confirmation email will not be sent.');
@@ -107,7 +108,7 @@ async function sendParticipantConfirmation(name: string, email: string) {
     `;
 
     const result = await resend.emails.send({
-      from: 'info@ipurposesoul.com',
+      from: fromEmail,
       to: email,
       subject: 'You\'re Registered for the iPurpose Info Session',
       html: emailHtml,
@@ -128,6 +129,7 @@ async function sendFounderInfoSessionNotification(
   timezone?: string
 ) {
   const resendApiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
   const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita.hamilton@polishedaffairsllc.com';
 
   if (!resendApiKey) {
@@ -195,7 +197,7 @@ async function sendFounderInfoSessionNotification(
     `;
 
     const result = await resend.emails.send({
-      from: 'info@ipurposesoul.com',
+      from: fromEmail,
       to: founderEmail,
       subject: `New Info Session Registration: ${name}`,
       html: emailHtml,
