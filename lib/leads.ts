@@ -6,7 +6,7 @@
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export type LeadSource = 'clarity-check' | 'info-session';
+export type LeadSource = 'clarity-check' | 'info-session' | 'contact';
 
 export interface LeadData {
   source: LeadSource;
