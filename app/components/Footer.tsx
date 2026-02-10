@@ -17,27 +17,17 @@ export default function Footer() {
 
   return (
     <>
-      {/* Deepen CTA Section — above footer */}
+      {/* Deepen CTA — above footer */}
       {isAuthenticated && (
-        <section className="w-full py-12 sm:py-16" style={{ backgroundColor: '#000000' }}>
-          <div className="max-w-3xl mx-auto px-6 text-center space-y-6">
-            <h2 className="font-italiana text-white" style={{ fontSize: '45px' }}>
-              Ready to Go Deeper?
-            </h2>
-            <p className="font-marcellus text-white/70" style={{ fontSize: '24px' }}>
-              Unlock Systems, Reflections, and Community access.
-            </p>
-            <div className="flex justify-center">
-              <Link
-                href="/deepen"
-                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-                style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '35px' }}
-              >
-                ✦ Deepen Your Experience
-              </Link>
-            </div>
-          </div>
-        </section>
+        <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#000000' }}>
+          <Link
+            href="/deepen"
+            className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '35px' }}
+          >
+            ✦ Deepen Your Experience
+          </Link>
+        </div>
       )}
 
       <footer className="relative border-t border-white/10" style={{ zIndex: 10, backgroundColor: '#4b4e6d' }}>
