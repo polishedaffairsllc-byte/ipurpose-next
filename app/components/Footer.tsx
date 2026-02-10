@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -15,10 +17,12 @@ export default function Footer() {
 
   if (!mounted) return null;
 
+  const isDeepenRoute = pathname === '/deepen' || pathname.startsWith('/deepen/');
+
   return (
     <>
-      {/* Deepen CTA — above footer */}
-      {isAuthenticated && (
+      {/* Deepen CTA — above footer (hidden when already on /deepen) */}
+      {isAuthenticated && !isDeepenRoute && (
         <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
           <Link
             href="/deepen"

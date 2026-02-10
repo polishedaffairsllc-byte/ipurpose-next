@@ -49,7 +49,7 @@ export default async function DeepenPage() {
             You have premium access. Choose where to go next.
           </p>
           <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '18px' }}>
-            Your membership is active — $29/month, cancel anytime.
+            Your membership is active — $59/month, cancel anytime.
           </p>
         </div>
 
@@ -158,7 +158,7 @@ export default async function DeepenPage() {
           </h2>
           <div className="space-y-2">
             <p className="font-italiana text-warmCharcoal" style={{ fontSize: '60px' }}>
-              $29<span className="text-warmCharcoal/50" style={{ fontSize: '28px' }}>/month</span>
+              $59<span className="text-warmCharcoal/50" style={{ fontSize: '28px' }}>/month</span>
             </p>
             <p className="font-marcellus text-warmCharcoal/50" style={{ fontSize: '20px' }}>
               Cancel anytime. No long-term commitment.
