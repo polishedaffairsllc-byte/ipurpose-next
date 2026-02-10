@@ -5,11 +5,9 @@ import { getTodaysAffirmation } from "@/lib/affirmationClient";
 import { canAccessTier, getTierFromUser } from "@/app/lib/auth/entitlements";
 import { isFounder as isFounderUser } from "@/lib/isFounder";
 import ErrorBoundary from "@/app/components/ErrorBoundary";
-import PathBanner from "@/app/components/PathBanner";
 import Footer from "@/app/components/Footer";
 import Card from "../components/Card";
 import ScrollReveal from "../components/ScrollReveal";
-import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
 import DashboardJournalPanel from "../components/DashboardJournalPanel";
 import DashboardOrientationStatus from "../components/DashboardOrientationStatus";
@@ -48,8 +46,6 @@ export default async function DashboardPage() {
     const userData = userDoc.data() ?? {};
     const customClaims = decoded.customClaims || {};
     const tier = getTierFromUser({ ...userData, customClaims });
-    const canAccessCommunity = canAccessTier(tier, "BASIC_PAID");
-
     const founderBypass = isFounderUser(decoded, userData);
 
     // Skip entitlement check for founders
@@ -199,67 +195,6 @@ export default async function DashboardPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </ScrollReveal>
-        <ScrollReveal delay={300}>
-          <div className="mb-12 animate-fade-in-up stagger-3 relative z-0">
-            <SectionHeading level="h2" className="mb-8">
-              Choose your path
-            </SectionHeading>
-            <div className="space-y-4 max-w-2xl mx-auto w-full">
-              <PathBanner 
-                href="/soul"
-                title="Soul Alignment"
-                description="Continue your inner clarity work and purpose alignment."
-                color="#9C88FF"
-                descriptionStyle={{ fontSize: '40px' }}
-              />
-              <PathBanner 
-                href="/systems"
-                title="Systems"
-                description="Structure your workflows, offers, and strategic foundation."
-                color="#F5E8C7"
-                descriptionStyle={{ fontSize: '40px' }}
-              />
-              <PathBanner 
-                href="/ai"
-                title="AI Mentor"
-                description="Expand your capacity with aligned automation and prompts."
-                color="#FCC4B7"
-                descriptionStyle={{ fontSize: '40px' }}
-              />
-              <PathBanner 
-                href="/insights"
-                title="Insights"
-                description="Review reflections, trends, and alignment reports."
-                color="#4B4E6D"
-                descriptionStyle={{ fontSize: '40px' }}
-              />
-              {canAccessCommunity ? (
-                <PathBanner 
-                  href="/community"
-                  title="Community"
-                  description="Connect with the iPurpose community and group reflections."
-                  color="#F8C9D3"
-                  descriptionStyle={{ fontSize: '40px' }}
-                />
-              ) : null}
-            </div>
-          </div>
-        </ScrollReveal>
-        <ScrollReveal delay={400}>
-          <div className="mb-12 animate-fade-in-up stagger-8 relative z-0">
-            <Card accent="gold">
-              <p className="text-xs font-medium tracking-[0.2em] text-warmCharcoal/60 uppercase mb-3">
-                RECENT ACTIVITY
-              </p>
-              <p className="text-warmCharcoal/75 leading-relaxed mb-2" style={{ fontSize: '40px' }}>
-                • Completed Soul Reflection
-              </p>
-              <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '40px' }}>
-                • Updated Systems Framework
-              </p>
-            </Card>
           </div>
         </ScrollReveal>
         <Footer />
