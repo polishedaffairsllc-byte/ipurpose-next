@@ -89,6 +89,7 @@ export function IntegrationSummaryModal({
           .entry { margin-bottom: 1rem; }
           button { display: none; }
           .whitespace-pre-line { white-space: pre-line; }
+          p[style*="50px"] { font-size: 50px !important; font-weight: bold !important; }
         </style>
       </head>
       <body>
@@ -228,7 +229,7 @@ export function IntegrationSummaryModal({
           <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '0.5rem' }}>
             ✨ Integration Reflection — {todayDate}
           </h1>
-          <p style={{ color: 'rgba(42, 42, 42, 0.6)' }}>
+          <p style={{ color: 'rgba(42, 42, 42, 0.6)', fontSize: '50px', fontWeight: 'bold' }}>
             {userName} the {userArchetype || "Explorer"}
           </p>
         </div>
