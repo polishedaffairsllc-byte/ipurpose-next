@@ -73,6 +73,7 @@ export function IntegrationSummaryModal({
       <html>
       <head>
         <title>${userName}'s Integration Reflection</title>
+        <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
         <style>
           body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -229,7 +230,7 @@ export function IntegrationSummaryModal({
           <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '0.5rem' }}>
             ✨ Integration Reflection — {todayDate}
           </h1>
-          <p style={{ color: 'rgba(42, 42, 42, 0.6)', fontSize: '50px', fontWeight: 'bold' }}>
+          <p style={{ color: 'rgba(42, 42, 42, 0.6)', fontSize: '50px', fontWeight: 'bold', fontFamily: 'Italiana, serif' }}>
             {userName} the {userArchetype || "Explorer"}
           </p>
         </div>
