@@ -41,6 +41,9 @@ export default async function DeepenPage() {
             <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '28px' }}>
               You have premium access. Choose where to go next.
             </p>
+            <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '18px' }}>
+              Your membership is active — $29/month, cancel anytime.
+            </p>
           </div>
 
           <div className="space-y-6 max-w-2xl mx-auto">
@@ -100,6 +103,7 @@ export default async function DeepenPage() {
         {/* What's Included */}
         <div className="max-w-2xl mx-auto space-y-8 mb-16">
           <h2 className="font-italiana text-warmCharcoal text-center" style={{ fontSize: '45px' }}>
+            What's Included
           </h2>
 
           <div className="space-y-6">
