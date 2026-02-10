@@ -60,10 +60,10 @@ export default function AIBlueprintPage() {
             </p>
           </section>
           <div className="text-center">
-            <p className="text-warmCharcoal/80 mb-6 sm:mb-8 text-[40px]">
+            <p className="text-warmCharcoal/80 mb-6 sm:mb-8 text-[45px] text-center">
               Use AI without losing your voice, values, or peace.
             </p>
-            <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[40px]">
+            <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[45px] text-center">
               A practical, beginner-friendly guide to help you integrate AI into your workflow ethically—so you can plan, write, organize, and create with more ease.
             </p>
 
@@ -78,39 +78,44 @@ export default function AIBlueprintPage() {
 
       {/* What You'll Receive */}
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-12 text-center">
+        <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+        </div>
+        <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
           What You'll Receive
         </h2>
-        <div className="space-y-6">
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-lavenderViolet/5 to-transparent rounded-lg border border-lavenderViolet/20">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+        <div className="space-y-8">
+          <div className="p-4 sm:p-6 bg-gradient-to-br from-lavenderViolet/5 to-transparent rounded-lg border border-lavenderViolet/20 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Plain-Language AI Explanation
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               No tech jargon. Just clarity on what AI can do, what it can't, and why that matters for your work and integrity.
             </p>
           </div>
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-salmonPeach/5 to-transparent rounded-lg border border-salmonPeach/20">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="p-4 sm:p-6 bg-gradient-to-br from-salmonPeach/5 to-transparent rounded-lg border border-salmonPeach/20 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Guided Prompts for Real Work
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               Ready-to-use templates for clarity, content, planning, and workflow. Designed for your actual projects, not hypotheticals.
             </p>
           </div>
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-indigoDeep/5 to-transparent rounded-lg border border-indigoDeep/20">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="p-4 sm:p-6 bg-gradient-to-br from-indigoDeep/5 to-transparent rounded-lg border border-indigoDeep/20 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Simple Examples You Can Copy
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               See how AI supports your work without replacing you. Real-world examples show what to automate and what to keep human.
             </p>
           </div>
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-softGold/5 to-transparent rounded-lg border border-softGold/20">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="p-4 sm:p-6 bg-gradient-to-br from-softGold/5 to-transparent rounded-lg border border-softGold/20 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Boundaries & Best Practices
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               Feel safe and grounded. Clear guidelines on ethical AI use so you're not just chasing trends.
             </p>
           </div>
@@ -120,10 +125,15 @@ export default function AIBlueprintPage() {
       {/* Who It's For */}
       <div className="bg-gradient-to-br from-lavenderViolet/5 via-transparent to-salmonPeach/5">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-12 text-center">
+          <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+            <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          </div>
+          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
             Who It's For
           </h2>
-          <div className="space-y-4 text-warmCharcoal/80 text-[40px]">
+          <div className="space-y-4 text-warmCharcoal/80 text-[45px] text-center">
             <p>
               <strong>You feel behind on AI</strong> and want a clean starting point that doesn't overwhelm.
             </p>
@@ -139,31 +149,36 @@ export default function AIBlueprintPage() {
 
       {/* FAQ */}
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-12 text-center">
+        <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+        </div>
+        <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
           FAQ
         </h2>
-        <div className="space-y-6">
-          <div className="border-l-4 border-lavenderViolet pl-4 sm:pl-6">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+        <div className="space-y-8 text-center">
+          <div className="space-y-2">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Do I need ChatGPT Plus or any paid tools?
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               No. This guide works with free versions of popular AI tools. You can start immediately.
             </p>
           </div>
-          <div className="border-l-4 border-salmonPeach pl-4 sm:pl-6">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="space-y-2">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Is this a full course?
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               No. It's a focused mini-offer and guide built for fast implementation. Not a 12-week program.
             </p>
           </div>
-          <div className="border-l-4 border-indigoDeep pl-4 sm:pl-6">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="space-y-2">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Will this teach advanced automation?
             </h3>
-            <p className="text-warmCharcoal/70 text-[40px]">
+            <p className="text-warmCharcoal/70 text-[45px] text-center">
               No. This is foundational and intentional—designed to help you feel confident and grounded, not overwhelmed by complexity.
             </p>
           </div>
@@ -173,10 +188,15 @@ export default function AIBlueprintPage() {
       {/* Final CTA */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-6 sm:mb-8 text-center">
+          <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+            <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          </div>
+          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-6 sm:mb-8 text-center">
             Ready to Use AI With Intention?
           </h2>
-          <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[40px] text-center">
+          <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[45px] text-center">
             Get your practical blueprint today.
           </p>
           <div className="space-y-3 sm:space-y-4 flex flex-col">

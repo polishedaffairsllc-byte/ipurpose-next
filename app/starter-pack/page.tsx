@@ -62,10 +62,10 @@ export default function StarterPackPage() {
             </p>
           </section>
           <div className="text-center">
-            <p className="text-[40px] text-warmCharcoal/80 mb-6 sm:mb-8">
+            <p className="text-[35px] text-warmCharcoal/80 mb-6 sm:mb-8 text-center">
               Get clear on your direction — without committing to a full program.
             </p>
-            <p className="text-[40px] text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto">
+            <p className="text-[35px] text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-center">
               A short, guided starter experience to help you reconnect to what matters, name your purpose clearly, and take your next step with calm structure.
             </p>
 
@@ -80,39 +80,54 @@ export default function StarterPackPage() {
 
       {/* What You'll Receive */}
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-marcellus text-warmCharcoal mb-8 sm:mb-12 text-center">
+        <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-8 sm:mb-12 text-center">
           What You'll Receive
         </h2>
-        <div className="space-y-6">
-          <div className="p-6 bg-gradient-to-br from-lavenderViolet/5 to-transparent rounded-lg border border-lavenderViolet/20">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+        <div className="space-y-10">
+          <div className="p-6 bg-gradient-to-br from-lavenderViolet/5 to-transparent rounded-lg">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Guided Soul Alignment Prompts
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               Reduce fog and overwhelm with intentional questions designed to reconnect you with what actually matters to you.
             </p>
+            <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mt-6" aria-hidden="true">
+              <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+              <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
+              <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+            </div>
           </div>
-          <div className="p-6 bg-gradient-to-br from-salmonPeach/5 to-transparent rounded-lg border border-salmonPeach/20">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="p-6 bg-gradient-to-br from-salmonPeach/5 to-transparent rounded-lg">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Purpose Statement Framework
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               Name your direction in plain language — not buzzwords. A simple template that helps you articulate what you're building, why it matters, and who it serves.
             </p>
+            <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mt-6" aria-hidden="true">
+              <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #FCC4B7, transparent)' }}></div>
+              <span style={{ fontSize: '20px', color: '#FCC4B7' }}>✦</span>
+              <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #FCC4B7, transparent)' }}></div>
+            </div>
           </div>
-          <div className="p-6 bg-gradient-to-br from-indigoDeep/5 to-transparent rounded-lg border border-indigoDeep/20">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="p-6 bg-gradient-to-br from-indigoDeep/5 to-transparent rounded-lg">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Simple Systems Map
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               See what supports you and what drains you. A visual exercise to understand your current environment so you can build with intention.
             </p>
+            <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mt-6" aria-hidden="true">
+              <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #4B4E6D, transparent)' }}></div>
+              <span style={{ fontSize: '20px', color: '#4B4E6D' }}>✦</span>
+              <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #4B4E6D, transparent)' }}></div>
+            </div>
           </div>
-          <div className="p-6 bg-gradient-to-br from-softGold/5 to-transparent rounded-lg border border-softGold/20">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="p-6 bg-gradient-to-br from-softGold/5 to-transparent rounded-lg">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Next Step Pathway
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               Don't stall after insight. Get a concrete, grounded action you can take this week — no overwhelm, just clarity.
             </p>
           </div>
@@ -122,10 +137,15 @@ export default function StarterPackPage() {
       {/* Who It's For */}
       <div className="bg-gradient-to-br from-lavenderViolet/5 via-transparent to-salmonPeach/5">
         <div className="container max-w-4xl mx-auto px-6 py-20">
-          <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
+          <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+            <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          </div>
+          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
             Who It's For
           </h2>
-          <div className="space-y-4 text-[40px] text-warmCharcoal/80">
+          <div className="space-y-4 text-[35px] text-warmCharcoal/80 text-center">
             <p>
               <strong>You feel called to build something</strong> but you're not clear what or how.
             </p>
@@ -144,42 +164,42 @@ export default function StarterPackPage() {
 
       {/* What Changes After */}
       <div className="container max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
+        <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
           After 60–90 Minutes, You'll Have:
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
-            <div className="flex gap-4">
+            <div className="flex flex-col items-center text-center space-y-3">
               <div className="text-3xl text-lavenderViolet font-marcellus">✓</div>
               <div>
-                <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
+                <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
                   A Clearer Sense of Direction
                 </h3>
-                <p className="text-[40px] text-warmCharcoal/70">
+                <p className="text-[35px] text-warmCharcoal/70 text-center">
                   Not perfect clarity, but real movement from fog to focus.
                 </p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col items-center text-center space-y-3">
               <div className="text-3xl text-lavenderViolet font-marcellus">✓</div>
               <div>
-                <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
+                <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
                   Words for What You're Building
                 </h3>
-                <p className="text-[40px] text-warmCharcoal/70">
+                <p className="text-[35px] text-warmCharcoal/70 text-center">
                   Even if it's early and evolving, you'll have language to share it.
                 </p>
               </div>
             </div>
           </div>
           <div className="space-y-4">
-            <div className="flex gap-4">
+            <div className="flex flex-col items-center text-center space-y-3">
               <div className="text-3xl text-lavenderViolet font-marcellus">✓</div>
               <div>
-                <h3 className="text-xl font-marcellus text-warmCharcoal mb-2">
+                <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
                   A Grounded Next Step
                 </h3>
-                <p className="text-[40px] text-warmCharcoal/70">
+                <p className="text-[35px] text-warmCharcoal/70 text-center">
                   Something concrete you can take this week — no overwhelm.
                 </p>
               </div>
@@ -191,20 +211,20 @@ export default function StarterPackPage() {
       {/* Delivery */}
       <div className="bg-gradient-to-br from-indigoDeep/5 to-transparent">
         <div className="container max-w-4xl mx-auto px-6 py-20">
-          <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
+          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
             Delivery & Support
           </h2>
-          <div className="space-y-6 text-[40px] text-warmCharcoal/80">
+          <div className="space-y-6 text-[35px] text-warmCharcoal/80 text-center">
             <div>
-              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Format</h3>
+              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2 text-center">Format</h3>
               <p>Digital access via download</p>
             </div>
             <div>
-              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Access</h3>
+              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2 text-center">Access</h3>
               <p>Delivered immediately after checkout</p>
             </div>
             <div>
-              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">Support</h3>
+              <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2 text-center">Support</h3>
               <p>Self-guided (no live calls, but all materials are self-explanatory)</p>
             </div>
           </div>
@@ -213,31 +233,31 @@ export default function StarterPackPage() {
 
       {/* FAQ */}
       <div className="container max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-12 text-center">
+        <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
           FAQ
         </h2>
-        <div className="space-y-6">
-          <div className="border-l-4 border-lavenderViolet pl-6">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+        <div className="space-y-12">
+          <div className="space-y-4 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Is this the full program?
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               No. This is a starter experience designed to give you clarity and momentum. The iPurpose Accelerator is our full cohort program with live mentorship.
             </p>
           </div>
-          <div className="border-l-4 border-salmonPeach pl-6">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="space-y-4 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Do I need any special knowledge?
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               No. This is designed for beginners. No prerequisite knowledge needed.
             </p>
           </div>
-          <div className="border-l-4 border-indigoDeep pl-6">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal mb-2">
+          <div className="space-y-4 text-center">
+            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
               Can I apply this toward the Accelerator later?
             </h3>
-            <p className="text-[40px] text-warmCharcoal/70">
+            <p className="text-[35px] text-warmCharcoal/70 text-center">
               Keep your receipt. Occasionally we offer credit or discounts during launches—we'll reach out if you're eligible.
             </p>
           </div>
@@ -247,10 +267,15 @@ export default function StarterPackPage() {
       {/* Final CTA */}
       <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
         <div className="container max-w-4xl mx-auto px-6 py-20">
-          <h2 className="text-5xl md:text-6xl font-marcellus text-warmCharcoal mb-8 text-center">
+          <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
+            <span style={{ fontSize: '20px', color: '#E6C87C' }}>✦</span>
+            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
+          </div>
+          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-8 text-center">
             Ready to Start?
           </h2>
-          <p className="text-[40px] text-warmCharcoal/70 mb-8 max-w-2xl mx-auto text-center">
+          <p className="text-[35px] text-warmCharcoal/70 mb-8 max-w-2xl mx-auto text-center">
             Get clear on your direction in 60–90 minutes.
           </p>
           <div className="space-y-3 sm:space-y-4 flex flex-col">

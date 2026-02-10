@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Metadata } from "next";
 import PublicHeader from "../components/PublicHeader";
 import Footer from "../components/Footer";
-import ImageSlideshow from "./ImageSlideshow";
 
 export const metadata: Metadata = {
   title: "About iPurpose — Built for Clarity, Structure, and Sustainable Progress",
@@ -83,15 +82,6 @@ export default function AboutPage() {
               This is not a slogan. It is a sequence.
             </p>
           </div>
-          
-          {/* Image Slideshow */}
-          <ImageSlideshow 
-            images={[
-              '/images/about-page/ChatGPT Image Feb 4, 2026, 02_24_01 PM.png',
-              '/images/about-page/ChatGPT Image Feb 4, 2026, 01_48_33 PM.png',
-              '/images/about-page/ChatGPT Image Feb 4, 2026, 01_48_25 PM.png'
-            ]}
-          />
           
           <div className="space-y-4 pl-4 border-l-4 border-lavenderViolet">
             <div>

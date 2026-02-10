@@ -167,8 +167,8 @@ export default function DiscoverPage() {
           <h2 className="font-marcellus text-warmCharcoal mb-6 text-center" style={{ fontSize: '50px' }}>
             How it works
           </h2>
-          <div className="flex gap-8 items-center">
-            <div className="space-y-4 sm:space-y-6 text-left">
+          <div className="flex gap-8 items-center justify-between">
+            <div className="space-y-4 sm:space-y-6 text-left flex-1">
               <ul className="space-y-3 sm:space-y-4 text-warmCharcoal/75 inline-block" style={{ fontSize: '35px', listStyle: 'none', padding: 0 }}>
                 <li><strong>Soul</strong> helps you clarify identity, values, and internal alignment</li>
                 <li><strong>Systems</strong> helps you apply that clarity through structure, follow-through, and practical design</li>
@@ -181,8 +181,8 @@ export default function DiscoverPage() {
             <img 
               src="/images/discover-page/W6RS98jvVvjPVRrRAl0m09G1C1AGTDLnQvYa60BaCRlXEVvHLZu0LZPRK6mD2BDaHgHFSDCPSJsCAUDyH4EHulYiXXmMJ7My_TMuJigaG0E.jpeg" 
               alt="Alignment and clarity" 
-              className="object-cover flex-shrink-0"
-              style={{ width: '400px', height: '300px', marginLeft: '52px' }}
+              className="object-cover flex-shrink-0 ml-auto"
+              style={{ width: '400px', height: '300px' }}
             />
           </div>
         </section>        {/* Decorative Divider */}
