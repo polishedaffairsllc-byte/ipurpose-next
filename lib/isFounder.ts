@@ -25,7 +25,16 @@ export function deriveFounderContext(
   const customClaims = fallbackDecoded.customClaims ?? {};
   const doc = userData ?? {};
 
+  // Founder emails that always bypass entitlement checks
+  const founderEmails = [
+    "mshmltn@gmail.com",
+    process.env.FOUNDER_EMAIL,
+  ].filter(Boolean).map(e => e!.toLowerCase());
+
+  const userEmail = (fallbackDecoded as any)?.email?.toLowerCase() ?? doc?.email?.toLowerCase() ?? "";
+
   const founder =
+    founderEmails.includes(userEmail) ||
     customClaims?.isFounder === true ||
     fallbackDecoded?.isFounder === true ||
     customClaims?.role === "founder" ||

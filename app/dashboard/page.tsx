@@ -62,7 +62,7 @@ export default async function DashboardPage() {
               Your access isn't active yet. Enroll to unlock the full dashboard experience.
             </p>
             <a
-              href="/enroll"
+              href="/program"
               className="inline-flex items-center justify-center mt-6 px-5 py-2.5 rounded-full bg-ip-accent text-white font-medium"
             >
               Enroll now

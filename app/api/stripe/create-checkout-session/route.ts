@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 const PRODUCT_PRICE_MAP: { [key: string]: string } = {
   'starter_pack': 'STRIPE_PRICE_STARTER_PACK',
   'ai_blueprint': 'STRIPE_PRICE_ID_AI_BLUEPRINT',
-  'accelerator': 'STRIPE_PRICE_ID_ACCELERATOR',
+  'accelerator': 'STRIPE_PRICE_ID_6WEEK',
 };
 
 // Product to success URL mapping
