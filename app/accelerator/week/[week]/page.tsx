@@ -78,17 +78,17 @@ export default async function AcceleratorWeekPage({ params }: Props) {
       <Link
         href="/accelerator"
         className="inline-block font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors mb-8"
-        style={{ fontSize: '16px' }}
+        style={{ fontSize: '14px' }}
       >
         ← Back to Accelerator
       </Link>
 
       {/* Stage Header */}
       <div className="text-center space-y-4 mb-10">
-        <p className="font-marcellus text-warmCharcoal/40 tracking-[0.2em] uppercase" style={{ fontSize: '14px' }}>
+        <p className="font-marcellus text-warmCharcoal/40 tracking-[0.2em] uppercase" style={{ fontSize: '12px' }}>
           {stage.subtitle} — Week {stage.week}
         </p>
-        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '50px' }}>
+        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '36px' }}>
           {stage.title}
         </h1>
         <div className="flex items-center justify-center gap-3">
@@ -102,26 +102,26 @@ export default async function AcceleratorWeekPage({ params }: Props) {
       <section className="mb-12 rounded-2xl p-6 sm:p-8" style={{ backgroundColor: stage.colorFaded }}>
         <div className="space-y-6">
           <div>
-            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '13px' }}>
+            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '11px' }}>
               What this week is about
             </h3>
-            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '18px', lineHeight: '1.7' }}>
+            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '16px', lineHeight: '1.7' }}>
               {stage.overview.about}
             </p>
           </div>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '13px' }}>
+            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '11px' }}>
               What shifts internally
             </h3>
-            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '18px', lineHeight: '1.7' }}>
+            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '16px', lineHeight: '1.7' }}>
               {stage.overview.shifts}
             </p>
           </div>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '13px' }}>
+            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '11px' }}>
               What you&apos;ll build
             </h3>
-            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '18px', lineHeight: '1.7' }}>
+            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '16px', lineHeight: '1.7' }}>
               {stage.overview.builds}
             </p>
           </div>
@@ -130,7 +130,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
 
       {/* ─── 2. Lesson Content ─── */}
       <section className="mb-12">
-        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '36px' }}>
+        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '24px' }}>
           Lesson Content
         </h2>
         <div className="space-y-3">
@@ -144,13 +144,13 @@ export default async function AcceleratorWeekPage({ params }: Props) {
                 {typeIcon[lesson.type] || "📄"}
               </span>
               <div>
-                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '20px' }}>
+                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '16px' }}>
                   {lesson.title}
                 </p>
-                <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '15px' }}>
+                <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '14px' }}>
                   {lesson.description}
                 </p>
-                <span className="inline-block mt-2 px-3 py-1 rounded-full font-marcellus text-warmCharcoal/40 border border-warmCharcoal/10" style={{ fontSize: '12px' }}>
+                <span className="inline-block mt-2 px-3 py-1 rounded-full font-marcellus text-warmCharcoal/40 border border-warmCharcoal/10" style={{ fontSize: '11px' }}>
                   {lesson.type}
                 </span>
               </div>
@@ -161,7 +161,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
 
       {/* ─── 3. Client Resources ─── */}
       <section className="mb-12">
-        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '36px' }}>
+        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '24px' }}>
           Resources
         </h2>
         <div className="space-y-3">
@@ -174,7 +174,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
                 {typeIcon[resource.type] || "📄"}
               </span>
               <div className="flex-1">
-                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '18px' }}>
+                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '16px' }}>
                   {resource.title}
                 </p>
                 <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '14px' }}>
@@ -203,7 +203,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
 
       {/* ─── 4. Reflection Prompts ─── */}
       <section className="mb-12">
-        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '36px' }}>
+        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '24px' }}>
           Reflection Prompts
         </h2>
         <div className="space-y-4">
@@ -218,7 +218,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
                 borderLeft: `3px solid ${reflection.type === 'integration' ? '#9C88FF' : '#E6C87C'}`,
               }}
             >
-              <p className="font-marcellus text-warmCharcoal/80 italic" style={{ fontSize: '18px', lineHeight: '1.7' }}>
+              <p className="font-marcellus text-warmCharcoal/80 italic" style={{ fontSize: '16px', lineHeight: '1.7' }}>
                 &ldquo;{reflection.prompt}&rdquo;
               </p>
               <span className="inline-block mt-2 font-marcellus text-warmCharcoal/30 uppercase tracking-wider" style={{ fontSize: '11px' }}>
@@ -234,7 +234,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <LiveCallPanel
           callDay={CURRENT_COHORT.liveCallDay}
           callTimes={CURRENT_COHORT.liveCallTimes}
-          zoomLink={CURRENT_COHORT.zoomLink}
+          zoomLinks={CURRENT_COHORT.zoomLinks}
           weekNumber={weekNumber}
         />
       </section>
@@ -250,7 +250,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
           <Link
             href={`/accelerator/week/${prevWeek}`}
             className="font-marcellus text-warmCharcoal/50 hover:text-warmCharcoal/70 transition-colors"
-            style={{ fontSize: '18px' }}
+            style={{ fontSize: '14px' }}
           >
             ← Week {prevWeek}
           </Link>
@@ -261,7 +261,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
           <Link
             href={`/accelerator/week/${nextWeek}`}
             className="font-marcellus text-warmCharcoal/50 hover:text-warmCharcoal/70 transition-colors"
-            style={{ fontSize: '18px' }}
+            style={{ fontSize: '14px' }}
           >
             Week {nextWeek} →
           </Link>
@@ -269,7 +269,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
           <Link
             href="/accelerator"
             className="font-marcellus text-lavenderViolet hover:opacity-80 transition-opacity"
-            style={{ fontSize: '18px' }}
+            style={{ fontSize: '14px' }}
           >
             Back to Dashboard →
           </Link>

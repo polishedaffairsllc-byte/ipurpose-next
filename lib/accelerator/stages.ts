@@ -63,9 +63,9 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
       { title: "Purpose Map Template", type: "template", description: "A visual template to integrate your clarity into a single-page map." },
     ],
     resources: [
-      { title: "Personal Brand Clarity Map (PDF)", type: "worksheet", description: "Printable version of the clarity mapping exercise." },
-      { title: "Business Model Framework (Fillable)", type: "template", description: "Interactive template for your soul-centered model." },
-      { title: "Purpose Meditation (Audio)", type: "meditation", description: "Downloadable audio for your daily practice." },
+      { title: "Personal Brand Clarity Map (PDF)", type: "worksheet", description: "Printable version of the clarity mapping exercise.", href: "https://drive.google.com/drive/folders/1htZjOzYOqDtdYH7EO60GeZ-hvjy7zmZ_?usp=sharing" },
+      { title: "Business Model Framework (Fillable)", type: "template", description: "Interactive template for your soul-centered model.", href: "https://drive.google.com/drive/folders/1htZjOzYOqDtdYH7EO60GeZ-hvjy7zmZ_?usp=sharing" },
+      { title: "Purpose Meditation (Audio)", type: "meditation", description: "Downloadable audio for your daily practice.", href: "https://drive.google.com/drive/folders/1htZjOzYOqDtdYH7EO60GeZ-hvjy7zmZ_?usp=sharing" },
     ],
     reflections: [
       { prompt: "What did I already know about my purpose that I've been avoiding?", type: "journal" },
@@ -96,9 +96,9 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
       { title: "Abundance Visualization", type: "meditation", description: "A guided visualization to embody a healthy, grounded relationship with receiving." },
     ],
     resources: [
-      { title: "Money Belief Audit (PDF)", type: "worksheet", description: "Printable audit worksheet." },
-      { title: "Pricing Alignment Guide (Fillable)", type: "template", description: "Interactive pricing and self-worth workbook." },
-      { title: "Abundance Visualization (Audio)", type: "meditation", description: "Downloadable guided visualization." },
+      { title: "Money Belief Audit (PDF)", type: "worksheet", description: "Printable audit worksheet.", href: "https://drive.google.com/drive/folders/17y4IVPek6tFNgMSY44f7mFb2ILpFMbqf?usp=sharing" },
+      { title: "Pricing Alignment Guide (Fillable)", type: "template", description: "Interactive pricing and self-worth workbook.", href: "https://drive.google.com/drive/folders/17y4IVPek6tFNgMSY44f7mFb2ILpFMbqf?usp=sharing" },
+      { title: "Abundance Visualization (Audio)", type: "meditation", description: "Downloadable guided visualization.", href: "https://drive.google.com/drive/folders/17y4IVPek6tFNgMSY44f7mFb2ILpFMbqf?usp=sharing" },
     ],
     reflections: [
       { prompt: "What is the earliest money story I remember from childhood? How does it still show up?", type: "journal" },
@@ -129,9 +129,9 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
       { title: "Offer Validation Flow", type: "worksheet", description: "Test your offer concept before you build it — simple, grounded validation." },
     ],
     resources: [
-      { title: "Offer Builder Blueprint (PDF)", type: "worksheet", description: "Printable blueprint template." },
-      { title: "Pricing & Naming Guide (Fillable)", type: "template", description: "Interactive naming and pricing workbook." },
-      { title: "Offer Validation Checklist", type: "template", description: "Step-by-step validation flow." },
+      { title: "Offer Builder Blueprint (PDF)", type: "worksheet", description: "Printable blueprint template.", href: "https://drive.google.com/drive/folders/1WE_NNcfZnh7K8tAwwe76bmDemGKleGmH?usp=sharing" },
+      { title: "Pricing & Naming Guide (Fillable)", type: "template", description: "Interactive naming and pricing workbook.", href: "https://drive.google.com/drive/folders/1WE_NNcfZnh7K8tAwwe76bmDemGKleGmH?usp=sharing" },
+      { title: "Offer Validation Checklist", type: "template", description: "Step-by-step validation flow.", href: "https://drive.google.com/drive/folders/1WE_NNcfZnh7K8tAwwe76bmDemGKleGmH?usp=sharing" },
     ],
     reflections: [
       { prompt: "What transformation do I help people experience — in one sentence?", type: "journal" },
@@ -162,9 +162,9 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
       { title: "Soul+System Workflow Template", type: "worksheet", description: "Design workflows that blend intuition with structure." },
     ],
     resources: [
-      { title: "AI Integration Map (PDF)", type: "worksheet", description: "Printable mapping exercise." },
-      { title: "Voice Prompt Bank (Template)", type: "template", description: "Ready-to-use prompt library." },
-      { title: "Workflow Template (Fillable)", type: "template", description: "Interactive workflow builder." },
+      { title: "AI Integration Map (PDF)", type: "worksheet", description: "Printable mapping exercise.", href: "https://drive.google.com/drive/folders/1kYdGvr82DpxXZbtXnZ1yHginrbocC3ik?usp=sharing" },
+      { title: "Voice Prompt Bank (Template)", type: "template", description: "Ready-to-use prompt library.", href: "https://drive.google.com/drive/folders/1kYdGvr82DpxXZbtXnZ1yHginrbocC3ik?usp=sharing" },
+      { title: "Workflow Template (Fillable)", type: "template", description: "Interactive workflow builder.", href: "https://drive.google.com/drive/folders/1kYdGvr82DpxXZbtXnZ1yHginrbocC3ik?usp=sharing" },
     ],
     reflections: [
       { prompt: "Where in my business am I doing things manually that could be supported by systems?", type: "journal" },
@@ -196,10 +196,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
       { title: "Energetic Presence Planner", type: "exercise", description: "Plan how you show up energetically — not just strategically." },
     ],
     resources: [
-      { title: "Brand Ethics Map (PDF)", type: "worksheet", description: "Printable ethics mapping exercise." },
-      { title: "Visual Style Template (Fillable)", type: "template", description: "Interactive visual identity builder." },
-      { title: "Brand Voice Worksheet (PDF)", type: "worksheet", description: "Printable voice development workbook." },
-      { title: "Presence Planner (Template)", type: "template", description: "Energetic presence planning tool." },
+      { title: "Brand Ethics Map (PDF)", type: "worksheet", description: "Printable ethics mapping exercise.", href: "https://drive.google.com/drive/folders/1Fp97jv39_7bOs4isHbDpTX8NpRy2xVUf?usp=sharing" },
+      { title: "Visual Style Template (Fillable)", type: "template", description: "Interactive visual identity builder.", href: "https://drive.google.com/drive/folders/1Fp97jv39_7bOs4isHbDpTX8NpRy2xVUf?usp=sharing" },
+      { title: "Brand Voice Worksheet (PDF)", type: "worksheet", description: "Printable voice development workbook.", href: "https://drive.google.com/drive/folders/1Fp97jv39_7bOs4isHbDpTX8NpRy2xVUf?usp=sharing" },
+      { title: "Presence Planner (Template)", type: "template", description: "Energetic presence planning tool.", href: "https://drive.google.com/drive/folders/1Fp97jv39_7bOs4isHbDpTX8NpRy2xVUf?usp=sharing" },
     ],
     reflections: [
       { prompt: "What do people feel when they interact with me? Is that intentional?", type: "journal" },
@@ -232,11 +232,11 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
       { title: "Nervous System Support Plan", type: "exercise", description: "Build a regulation plan for the emotional intensity of launching." },
     ],
     resources: [
-      { title: "Launch Planner (PDF)", type: "worksheet", description: "Printable launch timeline worksheet." },
-      { title: "Offer Page Template (Fillable)", type: "template", description: "Interactive offer page builder." },
-      { title: "Email Templates (Doc)", type: "template", description: "Copy-and-customize email sequences." },
-      { title: "Social Captions (Doc)", type: "template", description: "Launch caption templates." },
-      { title: "Nervous System Plan (PDF)", type: "worksheet", description: "Regulation and support plan." },
+      { title: "Launch Planner (PDF)", type: "worksheet", description: "Printable launch timeline worksheet.", href: "https://drive.google.com/drive/folders/1m5bgYXtV2uHx7nFMkwoEIoTNP1YLHrJ1?usp=sharing" },
+      { title: "Offer Page Template (Fillable)", type: "template", description: "Interactive offer page builder.", href: "https://drive.google.com/drive/folders/1m5bgYXtV2uHx7nFMkwoEIoTNP1YLHrJ1?usp=sharing" },
+      { title: "Email Templates (Doc)", type: "template", description: "Copy-and-customize email sequences.", href: "https://drive.google.com/drive/folders/1m5bgYXtV2uHx7nFMkwoEIoTNP1YLHrJ1?usp=sharing" },
+      { title: "Social Captions (Doc)", type: "template", description: "Launch caption templates.", href: "https://drive.google.com/drive/folders/1m5bgYXtV2uHx7nFMkwoEIoTNP1YLHrJ1?usp=sharing" },
+      { title: "Nervous System Plan (PDF)", type: "worksheet", description: "Regulation and support plan.", href: "https://drive.google.com/drive/folders/1m5bgYXtV2uHx7nFMkwoEIoTNP1YLHrJ1?usp=sharing" },
     ],
     reflections: [
       { prompt: "What has shifted in me since Week 1?", type: "journal" },
@@ -256,17 +256,20 @@ export interface CohortConfig {
   endDate: string;
   liveCallDay: string;
   liveCallTimes: string[];
-  zoomLink: string;
+  zoomLinks: string[];
 }
 
 export const CURRENT_COHORT: CohortConfig = {
-  id: "spring-2026",
-  label: "Spring 2026 Cohort",
+  id: "founding-2026",
+  label: "Founding Cohort",
   startDate: "2026-03-02",
   endDate: "2026-04-12",
   liveCallDay: "Friday",
   liveCallTimes: ["11:00 AM ET", "7:00 PM ET"],
-  zoomLink: "", // Placeholder — set in env or Firestore
+  zoomLinks: [
+    "https://us04web.zoom.us/j/74214700844?pwd=4FTzl7v5Q9kcsXBLgYtdamgh4iBEVg.1",
+    "https://us04web.zoom.us/j/76472857056?pwd=UTRur1Pc72FWixjkphZfXVAk22oR9C.1",
+  ],
 };
 
 // Helper: determine which week is unlocked based on cohort start

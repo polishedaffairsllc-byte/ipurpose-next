@@ -38,7 +38,7 @@ export default function WeekCompleteButton({ week, isCompleted }: WeekCompleteBu
           ? 'bg-green-50 text-green-700 border-2 border-green-200'
           : 'bg-warmCharcoal/5 text-warmCharcoal/60 border-2 border-warmCharcoal/10 hover:border-warmCharcoal/30'
       } disabled:opacity-50`}
-      style={{ fontSize: '20px' }}
+      style={{ fontSize: '16px' }}
     >
       {loading
         ? 'Saving...'

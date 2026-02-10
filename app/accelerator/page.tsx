@@ -48,7 +48,7 @@ export default async function AcceleratorPage() {
     return (
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center space-y-6">
-          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '55px' }}>
+          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '36px' }}>
             iPurpose Accelerator
           </h1>
 
@@ -58,18 +58,18 @@ export default async function AcceleratorPage() {
             <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
           </div>
 
-          <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '28px' }}>
+          <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '18px' }}>
             Six weeks to clarify your purpose and build aligned systems.
           </p>
 
           <div className="rounded-2xl p-8 sm:p-12 mt-8" style={{ background: 'linear-gradient(135deg, rgba(230, 200, 124, 0.15), rgba(230, 200, 124, 0.05))' }}>
-            <p className="font-marcellus text-warmCharcoal/60" style={{ fontSize: '20px' }}>
+            <p className="font-marcellus text-warmCharcoal/60" style={{ fontSize: '18px' }}>
               You don&apos;t have access to the Accelerator yet.
             </p>
             <a
               href="/program"
               className="inline-block mt-6 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0.5))', fontSize: '24px' }}
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0.5))', fontSize: '16px' }}
             >
               Learn More &amp; Enroll
             </a>
@@ -98,14 +98,14 @@ export default async function AcceleratorPage() {
 
       {/* Header */}
       <div className="text-center space-y-4 mb-8">
-        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '55px' }}>
+        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '36px' }}>
           iPurpose Accelerator
         </h1>
-        <p className="font-marcellus text-warmCharcoal/50 tracking-[0.15em] uppercase" style={{ fontSize: '18px' }}>
+        <p className="font-marcellus text-warmCharcoal/50 tracking-[0.15em] uppercase" style={{ fontSize: '16px' }}>
           {CURRENT_COHORT.label}
         </p>
         <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '16px' }}>
-          Begins {formattedStart}
+          Launching March 2026
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export default async function AcceleratorPage() {
 
       {/* Welcome message */}
       <div className="text-center mb-12">
-        <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '24px' }}>
+        <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '18px' }}>
           {userName ? `Welcome back, ${userName}.` : 'Welcome.'} {completedWeeks.length === 0
             ? 'Your journey begins here.'
             : completedWeeks.length === 6
@@ -134,10 +134,10 @@ export default async function AcceleratorPage() {
 
       {/* Next Live Session Info */}
       <div className="max-w-xl mx-auto mb-12 rounded-2xl p-5 sm:p-6 text-center border border-warmCharcoal/10" style={{ background: 'rgba(75, 78, 109, 0.04)' }}>
-        <p className="font-marcellus text-warmCharcoal/50" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
+        <p className="font-marcellus text-warmCharcoal/50" style={{ fontSize: '12px', letterSpacing: '0.1em' }}>
           NEXT LIVE SESSION
         </p>
-        <p className="font-marcellus text-warmCharcoal/70 mt-2" style={{ fontSize: '20px' }}>
+        <p className="font-marcellus text-warmCharcoal/70 mt-2" style={{ fontSize: '16px' }}>
           {CURRENT_COHORT.liveCallDay} — {CURRENT_COHORT.liveCallTimes.join(' or ')}
         </p>
       </div>
@@ -161,16 +161,16 @@ export default async function AcceleratorPage() {
                   }}
                 >
                   {/* Stage number */}
-                  <span className="font-italiana shrink-0" style={{ fontSize: '48px' }}>
+                  <span className="font-italiana shrink-0" style={{ fontSize: '28px' }}>
                     {isCompleted ? '✓' : stage.week}
                   </span>
                   <div className="flex-1">
-                    <span className="block font-marcellus text-white/50" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
-                      {stage.subtitle}
-                    </span>
-                    <span className="block font-marcellus mt-1" style={{ fontSize: '28px' }}>
-                      {stage.title}
-                    </span>
+                  <span className="block font-marcellus text-white/50" style={{ fontSize: '12px', letterSpacing: '0.1em' }}>
+                    {stage.subtitle}
+                  </span>
+                  <span className="block font-marcellus mt-1" style={{ fontSize: '18px' }}>
+                    {stage.title}
+                  </span>
                     {isCurrent && (
                       <span className="block font-marcellus text-white/70 mt-1" style={{ fontSize: '14px' }}>
                         Currently here →
@@ -183,14 +183,14 @@ export default async function AcceleratorPage() {
                   className="flex items-center gap-4 sm:gap-6 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl opacity-40 cursor-not-allowed"
                   style={{ background: '#e5e7eb' }}
                 >
-                  <span className="font-italiana text-warmCharcoal/40 shrink-0" style={{ fontSize: '48px' }}>
+                  <span className="font-italiana text-warmCharcoal/40 shrink-0" style={{ fontSize: '28px' }}>
                     🔒
                   </span>
                   <div>
-                    <span className="block font-marcellus text-warmCharcoal/40" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
+                    <span className="block font-marcellus text-warmCharcoal/40" style={{ fontSize: '12px', letterSpacing: '0.1em' }}>
                       {stage.subtitle}
                     </span>
-                    <span className="block font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '28px' }}>
+                    <span className="block font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '18px' }}>
                       {stage.title}
                     </span>
                     <span className="block font-marcellus text-warmCharcoal/30 mt-1" style={{ fontSize: '14px' }}>
@@ -213,16 +213,16 @@ export default async function AcceleratorPage() {
             <div style={{ height: '2px', width: '80px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
           </div>
 
-          <h2 className="font-italiana text-warmCharcoal" style={{ fontSize: '40px' }}>
+          <h2 className="font-italiana text-warmCharcoal" style={{ fontSize: '28px' }}>
             Continue Your Growth
           </h2>
-          <p className="font-marcellus text-warmCharcoal/60 max-w-lg mx-auto" style={{ fontSize: '20px' }}>
+          <p className="font-marcellus text-warmCharcoal/60 max-w-lg mx-auto" style={{ fontSize: '16px' }}>
             You&apos;ve completed the Accelerator. The inner work continues. Deepen is where you refine your systems, access ongoing reflections, and stay connected to community.
           </p>
           <Link
             href="/deepen"
             className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.5))', fontSize: '24px' }}
+            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.5))', fontSize: '16px' }}
           >
             ✦ Continue with Deepen
           </Link>
