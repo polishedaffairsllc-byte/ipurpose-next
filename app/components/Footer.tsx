@@ -120,7 +120,7 @@ export default function Footer() {
             </Link>
             <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
             <a
-              href="mailto:support@ipurpose.com"
+              href="/contact"
               className="hover:opacity-80 transition-colors"
               style={{ fontSize: '28px', color: '#FFFFFF' }}
             >
