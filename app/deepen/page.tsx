@@ -39,7 +39,7 @@ export default async function DeepenPage() {
               Your Deepening Journey
             </h1>
             <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '28px' }}>
-              You have full access. Choose where to go next.
+              You have premium access. Choose where to go next.
             </p>
           </div>
 
