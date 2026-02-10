@@ -83,7 +83,7 @@ export default function AIBlueprintPage() {
           <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
           <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
         </div>
-        <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
+        <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-12 text-center">
           What You'll Receive
         </h2>
         <div className="space-y-8">
@@ -130,7 +130,7 @@ export default function AIBlueprintPage() {
             <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
             <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
           </div>
-          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
+          <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-12 text-center">
             Who It's For
           </h2>
           <div className="space-y-4 text-warmCharcoal/80 text-[45px] text-center">
@@ -154,7 +154,7 @@ export default function AIBlueprintPage() {
           <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
           <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
         </div>
-        <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-12 text-center">
+        <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-12 text-center">
           FAQ
         </h2>
         <div className="space-y-8 text-center">
@@ -193,7 +193,7 @@ export default function AIBlueprintPage() {
             <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
             <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
           </div>
-          <h2 className="text-[45px] font-marcellus text-warmCharcoal mb-6 sm:mb-8 text-center">
+          <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-6 sm:mb-8 text-center">
             Ready to Use AI With Intention?
           </h2>
           <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[45px] text-center">
