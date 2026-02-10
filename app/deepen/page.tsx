@@ -32,13 +32,13 @@ export default async function DeepenPage() {
   // If they already have access, show the unlocked modules
   if (hasAccess) {
     return (
-      <div className="relative min-h-screen" style={{ backgroundColor: '#000000' }}>
+      <div className="relative min-h-screen bg-white">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
           <div className="text-center space-y-6 mb-16">
-            <h1 className="font-italiana text-white" style={{ fontSize: '55px' }}>
+            <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '55px' }}>
               Your Deepening Journey
             </h1>
-            <p className="font-marcellus text-white/70" style={{ fontSize: '28px' }}>
+            <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '28px' }}>
               You have full access. Choose where to go next.
             </p>
           </div>
@@ -74,18 +74,18 @@ export default async function DeepenPage() {
 
   // Not yet subscribed — show the membership sales page
   return (
-    <div className="relative min-h-screen" style={{ backgroundColor: '#000000' }}>
+    <div className="relative min-h-screen bg-white">
 
       {/* Hero */}
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center space-y-6 mb-16">
-          <p className="font-marcellus text-white/50 tracking-[0.2em] uppercase" style={{ fontSize: '18px' }}>
+          <p className="font-marcellus text-warmCharcoal/50 tracking-[0.2em] uppercase" style={{ fontSize: '18px' }}>
             Membership
           </p>
-          <h1 className="font-italiana text-white" style={{ fontSize: '55px' }}>
+          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '55px' }}>
             Deepen Your Experience
           </h1>
-          <p className="font-marcellus text-white/70 max-w-2xl mx-auto" style={{ fontSize: '28px' }}>
+          <p className="font-marcellus text-warmCharcoal/70 max-w-2xl mx-auto" style={{ fontSize: '28px' }}>
             You've done the inner work. Now build the systems, access reflections, and join the community that holds it all together.
           </p>
         </div>
@@ -99,34 +99,33 @@ export default async function DeepenPage() {
 
         {/* What's Included */}
         <div className="max-w-2xl mx-auto space-y-8 mb-16">
-          <h2 className="font-italiana text-white text-center" style={{ fontSize: '45px' }}>
-            What's Included
+          <h2 className="font-italiana text-warmCharcoal text-center" style={{ fontSize: '45px' }}>
           </h2>
 
           <div className="space-y-6">
             <div className="text-center space-y-2">
-              <h3 className="font-marcellus text-white" style={{ fontSize: '35px' }}>
+              <h3 className="font-marcellus text-warmCharcoal" style={{ fontSize: '35px' }}>
                 Systems
               </h3>
-              <p className="font-marcellus text-white/60" style={{ fontSize: '24px' }}>
+              <p className="font-marcellus text-warmCharcoal/60" style={{ fontSize: '24px' }}>
                 Offer architecture, workflows, calendar sync, and monetization tools to structure your purpose into action.
               </p>
             </div>
 
             <div className="text-center space-y-2">
-              <h3 className="font-marcellus text-white" style={{ fontSize: '35px' }}>
+              <h3 className="font-marcellus text-warmCharcoal" style={{ fontSize: '35px' }}>
                 Reflections
               </h3>
-              <p className="font-marcellus text-white/60" style={{ fontSize: '24px' }}>
+              <p className="font-marcellus text-warmCharcoal/60" style={{ fontSize: '24px' }}>
                 A personal dashboard of your alignment trends, journal insights, and growth patterns over time.
               </p>
             </div>
 
             <div className="text-center space-y-2">
-              <h3 className="font-marcellus text-white" style={{ fontSize: '35px' }}>
+              <h3 className="font-marcellus text-warmCharcoal" style={{ fontSize: '35px' }}>
                 Community
               </h3>
-              <p className="font-marcellus text-white/60" style={{ fontSize: '24px' }}>
+              <p className="font-marcellus text-warmCharcoal/60" style={{ fontSize: '24px' }}>
                 Private spaces for group reflections, shared wisdom, and connection with others on the same path.
               </p>
             </div>
@@ -142,14 +141,14 @@ export default async function DeepenPage() {
 
         {/* Pricing */}
         <div className="max-w-lg mx-auto text-center space-y-8 mb-16">
-          <h2 className="font-italiana text-white" style={{ fontSize: '45px' }}>
+          <h2 className="font-italiana text-warmCharcoal" style={{ fontSize: '45px' }}>
             Simple, Recurring Access
           </h2>
           <div className="space-y-2">
-            <p className="font-italiana text-white" style={{ fontSize: '60px' }}>
-              $29<span className="text-white/50" style={{ fontSize: '28px' }}>/month</span>
+            <p className="font-italiana text-warmCharcoal" style={{ fontSize: '60px' }}>
+              $29<span className="text-warmCharcoal/50" style={{ fontSize: '28px' }}>/month</span>
             </p>
-            <p className="font-marcellus text-white/50" style={{ fontSize: '20px' }}>
+            <p className="font-marcellus text-warmCharcoal/50" style={{ fontSize: '20px' }}>
               Cancel anytime. No long-term commitment.
             </p>
           </div>
@@ -166,7 +165,7 @@ export default async function DeepenPage() {
 
         {/* Already an Accelerator member? */}
         <div className="text-center space-y-4">
-          <p className="font-marcellus text-white/40" style={{ fontSize: '20px' }}>
+          <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '20px' }}>
             Already completed the iPurpose Accelerator? Your Deepening access may already be included.
           </p>
           <a
