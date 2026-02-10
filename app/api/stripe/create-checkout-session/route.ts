@@ -9,6 +9,7 @@ const PRODUCT_PRICE_MAP: { [key: string]: string } = {
   'starter_pack': 'STRIPE_PRICE_STARTER_PACK',
   'ai_blueprint': 'STRIPE_PRICE_ID_AI_BLUEPRINT',
   'accelerator': 'STRIPE_PRICE_ID_6WEEK',
+  'deepen_membership': 'STRIPE_PRICE_ID_DEEPEN',
 };
 
 // Product to success URL mapping
@@ -16,6 +17,7 @@ const PRODUCT_SUCCESS_URL_MAP: { [key: string]: string } = {
   'starter_pack': '/purchase/success?product=starter_pack',
   'ai_blueprint': '/purchase/success?product=ai_blueprint',
   'accelerator': '/enroll/create-account?session_id={CHECKOUT_SESSION_ID}',
+  'deepen_membership': '/deepen?welcome=true',
 };
 
 // Product to cancel URL mapping
@@ -23,6 +25,7 @@ const PRODUCT_CANCEL_URL_MAP: { [key: string]: string } = {
   'starter_pack': '/starter-pack',
   'ai_blueprint': '/ai-blueprint',
   'accelerator': '/program',
+  'deepen_membership': '/deepen',
 };
 
 function getStripe() {
@@ -73,8 +76,10 @@ export async function POST(request: NextRequest) {
       successUrl = `${appUrl}${successUrl}`;
     }
 
+    const isSubscription = product === 'deepen_membership';
+
     const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
+      mode: isSubscription ? 'subscription' : 'payment',
       line_items: [
         {
           price: priceId,
@@ -83,7 +88,7 @@ export async function POST(request: NextRequest) {
       ],
       success_url: successUrl,
       cancel_url: `${appUrl}${cancelUrl}`,
-      customer_creation: 'always',
+      ...(isSubscription ? {} : { customer_creation: 'always' }),
       allow_promotion_codes: true,
       metadata: {
         product,

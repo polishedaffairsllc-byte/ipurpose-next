@@ -1,104 +1,185 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { checkEntitlement, canAccessTier, EntitlementTier } from "@/lib/entitlementCheck";
-import Card from "../components/Card";
-import SectionHeading from "../components/SectionHeading";
-import ModuleGuide from "../components/ModuleGuide";
-
-const premiumModules = [
-  {
-    key: "systems",
-    name: "Systems",
-    description: "Offer architecture, workflows, calendar, and monetization.",
-    href: "/systems",
-    requiredTier: "DEEPENING" as EntitlementTier,
-  },
-  {
-    key: "reflections",
-    name: "Reflections",
-    description: "Reflections dashboard and read-only metrics.",
-    href: "/insights",
-    requiredTier: "DEEPENING" as EntitlementTier,
-  },
-  {
-    key: "community",
-    name: "Community",
-    description: "Private community spaces and conversations.",
-    href: "/community",
-    requiredTier: "DEEPENING" as EntitlementTier,
-  },
-];
+import { cookies } from "next/headers";
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { isFounder as isFounderUser } from "@/lib/isFounder";
+import Footer from "@/app/components/Footer";
+import DeepenSubscribeButton from "./DeepenSubscribeButton";
 
 export default async function DeepenPage() {
-  const entitlement = await checkEntitlement();
+  const cookieStore = await cookies();
+  const session = cookieStore.get("FirebaseSession")?.value ?? null;
 
-  // Not authenticated -> login
-  if (!entitlement.uid) {
+  if (!session) {
     return redirect("/login");
   }
 
-  const { tier } = entitlement;
+  let hasAccess = false;
+  try {
+    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
+    const db = firebaseAdmin.firestore();
+    const userDoc = await db.collection("users").doc(decoded.uid).get();
+    const userData = userDoc.data() ?? {};
+    const founderBypass = isFounderUser(decoded, userData);
 
+    // Check if they already have Deepening tier access
+    if (founderBypass || userData?.entitlement?.tier === "DEEPENING") {
+      hasAccess = true;
+    }
+  } catch {
+    return redirect("/login");
+  }
+
+  // If they already have access, show the unlocked modules
+  if (hasAccess) {
+    return (
+      <div className="relative min-h-screen" style={{ backgroundColor: '#000000' }}>
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+          <div className="text-center space-y-6 mb-16">
+            <h1 className="font-italiana text-white" style={{ fontSize: '55px' }}>
+              Your Deepening Journey
+            </h1>
+            <p className="font-marcellus text-white/70" style={{ fontSize: '28px' }}>
+              You have full access. Choose where to go next.
+            </p>
+          </div>
+
+          <div className="space-y-6 max-w-2xl mx-auto">
+            <a
+              href="/systems"
+              className="block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px' }}
+            >
+              Systems — Build Your Framework
+            </a>
+            <a
+              href="/insights"
+              className="block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', fontSize: '35px' }}
+            >
+              Reflections — Review Your Growth
+            </a>
+            <a
+              href="/community"
+              className="block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '35px' }}
+            >
+              Community — Connect & Reflect
+            </a>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Not yet subscribed — show the membership sales page
   return (
-    <div className="container max-w-6xl mx-auto px-6 md:px-10 py-10 space-y-10">
-      <div className="space-y-3">
-        <p className="text-xs font-semibold tracking-[0.2em] text-warmCharcoal/60 uppercase">Premium</p>
-        <h1 className="heading-hero text-warmCharcoal">Deepen</h1>
-        <p className="text-lg text-warmCharcoal/75 max-w-3xl">
-          One place to access premium modules. If something is locked, use Upgrade to add access.
-        </p>
+    <div className="relative min-h-screen" style={{ backgroundColor: '#000000' }}>
+
+      {/* Hero */}
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="text-center space-y-6 mb-16">
+          <p className="font-marcellus text-white/50 tracking-[0.2em] uppercase" style={{ fontSize: '18px' }}>
+            Membership
+          </p>
+          <h1 className="font-italiana text-white" style={{ fontSize: '55px' }}>
+            Deepen Your Experience
+          </h1>
+          <p className="font-marcellus text-white/70 max-w-2xl mx-auto" style={{ fontSize: '28px' }}>
+            You've done the inner work. Now build the systems, access reflections, and join the community that holds it all together.
+          </p>
+        </div>
+
+        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-3 mb-16">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+          <span className="text-lavenderViolet text-xl">✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+        </div>
+
+        {/* What's Included */}
+        <div className="max-w-2xl mx-auto space-y-8 mb-16">
+          <h2 className="font-italiana text-white text-center" style={{ fontSize: '45px' }}>
+            What's Included
+          </h2>
+
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <h3 className="font-marcellus text-white" style={{ fontSize: '35px' }}>
+                Systems
+              </h3>
+              <p className="font-marcellus text-white/60" style={{ fontSize: '24px' }}>
+                Offer architecture, workflows, calendar sync, and monetization tools to structure your purpose into action.
+              </p>
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="font-marcellus text-white" style={{ fontSize: '35px' }}>
+                Reflections
+              </h3>
+              <p className="font-marcellus text-white/60" style={{ fontSize: '24px' }}>
+                A personal dashboard of your alignment trends, journal insights, and growth patterns over time.
+              </p>
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="font-marcellus text-white" style={{ fontSize: '35px' }}>
+                Community
+              </h3>
+              <p className="font-marcellus text-white/60" style={{ fontSize: '24px' }}>
+                Private spaces for group reflections, shared wisdom, and connection with others on the same path.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-3 mb-16">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
+          <span className="text-softGold text-xl">✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
+        </div>
+
+        {/* Pricing */}
+        <div className="max-w-lg mx-auto text-center space-y-8 mb-16">
+          <h2 className="font-italiana text-white" style={{ fontSize: '45px' }}>
+            Simple, Recurring Access
+          </h2>
+          <div className="space-y-2">
+            <p className="font-italiana text-white" style={{ fontSize: '60px' }}>
+              $29<span className="text-white/50" style={{ fontSize: '28px' }}>/month</span>
+            </p>
+            <p className="font-marcellus text-white/50" style={{ fontSize: '20px' }}>
+              Cancel anytime. No long-term commitment.
+            </p>
+          </div>
+
+          <DeepenSubscribeButton />
+        </div>
+
+        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-3 mb-16">
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #FCC4B7, transparent)' }}></div>
+          <span className="text-salmonPeach text-xl">✦</span>
+          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #FCC4B7, transparent)' }}></div>
+        </div>
+
+        {/* Already an Accelerator member? */}
+        <div className="text-center space-y-4">
+          <p className="font-marcellus text-white/40" style={{ fontSize: '20px' }}>
+            Already completed the iPurpose Accelerator? Your Deepening access may already be included.
+          </p>
+          <a
+            href="/support"
+            className="font-marcellus text-lavenderViolet hover:opacity-80 transition-opacity underline"
+            style={{ fontSize: '20px' }}
+          >
+            Contact Support
+          </a>
+        </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {premiumModules.map((module) => {
-          const unlocked = canAccessTier(tier, module.requiredTier);
-          return (
-            <Card key={module.key} className="flex flex-col justify-between h-full border border-ip-border">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-marcellus text-warmCharcoal">{module.name}</h2>
-                  <span
-                    className={`text-xs px-3 py-1 rounded-full border ${
-                      unlocked
-                        ? "border-emerald-500 text-emerald-700 bg-emerald-50"
-                        : "border-amber-400 text-amber-700 bg-amber-50"
-                    }`}
-                  >
-                    {unlocked ? "Unlocked" : "Locked"}
-                  </span>
-                </div>
-                <p className="text-sm text-warmCharcoal/75">{module.description}</p>
-                {!unlocked && (
-                  <p className="text-xs text-warmCharcoal/60">
-                    Requires {module.requiredTier === "DEEPENING" ? "Deepening" : "Basic"} access.
-                  </p>
-                )}
-              </div>
-              <div className="flex items-center gap-3 pt-4">
-                {unlocked ? (
-                  <Link
-                    href={module.href}
-                    className="px-4 py-2 rounded-full bg-ip-accent text-white text-sm hover:opacity-90"
-                  >
-                    Enter
-                  </Link>
-                ) : (
-                  <Link
-                    href="/upgrade"
-                    className="px-4 py-2 rounded-full bg-warmCharcoal text-white text-sm hover:opacity-90"
-                  >
-                    Upgrade
-                  </Link>
-                )}
-                {!unlocked && (
-                  <span className="text-xs text-warmCharcoal/60">Preview content available inside.</span>
-                )}
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-      <ModuleGuide moduleId="deepen" />
+      <Footer />
     </div>
   );
 }
