@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { checkEntitlement } from "@/lib/entitlementCheck";
 import PageTitle from "../components/PageTitle";
-import Footer from "../components/Footer";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import SectionHeading from "../components/SectionHeading";
@@ -337,7 +336,6 @@ export default async function SystemsPage() {
         </div>
 
         </div>
-        <Footer />
       </div>
     );
   } catch (e) {
