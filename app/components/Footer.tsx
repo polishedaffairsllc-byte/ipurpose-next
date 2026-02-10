@@ -129,6 +129,17 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Deepen CTA */}
+        <div className="flex justify-center mb-8">
+          <Link
+            href="/deepen"
+            className="px-8 py-4 rounded-full font-italiana text-center hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0.3))', color: '#FFFFFF', fontSize: '35px' }}
+          >
+            ✦ Deepen Your Experience
+          </Link>
+        </div>
+
         {/* Divider */}
         <div className="border-t border-white/10 pt-8">
           {/* Footer Bottom - All Horizontal */}

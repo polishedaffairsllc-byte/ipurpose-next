@@ -43,14 +43,6 @@ export default function Navigation() {
         </Link>
 
         <Link
-          href="/deepen"
-          className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0.3))', color: '#FFFFFF', fontSize: '40px' }}
-        >
-          Deepen
-        </Link>
-
-        <Link
           href="/settings"
           className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
           style={{ background: 'linear-gradient(to right, #e6c87c, rgba(230, 200, 124, 0.3))', color: '#FFFFFF', fontSize: '40px' }}

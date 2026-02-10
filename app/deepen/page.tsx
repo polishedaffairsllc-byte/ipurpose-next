@@ -7,13 +7,6 @@ import ModuleGuide from "../components/ModuleGuide";
 
 const premiumModules = [
   {
-    key: "soul",
-    name: "Soul",
-    description: "Alignment practices, archetypes, and daily check-ins.",
-    href: "/soul",
-    requiredTier: "BASIC_PAID" as EntitlementTier,
-  },
-  {
     key: "systems",
     name: "Systems",
     description: "Offer architecture, workflows, calendar, and monetization.",
