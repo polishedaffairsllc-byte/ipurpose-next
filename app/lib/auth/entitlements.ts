@@ -36,11 +36,11 @@ export const ROUTE_GATING_CONFIG = {
   '/ai-tools': 'BASIC_PAID',
   '/ai-tools/chat': 'BASIC_PAID',
 
-  // Labs - FREE (no gating, auth-required)
-  '/labs': 'FREE',
-  '/labs/identity': 'FREE',
-  '/labs/meaning': 'FREE',
-  '/labs/agency': 'FREE',
+  // Labs - BASIC_PAID (requires enrollment)
+  '/labs': 'BASIC_PAID',
+  '/labs/identity': 'BASIC_PAID',
+  '/labs/meaning': 'BASIC_PAID',
+  '/labs/agency': 'BASIC_PAID',
 
   // Integration - BASIC_PAID and above (monetization bridge)
   '/integration': 'BASIC_PAID',
