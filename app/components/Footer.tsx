@@ -16,7 +16,31 @@ export default function Footer() {
   if (!mounted) return null;
 
   return (
-    <footer className="relative border-t border-white/10" style={{ zIndex: 10, backgroundColor: '#4b4e6d' }}>
+    <>
+      {/* Deepen CTA Section — above footer */}
+      {isAuthenticated && (
+        <section className="w-full py-12 sm:py-16" style={{ backgroundColor: '#000000' }}>
+          <div className="max-w-3xl mx-auto px-6 text-center space-y-6">
+            <h2 className="font-italiana text-white" style={{ fontSize: '45px' }}>
+              Ready to Go Deeper?
+            </h2>
+            <p className="font-marcellus text-white/70" style={{ fontSize: '24px' }}>
+              Unlock Systems, Reflections, and Community access.
+            </p>
+            <div className="flex justify-center">
+              <Link
+                href="/deepen"
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '35px' }}
+              >
+                ✦ Deepen Your Experience
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <footer className="relative border-t border-white/10" style={{ zIndex: 10, backgroundColor: '#4b4e6d' }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
         {/* Footer Grid - Horizontal Layout */}
         <div className="flex flex-col items-center gap-8 mb-8">
@@ -129,17 +153,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Deepen CTA */}
-        <div className="flex justify-center mb-8">
-          <Link
-            href="/deepen"
-            className="px-8 py-4 rounded-full font-italiana text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0.3))', color: '#FFFFFF', fontSize: '35px' }}
-          >
-            ✦ Deepen Your Experience
-          </Link>
-        </div>
-
         {/* Divider */}
         <div className="border-t border-white/10 pt-8">
           {/* Footer Bottom - All Horizontal */}
@@ -163,5 +176,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }
