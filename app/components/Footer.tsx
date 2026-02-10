@@ -19,11 +19,11 @@ export default function Footer() {
     <>
       {/* Deepen CTA — above footer */}
       {isAuthenticated && (
-        <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#000000' }}>
+        <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
           <Link
             href="/deepen"
             className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #5B4BA6, rgba(91, 75, 166, 0))', fontSize: '35px' }}
+            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px', color: '#FFFFFF' }}
           >
             ✦ Deepen Your Experience
           </Link>
