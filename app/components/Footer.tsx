@@ -18,7 +18,7 @@ export default function Footer() {
   if (!mounted) return null;
 
   const isDeepenRoute = pathname === '/deepen' || pathname.startsWith('/deepen/');
-  const isPremiumRoute = isDeepenRoute || pathname === '/systems' || pathname.startsWith('/systems/') || pathname === '/insights' || pathname.startsWith('/insights/') || pathname === '/community' || pathname.startsWith('/community/');
+  const isPremiumRoute = isDeepenRoute || pathname === '/systems' || pathname.startsWith('/systems/') || pathname === '/insights' || pathname.startsWith('/insights/') || pathname === '/community' || pathname.startsWith('/community/') || pathname === '/accelerator' || pathname.startsWith('/accelerator/');
 
   return (
     <>
@@ -26,7 +26,7 @@ export default function Footer() {
       {isAuthenticated && isPremiumRoute && (
         <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
           <Link
-            href="/program"
+            href="/accelerator"
             className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
             style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px', color: '#FFFFFF' }}
           >

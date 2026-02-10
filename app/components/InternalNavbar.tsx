@@ -22,7 +22,7 @@ export default function InternalNavbar() {
   const isIntegrationRoute = pathname === '/integration' || pathname.startsWith('/integration/');
   const isLearningRoute = pathname === '/learning-path' || pathname === '/ethics' || pathname === '/onboarding';
   const isDeepenRoute = pathname === '/deepen' || pathname.startsWith('/deepen/');
-  const isPremiumRoute = pathname === '/systems' || pathname.startsWith('/systems/') || pathname === '/insights' || pathname.startsWith('/insights/') || pathname === '/community' || pathname.startsWith('/community/');
+  const isPremiumRoute = pathname === '/systems' || pathname.startsWith('/systems/') || pathname === '/insights' || pathname.startsWith('/insights/') || pathname === '/community' || pathname.startsWith('/community/') || pathname === '/accelerator' || pathname.startsWith('/accelerator/');
   
   // Hide on public pages, learning routes, and premium routes (they have their own nav)
   if (isPublicPage || isLearningRoute || isDeepenRoute || isPremiumRoute) return null;
