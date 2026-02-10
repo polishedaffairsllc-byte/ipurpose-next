@@ -21,9 +21,10 @@ export default function InternalNavbar() {
   const isOrientationRoute = pathname === '/orientation' || pathname.startsWith('/orientation/');
   const isIntegrationRoute = pathname === '/integration' || pathname.startsWith('/integration/');
   const isLearningRoute = pathname === '/learning-path' || pathname === '/ethics' || pathname === '/onboarding';
+  const isDeepenRoute = pathname === '/deepen' || pathname.startsWith('/deepen/');
   
-  // Hide on public pages and other learning routes
-  if (isPublicPage || isLearningRoute) return null;
+  // Hide on public pages, learning routes, and deepen routes (deepen has its own nav)
+  if (isPublicPage || isLearningRoute || isDeepenRoute) return null;
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
