@@ -7,6 +7,8 @@ import Card from "@/app/components/Card";
 import ModuleGuide from "@/app/components/ModuleGuide";
 import OrientationClient from "./OrientationClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Orientation — Labs Launchpad | iPurpose",
   description: "A state-aware jumping-off point that routes you directly into the lab that still needs attention.",
