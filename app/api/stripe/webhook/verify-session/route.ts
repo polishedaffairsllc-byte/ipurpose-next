@@ -73,7 +73,8 @@ export async function GET(request: NextRequest) {
       customerId: session.customer,
       email: session.customer_details?.email,
       product: session.metadata?.product || 'accelerator',
-      cohort: session.metadata?.cohort || '2026-03',
+      cohort: session.metadata?.cohort || 'founding-2026',
+      cohortStartDate: session.metadata?.cohortStartDate || '',
     });
   } catch (error) {
     console.error('Session verification error:', error);

@@ -14,6 +14,7 @@ interface VerificationData {
   email?: string;
   product?: string;
   cohort?: string;
+  cohortStartDate?: string;
   error?: string;
 }
 
@@ -103,6 +104,7 @@ export default function CreateAccountPage() {
           customerId: verification.customerId,
           product: verification.product,
           cohort: verification.cohort,
+          cohortStartDate: verification.cohortStartDate,
         }),
       });
 
@@ -110,8 +112,13 @@ export default function CreateAccountPage() {
         throw new Error('Failed to create user record');
       }
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect: accelerator buyers go to cohort registration,
+      // all others go to dashboard
+      if (verification.product === 'accelerator') {
+        router.push('/accelerator/register');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: any) {
       console.error('Account creation error:', err);
       setError(err.message || 'Failed to create account');

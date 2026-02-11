@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
       const email = session.customer_details?.email;
       const sessionId = session.id;
       const product = session.metadata?.product || 'accelerator';
-      const cohort = session.metadata?.cohort || '2026-03';
+      const cohort = session.metadata?.cohort || 'founding-2026';
+      const cohortStartDate = session.metadata?.cohortStartDate || '';
 
       if (!customerId || !email) {
         console.warn('Missing customer or email in session:', sessionId);
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest) {
         email,
         product,
         cohort,
+        cohortStartDate,
         status: 'paid',
         createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
       });

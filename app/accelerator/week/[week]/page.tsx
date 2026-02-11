@@ -2,7 +2,13 @@ import { redirect, notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { isFounder as isFounderUser } from "@/lib/isFounder";
-import { ACCELERATOR_STAGES, CURRENT_COHORT } from "@/lib/accelerator/stages";
+import {
+  ACCELERATOR_STAGES,
+  getUnlockedWeek,
+  getCohortById,
+  getEnrollableCohort,
+  isCohortPreLaunch,
+} from "@/lib/accelerator/stages";
 import LiveCallPanel from "../../LiveCallPanel";
 import WeekCompleteButton from "../../WeekCompleteButton";
 import Link from "next/link";
@@ -28,15 +34,34 @@ export default async function AcceleratorWeekPage({ params }: Props) {
 
   let hasAccess = false;
   let completedWeeks: number[] = [];
+  let isFounder = false;
+  let userCohortId = "";
   try {
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const db = firebaseAdmin.firestore();
     const userDoc = await db.collection("users").doc(decoded.uid).get();
     const userData = userDoc.data() ?? {};
     const founderBypass = isFounderUser(decoded, userData);
+    isFounder = founderBypass;
 
     if (founderBypass || userData?.entitlement?.tier === "ACCELERATOR" || userData?.entitlement?.tier === "DEEPENING") {
       hasAccess = true;
+    }
+
+    // Primary source: cohortId from entitlement (assigned at purchase)
+    userCohortId = userData?.entitlement?.cohortId || "";
+
+    // Fallback: cohortId from registration subcollection
+    if (!userCohortId) {
+      const regDoc = await db
+        .collection("users")
+        .doc(decoded.uid)
+        .collection("accelerator")
+        .doc("registration")
+        .get();
+      if (regDoc.exists) {
+        userCohortId = regDoc.data()?.cohortId || "";
+      }
     }
 
     const progressDoc = await db
@@ -55,6 +80,25 @@ export default async function AcceleratorWeekPage({ params }: Props) {
 
   if (!hasAccess) return redirect("/accelerator");
 
+  // ─── Cohort-aware week gating ────────────────────────────────────────
+  const userCohort = userCohortId
+    ? getCohortById(userCohortId) ?? getEnrollableCohort()
+    : getEnrollableCohort();
+
+  // Pre-launch: no weeks accessible (unless founder)
+  if (isCohortPreLaunch(userCohort) && !isFounder) {
+    return redirect("/accelerator");
+  }
+
+  // Time-gated unlock: can't skip ahead
+  const unlockedWeek = getUnlockedWeek(userCohort.startDate);
+  const effectiveUnlocked = isFounder ? 6 : unlockedWeek;
+
+  if (weekNumber > effectiveUnlocked) {
+    // Week not yet unlocked — redirect back to hub
+    return redirect("/accelerator");
+  }
+
   const isCompleted = completedWeeks.includes(weekNumber);
 
   // Resource type icons
@@ -67,9 +111,9 @@ export default async function AcceleratorWeekPage({ params }: Props) {
     guide: "📖",
   };
 
-  // Navigation: prev/next week
+  // Navigation: prev/next week (only if unlocked)
   const prevWeek = weekNumber > 1 ? weekNumber - 1 : null;
-  const nextWeek = weekNumber < 6 ? weekNumber + 1 : null;
+  const nextWeek = weekNumber < 6 && weekNumber + 1 <= effectiveUnlocked ? weekNumber + 1 : null;
 
   return (
     <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20" style={{ background: 'linear-gradient(180deg, rgba(245, 241, 235, 0.5) 0%, rgba(250, 248, 244, 0.3) 50%, rgba(245, 241, 235, 0.5) 100%)', borderRadius: '8px' }}>
@@ -301,9 +345,9 @@ export default async function AcceleratorWeekPage({ params }: Props) {
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
         </div>
         <LiveCallPanel
-          callDay={CURRENT_COHORT.liveCallDay}
-          callTimes={CURRENT_COHORT.liveCallTimes}
-          zoomLinks={CURRENT_COHORT.zoomLinks}
+          callDay={userCohort.liveCallDay}
+          callTimes={userCohort.liveCallTimes}
+          zoomLinks={userCohort.zoomLinks}
           weekNumber={weekNumber}
         />
       </section>

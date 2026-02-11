@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { getEnrollableCohort } from '@/lib/accelerator/stages';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -39,7 +40,10 @@ function getStripe() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { product = 'accelerator', cohort = '2026-03' } = body;
+    const { product = 'accelerator' } = body;
+    // Resolve cohort from the live schedule (not from client)
+    const enrollableCohort = getEnrollableCohort();
+    const cohort = enrollableCohort.id;
 
     // Validate product
     if (!PRODUCT_PRICE_MAP[product]) {
@@ -93,6 +97,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         product,
         cohort,
+        cohortStartDate: enrollableCohort.startDate,
       },
     });
 

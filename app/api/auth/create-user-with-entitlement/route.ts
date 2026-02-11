@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { uid, email, sessionId, customerId, product, cohort } = body;
+    const { uid, email, sessionId, customerId, product, cohort, cohortStartDate } = body;
 
     // Verify UID matches session
     if (uid !== decodedClaim.uid) {
@@ -36,14 +36,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Map product to entitlement tier
+    const tierMap: Record<string, string> = {
+      accelerator: 'ACCELERATOR',
+      deepen_membership: 'DEEPENING',
+    };
+    const tier = tierMap[product] || product?.toUpperCase() || 'ACCELERATOR';
+
     // Write user document with entitlement
+    // cohort = the unified cohortId (e.g. "founding-2026")
+    // cohortStartDate = ISO date persisted for resilience against schedule changes
     const db = firebaseAdmin.firestore();
     await db.collection('users').doc(uid).set({
       email,
       entitlement: {
+        tier,
         status: 'active',
         product,
         cohort,
+        cohortId: cohort, // Explicit alias for clarity
+        cohortStartDate: cohortStartDate || '',
         checkoutSessionId: sessionId,
         stripeCustomerId: customerId,
       },

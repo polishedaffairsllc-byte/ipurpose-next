@@ -284,23 +284,145 @@ export interface CohortConfig {
   label: string;
   startDate: string; // ISO date
   endDate: string;
+  enrollmentCutoff: string; // ISO date — last day to enroll (end of Week 1)
   liveCallDay: string;
   liveCallTimes: string[];
   zoomLinks: string[];
 }
 
-export const CURRENT_COHORT: CohortConfig = {
-  id: "founding-2026",
-  label: "Founding Cohort",
-  startDate: "2026-03-02",
-  endDate: "2026-04-12",
-  liveCallDay: "Friday",
-  liveCallTimes: ["11:00 AM ET", "7:00 PM ET"],
-  zoomLinks: [
-    "https://us04web.zoom.us/j/74214700844?pwd=4FTzl7v5Q9kcsXBLgYtdamgh4iBEVg.1",
-    "https://us04web.zoom.us/j/76472857056?pwd=UTRur1Pc72FWixjkphZfXVAk22oR9C.1",
-  ],
-};
+// ─── Annual Cohort Schedule (4 per year) ───────────────────────────────────
+// Q1: March–April | Q2: June–July | Q3: September–October | Q4: January–February
+export const COHORT_SCHEDULE: CohortConfig[] = [
+  {
+    id: "founding-2026",
+    label: "Founding Cohort",
+    startDate: "2026-03-02",
+    endDate: "2026-04-12",
+    enrollmentCutoff: "2026-03-08", // End of Week 1
+    liveCallDay: "Friday",
+    liveCallTimes: ["11:00 AM ET", "7:00 PM ET"],
+    zoomLinks: [
+      "https://us04web.zoom.us/j/74214700844?pwd=4FTzl7v5Q9kcsXBLgYtdamgh4iBEVg.1",
+      "https://us04web.zoom.us/j/76472857056?pwd=UTRur1Pc72FWixjkphZfXVAk22oR9C.1",
+    ],
+  },
+  {
+    id: "summer-2026",
+    label: "Summer Cohort",
+    startDate: "2026-06-01",
+    endDate: "2026-07-12",
+    enrollmentCutoff: "2026-06-07",
+    liveCallDay: "Friday",
+    liveCallTimes: ["11:00 AM ET", "7:00 PM ET"],
+    zoomLinks: [],
+  },
+  {
+    id: "fall-2026",
+    label: "Fall Cohort",
+    startDate: "2026-09-07",
+    endDate: "2026-10-18",
+    enrollmentCutoff: "2026-09-13",
+    liveCallDay: "Friday",
+    liveCallTimes: ["11:00 AM ET", "7:00 PM ET"],
+    zoomLinks: [],
+  },
+  {
+    id: "winter-2027",
+    label: "Winter Cohort",
+    startDate: "2027-01-11",
+    endDate: "2027-02-21",
+    enrollmentCutoff: "2027-01-17",
+    liveCallDay: "Friday",
+    liveCallTimes: ["11:00 AM ET", "7:00 PM ET"],
+    zoomLinks: [],
+  },
+];
+
+// The current active or next-upcoming cohort (used as default)
+export const CURRENT_COHORT: CohortConfig = COHORT_SCHEDULE[0];
+
+// ─── Enrollment Helpers ────────────────────────────────────────────────────
+
+export type EnrollmentStatus =
+  | "open"           // Before start date — enrollment is open
+  | "grace"          // Week 1 in progress — still enrollable (catch-up allowed)
+  | "closed"         // Past enrollment cutoff — closed for this cohort
+  | "completed";     // Cohort has ended
+
+/**
+ * Get the enrollment status of a specific cohort.
+ */
+export function getCohortEnrollmentStatus(cohort: CohortConfig): EnrollmentStatus {
+  const now = new Date();
+  const start = new Date(cohort.startDate);
+  const cutoff = new Date(cohort.enrollmentCutoff + "T23:59:59");
+  const end = new Date(cohort.endDate + "T23:59:59");
+
+  if (now > end) return "completed";
+  if (now > cutoff) return "closed";
+  if (now >= start && now <= cutoff) return "grace";
+  return "open";
+}
+
+/**
+ * Find the next cohort a new buyer should be enrolled into.
+ * Returns the earliest cohort that is still "open" or in "grace" period.
+ * If none, returns the next future cohort.
+ */
+export function getEnrollableCohort(): CohortConfig {
+  const now = new Date();
+
+  // First: find a cohort that's open or in grace
+  for (const cohort of COHORT_SCHEDULE) {
+    const status = getCohortEnrollmentStatus(cohort);
+    if (status === "open" || status === "grace") {
+      return cohort;
+    }
+  }
+
+  // Fallback: find the next future cohort (start date > now)
+  const futureCohort = COHORT_SCHEDULE.find((c) => new Date(c.startDate) > now);
+  if (futureCohort) return futureCohort;
+
+  // Ultimate fallback: last cohort in schedule (shouldn't happen in production)
+  return COHORT_SCHEDULE[COHORT_SCHEDULE.length - 1];
+}
+
+/**
+ * Resolve which cohort a user belongs to.
+ * If the user has a cohortId stored in Firestore, match it.
+ * Otherwise, return the enrollable cohort.
+ */
+export function getCohortById(cohortId: string): CohortConfig | undefined {
+  return COHORT_SCHEDULE.find((c) => c.id === cohortId);
+}
+
+/**
+ * Get the next upcoming cohort after the given one (for "closed" enrollment previews).
+ * Returns undefined if there is no later cohort in the schedule.
+ */
+export function getNextCohortAfter(cohort: CohortConfig): CohortConfig | undefined {
+  const idx = COHORT_SCHEDULE.findIndex((c) => c.id === cohort.id);
+  if (idx === -1 || idx >= COHORT_SCHEDULE.length - 1) return undefined;
+  return COHORT_SCHEDULE[idx + 1];
+}
+
+/**
+ * Check if a cohort hasn't started yet (pre-launch countdown state).
+ */
+export function isCohortPreLaunch(cohort: CohortConfig): boolean {
+  return new Date() < new Date(cohort.startDate);
+}
+
+/**
+ * Get days until cohort starts. Returns 0 if already started.
+ */
+export function getDaysUntilStart(cohort: CohortConfig): number {
+  const now = new Date();
+  const start = new Date(cohort.startDate);
+  const diff = start.getTime() - now.getTime();
+  return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
+}
 
 // Helper: determine which week is unlocked based on cohort start
 export function getUnlockedWeek(cohortStartDate: string): number {
