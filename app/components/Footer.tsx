@@ -12,7 +12,7 @@ export default function Footer() {
   useEffect(() => {
     setMounted(true);
     // Check if user is authenticated by looking for Firebase session cookie
-    setIsAuthenticated(document.cookie.includes('FirebaseSession'));
+    setIsAuthenticated(document.cookie.includes('ipurpose_logged_in'));
   }, []);
 
   if (!mounted) return null;

@@ -97,6 +97,11 @@ export async function POST(req: Request) {
       );
     }
 
+    // Non-sensitive flag cookie (not HttpOnly) so client-side JS can detect auth state
+    cookies.push(
+      `ipurpose_logged_in=1; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
+    );
+
     if (founderContext.isFounder) {
       cookies.push(
         `x-founder=true; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
