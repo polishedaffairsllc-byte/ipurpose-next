@@ -53,7 +53,7 @@ export default function AIBlueprintPage() {
             <div className="absolute inset-0 bg-black/50"></div>
             
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-              iPurpose Blueprint
+              iPurpose<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span> Blueprint
             </h1>
             <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
               Design your purpose-aligned systems with AI

@@ -169,7 +169,7 @@ export default function ClarityCheckPage() {
                 className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
                 style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '35px' }}
               >
-                Or explore the iPurpose Accelerator
+                Or explore the iPurpose Accelerator™
               </Link>
             </div>
             <Link href="/" className="text-xs sm:text-sm text-lavenderViolet hover:underline">

@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: 'iPurpose Blueprint | Use AI with Intention',
   description: 'A beginner-friendly guide to using AI ethically and intentionally to support clarity, planning, and creative work.',
   openGraph: {
-    title: 'iPurpose Blueprint | Use AI with Intention',
+    title: 'iPurpose™ Blueprint | Use AI with Intention',
     description: 'A beginner-friendly guide to using AI ethically and intentionally to support clarity, planning, and creative work.',
     type: 'website',
   },

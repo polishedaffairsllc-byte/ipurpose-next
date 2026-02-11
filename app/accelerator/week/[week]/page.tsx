@@ -72,85 +72,127 @@ export default async function AcceleratorWeekPage({ params }: Props) {
   const nextWeek = weekNumber < 6 ? weekNumber + 1 : null;
 
   return (
-    <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+    <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20" style={{ background: 'linear-gradient(180deg, rgba(245, 241, 235, 0.5) 0%, rgba(250, 248, 244, 0.3) 50%, rgba(245, 241, 235, 0.5) 100%)', borderRadius: '8px' }}>
 
       {/* Back to Accelerator */}
       <Link
         href="/accelerator"
-        className="inline-block font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors mb-8"
-        style={{ fontSize: '14px' }}
+        className="inline-block font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors mb-10"
+        style={{ fontSize: '30px', letterSpacing: '0.1em' }}
       >
-        ← Back to Accelerator
+        ← Return to Curriculum
       </Link>
 
-      {/* Stage Header */}
-      <div className="text-center space-y-4 mb-10">
-        <p className="font-marcellus text-warmCharcoal/40 tracking-[0.2em] uppercase" style={{ fontSize: '12px' }}>
-          {stage.subtitle} — Week {stage.week}
+      {/* ═══ Academic Stage Header ═══ */}
+      <div className="text-center mb-12">
+        {/* Roman numeral with decorative lines */}
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <div style={{ height: '1px', flex: 1, maxWidth: '80px', background: `linear-gradient(to right, transparent, ${stage.color})` }}></div>
+          <span className="font-italiana" style={{ fontSize: '65px', color: stage.color }}>
+            {['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
+          </span>
+          <div style={{ height: '1px', flex: 1, maxWidth: '80px', background: `linear-gradient(to left, transparent, ${stage.color})` }}></div>
+        </div>
+
+        <p className="font-marcellus text-warmCharcoal/35 uppercase mb-2" style={{ fontSize: '25px', letterSpacing: '0.35em' }}>
+          {stage.subtitle} — Week {stage.week} of Six
         </p>
-        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '36px' }}>
+        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '60px', letterSpacing: '0.04em' }}>
           {stage.title}
         </h1>
-        <div className="flex items-center justify-center gap-3">
-          <div style={{ height: '2px', width: '80px', background: `linear-gradient(to right, transparent, ${stage.color}, transparent)` }}></div>
-          <span style={{ color: stage.color }} className="text-xl">{stage.icon}</span>
-          <div style={{ height: '2px', width: '80px', background: `linear-gradient(to right, transparent, ${stage.color}, transparent)` }}></div>
+
+        {/* Academic double rule */}
+        <div className="mt-6 mx-auto" style={{ maxWidth: '220px' }}>
+          <div style={{ height: '2px', background: `linear-gradient(to right, transparent, ${stage.color}, transparent)` }}></div>
+          <div className="mt-1" style={{ height: '1px', background: `linear-gradient(to right, transparent, ${stage.color}60, transparent)` }}></div>
         </div>
       </div>
 
-      {/* ─── 1. Overview Block ─── */}
-      <section className="mb-12 rounded-2xl p-6 sm:p-8" style={{ backgroundColor: stage.colorFaded }}>
-        <div className="space-y-6">
+      {/* ═══ Epigraph — Chapter Opening Quote ═══ */}
+      <div className="max-w-2xl mx-auto mb-14 text-center px-6 sm:px-10 py-8" style={{ borderLeft: `3px solid ${stage.color}30`, borderRight: `3px solid ${stage.color}30` }}>
+        <p className="font-marcellus text-warmCharcoal/60 italic" style={{ fontSize: '38px', lineHeight: '1.7' }}>
+          &ldquo;{stage.epigraph.quote}&rdquo;
+        </p>
+        <p className="font-marcellus text-warmCharcoal/30 mt-4" style={{ fontSize: '25px', letterSpacing: '0.15em' }}>
+          — {stage.epigraph.attribution}
+        </p>
+      </div>
+
+      {/* ─── §1. Overview — Scholarly Abstract ─── */}
+      <section className="mb-14">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§1</span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            Overview
+          </p>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+        </div>
+
+        <div className="space-y-8 pl-4 sm:pl-6" style={{ borderLeft: `2px solid ${stage.color}30` }}>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '11px' }}>
-              What this week is about
+            <h3 className="font-marcellus text-warmCharcoal/40 uppercase tracking-wider mb-3" style={{ fontSize: '25px', letterSpacing: '0.25em' }}>
+              What This Week Is About
             </h3>
-            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '16px', lineHeight: '1.7' }}>
-              {stage.overview.about}
+            {/* Drop cap on first paragraph */}
+            <p className="font-marcellus text-warmCharcoal/75" style={{ fontSize: '45px', lineHeight: '1.8' }}>
+              <span className="font-italiana float-left mr-2" style={{ fontSize: '90px', lineHeight: '0.85', color: stage.color, marginTop: '4px' }}>
+                {stage.overview.about.charAt(0)}
+              </span>
+              {stage.overview.about.slice(1)}
             </p>
           </div>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '11px' }}>
-              What shifts internally
+            <h3 className="font-marcellus text-warmCharcoal/40 uppercase tracking-wider mb-3" style={{ fontSize: '25px', letterSpacing: '0.25em' }}>
+              What Shifts Internally
             </h3>
-            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '16px', lineHeight: '1.7' }}>
+            <p className="font-marcellus text-warmCharcoal/75" style={{ fontSize: '45px', lineHeight: '1.8' }}>
               {stage.overview.shifts}
             </p>
           </div>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal/50 uppercase tracking-wider mb-2" style={{ fontSize: '11px' }}>
-              What you&apos;ll build
+            <h3 className="font-marcellus text-warmCharcoal/40 uppercase tracking-wider mb-3" style={{ fontSize: '25px', letterSpacing: '0.25em' }}>
+              What You&apos;ll Build
             </h3>
-            <p className="font-marcellus text-warmCharcoal/80" style={{ fontSize: '16px', lineHeight: '1.7' }}>
+            <p className="font-marcellus text-warmCharcoal/75" style={{ fontSize: '45px', lineHeight: '1.8' }}>
               {stage.overview.builds}
             </p>
           </div>
         </div>
       </section>
 
-      {/* ─── 2. Lesson Content ─── */}
-      <section className="mb-12">
-        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '24px' }}>
-          Lesson Content
-        </h2>
-        <div className="space-y-3">
+      {/* ─── §2. Lesson Content — Course Materials ─── */}
+      <section className="mb-14">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§2</span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            Lesson Content
+          </p>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+        </div>
+
+        <div className="space-y-0">
           {stage.lessons.map((lesson, i) => (
             <div
               key={i}
-              className="flex items-start gap-4 px-5 py-4 rounded-xl border border-warmCharcoal/8 hover:border-warmCharcoal/20 transition-colors"
-              style={{ backgroundColor: 'rgba(255,255,255,0.8)' }}
+              className="flex items-start gap-4 px-5 py-5 transition-colors"
+              style={{
+                borderBottom: i < stage.lessons.length - 1 ? '1px solid rgba(75, 78, 109, 0.06)' : 'none',
+                borderLeft: `2px solid ${stage.color}20`,
+              }}
             >
-              <span className="shrink-0 mt-1" style={{ fontSize: '20px' }}>
-                {typeIcon[lesson.type] || "📄"}
+              <span className="shrink-0 font-italiana text-warmCharcoal/20 mt-1" style={{ fontSize: '35px', width: '40px', textAlign: 'right' }}>
+                {i + 1}.
               </span>
               <div>
-                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '16px' }}>
+                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '45px' }}>
                   {lesson.title}
                 </p>
-                <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '14px' }}>
+                <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '38px', lineHeight: '1.6' }}>
                   {lesson.description}
                 </p>
-                <span className="inline-block mt-2 px-3 py-1 rounded-full font-marcellus text-warmCharcoal/40 border border-warmCharcoal/10" style={{ fontSize: '11px' }}>
+                <span className="inline-block mt-2 px-3 py-1 font-marcellus text-warmCharcoal/35 uppercase" style={{ fontSize: '22px', letterSpacing: '0.2em', border: '1px solid rgba(75, 78, 109, 0.1)' }}>
                   {lesson.type}
                 </span>
               </div>
@@ -159,25 +201,35 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ─── 3. Client Resources ─── */}
-      <section className="mb-12">
-        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '24px' }}>
-          Resources
-        </h2>
-        <div className="space-y-3">
+      {/* ─── §3. Client Resources — Reference Materials ─── */}
+      <section className="mb-14">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§3</span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            Reference Materials
+          </p>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+        </div>
+
+        <div className="space-y-0">
           {stage.resources.map((resource, i) => (
             <div
               key={i}
-              className="flex items-start gap-4 px-5 py-4 rounded-xl border border-warmCharcoal/8"
+              className="flex items-start gap-4 px-5 py-5"
+              style={{
+                borderBottom: i < stage.resources.length - 1 ? '1px solid rgba(75, 78, 109, 0.06)' : 'none',
+                borderLeft: `2px solid ${stage.color}20`,
+              }}
             >
-              <span className="shrink-0 mt-1" style={{ fontSize: '20px' }}>
+              <span className="shrink-0 font-marcellus text-warmCharcoal/20 mt-1" style={{ fontSize: '32px' }}>
                 {typeIcon[resource.type] || "📄"}
               </span>
               <div className="flex-1">
-                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '16px' }}>
+                <p className="font-marcellus text-warmCharcoal" style={{ fontSize: '45px' }}>
                   {resource.title}
                 </p>
-                <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '14px' }}>
+                <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '38px', lineHeight: '1.6' }}>
                   {resource.description}
                 </p>
               </div>
@@ -186,14 +238,14 @@ export default async function AcceleratorWeekPage({ params }: Props) {
                   href={resource.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 font-marcellus text-lavenderViolet hover:opacity-80 transition-opacity"
-                  style={{ fontSize: '14px' }}
+                  className="shrink-0 font-marcellus hover:opacity-80 transition-opacity uppercase"
+                  style={{ fontSize: '28px', color: stage.color, letterSpacing: '0.15em' }}
                 >
                   Open →
                 </a>
               ) : (
-                <span className="shrink-0 font-marcellus text-warmCharcoal/30" style={{ fontSize: '14px' }}>
-                  Coming soon
+                <span className="shrink-0 font-marcellus text-warmCharcoal/25 italic" style={{ fontSize: '28px' }}>
+                  Forthcoming
                 </span>
               )}
             </div>
@@ -201,36 +253,53 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ─── 4. Reflection Prompts ─── */}
-      <section className="mb-12">
-        <h2 className="font-italiana text-warmCharcoal text-center mb-6" style={{ fontSize: '24px' }}>
-          Reflection Prompts
-        </h2>
-        <div className="space-y-4">
+      {/* ─── §4. Reflection Prompts — Inquiry ─── */}
+      <section className="mb-14">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§4</span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            Inquiry &amp; Reflection
+          </p>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+        </div>
+
+        <div className="space-y-5">
           {stage.reflections.map((reflection, i) => (
             <div
               key={i}
-              className="px-5 py-4 rounded-xl"
+              className="px-6 py-5"
               style={{
-                backgroundColor: reflection.type === 'integration'
-                  ? 'rgba(156, 136, 255, 0.06)'
-                  : 'rgba(230, 200, 124, 0.08)',
                 borderLeft: `3px solid ${reflection.type === 'integration' ? '#9C88FF' : '#E6C87C'}`,
+                background: reflection.type === 'integration'
+                  ? 'rgba(156, 136, 255, 0.04)'
+                  : 'rgba(230, 200, 124, 0.04)',
               }}
             >
-              <p className="font-marcellus text-warmCharcoal/80 italic" style={{ fontSize: '16px', lineHeight: '1.7' }}>
+              <p className="font-marcellus text-warmCharcoal/75 italic" style={{ fontSize: '45px', lineHeight: '1.8' }}>
                 &ldquo;{reflection.prompt}&rdquo;
               </p>
-              <span className="inline-block mt-2 font-marcellus text-warmCharcoal/30 uppercase tracking-wider" style={{ fontSize: '11px' }}>
-                {reflection.type === 'integration' ? 'Integration' : 'Journal'}
-              </span>
+              <div className="flex items-center gap-2 mt-3">
+                <div style={{ height: '1px', width: '20px', background: reflection.type === 'integration' ? '#9C88FF40' : '#E6C87C40' }}></div>
+                <span className="font-marcellus text-warmCharcoal/30 uppercase" style={{ fontSize: '22px', letterSpacing: '0.2em' }}>
+                  {reflection.type === 'integration' ? 'Integration Prompt' : 'Journal Prompt'}
+                </span>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ─── 5. Live Call Panel ─── */}
-      <section className="mb-12">
+      {/* ─── §5. Live Seminar ─── */}
+      <section className="mb-14">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§5</span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            Live Seminar
+          </p>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+        </div>
         <LiveCallPanel
           callDay={CURRENT_COHORT.liveCallDay}
           callTimes={CURRENT_COHORT.liveCallTimes}
@@ -239,41 +308,63 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         />
       </section>
 
-      {/* ─── 6. Progress Marker ─── */}
-      <section className="mb-12">
+      {/* ─── §6. Progress ─── */}
+      <section className="mb-14">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§6</span>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            Progress
+          </p>
+          <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
+        </div>
         <WeekCompleteButton week={weekNumber} isCompleted={isCompleted} />
       </section>
 
-      {/* Week Navigation */}
-      <div className="flex items-center justify-between pt-8 border-t border-warmCharcoal/10">
-        {prevWeek ? (
-          <Link
-            href={`/accelerator/week/${prevWeek}`}
-            className="font-marcellus text-warmCharcoal/50 hover:text-warmCharcoal/70 transition-colors"
-            style={{ fontSize: '14px' }}
-          >
-            ← Week {prevWeek}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {nextWeek ? (
-          <Link
-            href={`/accelerator/week/${nextWeek}`}
-            className="font-marcellus text-warmCharcoal/50 hover:text-warmCharcoal/70 transition-colors"
-            style={{ fontSize: '14px' }}
-          >
-            Week {nextWeek} →
-          </Link>
-        ) : (
-          <Link
-            href="/accelerator"
-            className="font-marcellus text-lavenderViolet hover:opacity-80 transition-opacity"
-            style={{ fontSize: '14px' }}
-          >
-            Back to Dashboard →
-          </Link>
-        )}
+      {/* ═══ Week Navigation — Academic Pagination ═══ */}
+      <div className="pt-8" style={{ borderTop: '2px solid rgba(75, 78, 109, 0.08)' }}>
+        <div className="flex items-center justify-between">
+          {prevWeek ? (
+            <Link
+              href={`/accelerator/week/${prevWeek}`}
+              className="font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors"
+              style={{ fontSize: '30px', letterSpacing: '0.05em' }}
+            >
+              ← Week {prevWeek}: {ACCELERATOR_STAGES[prevWeek - 1]?.title}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {nextWeek ? (
+            <Link
+              href={`/accelerator/week/${nextWeek}`}
+              className="font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors"
+              style={{ fontSize: '30px', letterSpacing: '0.05em' }}
+            >
+              Week {nextWeek}: {ACCELERATOR_STAGES[nextWeek - 1]?.title} →
+            </Link>
+          ) : (
+            <Link
+              href="/accelerator"
+              className="font-marcellus hover:opacity-80 transition-opacity"
+              style={{ fontSize: '30px', color: '#9C88FF', letterSpacing: '0.05em' }}
+            >
+              Return to Curriculum →
+            </Link>
+          )}
+        </div>
+
+        {/* Colophon */}
+        <div className="text-center mt-10">
+          <div className="flex items-center justify-center gap-3">
+            <div style={{ height: '1px', width: '30px', background: `${stage.color}30` }}></div>
+            <span className="font-italiana" style={{ fontSize: '28px', color: `${stage.color}40` }}>✦</span>
+            <div style={{ height: '1px', width: '30px', background: `${stage.color}30` }}></div>
+          </div>
+          <p className="font-marcellus text-warmCharcoal/20 mt-2" style={{ fontSize: '25px', letterSpacing: '0.2em' }}>
+            {stage.subtitle.toUpperCase()} · {stage.title}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -637,13 +637,13 @@ export default function IntegrationPage() {
       <div className="print-hide container max-w-5xl mx-auto px-6 md:px-10 py-10">
       {/* New Header */}
       <div className="mb-8">
-        <h1 className="font-semibold text-warmCharcoal" style={{ fontSize: '28px' }}>
+        <h1 className="font-semibold text-warmCharcoal" style={{ fontSize: '60px' }}>
           Integration Reflection — {todayDate}
         </h1>
-        <p className="mt-3 text-warmCharcoal/80" style={{ fontSize: '18px' }}>
+        <p className="mt-3 text-warmCharcoal/80" style={{ fontSize: '45px' }}>
           {userName} the {userArchetype || "Explorer"}
         </p>
-        <p className="mt-4 text-warmCharcoal/70 font-marcellus" style={{ fontSize: '18px' }}>
+        <p className="mt-4 text-warmCharcoal/70 font-marcellus" style={{ fontSize: '45px' }}>
           This reflection brings together what emerged from your work today.
         </p>
         <div className="mt-6">
@@ -651,7 +651,7 @@ export default function IntegrationPage() {
             {generating ? "Generating..." : (generated ? "Regenerate Reflection" : "Generate My Integration Reflection")}
           </Button>
           {status ? (
-            <p className="mt-3 text-warmCharcoal/70" style={{ fontSize: '16px' }}>
+            <p className="mt-3 text-warmCharcoal/70" style={{ fontSize: '45px' }}>
               {status}
             </p>
           ) : null}
@@ -672,10 +672,10 @@ export default function IntegrationPage() {
             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
           </svg>
           <div className="flex-1">
-            <p className="font-medium text-amber-900" style={{ fontSize: '20px' }}>
+            <p className="font-medium text-amber-900" style={{ fontSize: '45px' }}>
               Your lab answers have changed since this reflection was generated.
             </p>
-            <p className="mt-1 text-amber-800" style={{ fontSize: '20px' }}>
+            <p className="mt-1 text-amber-800" style={{ fontSize: '45px' }}>
               Regenerate to update with your latest responses.
             </p>
             <div className="mt-4 flex gap-3">
@@ -701,8 +701,8 @@ export default function IntegrationPage() {
       {!generated && (
         <div className="mt-8 grid gap-8">
           <section className="rounded-2xl border border-ip-border bg-white/80 p-6">
-            <h2 className="font-semibold text-warmCharcoal" style={{ fontSize: '20px' }}>Lab Inputs</h2>
-            <div className="mt-4 space-y-3 text-warmCharcoal/70" style={{ fontSize: '20px' }}>
+            <h2 className="font-semibold text-warmCharcoal" style={{ fontSize: '55px' }}>Lab Inputs</h2>
+            <div className="mt-4 space-y-3 text-warmCharcoal/70" style={{ fontSize: '45px' }}>
               <div>
                 <strong>Identity:</strong> {identity?.text || "Not yet completed"}
               </div>

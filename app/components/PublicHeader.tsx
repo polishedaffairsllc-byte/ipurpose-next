@@ -48,7 +48,7 @@ export default function PublicHeader() {
           className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
           style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
         >
-          iPurpose Accelerator
+          iPurpose Accelerator™
         </Link>
 
         <Link

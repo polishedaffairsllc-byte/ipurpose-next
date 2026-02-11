@@ -178,7 +178,7 @@ export default async function DeepenPage() {
         {/* Already an Accelerator member? */}
         <div className="text-center space-y-4">
           <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '20px' }}>
-            Already completed the iPurpose Accelerator? Your Deepening access may already be included.
+            Already completed the iPurpose Accelerator™? Your Deepening access may already be included.
           </p>
           <a
             href="/support"

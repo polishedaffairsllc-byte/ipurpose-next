@@ -22,6 +22,12 @@ export interface AcceleratorStage {
   colorFaded: string;
   icon: string;
 
+  // Epigraph — chapter-opening quote
+  epigraph: {
+    quote: string;
+    attribution: string;
+  };
+
   // Overview block
   overview: {
     about: string;
@@ -48,6 +54,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
     color: "#9C88FF",
     colorFaded: "rgba(156, 136, 255, 0.12)",
     icon: "✦",
+    epigraph: {
+      quote: "The two most important days in your life are the day you are born and the day you find out why.",
+      attribution: "Mark Twain",
+    },
     overview: {
       about:
         "This week is about returning to the center. Before building anything externally, you ground into the truth of who you are and what you're here to do. This is the foundation everything else will be built upon.",
@@ -82,6 +92,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
     color: "#FCC4B7",
     colorFaded: "rgba(252, 196, 183, 0.12)",
     icon: "✦",
+    epigraph: {
+      quote: "When you undervalue what you do, the world will undervalue who you are.",
+      attribution: "Suze Orman",
+    },
     overview: {
       about:
         "This week confronts one of the deepest barriers to purpose-driven work: your relationship with money. Before you can price, sell, or receive — you have to heal what's in the way.",
@@ -115,6 +129,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
     color: "#4B4E6D",
     colorFaded: "rgba(75, 78, 109, 0.12)",
     icon: "✦",
+    epigraph: {
+      quote: "Your work is to discover your world and then with all your heart give yourself to it.",
+      attribution: "Buddha",
+    },
     overview: {
       about:
         "This week takes everything you've clarified — your purpose, your relationship with money — and channels it into a tangible offer. You're not just creating a product. You're designing a container for transformation.",
@@ -148,6 +166,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
     color: "#E6C87C",
     colorFaded: "rgba(230, 200, 124, 0.12)",
     icon: "✦",
+    epigraph: {
+      quote: "We shape our tools, and thereafter our tools shape us.",
+      attribution: "Marshall McLuhan",
+    },
     overview: {
       about:
         "This week is about building the infrastructure that holds your purpose-driven work. You'll learn to integrate AI ethically and create systems that support you — not replace you.",
@@ -181,6 +203,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
     color: "#88b04b",
     colorFaded: "rgba(136, 176, 75, 0.12)",
     icon: "✦",
+    epigraph: {
+      quote: "Authenticity is the daily practice of letting go of who we think we're supposed to be and embracing who we are.",
+      attribution: "Brené Brown",
+    },
     overview: {
       about:
         "This week is about showing up. Not performing — being present. Your brand isn't a logo. It's the energetic signature of your purpose made visible.",
@@ -216,6 +242,10 @@ export const ACCELERATOR_STAGES: AcceleratorStage[] = [
     color: "#d4af37",
     colorFaded: "rgba(212, 175, 55, 0.12)",
     icon: "✦",
+    epigraph: {
+      quote: "There is no passion to be found playing small — in settling for a life that is less than the one you are capable of living.",
+      attribution: "Nelson Mandela",
+    },
     overview: {
       about:
         "This is where everything comes together. You're not starting from scratch — you're launching from clarity. This week is about stepping into your next chapter with grounded confidence.",

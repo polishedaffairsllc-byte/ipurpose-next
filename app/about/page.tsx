@@ -37,7 +37,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-black/50"></div>
           
           <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-            About iPurpose
+            About iPurpose<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span>
           </h1>
           <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
             A framework for building what matters — without losing yourself.
@@ -208,7 +208,7 @@ export default function AboutPage() {
               className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '35px' }}
             >
-              Explore the iPurpose Accelerator
+              Explore the iPurpose Accelerator™
             </Link>
           </div>
         </section>

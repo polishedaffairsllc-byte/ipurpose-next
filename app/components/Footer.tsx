@@ -20,6 +20,7 @@ export default function Footer() {
   const isDeepenRoute = pathname === '/deepen' || pathname.startsWith('/deepen/');
   const isAcceleratorRoute = pathname === '/accelerator' || pathname.startsWith('/accelerator/');
   const isPremiumRoute = isDeepenRoute || isAcceleratorRoute || pathname === '/systems' || pathname.startsWith('/systems/') || pathname === '/insights' || pathname.startsWith('/insights/') || pathname === '/community' || pathname.startsWith('/community/');
+  const isPublicRoute = pathname === '/' || pathname === '/about' || pathname === '/soul' || pathname === '/signup' || pathname === '/login' || pathname === '/orientation' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/starter-pack' || pathname === '/ai-blueprint' || pathname === '/ipurpose-6-week' || pathname === '/labs';
 
   return (
     <>
@@ -46,7 +47,7 @@ export default function Footer() {
           </Link>
         </div>
       )}
-      {isAuthenticated && !isPremiumRoute && (
+      {isAuthenticated && !isPremiumRoute && !isPublicRoute && (
         <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
           <Link
             href="/deepen"

@@ -2,7 +2,7 @@ export default function IPurpose6WeekPage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white">
       <h1 className="font-italiana text-3xl md:text-5xl text-warmCharcoal font-bold mb-6 text-center">
-        iPurpose Accelerator
+        iPurpose Accelerator™
       </h1>
       <p className="text-lg text-warmCharcoal/80 text-center max-w-xl">
         iPurpose Accelerator is a cohort-based guided program for meaning-driven creators who feel

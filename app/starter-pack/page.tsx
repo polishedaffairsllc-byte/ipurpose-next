@@ -55,7 +55,7 @@ export default function StarterPackPage() {
             <div className="absolute inset-0 bg-black/50"></div>
             
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-              iPurpose Starter Pack
+              iPurpose<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span> Starter Pack
             </h1>
             <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
               Your foundation for purpose-driven work
@@ -242,7 +242,7 @@ export default function StarterPackPage() {
               Is this the full program?
             </h3>
             <p className="text-[35px] text-warmCharcoal/70 text-center">
-              No. This is a starter experience designed to give you clarity and momentum. The iPurpose Accelerator is our full cohort program with live mentorship.
+              No. This is a starter experience designed to give you clarity and momentum. The iPurpose Accelerator™ is our full cohort program with live mentorship.
             </p>
           </div>
           <div className="space-y-4 text-center">
