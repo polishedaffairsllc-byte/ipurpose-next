@@ -122,7 +122,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
       <Link
         href="/accelerator"
         className="inline-block font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors mb-10"
-        style={{ fontSize: '30px', letterSpacing: '0.1em' }}
+        style={{ fontSize: '16px', letterSpacing: '0.05em' }}
       >
         ← Return to Curriculum
       </Link>
@@ -167,7 +167,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§1</span>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Overview
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
@@ -180,7 +180,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
             </h3>
             {/* Drop cap on first paragraph */}
             <p className="font-marcellus text-warmCharcoal/75" style={{ fontSize: '45px', lineHeight: '1.8' }}>
-              <span className="font-italiana float-left mr-2" style={{ fontSize: '90px', lineHeight: '0.85', color: stage.color, marginTop: '4px' }}>
+              <span className="font-italiana float-left mr-2" style={{ fontSize: '28px', lineHeight: '0.85', color: stage.color, marginTop: '4px' }}>
                 {stage.overview.about.charAt(0)}
               </span>
               {stage.overview.about.slice(1)}
@@ -210,7 +210,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§2</span>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Lesson Content
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
@@ -250,7 +250,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§3</span>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Reference Materials
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
@@ -283,7 +283,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="shrink-0 font-marcellus hover:opacity-80 transition-opacity uppercase"
-                  style={{ fontSize: '28px', color: stage.color, letterSpacing: '0.15em' }}
+                  style={{ fontSize: '16px', color: stage.color, letterSpacing: '0.1em' }}
                 >
                   Open →
                 </a>
@@ -302,7 +302,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§4</span>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Inquiry &amp; Reflection
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
@@ -339,7 +339,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§5</span>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Live Seminar
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
@@ -357,7 +357,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-italiana text-warmCharcoal/25" style={{ fontSize: '32px' }}>§6</span>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Progress
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.1)' }}></div>
@@ -372,7 +372,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
             <Link
               href={`/accelerator/week/${prevWeek}`}
               className="font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors"
-              style={{ fontSize: '30px', letterSpacing: '0.05em' }}
+              style={{ fontSize: '16px', letterSpacing: '0.05em' }}
             >
               ← Week {prevWeek}: {ACCELERATOR_STAGES[prevWeek - 1]?.title}
             </Link>
@@ -383,7 +383,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
             <Link
               href={`/accelerator/week/${nextWeek}`}
               className="font-marcellus text-warmCharcoal/40 hover:text-warmCharcoal/60 transition-colors"
-              style={{ fontSize: '30px', letterSpacing: '0.05em' }}
+              style={{ fontSize: '16px', letterSpacing: '0.05em' }}
             >
               Week {nextWeek}: {ACCELERATOR_STAGES[nextWeek - 1]?.title} →
             </Link>
@@ -391,7 +391,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
             <Link
               href="/accelerator"
               className="font-marcellus hover:opacity-80 transition-opacity"
-              style={{ fontSize: '30px', color: '#9C88FF', letterSpacing: '0.05em' }}
+              style={{ fontSize: '16px', color: '#9C88FF', letterSpacing: '0.05em' }}
             >
               Return to Curriculum →
             </Link>
@@ -405,7 +405,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
             <span className="font-italiana" style={{ fontSize: '28px', color: `${stage.color}40` }}>✦</span>
             <div style={{ height: '1px', width: '30px', background: `${stage.color}30` }}></div>
           </div>
-          <p className="font-marcellus text-warmCharcoal/20 mt-2" style={{ fontSize: '25px', letterSpacing: '0.2em' }}>
+          <p className="font-marcellus text-warmCharcoal/20 mt-2" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             {stage.subtitle.toUpperCase()} · {stage.title}
           </p>
         </div>

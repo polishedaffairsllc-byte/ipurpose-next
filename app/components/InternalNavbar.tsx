@@ -59,15 +59,16 @@ export default function InternalNavbar() {
                       ? 'bg-lavenderViolet/20 text-lavenderViolet'
                       : 'text-white/70 hover:text-white hover:bg-white/5'
                   }`}
+                  style={{ fontSize: '18px' }}
                 >
                   {item.label}
                 </Link>
               ))}
-              
               <form action="/api/auth/logout" method="post" className="ml-2">
                 <button
                   type="submit"
                   className="px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-salmonPeach hover:bg-white/5 transition-all"
+                  style={{ fontSize: '18px' }}
                 >
                   Logout
                 </button>
@@ -113,15 +114,16 @@ export default function InternalNavbar() {
                       ? 'bg-lavenderViolet/20 text-lavenderViolet'
                       : 'text-white/70 hover:text-white hover:bg-white/5'
                   }`}
+                  style={{ fontSize: '18px' }}
                 >
                   {item.label}
                 </Link>
               ))}
-              
               <form action="/api/auth/logout" method="post">
                 <button
                   type="submit"
                   className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-white/70 hover:text-salmonPeach hover:bg-white/5 transition-all"
+                  style={{ fontSize: '18px' }}
                 >
                   Logout
                 </button>

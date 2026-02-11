@@ -83,14 +83,13 @@ export function IntegrationSummaryModal({
             margin: 0;
             padding: 2rem;
           }
-          h1 { font-size: 2.25rem; margin-top: 0; }
-          h2 { font-size: 1.875rem; margin-top: 1.5rem; }
+          h1 { font-size: 2rem; margin-top: 0; }
+          h2 { font-size: 1.5rem; margin-top: 1.5rem; }
           h3 { font-weight: 600; margin-top: 1rem; }
           .section { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0; }
           .entry { margin-bottom: 1rem; }
           button { display: none; }
           .whitespace-pre-line { white-space: pre-line; }
-          p[style*="50px"] { font-size: 50px !important; font-weight: bold !important; }
         </style>
       </head>
       <body>

@@ -38,7 +38,7 @@ export default function ProgramPage() {
             <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
               iPurpose Accelerator<sup style={{ fontSize: '0.3em' }}>™</sup>
             </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '22px' }}>
               Six weeks to clarify your purpose and build aligned systems
             </p>
           </section>
@@ -65,33 +65,33 @@ export default function ProgramPage() {
       {/* Outcomes */}
       <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-12 sm:py-16 md:py-20">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6">
-          <h2 className="font-marcellus text-warmCharcoal text-center mb-8 sm:mb-12" style={{ fontSize: '50px' }}>
+          <h2 className="font-marcellus text-warmCharcoal text-center mb-8 sm:mb-12" style={{ fontSize: '32px' }}>
             By the End, You'll Have Built:
           </h2>
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>A Defined Purpose & Priorities Statement</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '40px' }}>A documented articulation of what you're building and why.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>A Defined Purpose & Priorities Statement</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>A documented articulation of what you're building and why.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>Core Systems Aligned to Your Goals</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '40px' }}>Workflows, processes, and strategy designed to support your direction.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>Core Systems Aligned to Your Goals</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>Workflows, processes, and strategy designed to support your direction.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>A Practical AI Usage Plan</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '40px' }}>Clear guidelines for where and how AI supports your work.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>A Practical AI Usage Plan</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>Clear guidelines for where and how AI supports your work.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>Peer Network</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '40px' }}>A small cohort of thoughtful builders navigating similar challenges.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>Peer Network</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>A small cohort of thoughtful builders navigating similar challenges.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>A Defined Direction Forward</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '40px' }}>Clear next steps based on the systems and decisions you've built.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>A Defined Direction Forward</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>Clear next steps based on the systems and decisions you've built.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>Clarity Blueprint</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '40px' }}>A documented plan you'll reference for months to come.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>Clarity Blueprint</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>A documented plan you'll reference for months to come.</p>
             </div>
           </div>
         </div>

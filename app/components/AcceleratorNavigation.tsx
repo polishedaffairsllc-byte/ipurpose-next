@@ -34,7 +34,7 @@ export default function AcceleratorNavigation() {
                   ? `linear-gradient(to right, ${item.color}, ${item.color})`
                   : `linear-gradient(to right, ${item.color}, ${item.color}4D)`,
                 color: '#FFFFFF',
-                fontSize: '40px',
+                fontSize: '18px',
                 opacity: isActive ? 1 : 0.85,
               }}
             >
@@ -47,7 +47,7 @@ export default function AcceleratorNavigation() {
           <button
             type="submit"
             className="flex-1 px-4 py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ background: 'linear-gradient(to right, #d4af37, rgba(212, 175, 55, 0.3))', color: '#FFFFFF', fontSize: '40px' }}
+            style={{ background: 'linear-gradient(to right, #d4af37, rgba(212, 175, 55, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
           >
             Logout
           </button>

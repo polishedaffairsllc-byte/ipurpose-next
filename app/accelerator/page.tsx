@@ -29,6 +29,7 @@ export default async function AcceleratorPage() {
   let soulIdentity = "";
   let isFounder = false;
   let userCohortId = "";
+  let hasRegistration = false;
   try {
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const db = firebaseAdmin.firestore();
@@ -55,7 +56,17 @@ export default async function AcceleratorPage() {
         .get();
       if (regDoc.exists) {
         userCohortId = regDoc.data()?.cohortId || "";
+        hasRegistration = true;
       }
+    } else {
+      // cohortId came from entitlement — still check if registration exists
+      const regDoc = await db
+        .collection("users")
+        .doc(decoded.uid)
+        .collection("accelerator")
+        .doc("registration")
+        .get();
+      hasRegistration = regDoc.exists;
     }
 
     // Fetch progress
@@ -105,7 +116,7 @@ export default async function AcceleratorPage() {
             <a
               href="/program"
               className="inline-block mt-6 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0.5))', fontSize: '35px' }}
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0.5))', fontSize: '18px' }}
             >
               Learn More &amp; Enroll
             </a>
@@ -156,7 +167,7 @@ export default async function AcceleratorPage() {
             <div style={{ height: '1px', flex: 1, maxWidth: '120px', background: 'linear-gradient(to left, transparent, #E6C87C)' }}></div>
           </div>
 
-          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '48px' }}>
+          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '36px' }}>
             iPurpose Accelerator<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span>
           </h1>
 
@@ -212,7 +223,7 @@ export default async function AcceleratorPage() {
         </div>
 
         {/* Title with academic styling */}
-        <p className="font-marcellus text-warmCharcoal/40 uppercase mb-3" style={{ fontSize: '28px', letterSpacing: '0.35em' }}>
+        <p className="font-marcellus text-warmCharcoal/40 uppercase mb-3" style={{ fontSize: '14px', letterSpacing: '0.15em' }}>
           A Six-Week Intensive in Purpose-Driven Transformation
         </p>
         <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '60px', letterSpacing: '0.04em' }}>
@@ -225,7 +236,7 @@ export default async function AcceleratorPage() {
             {userCohort.label}
           </span>
           <span className="text-warmCharcoal/20">·</span>
-          <span className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '28px', letterSpacing: '0.1em' }}>
+          <span className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
             Starts {formattedStart}
           </span>
         </div>
@@ -278,10 +289,30 @@ export default async function AcceleratorPage() {
         </div>
       )}
 
+      {/* ═══ Complete Your Profile — Soft Nudge ═══ */}
+      {!isFounder && hasAccess && !hasRegistration && (
+        <Link
+          href="/accelerator/register"
+          className="max-w-2xl mx-auto mb-10 p-4 sm:p-5 rounded-xl flex items-center justify-between gap-4 group transition-all duration-300 hover:shadow-md"
+          style={{
+            background: 'linear-gradient(135deg, rgba(156,136,255,0.05), rgba(230,200,124,0.05))',
+            border: '1px solid rgba(156,136,255,0.12)',
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-lg">✦</span>
+            <p className="font-marcellus text-warmCharcoal/60 text-sm">
+              Complete your profile for a personalized experience
+            </p>
+          </div>
+          <span className="font-marcellus text-lavenderViolet text-sm shrink-0 group-hover:translate-x-1 transition-transform">→</span>
+        </Link>
+      )}
+
       {/* ═══ Welcome — Drop Cap Style ═══ */}
       <div className="max-w-2xl mx-auto mb-14 text-center">
         <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '45px', lineHeight: '1.8' }}>
-          <span className="font-italiana float-left mr-2" style={{ fontSize: '90px', lineHeight: '0.85', color: '#9C88FF', marginTop: '4px' }}>
+          <span className="font-italiana float-left mr-2" style={{ fontSize: '28px', lineHeight: '0.85', color: '#9C88FF', marginTop: '4px' }}>
             W
           </span>
           {userName ? `elcome back, ${userName}${soulIdentity ? ` the ${soulIdentity}` : ''}.` : 'elcome.'}{' '}
@@ -422,7 +453,7 @@ export default async function AcceleratorPage() {
             <Link
               href="/deepen"
               className="inline-block mt-6 px-8 py-3 font-marcellus text-white hover:opacity-90 transition-opacity"
-              style={{ background: '#9C88FF', fontSize: '32px', letterSpacing: '0.15em' }}
+              style={{ background: '#9C88FF', fontSize: '18px', letterSpacing: '0.1em' }}
             >
               CONTINUE WITH DEEPEN →
             </Link>
@@ -437,7 +468,7 @@ export default async function AcceleratorPage() {
           <span className="font-italiana text-warmCharcoal/20" style={{ fontSize: '28px' }}>✦</span>
           <div style={{ height: '1px', width: '40px', background: 'rgba(75, 78, 109, 0.15)' }}></div>
         </div>
-        <p className="font-marcellus text-warmCharcoal/25 mt-3" style={{ fontSize: '25px', letterSpacing: '0.2em' }}>
+        <p className="font-marcellus text-warmCharcoal/25 mt-3" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
           iPurpose™ Accelerator · {userCohort.label}
         </p>
       </div>

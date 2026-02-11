@@ -52,11 +52,11 @@ export function SessionSummaryModal({
             margin: 0;
             padding: 2rem;
           }
-          h1 { font-size: 2.25rem; margin-top: 0; }
-          h2 { font-size: 1.875rem; margin-top: 1.5rem; }
+          h1 { font-size: 2rem; margin-top: 0; }
+          h2 { font-size: 1.5rem; margin-top: 1.5rem; }
           h3 { font-weight: 600; }
           .entry { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
-          .tags { margin-top: 0.5rem; font-size: 0.875rem; }
+          .tags { margin-top: 0.5rem; font-size: 0.85rem; }
           .tag { display: inline-block; background: #f0f0f0; padding: 0.25rem 0.5rem; margin-right: 0.5rem; border-radius: 12px; }
           button { display: none; }
         </style>
