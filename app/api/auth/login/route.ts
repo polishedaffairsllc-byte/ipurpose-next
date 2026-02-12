@@ -98,7 +98,10 @@ export async function POST(req: Request) {
                     ...pendingEntitlements,
                   },
                   // If there were recorded sessions, copy the last one
-                  starterPackPurchaseSessionId: (pending.sessions && pending.sessions.length && pending.sessions[pending.sessions.length - 1]) || undefined,
+                  starterPackPurchaseSessionId:
+                    pending && pending.sessions && pending.sessions.length
+                      ? pending.sessions[pending.sessions.length - 1]
+                      : undefined,
                   updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
                 },
                 { merge: true }

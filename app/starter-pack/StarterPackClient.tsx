@@ -134,7 +134,7 @@ export default function StarterPackClient() {
               Back
             </button>
             <button
-              onClick={() => setCurrent(Math.min(STEPS.length - 1, current + 1))}
+              onClick={() => setCurrent(Math.min(steps.length - 1, current + 1))}
               className="px-4 py-2 bg-indigo-600 text-white rounded"
             >
               Next
