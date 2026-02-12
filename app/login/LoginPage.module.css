@@ -1,14 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Italiana&family=Marcellus&display=swap');
 
-/* Brand Color Palette */
-:root {
-  --deep-indigo: #4B4E6D;
-  --lavender: #9C88FF;
-  --salmon: #FCC4B7;
-  --gold: #D4A657;
-  --stone: #F8F6F3;
-}
-
 /* Layout */
 .page {
   position: fixed;
