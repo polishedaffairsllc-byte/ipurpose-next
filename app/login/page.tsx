@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getFirebaseAuth } from "../../lib/firebaseClient";
 
 export default function LoginPage() {
   const router = useRouter();
+  const search = useSearchParams();
+  const nextParam = search.get('next') || '/dashboard';
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -48,9 +50,9 @@ export default function LoginPage() {
       // Wait a brief moment for cookies to be processed by the browser
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Redirect to dashboard
-      console.log("✅ Redirecting to dashboard...");
-      router.push("/dashboard");
+      // Redirect to requested destination (defaults to dashboard)
+      console.log("✅ Redirecting to:", nextParam);
+      router.push(nextParam);
     } catch (err: any) {
       console.error(err);
       setError(err.message ?? "Login failed. Please try again.");

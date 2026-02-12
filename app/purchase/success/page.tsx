@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { getFirebaseAuth } from '@/lib/firebaseClient';
 
 type VerifyResult = {
   verified: boolean;
@@ -14,9 +15,11 @@ type VerifyResult = {
 export default function PurchaseSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id') || searchParams.get('sessionId');
+  const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<VerifyResult | null>(null);
+  const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
     if (!sessionId) {
@@ -41,6 +44,20 @@ export default function PurchaseSuccessPage() {
     verify();
   }, [sessionId]);
 
+  // detect client auth state and redirect if already signed in
+  useEffect(() => {
+    const auth = getFirebaseAuth();
+    const unsub = auth.onAuthStateChanged((u) => {
+      const signedIn = !!u;
+      setAuthed(signedIn);
+      // If user is signed in, send them to the canonical starter-pack page.
+      if (signedIn) {
+        router.replace('/starter-pack');
+      }
+    });
+    return () => unsub();
+  }, [router]);
+
   const starterUrl = process.env.NEXT_PUBLIC_STARTER_PACK_URL || '/starter-pack';
 
   return (
@@ -58,24 +75,40 @@ export default function PurchaseSuccessPage() {
 
       {!loading && result && result.verified && (
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Welcome to the Starter Pack</h2>
-          <p className="mb-6">We've emailed your Starter Pack to <strong>{result.email}</strong>. You can also begin the Starter Pack workspace now.</p>
+          <h2 className="text-2xl font-semibold mb-4">Your Starter Pack purchase is confirmed.</h2>
 
-          <a
-            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md mr-3"
-            href="/starter-pack"
-          >
-            Begin Starter Pack
-          </a>
+          {/* If user is not authenticated, show claim screen with login/register buttons. */}
+          {!authed && (
+            <div>
+              <p className="mb-4">Create an account or sign in to unlock access.</p>
 
-          <a
-            className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md ml-3"
-            href={starterUrl}
-          >
-            Download Materials
-          </a>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <a
+                  className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md"
+                  href={`/login?next=/starter-pack`}
+                >
+                  Sign in
+                </a>
 
-          <p className="mt-6 text-sm text-gray-600">If you don't see the email, check your spam folder or reply to support.</p>
+                <a
+                  className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-md"
+                  href={`/signup?next=/starter-pack`}
+                >
+                  Create account
+                </a>
+              </div>
+
+              <p className="text-sm text-gray-600">If you paid with <strong>{result.email}</strong>, sign in with that same email to claim access.</p>
+            </div>
+          )}
+
+          {/* If already authed we redirected earlier; keep a fallback CTA */}
+          {authed && (
+            <div>
+              <p className="mb-6">We've emailed your Starter Pack to <strong>{result.email}</strong>. You can also begin the Starter Pack workspace now.</p>
+              <a className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md" href="/starter-pack">Begin Starter Pack</a>
+            </div>
+          )}
         </div>
       )}
     </div>
