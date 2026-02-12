@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { getEnrollableCohort } from '@/lib/accelerator/stages';
 
 export default function ProgramEnrollButton() {
   const [loading, setLoading] = useState(false);
@@ -11,12 +12,13 @@ export default function ProgramEnrollButton() {
     setError(null);
 
     try {
+      const cohort = getEnrollableCohort();
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           product: 'accelerator',
-          cohort: '2026-03',
+          cohort: cohort.id,
         }),
       });
 

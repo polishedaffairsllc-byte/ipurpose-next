@@ -1,3 +1,9 @@
+
+<style>
+body, html {
+  font-size: 18px;
+}
+</style>
 # iPurpose Platform Launch Readiness Report
 
 **Date:** February 11, 2026  

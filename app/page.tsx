@@ -73,26 +73,26 @@ export default async function Home() {
         </div>
         <div className="relative w-full bg-black/20 backdrop-blur-sm px-4 sm:px-6 lg:px-12" style={{ zIndex: 10, paddingTop: '0.0045rem', paddingBottom: '6rem' }}>
           <div className="max-w-7xl mx-auto">
-            <h2 className="font-italiana text-center mb-8 sm:mb-12 md:mb-16" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)', fontSize: '32px' }}>
+            <h2 className="font-italiana text-center mb-8 sm:mb-12 md:mb-16 text-6xl" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)', fontSize: '96px' }}>
               Start Your Journey
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                <h3 className="font-italiana mb-4 !text-white" style={{ color: '#FFFFFF', fontSize: '24px' }}>Clarity Check</h3>
+                <h3 className="font-italiana mb-4 !text-white text-5xl" style={{ color: '#FFFFFF', fontSize: '72px' }}>Clarity Check</h3>
                 <p className="!text-white mb-6" style={{ color: '#FFFFFF', fontSize: '18px' }}>Take a guided assessment to discover your core values and purpose.</p>
                 <Link href="/clarity-check" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF', fontSize: '18px' }}>
                   Start Assessment
                 </Link>
               </div>
               <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                <h3 className="font-italiana mb-4 !text-white" style={{ color: '#FFFFFF', fontSize: '24px' }}>Starter Pack</h3>
+                <h3 className="font-italiana mb-4 !text-white text-5xl" style={{ color: '#FFFFFF', fontSize: '72px' }}>Starter Pack</h3>
                 <p className="!text-white mb-6" style={{ color: '#FFFFFF', fontSize: '18px' }}>Get foundational tools and exercises to begin your clarity journey.</p>
                 <Link href="/starter-pack" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #e6c87c, rgba(230, 200, 124, 0.7))', color: '#FFFFFF', fontSize: '18px' }}>
                   Explore Offer
                 </Link>
               </div>
               <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all md:col-span-2 lg:col-span-1 text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                <h3 className="font-italiana mb-4 !text-white" style={{ color: '#FFFFFF', fontSize: '24px' }}>AI Blueprint</h3>
+                <h3 className="font-italiana mb-4 !text-white text-5xl" style={{ color: '#FFFFFF', fontSize: '72px' }}>AI Blueprint</h3>
                 <p className="!text-white mb-6" style={{ color: '#FFFFFF', fontSize: '18px' }}>Let AI help you build a personalized action plan for clarity.</p>
                 <Link href="/ai-blueprint" className="inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full font-marcellus transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9c88ff, rgba(156, 136, 255, 0.7))', color: '#FFFFFF', fontSize: '18px' }}>
                   Explore Offer

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
+import { getEnrollableCohort } from '@/lib/accelerator/stages';
 
 export const metadata: Metadata = {
   title: 'iPurpose Accelerator™ — From Insight to Action',
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
 };
 
 export default function ProgramPage() {
+  const cohort = getEnrollableCohort();
+  const cohortStart = new Date(cohort.startDate);
+  const cohortLabel = cohort.label;
+  const cohortMonth = cohortStart.toLocaleString('default', { month: 'long' });
+  const cohortYear = cohortStart.getFullYear();
   return (
     <div className="relative min-h-screen bg-white">
       {/* Public Header */}
@@ -128,7 +134,7 @@ export default function ProgramPage() {
               <strong>Cohort Size:</strong> 8–12 people to keep it intimate and real.
             </p>
             <p>
-              <strong>Next Cohort:</strong> Launching March 2026. Limited spots available.
+              <strong>Next Cohort:</strong> Launching {cohortLabel} ({cohortMonth} {cohortYear}). Limited spots available.
             </p>
             <p>
               <strong>Time Commitment:</strong> ~3–4 hours per week (1.5 hours live + 1.5–2.5 hours self-guided work).

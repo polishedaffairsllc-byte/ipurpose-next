@@ -287,11 +287,7 @@ export default async function AcceleratorWeekPage({ params }: Props) {
                 >
                   Open →
                 </a>
-              ) : (
-                <span className="shrink-0 font-marcellus text-warmCharcoal/25 italic" style={{ fontSize: '28px' }}>
-                  Forthcoming
-                </span>
-              )}
+              ) : null}
             </div>
           ))}
         </div>

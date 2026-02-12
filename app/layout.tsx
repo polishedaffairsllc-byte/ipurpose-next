@@ -35,7 +35,7 @@ export default function RootLayout({
           gtag('config', 'G-XXXXXXXXXX');
         ` }} />
       </head>
-      <body className="min-h-screen font-marcellus text-warmCharcoal">
+      <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
         <div className="fixed inset-0 -z-40">
           <VideoBackground src="/videos/water-reflection.mp4" />
         </div>

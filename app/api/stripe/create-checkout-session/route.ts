@@ -67,18 +67,47 @@ export async function POST(request: NextRequest) {
     }
 
     const stripe = getStripe();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+    // Dynamically determine domain from request headers
+    const headers = request.headers;
+    const proto = headers.get('x-forwarded-proto') || 'https';
+    const host = headers.get('x-forwarded-host') || headers.get('host') || 'localhost:3000';
+    let baseUrl = `${proto}://${host}`;
+
+    // Stripe livemode check
+    const stripeKey = process.env.STRIPE_SECRET_KEY || '';
+    const isLiveMode = stripeKey.startsWith('sk_live_');
+    const allowlist = [
+      'https://ipurposesoul.com',
+      'https://ipurposesoul.online',
+      'https://mshmltn.com',
+    ];
+
+    // If in live mode and host is localhost/127.0.0.1, force to primary domain
+    if (isLiveMode && (host.includes('localhost') || host.includes('127.0.0.1'))) {
+      baseUrl = allowlist[0]; // primary domain
+    }
+
+    // If in live mode and host is not in allowlist, fallback to primary domain
+    if (isLiveMode && !allowlist.some((allowed) => baseUrl.startsWith(allowed))) {
+      baseUrl = allowlist[0];
+    }
+
+    // Log chosen base URL and incoming host/proto
+    console.log('[Stripe Checkout] Base URL:', baseUrl, '| Incoming host:', host, '| Proto:', proto);
 
     // Get success and cancel URLs
-    let successUrl = PRODUCT_SUCCESS_URL_MAP[product] || '/';
-    const cancelUrl = PRODUCT_CANCEL_URL_MAP[product] || '/';
+    let successUrlPath = PRODUCT_SUCCESS_URL_MAP[product] || '/';
+    let cancelUrlPath = PRODUCT_CANCEL_URL_MAP[product] || '/';
 
     // For accelerator, preserve the session ID placeholder
+    let successUrl;
     if (product === 'accelerator') {
-      successUrl = `${appUrl}/enroll/create-account?session_id={CHECKOUT_SESSION_ID}`;
+      successUrl = `${baseUrl}/enroll/create-account?session_id={CHECKOUT_SESSION_ID}`;
     } else {
-      successUrl = `${appUrl}${successUrl}`;
+      successUrl = `${baseUrl}${successUrlPath}`;
     }
+    const cancelUrl = `${baseUrl}${cancelUrlPath}`;
 
     const isSubscription = product === 'deepen_membership';
 
@@ -91,7 +120,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       success_url: successUrl,
-      cancel_url: `${appUrl}${cancelUrl}`,
+      cancel_url: cancelUrl,
       ...(isSubscription ? {} : { customer_creation: 'always' }),
       allow_promotion_codes: true,
       metadata: {
