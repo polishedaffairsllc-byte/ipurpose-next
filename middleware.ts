@@ -96,10 +96,15 @@ function getTierFromRequest(request: NextRequest): EntitlementTier {
 }
 
 export async function middleware(request: NextRequest) {
-  // Temporary: bypass entitlement/auth gating entirely to stop redirects to enrollment/accelerator.
+  // In development, keep the temporary bypass to simplify local testing.
+  // In production, do not force the `x-user-tier` header so real entitlements are respected.
   const response = NextResponse.next();
   response.headers.set('x-pathname', request.nextUrl.pathname);
-  response.headers.set('x-user-tier', 'DEEPENING');
+
+  if (process.env.NODE_ENV === 'development') {
+    response.headers.set('x-user-tier', 'DEEPENING');
+  }
+
   return response;
 }
 

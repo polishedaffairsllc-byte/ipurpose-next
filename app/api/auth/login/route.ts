@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { deriveFounderContext } from "@/lib/isFounder";
+import crypto from 'crypto';
 
 // Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
 export const runtime = "nodejs";
@@ -74,6 +75,50 @@ export async function POST(req: Request) {
           entitlementTier: founderContext.entitlementTier ?? 'founder',
         };
         console.log(`[LOGIN] Synced founder fields to Firestore for UID ${uid}`);
+      }
+
+      // Reconciliation: migrate any pending entitlements keyed by email hash
+      try {
+        const email = decoded.email;
+        if (email) {
+          const normalized = String(email).trim().toLowerCase();
+          const emailHash = crypto.createHash('sha256').update(normalized).digest('hex');
+          const pendingRef = db.collection('pending_entitlements').doc(emailHash);
+          const pendingDoc = await pendingRef.get();
+          if (pendingDoc.exists) {
+            const pending = pendingDoc.data();
+            const pendingEntitlements = pending?.entitlements || {};
+
+            if (Object.keys(pendingEntitlements).length > 0) {
+              // Merge pending entitlements onto the canonical user doc
+              await userRef.set(
+                {
+                  entitlements: {
+                    ...(userData?.entitlements || {}),
+                    ...pendingEntitlements,
+                  },
+                  // If there were recorded sessions, copy the last one
+                  starterPackPurchaseSessionId: (pending.sessions && pending.sessions.length && pending.sessions[pending.sessions.length - 1]) || undefined,
+                  updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+                },
+                { merge: true }
+              );
+
+              await pendingRef.set(
+                {
+                  claimed: true,
+                  claimedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+                  claimedByUid: uid,
+                },
+                { merge: true }
+              );
+
+              console.log(`migrated pending entitlement for email=${email} to uid=${uid}`);
+            }
+          }
+        }
+      } catch (reconErr) {
+        console.error('[LOGIN] Pending entitlement reconciliation failed:', reconErr);
       }
     } catch (err) {
       console.error("[LOGIN] Error verifying idToken for custom claims:", err);

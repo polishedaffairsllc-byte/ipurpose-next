@@ -1,3 +1,42 @@
+import { cookies } from 'next/headers';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import StarterPackLanding from './StarterPackLandingClient';
+import StarterPackWorkspace from './StarterPackWorkspaceClient';
+
+// Server-side guarded page: show workspace only when user's Firestore user doc
+// has `entitlements.starterPack === true`. Otherwise show the public landing.
+export default async function Page() {
+  let isEntitled = false;
+  let email: string | null = null;
+
+  try {
+    const cookie = cookies().get('FirebaseSession')?.value;
+    if (cookie) {
+      // Verify session cookie and fetch user document
+      const decoded = await firebaseAdmin.auth().verifySessionCookie(cookie, true);
+      const uid = (decoded as any).uid as string;
+      if (uid) {
+        const userDoc = await firebaseAdmin.firestore().collection('users').doc(uid).get();
+        if (userDoc.exists) {
+          const ent = userDoc.get('entitlements') || {};
+          isEntitled = !!ent.starterPack;
+          email = userDoc.get('email') || null;
+        }
+      }
+    }
+  } catch (err) {
+    // If anything fails, treat as not entitled (user will see landing/purchase flow)
+    console.warn('Starter pack entitlement check failed:', err);
+    isEntitled = false;
+  }
+
+  // Render client components based on entitlement
+  if (isEntitled) {
+    return <StarterPackWorkspace email={email} />;
+  }
+
+  return <StarterPackLanding />;
+}
 'use client';
 
 import { useState } from 'react';
