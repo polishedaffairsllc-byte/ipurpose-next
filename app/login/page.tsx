@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getFirebaseAuth } from "../../lib/firebaseClient";
+import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -53,107 +54,82 @@ export default function LoginPage() {
       // Redirect to requested destination (defaults to dashboard)
       console.log("✅ Redirecting to:", nextParam);
       router.push(nextParam);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message ?? "Login failed. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Login failed. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Home Button */}
-      <div className="w-full flex justify-start px-6 py-4 md:px-8 md:py-6">
-        <a 
-          href="/" 
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            paddingLeft: '1rem',
-            paddingRight: '1rem',
-            paddingTop: '0.5rem',
-            paddingBottom: '0.5rem',
-            borderRadius: '0.5rem',
-            background: 'linear-gradient(135deg, #9C88FF 0%, #6B5B95 100%)',
-            color: 'white',
-            fontFamily: 'Marcellus, serif',
-            fontSize: '0.875rem',
-            fontWeight: '500',
-            textDecoration: 'none',
-            boxShadow: '0 4px 12px rgba(156, 136, 255, 0.3)',
-            transition: 'all 0.3s ease-in-out',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = '0 8px 20px rgba(156, 136, 255, 0.5)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(156, 136, 255, 0.3)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" style={{ width: '1.25rem', height: '1.25rem' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9M4.5 10.5V19a2.5 2.5 0 002.5 2.5h2A2.5 2.5 0 0011.5 19v-3.5a2.5 2.5 0 012.5-2.5h0a2.5 2.5 0 012.5 2.5V19a2.5 2.5 0 002.5 2.5h2A2.5 2.5 0 0021 19v-8.5" />
-          </svg>
-          Home
-        </a>
-      </div>
-      {/* Hero Section with Background Image */}
-      <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-16 sm:py-20 md:py-32">
-          <section
-            className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden"
-            style={{
-              backgroundImage: 'url(/images/360_F_180837604_UyJZNTHPluIJNQJjmTkCpE4XLJ03Zott.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black/50"></div>
-
-            <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl" style={{ lineHeight: '1.2', paddingBottom: '0.5em' }}>
-              Let's get started
-            </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-lg sm:text-2xl md:text-3xl lg:text-4xl" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
-              Access your dashboard and unlock your potential
-            </p>
-          </section>
-        </div>
-      </div>
-
-      {/* Login Form */}
-      <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-white to-lavenderViolet/10 px-2 py-8">
-        <div className="w-full max-w-md flex flex-col items-center justify-center">
-          <div className="ipurpose-glow-container w-full">
-            <div className="relative ipurpose-card px-4 py-6 md:px-6 md:py-7 flex flex-col items-center">
-              <div className="text-center mb-4 w-full">
-                <h2 className="heading-hero mb-1 text-2xl md:text-3xl" style={{ lineHeight: '1.2', paddingBottom: '0.5em' }}>Log In</h2>
-                <p className="font-marcellus text-warmCharcoal/70 text-sm md:text-base">Access your dashboard and AI tools</p>
-              </div>
-              <form onSubmit={handleLogin} className="w-full space-y-3">
-                <div>
-                  <label htmlFor="email" className="block text-xs font-medium text-warmCharcoal mb-1">Email</label>
-                  <input id="email" type="email" className="ipurpose-input" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </div>
-                <div>
-                  <label htmlFor="password" className="block text-xs font-medium text-warmCharcoal mb-1">Password</label>
-                  <input id="password" type="password" className="ipurpose-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </div>
-                {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs text-center">{error}</div>
-                )}
-                <button type="submit" disabled={loading} className="ipurpose-button-gradient w-full text-base">{loading ? "Logging in..." : "Login"}</button>
-            </form>
-            <div className="mt-3 text-center w-full">
-              <p className="text-xs text-warmCharcoal/60">Don't have an account?{' '}
-                <a href="/signup" className="text-lavenderViolet font-marcellus hover:text-indigoDeep transition-colors">Sign up</a>
-              </p>
+    <div className={styles.page}>
+      <div className={styles.center}>
+        {/* Brand Visual - Left Column */}
+        <div className={styles.visual}>
+          <div className={styles.brand}>
+            <div className={styles.logo} />
+            <div className={styles.brandText}>
+              <div className={styles.brandTitle}>iPurpose</div>
+              <div className={styles.brandTag}>Where Alignment Meets Action</div>
             </div>
+          </div>
+        </div>
+
+        {/* Login Form - Right Column */}
+        <div className={styles.cardWrapper}>
+          <div className={styles.card}>
+            <h2 className={styles.title}>Welcome Back</h2>
+            <p className={styles.subtitle}>Sign in to access your dashboard</p>
+            
+            <form onSubmit={handleLogin} className={styles.form}>
+              <div className={styles.field}>
+                <label htmlFor="email" className={styles.label}>Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  className={styles.input}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+
+              <div className={styles.field}>
+                <label htmlFor="password" className={styles.label}>Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  className={styles.input}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+
+              {error && (
+                <div className={styles.error}>{error}</div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className={styles.submit}
+              >
+                {loading ? "Signing in..." : "Sign In"}
+              </button>
+
+              <div className={styles.row}>
+                <a href="/forgot-password" className={styles.link}>Forgot password?</a>
+                <a href="/signup" className={styles.secondary}>Sign up</a>
+              </div>
+            </form>
+
+            <div className={styles.footer}>
+              © 2026 iPurpose. All rights reserved.
             </div>
           </div>
         </div>
