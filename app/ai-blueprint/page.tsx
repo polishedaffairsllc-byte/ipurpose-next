@@ -1,228 +1,40 @@
-'use client';
+import { cookies } from 'next/headers';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import AIBlueprintLandingClient from './AIBlueprintLandingClient';
+import AIBlueprintWorkspace from './AIBlueprintWorkspaceClient';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import PublicHeader from '../components/PublicHeader';
-import Footer from '../components/Footer';
+export const dynamic = 'force-dynamic';
 
-export default function AIBlueprintPage() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+// Server-only page: session cookie verification + entitlement check.
+// Shows landing (sales page) or workspace (interactive workbook + AI tools unlock).
+export default async function Page() {
+  let isEntitled = false;
+  let email: string | null = null;
+  let claimed = false;
 
-  const handleCheckout = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product: 'ai_blueprint' }),
-      });
+  try {
+    const cookieJar = await cookies();
+    const cookie = cookieJar.get('FirebaseSession')?.value;
+    claimed = Boolean(cookieJar.get('aiBlueprintClaimed')?.value);
 
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
-        return;
+    if (cookie && firebaseAdmin.apps.length > 0) {
+      const decoded = await firebaseAdmin.auth().verifySessionCookie(cookie, true);
+      const uid = (decoded as any).uid as string;
+      if (uid) {
+        const userDoc = await firebaseAdmin.firestore().collection('users').doc(uid).get();
+        if (userDoc.exists) {
+          const ent = userDoc.get('entitlements') || {};
+          isEntitled = !!ent.aiBlueprint;
+          email = userDoc.get('email') || null;
+        }
       }
-
-      window.location.href = data.url;
-    } catch (err) {
-      setError('Failed to start checkout. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (err) {
+    console.warn('AI Blueprint entitlement check failed:', err);
+    isEntitled = false;
+  }
 
-  return (
-    <div className="relative z-10 min-h-screen bg-white">
-      <PublicHeader />
+  if (isEntitled) return <AIBlueprintWorkspace email={email} claimed={claimed} />;
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32">
-          <section 
-            className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-6"
-            style={{
-              backgroundImage: 'url(/images/cosmic-timetraveler-XPraChyTx68-unsplash.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black/50"></div>
-            
-            <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-              iPurpose<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span> Blueprint
-            </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '55px' }}>
-              Design your purpose-aligned systems with AI
-            </p>
-          </section>
-          <div className="text-center">
-            <p className="text-warmCharcoal/80 mb-6 sm:mb-8 text-[45px] text-center">
-              Use AI without losing your voice, values, or peace.
-            </p>
-            <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[45px] text-center">
-              A practical, beginner-friendly guide to help you integrate AI into your workflow ethically—so you can plan, write, organize, and create with more ease.
-            </p>
-
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-                {error}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* What You'll Receive */}
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-        <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
-          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-          <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
-          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-        </div>
-        <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-12 text-center">
-          What You'll Receive
-        </h2>
-        <div className="space-y-8">
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-lavenderViolet/5 to-transparent rounded-lg border border-lavenderViolet/20 text-center">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Plain-Language AI Explanation
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              No tech jargon. Just clarity on what AI can do, what it can't, and why that matters for your work and integrity.
-            </p>
-          </div>
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-salmonPeach/5 to-transparent rounded-lg border border-salmonPeach/20 text-center">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Guided Prompts for Real Work
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              Ready-to-use templates for clarity, content, planning, and workflow. Designed for your actual projects, not hypotheticals.
-            </p>
-          </div>
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-indigoDeep/5 to-transparent rounded-lg border border-indigoDeep/20 text-center">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Simple Examples You Can Copy
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              See how AI supports your work without replacing you. Real-world examples show what to automate and what to keep human.
-            </p>
-          </div>
-          <div className="p-4 sm:p-6 bg-gradient-to-br from-softGold/5 to-transparent rounded-lg border border-softGold/20 text-center">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Boundaries & Best Practices
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              Feel safe and grounded. Clear guidelines on ethical AI use so you're not just chasing trends.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Who It's For */}
-      <div className="bg-gradient-to-br from-lavenderViolet/5 via-transparent to-salmonPeach/5">
-        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-          <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
-            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-            <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
-            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-          </div>
-          <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-12 text-center">
-            Who It's For
-          </h2>
-          <div className="space-y-4 text-warmCharcoal/80 text-[45px] text-center">
-            <p>
-              <strong>You feel behind on AI</strong> and want a clean starting point that doesn't overwhelm.
-            </p>
-            <p>
-              <strong>You want structure, not tool overload.</strong> No 47 different tools—just the essentials, done right.
-            </p>
-            <p>
-              <strong>You care about integrity</strong> and don't want to build "soulless automation."
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ */}
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-        <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
-          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-          <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
-          <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-        </div>
-        <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-12 text-center">
-          FAQ
-        </h2>
-        <div className="space-y-8 text-center">
-          <div className="space-y-2">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Do I need ChatGPT Plus or any paid tools?
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              No. This guide works with free versions of popular AI tools. You can start immediately.
-            </p>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Is this a full course?
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              No. It's a focused mini-offer and guide built for fast implementation. Not a 12-week program.
-            </p>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-[45px] font-marcellus text-warmCharcoal mb-2 text-center">
-              Will this teach advanced automation?
-            </h3>
-            <p className="text-warmCharcoal/70 text-[45px] text-center">
-              No. This is foundational and intentional—designed to help you feel confident and grounded, not overwhelmed by complexity.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Final CTA */}
-      <div className="bg-gradient-to-br from-lavenderViolet/10 via-transparent to-salmonPeach/10">
-        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 md:py-24">
-          <div className="flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-6" aria-hidden="true">
-            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-            <span style={{ fontSize: '20px', color: '#9C88FF' }}>✦</span>
-            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-          </div>
-          <h2 className="text-[55px] font-marcellus text-warmCharcoal mb-6 sm:mb-8 text-center">
-            Ready to Use AI With Intention?
-          </h2>
-          <p className="text-warmCharcoal/70 mb-8 sm:mb-12 max-w-2xl mx-auto text-[45px] text-center">
-            Get your practical blueprint today.
-          </p>
-          <div className="space-y-3 sm:space-y-4 flex flex-col">
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
-            >
-              {loading ? 'Loading...' : 'Get the AI Blueprint — $47'}
-            </button>
-            <Link
-              href="/starter-pack"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px' }}
-            >
-              Start with Purpose First
-            </Link>
-            <p className="text-sm text-warmCharcoal/50 text-center mt-4">
-              Already purchased? <Link href="/login?next=/ai-blueprint" className="underline text-lavenderViolet">Sign in to access your Blueprint</Link>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <Footer />
-    </div>
-  );
+  return <AIBlueprintLandingClient />;
 }

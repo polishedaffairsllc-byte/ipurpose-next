@@ -253,6 +253,80 @@ export async function POST(request: NextRequest) {
   </div>
 </body>
 </html>`;
+          } else if (product === 'ai_blueprint') {
+            // Branded AI Blueprint welcome email
+            emailSubject = `Your iPurpose AI Blueprint is ready${firstName ? `, ${firstName}` : ''} 🤖`;
+            emailHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { margin: 0; padding: 0; background: #f8f6f3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #2A2A2A; }
+    .wrapper { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+    .card { background: #ffffff; border-radius: 16px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(107, 91, 149, 0.08); }
+    .logo { text-align: center; margin-bottom: 24px; }
+    .logo-text { font-size: 28px; font-weight: 700; color: #6B5B95; letter-spacing: 1px; }
+    .tagline { text-align: center; font-size: 14px; color: #9C88FF; font-style: italic; margin-bottom: 32px; }
+    h1 { font-size: 24px; color: #2A2A2A; margin: 0 0 16px 0; line-height: 1.3; }
+    p { font-size: 16px; line-height: 1.7; color: #444; margin: 0 0 16px 0; }
+    .highlight { background: linear-gradient(135deg, rgba(107,91,149,0.08), rgba(156,136,255,0.08)); border-left: 4px solid #6B5B95; padding: 16px 20px; border-radius: 8px; margin: 24px 0; }
+    .highlight p { margin: 0; font-size: 15px; color: #555; }
+    .cta { display: inline-block; background: linear-gradient(135deg, #6B5B95, #9C88FF); color: #ffffff !important; text-decoration: none; padding: 14px 32px; border-radius: 50px; font-weight: 600; font-size: 16px; margin: 24px 0; }
+    .steps { margin: 24px 0; }
+    .step { display: flex; align-items: flex-start; margin-bottom: 12px; }
+    .step-num { background: #6B5B95; color: white; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; margin-right: 12px; flex-shrink: 0; }
+    .step-text { font-size: 15px; color: #444; padding-top: 3px; }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, #d5cef0, transparent); margin: 28px 0; }
+    .footer { text-align: center; font-size: 13px; color: #999; margin-top: 24px; }
+    .footer a { color: #9C88FF; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div class="logo">
+        <div class="logo-text">iPurpose</div>
+      </div>
+      <div class="tagline">Where Alignment Meets Action</div>
+
+      <h1>${firstName ? `${firstName}, your` : 'Your'} AI Blueprint is ready 🤖</h1>
+
+      <p>Thank you for investing in yourself. The iPurpose AI Blueprint is an interactive workbook that helps you use AI with intention — without losing your voice, values, or peace.</p>
+
+      <div class="highlight">
+        <p><strong>Your workbook saves automatically</strong> — come back anytime to refine your values, update your workflow map, or try new prompts.</p>
+      </div>
+
+      <p><strong>Here's what's inside:</strong></p>
+
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><span class="step-text">AI Readiness Check</span></div>
+        <div class="step"><span class="step-num">2</span><span class="step-text">Your Values Filter</span></div>
+        <div class="step"><span class="step-num">3</span><span class="step-text">Prompt Library</span></div>
+        <div class="step"><span class="step-num">4</span><span class="step-text">Your AI Workflow Map</span></div>
+        <div class="step"><span class="step-num">5</span><span class="step-text">Ethical Guardrails</span></div>
+      </div>
+
+      <p>Plus, you get access to the <strong>iPurpose AI Tools Studio</strong> — a live playground to put your new prompts into action.</p>
+
+      <div style="text-align:center;">
+        <a href="${productUrl}" class="cta">Open Your AI Blueprint →</a>
+      </div>
+
+      <p style="font-size:14px;color:#777;margin-top:24px;">If you haven't created an account yet, <a href="${siteUrl}/signup?next=${encodeURIComponent(productPath)}" style="color:#6B5B95;">sign up here</a> using the same email you purchased with (<strong>${email}</strong>).</p>
+
+      <div class="divider"></div>
+
+      <p style="font-size:14px;color:#777;">Questions? Just reply to this email — I read every message.</p>
+      <p style="font-size:14px;color:#777;">With purpose,<br><strong>Renita Hamilton</strong><br>Founder, iPurpose</p>
+    </div>
+    <div class="footer">
+      <p>© ${new Date().getFullYear()} iPurpose · <a href="${siteUrl}">ipurposesoul.com</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
           } else {
             // Generic fulfillment email for other products
             emailSubject = `Your iPurpose ${productDisplayName}`;
