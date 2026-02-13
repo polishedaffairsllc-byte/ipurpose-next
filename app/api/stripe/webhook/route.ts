@@ -165,8 +165,10 @@ export async function POST(request: NextRequest) {
       try {
         const resendApiKey = process.env.RESEND_API_KEY;
         const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@ipurposesoul.com';
+        const replyTo = process.env.FOUNDER_NOTIFY_EMAIL || 'renita@ipurposesoul.com';
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipurposesoul.com';
         const productUrl = `${siteUrl}${productPath}`;
+        const firstName = session.customer_details?.name?.split(' ')[0] || '';
 
         if (!resendApiKey) {
           console.warn('RESEND_API_KEY not configured. Skipping fulfillment email.');
@@ -174,19 +176,112 @@ export async function POST(request: NextRequest) {
           const { Resend } = await import('resend');
           const resend = new Resend(resendApiKey);
 
-          const emailHtml = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#222} .container{max-width:600px;margin:0 auto;padding:20px}</style></head><body><div class="container"><h2>Your ${productDisplayName}</h2><p>Thanks for your purchase! Access your ${productDisplayName} here:</p><p><a href="${productUrl}" target="_blank">Go to ${productDisplayName}</a></p><p>If you don't have an account yet, <a href="${siteUrl}/signup?next=${encodeURIComponent(productPath)}">create one here</a> using the same email you purchased with.</p><p>If you have any trouble, reply to this email and we'll help.</p><p>— iPurpose Team</p></div></body></html>`;
+          let emailSubject: string;
+          let emailHtml: string;
+
+          if (product === 'starter_pack') {
+            // Branded Starter Pack welcome email
+            emailSubject = `Welcome to the iPurpose Starter Pack${firstName ? `, ${firstName}` : ''} ✨`;
+            emailHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { margin: 0; padding: 0; background: #f8f6f3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #2A2A2A; }
+    .wrapper { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+    .card { background: #ffffff; border-radius: 16px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(156, 136, 255, 0.08); }
+    .logo { text-align: center; margin-bottom: 24px; }
+    .logo-text { font-size: 28px; font-weight: 700; color: #6B5B95; letter-spacing: 1px; }
+    .tagline { text-align: center; font-size: 14px; color: #9C88FF; font-style: italic; margin-bottom: 32px; }
+    h1 { font-size: 24px; color: #2A2A2A; margin: 0 0 16px 0; line-height: 1.3; }
+    p { font-size: 16px; line-height: 1.7; color: #444; margin: 0 0 16px 0; }
+    .highlight { background: linear-gradient(135deg, rgba(156,136,255,0.08), rgba(230,200,124,0.08)); border-left: 4px solid #9C88FF; padding: 16px 20px; border-radius: 8px; margin: 24px 0; }
+    .highlight p { margin: 0; font-size: 15px; color: #555; }
+    .cta { display: inline-block; background: linear-gradient(135deg, #9C88FF, #6B5B95); color: #ffffff !important; text-decoration: none; padding: 14px 32px; border-radius: 50px; font-weight: 600; font-size: 16px; margin: 24px 0; }
+    .steps { margin: 24px 0; }
+    .step { display: flex; align-items: flex-start; margin-bottom: 12px; }
+    .step-num { background: #9C88FF; color: white; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; margin-right: 12px; flex-shrink: 0; }
+    .step-text { font-size: 15px; color: #444; padding-top: 3px; }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, #e5e1f5, transparent); margin: 28px 0; }
+    .footer { text-align: center; font-size: 13px; color: #999; margin-top: 24px; }
+    .footer a { color: #9C88FF; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <div class="logo">
+        <div class="logo-text">iPurpose</div>
+      </div>
+      <div class="tagline">Where Alignment Meets Action</div>
+
+      <h1>${firstName ? `${firstName}, your` : 'Your'} Starter Pack is ready ✨</h1>
+
+      <p>Thank you for investing in yourself. The iPurpose Starter Pack is a guided workbook designed to help you uncover your purpose, clarify your values, and take aligned action.</p>
+
+      <div class="highlight">
+        <p><strong>Your workbook saves automatically</strong> — you can come back anytime and pick up right where you left off.</p>
+      </div>
+
+      <p><strong>Here's what's inside:</strong></p>
+
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><span class="step-text">Grounding in the Present</span></div>
+        <div class="step"><span class="step-num">2</span><span class="step-text">Vision Alignment</span></div>
+        <div class="step"><span class="step-num">3</span><span class="step-text">Self-Discovery & Alignment</span></div>
+        <div class="step"><span class="step-num">4</span><span class="step-text">Core Values & Passions</span></div>
+        <div class="step"><span class="step-num">5</span><span class="step-text">Energy & Flow</span></div>
+        <div class="step"><span class="step-num">6</span><span class="step-text">Purpose in Action</span></div>
+        <div class="step"><span class="step-num">7</span><span class="step-text">Integration & Next Steps</span></div>
+      </div>
+
+      <div style="text-align:center;">
+        <a href="${productUrl}" class="cta">Open Your Starter Pack →</a>
+      </div>
+
+      <p style="font-size:14px;color:#777;margin-top:24px;">If you haven't created an account yet, <a href="${siteUrl}/signup?next=${encodeURIComponent(productPath)}" style="color:#9C88FF;">sign up here</a> using the same email you purchased with (<strong>${email}</strong>).</p>
+
+      <div class="divider"></div>
+
+      <p style="font-size:14px;color:#777;">Questions? Just reply to this email — I read every message.</p>
+      <p style="font-size:14px;color:#777;">With purpose,<br><strong>Renita Hamilton</strong><br>Founder, iPurpose</p>
+    </div>
+    <div class="footer">
+      <p>© ${new Date().getFullYear()} iPurpose · <a href="${siteUrl}">ipurposesoul.com</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+          } else {
+            // Generic fulfillment email for other products
+            emailSubject = `Your iPurpose ${productDisplayName}`;
+            emailHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#222;background:#f8f6f3;margin:0;padding:0}.wrapper{max-width:600px;margin:0 auto;padding:40px 20px}.card{background:#fff;border-radius:16px;padding:40px 32px;box-shadow:0 4px 24px rgba(156,136,255,0.08)}.logo{text-align:center;font-size:28px;font-weight:700;color:#6B5B95;margin-bottom:8px}.tagline{text-align:center;font-size:14px;color:#9C88FF;font-style:italic;margin-bottom:32px}h2{color:#2A2A2A;margin:0 0 16px}p{font-size:16px;line-height:1.7;color:#444;margin:0 0 16px}.cta{display:inline-block;background:linear-gradient(135deg,#9C88FF,#6B5B95);color:#fff!important;text-decoration:none;padding:14px 32px;border-radius:50px;font-weight:600;font-size:16px;margin:16px 0}.footer{text-align:center;font-size:13px;color:#999;margin-top:24px}</style></head>
+<body><div class="wrapper"><div class="card">
+<div class="logo">iPurpose</div><div class="tagline">Where Alignment Meets Action</div>
+<h2>${firstName ? `${firstName}, your` : 'Your'} ${productDisplayName} is ready</h2>
+<p>Thank you for your purchase! Access your ${productDisplayName} here:</p>
+<div style="text-align:center"><a href="${productUrl}" class="cta">Open ${productDisplayName} →</a></div>
+<p style="font-size:14px;color:#777">If you don't have an account yet, <a href="${siteUrl}/signup?next=${encodeURIComponent(productPath)}" style="color:#9C88FF">sign up here</a> using <strong>${email}</strong>.</p>
+<p style="font-size:14px;color:#777">Questions? Reply to this email — we're here to help.</p>
+</div><div class="footer">© ${new Date().getFullYear()} iPurpose · <a href="${siteUrl}" style="color:#9C88FF">ipurposesoul.com</a></div></div>
+</body></html>`;
+          }
 
           const result = await resend.emails.send({
             from: fromEmail,
+            replyTo,
             to: email,
-            subject: `Your iPurpose ${productDisplayName}`,
+            subject: emailSubject,
             html: emailHtml,
           });
 
           console.log(`${productDisplayName} fulfillment email sent:`, result);
         }
       } catch (emailErr) {
-        console.error('Error sending Starter Pack email:', emailErr);
+        console.error('Error sending fulfillment email:', emailErr);
       }
     }
 

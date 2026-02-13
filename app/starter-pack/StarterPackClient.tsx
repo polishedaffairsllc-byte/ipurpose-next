@@ -254,20 +254,124 @@ export default function StarterPackClient() {
   }, []);
 
   const handleDownload = useCallback(() => {
-    const content = buildFormattedContent();
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `iPurpose-Starter-Pack-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [buildFormattedContent]);
+    if (typeof window === 'undefined') return;
+    const printWindow = window.open('', '', 'height=800,width=800');
+    if (!printWindow) return;
+
+    const todayDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Build styled HTML sections for each step
+    let sectionsHtml = '';
+    steps.forEach((s) => {
+      const fields = (s as any).fields;
+      let fieldsHtml = '';
+
+      if (fields) {
+        fields.forEach((f: any) => {
+          if (f.type === 'grid' && f.rows && f.columns) {
+            let tableRows = '';
+            f.rows.forEach((row: string) => {
+              let cells = '';
+              f.columns.forEach((col: string) => {
+                const cellKey = `${f.key}_${row.toLowerCase()}_${col.toLowerCase()}`;
+                cells += `<td style="padding:0.5rem 0.75rem;border:1px solid #e5e1f5;color:#2A2A2A;">${values[cellKey] || '<em style="color:#bbb;">—</em>'}</td>`;
+              });
+              tableRows += `<tr><td style="padding:0.5rem 0.75rem;border:1px solid #e5e1f5;font-weight:600;color:#6B5B95;font-family:'Marcellus',serif;">${row}</td>${cells}</tr>`;
+            });
+            let headerCells = '<th style="padding:0.5rem 0.75rem;border:1px solid #e5e1f5;background:#f5f3ff;width:100px;"></th>';
+            f.columns.forEach((col: string) => {
+              headerCells += `<th style="padding:0.5rem 0.75rem;border:1px solid #e5e1f5;background:#f5f3ff;font-family:'Marcellus',serif;color:#6B5B95;">${col}</th>`;
+            });
+            fieldsHtml += `
+              <div style="margin-bottom:1rem;">
+                <p style="font-weight:600;color:#555;font-size:0.85rem;margin-bottom:0.5rem;">${f.label}</p>
+                <table style="border-collapse:collapse;width:100%;"><thead><tr>${headerCells}</tr></thead><tbody>${tableRows}</tbody></table>
+              </div>`;
+          } else {
+            const val = values[f.key];
+            fieldsHtml += `
+              <div style="margin-bottom:1rem;border-left:4px solid rgba(156,136,255,0.3);padding-left:1rem;">
+                <p style="font-weight:600;color:#555;font-size:0.85rem;margin-bottom:0.25rem;">${f.label}${f.required ? ' <span style="color:#E88C7A;">*</span>' : ''}</p>
+                <p style="color:#2A2A2A;white-space:pre-line;">${val || '<em style="color:#bbb;">Not yet filled</em>'}</p>
+              </div>`;
+          }
+        });
+      } else {
+        const val = values[s.key];
+        fieldsHtml = `<p style="color:#2A2A2A;white-space:pre-line;">${val || '<em style="color:#bbb;">Not yet filled</em>'}</p>`;
+      }
+
+      sectionsHtml += `
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid #e5e1f5;page-break-inside:avoid;">
+          <h2 style="font-size:1.35rem;font-weight:600;color:#6B5B95;margin-bottom:1rem;font-family:'Marcellus',serif;">${s.title}</h2>
+          ${fieldsHtml}
+        </div>`;
+    });
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>iPurpose Starter Pack — ${userName || 'Workbook'}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Marcellus&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+        <style>
+          @page { margin: 1.5cm; }
+          body { font-family: 'Montserrat', system-ui, sans-serif; line-height: 1.7; color: #2A2A2A; max-width: 800px; margin: 0 auto; padding: 2rem; }
+          .header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 2px solid #9C88FF; }
+          .header h1 { font-size: 2.25rem; font-family: 'Marcellus', serif; color: #6B5B95; margin: 0 0 0.25rem 0; }
+          .header .tagline { font-family: 'Italiana', serif; font-size: 1.1rem; color: #9C88FF; margin: 0 0 0.75rem 0; }
+          .header .meta { font-size: 0.85rem; color: #888; }
+          .footer { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e1f5; font-size: 0.8rem; color: #aaa; font-family: 'Italiana', serif; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>✨ iPurpose Starter Pack</h1>
+          <p class="tagline">Where Alignment Meets Action</p>
+          <p class="meta">${userName ? `Prepared for <strong>${userName}</strong> · ` : ''}${todayDate}</p>
+        </div>
+        ${sectionsHtml}
+        <div class="footer">
+          © ${new Date().getFullYear()} iPurpose · ipurposesoul.com
+        </div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    // Auto-trigger print dialog (user can Save as PDF)
+    setTimeout(() => printWindow.print(), 400);
+  }, [steps, values, userName]);
 
   const step = steps[current];
-  const progress = ((current + 1) / steps.length) * 100;
+  // Calculate overall completion across all fields
+  const overallProgress = useMemo(() => {
+    let filled = 0;
+    let total = 0;
+    steps.forEach((s) => {
+      const fields = (s as any).fields;
+      if (fields) {
+        fields.forEach((f: any) => {
+          if (f.type === 'grid' && f.rows && f.columns) {
+            f.rows.forEach((row: string) => {
+              f.columns.forEach((col: string) => {
+                total++;
+                const cellKey = `${f.key}_${row.toLowerCase()}_${col.toLowerCase()}`;
+                if (values[cellKey]?.trim()) filled++;
+              });
+            });
+          } else {
+            total++;
+            if (values[f.key]?.trim()) filled++;
+          }
+        });
+      } else {
+        total++;
+        if (values[s.key]?.trim()) filled++;
+      }
+    });
+    return total > 0 ? Math.round((filled / total) * 100) : 0;
+  }, [steps, values]);
+
   const hasFields = !!(step as any).fields?.length;
 
   return (
@@ -280,26 +384,59 @@ export default function StarterPackClient() {
         <div className="flex flex-wrap items-center justify-center gap-2">
           {steps.map((s, i) => {
             const isActive = i === current;
-            // A step is "completed" if the single key has a value, or if any field in the fields array has a value
             const stepFields = (s as any).fields;
-            const isCompleted = stepFields
-              ? stepFields.some((f: any) => !!values[f.key])
-              : !!values[s.key];
+
+            // Calculate completion: fully complete, in-progress, or not started
+            let filledCount = 0;
+            let totalCount = 0;
+            if (stepFields) {
+              stepFields.forEach((f: any) => {
+                if (f.type === 'grid' && f.rows && f.columns) {
+                  f.rows.forEach((row: string) => {
+                    f.columns.forEach((col: string) => {
+                      totalCount++;
+                      const cellKey = `${f.key}_${row.toLowerCase()}_${col.toLowerCase()}`;
+                      if (values[cellKey]?.trim()) filledCount++;
+                    });
+                  });
+                } else {
+                  totalCount++;
+                  if (values[f.key]?.trim()) filledCount++;
+                }
+              });
+            } else {
+              totalCount = 1;
+              if (values[s.key]?.trim()) filledCount = 1;
+            }
+
+            const isComplete = totalCount > 0 && filledCount === totalCount;
+            const isInProgress = filledCount > 0 && filledCount < totalCount;
+
             return (
               <button
                 key={s.key}
                 onClick={() => setCurrent(i)}
                 className={`
-                  px-3 py-2 rounded-full text-xs sm:text-sm font-marcellus transition-all duration-200
+                  relative px-3 py-2 rounded-full text-xs sm:text-sm font-marcellus transition-all duration-200 flex items-center gap-1.5
                   ${isActive
                     ? 'text-white shadow-md'
-                    : isCompleted
-                      ? 'bg-lavenderViolet/10 text-lavenderViolet border border-lavenderViolet/20 hover:bg-lavenderViolet/20'
-                      : 'bg-gray-50 text-warmCharcoal/50 border border-gray-100 hover:bg-gray-100'
+                    : isComplete
+                      ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
+                      : isInProgress
+                        ? 'bg-lavenderViolet/10 text-lavenderViolet border border-lavenderViolet/20 hover:bg-lavenderViolet/20'
+                        : 'bg-gray-50 text-warmCharcoal/50 border border-gray-100 hover:bg-gray-100'
                   }
                 `}
                 style={isActive ? { background: 'linear-gradient(135deg, #9C88FF, #6B5B95)' } : undefined}
               >
+                {isComplete && !isActive && (
+                  <svg className="w-3.5 h-3.5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
+                {isInProgress && !isActive && (
+                  <span className="inline-block w-2 h-2 rounded-full bg-lavenderViolet/60 flex-shrink-0" />
+                )}
                 {s.title}
               </button>
             );
@@ -311,12 +448,12 @@ export default function StarterPackClient() {
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs text-warmCharcoal/50 mb-1">
           <span className="font-marcellus">Step {current + 1} of {steps.length}</span>
-          <span className="font-marcellus">{Math.round(progress)}% complete</span>
+          <span className="font-marcellus">{overallProgress}% complete</span>
         </div>
         <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #9C88FF, #E6C87C)' }}
+            style={{ width: `${overallProgress}%`, background: overallProgress === 100 ? 'linear-gradient(90deg, #22c55e, #16a34a)' : 'linear-gradient(90deg, #9C88FF, #E6C87C)' }}
           />
         </div>
       </div>
@@ -503,7 +640,7 @@ export default function StarterPackClient() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e0e0e0')}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
                 >
-                  ⬇ Download
+                  ⬇ Download PDF
                 </button>
                 <button
                   onClick={() => setShowSummary(false)}
