@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { deriveFounderContext } from '@/lib/isFounder';
 import StarterPackLanding from './StarterPackLandingClient';
 import StarterPackLandingServer from './StarterPackLandingServer';
 import StarterPackWorkspace from './StarterPackWorkspaceClient';
@@ -24,7 +25,9 @@ export default async function Page() {
         const userDoc = await firebaseAdmin.firestore().collection('users').doc(uid).get();
         if (userDoc.exists) {
           const ent = userDoc.get('entitlements') || {};
-          isEntitled = !!ent.starterPack;
+          const userData = userDoc.data() || {};
+          const founder = deriveFounderContext(decoded as any, userData);
+          isEntitled = !!ent.starterPack || founder.isFounder;
           email = userDoc.get('email') || null;
         }
       }

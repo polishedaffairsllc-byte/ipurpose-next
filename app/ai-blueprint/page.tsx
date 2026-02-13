@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { deriveFounderContext } from '@/lib/isFounder';
 import AIBlueprintLandingClient from './AIBlueprintLandingClient';
 import AIBlueprintWorkspace from './AIBlueprintWorkspaceClient';
 
@@ -24,7 +25,9 @@ export default async function Page() {
         const userDoc = await firebaseAdmin.firestore().collection('users').doc(uid).get();
         if (userDoc.exists) {
           const ent = userDoc.get('entitlements') || {};
-          isEntitled = !!ent.aiBlueprint;
+          const userData = userDoc.data() || {};
+          const founder = deriveFounderContext(decoded as any, userData);
+          isEntitled = !!ent.aiBlueprint || founder.isFounder;
           email = userDoc.get('email') || null;
         }
       }
