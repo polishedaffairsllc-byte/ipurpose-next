@@ -82,6 +82,16 @@ export async function POST(request: NextRequest) {
 
       console.log('Enrollment recorded:', sessionId);
 
+      // Map Stripe product keys to entitlement field names
+      const PRODUCT_ENTITLEMENT_MAP: Record<string, string> = {
+        'starter_pack': 'starterPack',
+        'ai_blueprint': 'aiBlueprint',
+        'accelerator': 'accelerator',
+        'deepen_membership': 'deepen',
+      };
+
+      const entitlementKey = PRODUCT_ENTITLEMENT_MAP[product] || product;
+
       // Attempt to upsert user entitlement by matching users.email === customer email
       try {
         if (!email) throw new Error('No customer email available for entitlement upsert');
@@ -96,14 +106,14 @@ export async function POST(request: NextRequest) {
             {
               entitlements: {
                 ...(userDoc.get('entitlements') || {}),
-                starterPack: true,
+                [entitlementKey]: true,
               },
-              starterPackPurchaseSessionId: sessionId,
+              [`${entitlementKey}PurchaseSessionId`]: sessionId,
               updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
             },
             { merge: true }
           );
-          console.log(`starterPack entitlement set for uid=${uid}`);
+          console.log(`${entitlementKey} entitlement set for uid=${uid}`);
         } else {
           // No matching user found — record a pending entitlement keyed by hashed email
           try {
@@ -115,7 +125,7 @@ export async function POST(request: NextRequest) {
               {
                 email: normalized,
                 entitlements: {
-                  starterPack: true,
+                  [entitlementKey]: true,
                 },
                 sessions: firebaseAdmin.firestore.FieldValue.arrayUnion(sessionId),
                 product,
@@ -126,7 +136,7 @@ export async function POST(request: NextRequest) {
               { merge: true }
             );
 
-            console.log(`pending entitlement created for email=${email}`);
+            console.log(`pending entitlement (${entitlementKey}) created for email=${email}`);
           } catch (hashErr) {
             console.error('Error creating pending entitlement:', hashErr);
           }
@@ -135,11 +145,28 @@ export async function POST(request: NextRequest) {
         console.error('Error upserting user entitlement:', upsertErr);
       }
 
-      // Send fulfillment email with Starter Pack link (if configured)
+      // Product display names and destination URLs
+      const PRODUCT_DISPLAY_NAMES: Record<string, string> = {
+        'starter_pack': 'Starter Pack',
+        'ai_blueprint': 'AI Blueprint',
+        'accelerator': 'Accelerator',
+        'deepen_membership': 'Deepen Membership',
+      };
+      const PRODUCT_URLS: Record<string, string> = {
+        'starter_pack': '/starter-pack',
+        'ai_blueprint': '/ai-blueprint',
+        'accelerator': '/accelerator',
+        'deepen_membership': '/deepen',
+      };
+      const productDisplayName = PRODUCT_DISPLAY_NAMES[product] || product;
+      const productPath = PRODUCT_URLS[product] || '/';
+
+      // Send fulfillment email (if configured)
       try {
         const resendApiKey = process.env.RESEND_API_KEY;
         const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@ipurposesoul.com';
-        const starterUrl = process.env.STARTER_PACK_URL || 'https://ipurposesoul.com/starter-pack';
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipurposesoul.com';
+        const productUrl = `${siteUrl}${productPath}`;
 
         if (!resendApiKey) {
           console.warn('RESEND_API_KEY not configured. Skipping fulfillment email.');
@@ -147,16 +174,16 @@ export async function POST(request: NextRequest) {
           const { Resend } = await import('resend');
           const resend = new Resend(resendApiKey);
 
-          const emailHtml = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#222} .container{max-width:600px;margin:0 auto;padding:20px}</style></head><body><div class="container"><h2>Your Starter Pack</h2><p>Thanks for your purchase. You can download your Starter Pack here:</p><p><a href="${starterUrl}" target="_blank">Download Starter Pack</a></p><p>If you have any trouble, reply to this email and we'll help.</p><p>— iPurpose Team</p></div></body></html>`;
+          const emailHtml = `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#222} .container{max-width:600px;margin:0 auto;padding:20px}</style></head><body><div class="container"><h2>Your ${productDisplayName}</h2><p>Thanks for your purchase! Access your ${productDisplayName} here:</p><p><a href="${productUrl}" target="_blank">Go to ${productDisplayName}</a></p><p>If you don't have an account yet, <a href="${siteUrl}/signup?next=${encodeURIComponent(productPath)}">create one here</a> using the same email you purchased with.</p><p>If you have any trouble, reply to this email and we'll help.</p><p>— iPurpose Team</p></div></body></html>`;
 
           const result = await resend.emails.send({
             from: fromEmail,
             to: email,
-            subject: 'Your iPurpose Starter Pack',
+            subject: `Your iPurpose ${productDisplayName}`,
             html: emailHtml,
           });
 
-          console.log('Starter Pack fulfillment email sent:', result);
+          console.log(`${productDisplayName} fulfillment email sent:`, result);
         }
       } catch (emailErr) {
         console.error('Error sending Starter Pack email:', emailErr);

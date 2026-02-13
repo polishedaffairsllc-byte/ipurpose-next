@@ -35,7 +35,7 @@ export default function AIBlueprintPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white">
+    <div className="relative z-10 min-h-screen bg-white">
       <PublicHeader />
 
       {/* Hero Section */}
@@ -215,6 +215,9 @@ export default function AIBlueprintPage() {
             >
               Start with Purpose First
             </Link>
+            <p className="text-sm text-warmCharcoal/50 text-center mt-4">
+              Already purchased? <Link href="/login?next=/ai-blueprint" className="underline text-lavenderViolet">Sign in to access your Blueprint</Link>
+            </p>
           </div>
         </div>
       </div>

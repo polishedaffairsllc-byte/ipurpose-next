@@ -5,8 +5,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { User, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth"; // Renamed signOut to firebaseSignOut to avoid conflict
-import { doc, onSnapshot, DocumentData } from 'firebase/firestore'; 
-import { getFirebaseAuth, getFirebaseFirestore } from "@/lib/firebaseClient";
+import { DocumentData } from 'firebase/firestore'; 
+import { getFirebaseAuth } from "@/lib/firebaseClient";
 
 // -----------------------------
 // 1. TYPES
@@ -84,35 +84,36 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  // --- Effect 2: Firestore User Data Listener (Sets 'userData') ---
+  // --- Effect 2: Fetch user data via server API (uses Admin SDK, bypasses Firestore rules) ---
   useEffect(() => {
-    let unsubscribeFromFirestore: () => void;
+    let cancelled = false;
 
     if (user) {
-      const userDocRef = doc(getFirebaseFirestore(), 'users', user.uid);
-
-      unsubscribeFromFirestore = onSnapshot(userDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          // Document exists: set the data
-          setUserData(docSnap.data() as UserData);
-        } else {
-          // Document does not exist yet (e.g., brand new sign up)
-          setUserData({});
-        }
-      }, (error) => {
-        console.error("Error listening to user data:", error);
-        setUserData(null);
-      });
+      // Fetch user profile from server API instead of client-side Firestore
+      // This avoids "Missing or insufficient permissions" errors
+      fetch('/api/auth/me', { credentials: 'include' })
+        .then((res) => res.json())
+        .then((json) => {
+          if (cancelled) return;
+          if (json.user) {
+            setUserData(json.user as UserData);
+          } else {
+            // User doc doesn't exist yet (brand new sign up)
+            setUserData({});
+          }
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          console.error("Error fetching user data:", error);
+          setUserData(null);
+        });
     } else {
-      // If no user is logged in, clear the Firestore data
+      // If no user is logged in, clear the data
       setUserData(null);
     }
 
-    // Cleanup function: Unsubscribe from the Firestore listener
     return () => {
-      if (unsubscribeFromFirestore) {
-        unsubscribeFromFirestore();
-      }
+      cancelled = true;
     };
   }, [user]); // Reruns whenever the Firebase 'user' state changes
 

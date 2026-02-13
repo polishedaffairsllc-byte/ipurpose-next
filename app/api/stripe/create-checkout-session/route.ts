@@ -15,8 +15,8 @@ const PRODUCT_PRICE_MAP: { [key: string]: string } = {
 
 // Product to success URL mapping
 const PRODUCT_SUCCESS_URL_MAP: { [key: string]: string } = {
-  'starter_pack': '/purchase/success?product=starter_pack',
-  'ai_blueprint': '/purchase/success?product=ai_blueprint',
+  'starter_pack': '/purchase/success?product=starter_pack&session_id={CHECKOUT_SESSION_ID}',
+  'ai_blueprint': '/purchase/success?product=ai_blueprint&session_id={CHECKOUT_SESSION_ID}',
   'accelerator': '/enroll/create-account?session_id={CHECKOUT_SESSION_ID}',
   'deepen_membership': '/deepen?welcome=true',
 };
@@ -97,16 +97,12 @@ export async function POST(request: NextRequest) {
     console.log('[Stripe Checkout] Base URL:', baseUrl, '| Incoming host:', host, '| Proto:', proto);
 
     // Get success and cancel URLs
+    // Note: {CHECKOUT_SESSION_ID} is a Stripe template variable that Stripe replaces
+    // with the actual session ID when redirecting the customer after payment.
     let successUrlPath = PRODUCT_SUCCESS_URL_MAP[product] || '/';
     let cancelUrlPath = PRODUCT_CANCEL_URL_MAP[product] || '/';
 
-    // For accelerator, preserve the session ID placeholder
-    let successUrl;
-    if (product === 'accelerator') {
-      successUrl = `${baseUrl}/enroll/create-account?session_id={CHECKOUT_SESSION_ID}`;
-    } else {
-      successUrl = `${baseUrl}${successUrlPath}`;
-    }
+    const successUrl = `${baseUrl}${successUrlPath}`;
     const cancelUrl = `${baseUrl}${cancelUrlPath}`;
 
     const isSubscription = product === 'deepen_membership';

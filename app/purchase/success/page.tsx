@@ -12,14 +12,32 @@ type VerifyResult = {
   error?: string;
 };
 
+// Map product keys to display names and destination paths
+const PRODUCT_INFO: Record<string, { name: string; path: string }> = {
+  'starter_pack':      { name: 'Starter Pack',      path: '/starter-pack' },
+  'ai_blueprint':      { name: 'AI Blueprint',      path: '/ai-blueprint' },
+  'accelerator':       { name: 'Accelerator',       path: '/accelerator' },
+  'deepen_membership': { name: 'Deepen Membership', path: '/deepen' },
+};
+
+function getProductInfo(key?: string | null) {
+  if (key && PRODUCT_INFO[key]) return PRODUCT_INFO[key];
+  return { name: 'purchase', path: '/dashboard' };
+}
+
 export default function PurchaseSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id') || searchParams.get('sessionId');
+  const productParam = searchParams.get('product');
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<VerifyResult | null>(null);
   const [authed, setAuthed] = useState(false);
+
+  // Resolve product info from URL param first, then from verify result
+  const resolvedProduct = result?.product || productParam;
+  const { name: productName, path: productPath } = getProductInfo(resolvedProduct);
 
   useEffect(() => {
     if (!sessionId) {
@@ -50,18 +68,15 @@ export default function PurchaseSuccessPage() {
     const unsub = auth.onAuthStateChanged((u) => {
       const signedIn = !!u;
       setAuthed(signedIn);
-      // If user is signed in, send them to the canonical starter-pack page.
       if (signedIn) {
-        router.replace('/starter-pack');
+        router.replace(productPath);
       }
     });
     return () => unsub();
-  }, [router]);
-
-  const starterUrl = process.env.NEXT_PUBLIC_STARTER_PACK_URL || '/starter-pack';
+  }, [router, productPath]);
 
   return (
-    <div className="max-w-3xl mx-auto py-20 px-6 text-center">
+    <div className="relative z-10 max-w-3xl mx-auto py-20 px-6 text-center bg-white min-h-screen">
       <h1 className="text-3xl font-bold mb-4">Thanks for your purchase</h1>
 
       {loading && <p>Verifying your order…</p>}
@@ -75,9 +90,8 @@ export default function PurchaseSuccessPage() {
 
       {!loading && result && result.verified && (
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Your Starter Pack purchase is confirmed.</h2>
+          <h2 className="text-2xl font-semibold mb-4">Your {productName} purchase is confirmed.</h2>
 
-          {/* If user is not authenticated, show claim screen with login/register buttons. */}
           {!authed && (
             <div>
               <p className="mb-4">Create an account or sign in to unlock access.</p>
@@ -85,16 +99,16 @@ export default function PurchaseSuccessPage() {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <a
                   className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md"
-                  href={`/login?next=/starter-pack`}
+                  href={`/login?next=${encodeURIComponent(productPath)}`}
                 >
-                  Sign in
+                  Sign in & claim
                 </a>
 
                 <a
                   className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-md"
-                  href={`/signup?next=/starter-pack`}
+                  href={`/signup?next=${encodeURIComponent(productPath)}`}
                 >
-                  Create account
+                  Create account & claim
                 </a>
               </div>
 
@@ -102,11 +116,10 @@ export default function PurchaseSuccessPage() {
             </div>
           )}
 
-          {/* If already authed we redirected earlier; keep a fallback CTA */}
           {authed && (
             <div>
-              <p className="mb-6">We've emailed your Starter Pack to <strong>{result.email}</strong>. You can also begin the Starter Pack workspace now.</p>
-              <a className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md" href="/starter-pack">Begin Starter Pack</a>
+              <p className="mb-6">We've sent confirmation to <strong>{result.email}</strong>. You can access your {productName} now.</p>
+              <a className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-md" href={productPath}>Go to {productName}</a>
             </div>
           )}
         </div>

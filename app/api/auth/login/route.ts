@@ -44,6 +44,8 @@ export async function POST(req: Request) {
     // Verify the idToken to extract custom claims and check for founder status
     let uid = '';
     let founderContext = deriveFounderContext(null, null);
+    // Flag set when pending entitlements are migrated so we can show a short-lived banner
+    let didClaimEntitlements = false;
     try {
       const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
       uid = decoded.uid;
@@ -56,6 +58,19 @@ export async function POST(req: Request) {
 
       founderContext = deriveFounderContext(decoded, userData);
       console.log(`[LOGIN] Founder context resolved:`, founderContext);
+
+      // ALWAYS ensure the user doc exists and has the email field.
+      // Without this, queries like `where('email', '==', ...)` fail to find the user.
+      if (decoded.email) {
+        await userRef.set(
+          {
+            email: decoded.email.trim().toLowerCase(),
+            updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
+        console.log(`[LOGIN] Ensured user doc exists with email for UID ${uid}`);
+      }
 
       // If founder detected, ensure Firestore is synced with canonical founder fields
       if (founderContext.isFounder) {
@@ -116,7 +131,8 @@ export async function POST(req: Request) {
                 { merge: true }
               );
 
-              console.log(`migrated pending entitlement for email=${email} to uid=${uid}`);
+              didClaimEntitlements = true;
+              console.log(`migrated pending entitlements for email=${email} to uid=${uid}`);
             }
           }
         }
@@ -154,6 +170,15 @@ export async function POST(req: Request) {
       cookies.push(
         `x-founder=true; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure ? "; Secure" : ""}`
       );
+    }
+
+    // Short-lived claim indicator so UI can show a "claimed" banner
+    if (didClaimEntitlements) {
+      // Keep this cookie non-HttpOnly so client can read it. Very short lifetime.
+      const claimMaxAge = 15; // seconds
+      cookies.push(`entitlementClaimed=1; Path=/; Max-Age=${claimMaxAge}; SameSite=${sameSite}${secure ? "; Secure" : ""}`);
+      // Keep the legacy cookie name too for the starter-pack page
+      cookies.push(`starterPackClaimed=1; Path=/; Max-Age=${claimMaxAge}; SameSite=${sameSite}${secure ? "; Secure" : ""}`);
     }
 
     const responseHeaders = new Headers({

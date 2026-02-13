@@ -82,12 +82,53 @@ export async function GET(req: NextRequest) {
       claimed = Boolean(pdata.claimed);
     }
 
+    // Also check Firebase Auth for an account with this email
+    let firebaseAuthUser: any = null;
+    try {
+      const authUser = await firebaseAdmin.auth().getUserByEmail(normalized);
+      firebaseAuthUser = {
+        uid: authUser.uid,
+        email: authUser.email,
+        displayName: authUser.displayName || null,
+        creationTime: authUser.metadata.creationTime || null,
+        lastSignInTime: authUser.metadata.lastSignInTime || null,
+      };
+    } catch (authErr: any) {
+      // auth/user-not-found is expected if no account exists
+      if (authErr?.code !== 'auth/user-not-found') {
+        console.error('[DEBUG/ENTITLEMENTS] Auth lookup error:', authErr);
+      }
+      firebaseAuthUser = null;
+    }
+
+    // If we found a Firebase Auth user but no Firestore user doc by email query,
+    // also try looking up the doc directly by UID
+    let userDocByUid: any = null;
+    if (firebaseAuthUser?.uid && !userDocMatch) {
+      try {
+        const uidDoc = await db.collection('users').doc(firebaseAuthUser.uid).get();
+        if (uidDoc.exists) {
+          const data = uidDoc.data() || {};
+          userDocByUid = {
+            uid: uidDoc.id,
+            email: data.email || null,
+            entitlements: data.entitlements || {},
+            hasStarterPack: Boolean(data.entitlements?.starterPack),
+          };
+        }
+      } catch (uidErr) {
+        console.error('[DEBUG/ENTITLEMENTS] UID doc lookup error:', uidErr);
+      }
+    }
+
     const response = {
       normalizedEmail: normalized,
       emailHash,
       pendingEntitlementDocExists: pendingSnap.exists,
       pendingDoc,
       userDocMatch,
+      userDocByUid,
+      firebaseAuthUser,
       lastSessionId,
       claimed,
     };

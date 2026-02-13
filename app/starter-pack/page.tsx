@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import StarterPackLanding from './StarterPackLandingClient';
+import StarterPackLandingServer from './StarterPackLandingServer';
 import StarterPackWorkspace from './StarterPackWorkspaceClient';
 
 // Server-only page: perform session cookie verification and entitlement check.
@@ -8,11 +9,15 @@ import StarterPackWorkspace from './StarterPackWorkspaceClient';
 export default async function Page() {
   let isEntitled = false;
   let email: string | null = null;
+  let claimed = false;
 
   try {
     const cookieJar = await cookies();
     const cookie = cookieJar.get('FirebaseSession')?.value;
-    if (cookie) {
+    // short-lived client-readable cookie set on login when a pending entitlement was migrated
+    claimed = Boolean(cookieJar.get('starterPackClaimed')?.value);
+    // Only attempt Firebase verification if admin SDK is initialized
+    if (cookie && firebaseAdmin.apps.length > 0) {
       const decoded = await firebaseAdmin.auth().verifySessionCookie(cookie, true);
       const uid = (decoded as any).uid as string;
       if (uid) {
@@ -30,6 +35,16 @@ export default async function Page() {
     isEntitled = false;
   }
 
-  if (isEntitled) return <StarterPackWorkspace email={email} />;
-  return <StarterPackLanding />;
+  if (isEntitled) return <StarterPackWorkspace email={email} claimed={claimed} />;
+
+  // Render the full styled client landing (hero, gradients, PublicHeader, Footer)
+  // with a <noscript> server fallback for environments that don't run JS
+  return (
+    <>
+      <StarterPackLanding />
+      <noscript>
+        <StarterPackLandingServer />
+      </noscript>
+    </>
+  );
 }
