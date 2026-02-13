@@ -8,8 +8,8 @@ export async function POST(request: Request) {
     const { prompt, model } = await request.json();
     if (!prompt) return new Response("Missing prompt", { status: 400 });
 
-    // FREE FALLBACK: If no OpenAI key or quota exceeded, use mock responses
-    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY.startsWith('sk-proj-')) {
+    // FREE FALLBACK: If no OpenAI key, use mock responses
+    if (!process.env.OPENAI_API_KEY) {
       const mockResponse = generateMockResponse(prompt);
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
