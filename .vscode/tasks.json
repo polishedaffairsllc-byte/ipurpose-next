@@ -28,6 +28,18 @@
 			"command": "npm run dev",
 			"isBackground": true,
 			"problemMatcher": []
+		},
+		{
+			"label": "Dev Server Live",
+			"type": "shell",
+			"command": "cd /Users/renita.hamilton/Desktop/ipurpose-next && npm run dev",
+			"isBackground": true
+		},
+		{
+			"label": "Next Dev",
+			"type": "shell",
+			"command": "npx next dev",
+			"isBackground": true
 		}
 	]
 }

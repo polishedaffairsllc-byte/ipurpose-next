@@ -377,7 +377,7 @@ export default function StarterPackClient() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* Title */}
-      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">iPurpose Starter Pack</h2>
+      <h2 className="text-[7rem] sm:text-[8rem] font-bold text-center mb-8">iPurpose Starter Pack</h2>
 
       {/* Step Navigation Pills */}
       <div className="mb-8">
@@ -385,8 +385,6 @@ export default function StarterPackClient() {
           {steps.map((s, i) => {
             const isActive = i === current;
             const stepFields = (s as any).fields;
-
-            // Calculate completion: fully complete, in-progress, or not started
             let filledCount = 0;
             let totalCount = 0;
             if (stepFields) {
@@ -408,16 +406,14 @@ export default function StarterPackClient() {
               totalCount = 1;
               if (values[s.key]?.trim()) filledCount = 1;
             }
-
             const isComplete = totalCount > 0 && filledCount === totalCount;
             const isInProgress = filledCount > 0 && filledCount < totalCount;
-
             return (
               <button
                 key={s.key}
                 onClick={() => setCurrent(i)}
                 className={`
-                  relative px-3 py-2 rounded-full text-xs sm:text-sm font-marcellus transition-all duration-200 flex items-center gap-1.5
+                  relative px-3 py-2 rounded-full text-[2.5rem] sm:text-[3rem] font-marcellus transition-all duration-200 flex items-center gap-1.5
                   ${isActive
                     ? 'text-white shadow-md'
                     : isComplete
@@ -437,7 +433,7 @@ export default function StarterPackClient() {
                 {isInProgress && !isActive && (
                   <span className="inline-block w-2 h-2 rounded-full bg-lavenderViolet/60 flex-shrink-0" />
                 )}
-                {s.title}
+                <span className="text-[2.5rem] sm:text-[3rem] font-marcellus">{s.title}</span>
               </button>
             );
           })}
@@ -447,8 +443,8 @@ export default function StarterPackClient() {
       {/* Progress Bar */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs text-warmCharcoal/50 mb-1">
-          <span className="font-marcellus">Step {current + 1} of {steps.length}</span>
-          <span className="font-marcellus">{overallProgress}% complete</span>
+          <span className="font-marcellus text-[2.5rem] sm:text-[3rem]">Step {current + 1} of {steps.length}</span>
+          <span className="font-marcellus text-[2.5rem] sm:text-[3rem]">{overallProgress}% complete</span>
         </div>
         <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <div
@@ -461,13 +457,33 @@ export default function StarterPackClient() {
       {/* Step Card */}
       <div className="ipurpose-glow-container">
         <div className="relative bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8">
-          <h3 className="text-xl sm:text-2xl font-semibold mb-3">{step.title}</h3>
-          <div className="text-sm sm:text-base text-warmCharcoal/70 mb-3 leading-relaxed whitespace-pre-line">{step.prompt}</div>
+          <h3 className="text-[5rem] sm:text-[6rem] font-semibold mb-3">{step.title}</h3>
+          {step.key === 'coreValues' && (
+            <div className="mb-6 text-[4rem] sm:text-[5rem] text-warmCharcoal/60 font-marcellus text-center">
+              A guided set of questions to help you name what's most important.
+            </div>
+          )}
+          <div className="text-[3rem] sm:text-[3.5rem] text-warmCharcoal/70 mb-3 leading-relaxed whitespace-pre-line">{step.prompt}</div>
 
           {/* Example hint */}
           {step.example && (
-            <div className="text-xs text-warmCharcoal/40 italic mb-5 font-marcellus bg-lavenderViolet/5 rounded-lg px-4 py-3 border-l-2 border-lavenderViolet/20 whitespace-pre-line">
+            <div className={`italic mb-5 font-marcellus bg-lavenderViolet/5 rounded-lg px-4 py-3 border-l-2 border-lavenderViolet/20 whitespace-pre-line ${step.key === 'purposeAction' ? 'text-[4rem] sm:text-[5rem]' : 'text-[2rem] sm:text-[2.5rem]'} text-warmCharcoal/40`}>
               <span className="font-semibold not-italic text-warmCharcoal/50">Example:</span>{'\n'}{step.example}
+              {step.key === 'purposeAction' && (
+                <div className="mt-4 text-[6rem] sm:text-[7rem] text-warmCharcoal/60 font-marcellus">
+                  <strong className="text-[6rem] sm:text-[7rem]">A short template and examples to craft a clear purpose statement.</strong>
+                  <br />
+                  <span className="text-[5rem] sm:text-[6rem]">Template: My purpose is to <u>____</u> so that <u>____</u>.</span>
+                  <div className="mt-8">
+                    <strong className="text-[5rem] sm:text-[6rem]">Examples:</strong>
+                    <ul className="list-disc ml-8 mt-4 text-[4rem] sm:text-[5rem] text-warmCharcoal/70">
+                      <li>My purpose is to teach and inspire so that others believe in their potential.</li>
+                      <li>My purpose is to create art so that people feel more connected to themselves.</li>
+                      <li>My purpose is to build communities so that everyone feels a sense of belonging.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -476,7 +492,7 @@ export default function StarterPackClient() {
             <div className="space-y-5">
               {(step as any).fields.map((field: any) => (
                 <div key={field.key}>
-                  <label className="block text-sm font-medium text-warmCharcoal/80 mb-1.5">
+                  <label className="block text-[2.5rem] sm:text-[3rem] font-medium text-warmCharcoal/80 mb-1.5">
                     {field.label}
                     {field.required && <span className="text-salmonPeach ml-1">*</span>}
                   </label>
@@ -509,19 +525,19 @@ export default function StarterPackClient() {
                     </div>
                   ) : field.type === 'grid' && field.rows && field.columns ? (
                     <div className="overflow-x-auto">
-                      <table className="w-full border-collapse text-sm">
+                      <table className="w-full border-collapse text-[2.5rem] sm:text-[3rem]">
                         <thead>
                           <tr>
                             <th className="p-2 text-left text-warmCharcoal/60 font-marcellus border-b border-lavenderViolet/10 w-28"></th>
                             {field.columns.map((col: string) => (
-                              <th key={col} className="p-2 text-center text-warmCharcoal/70 font-marcellus border-b border-lavenderViolet/10 font-semibold">{col}</th>
+                              <th key={col} className="p-2 text-center text-warmCharcoal/70 font-marcellus border-b border-lavenderViolet/10 font-semibold text-[2.5rem] sm:text-[3rem]">{col}</th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
                           {field.rows.map((row: string) => (
                             <tr key={row}>
-                              <td className="p-2 font-marcellus text-warmCharcoal/70 font-semibold border-b border-lavenderViolet/5">{row}</td>
+                              <td className="p-2 font-marcellus text-warmCharcoal/70 font-semibold border-b border-lavenderViolet/5 text-[2.5rem] sm:text-[3rem]">{row}</td>
                               {field.columns.map((col: string) => {
                                 const cellKey = `${field.key}_${row.toLowerCase()}_${col.toLowerCase()}`;
                                 return (
@@ -531,7 +547,7 @@ export default function StarterPackClient() {
                                       value={values[cellKey] || ''}
                                       onChange={(e) => onChange(cellKey, e.target.value)}
                                       placeholder={`${col}…`}
-                                      className="w-full border border-lavenderViolet/10 rounded-lg px-3 py-2 text-warmCharcoal/80 text-sm focus:outline-none focus:ring-2 focus:ring-lavenderViolet/30 focus:border-lavenderViolet/30 transition-all"
+                                      className="w-full border border-lavenderViolet/10 rounded-lg px-3 py-2 text-warmCharcoal/80 text-[2.5rem] sm:text-[3rem] focus:outline-none focus:ring-2 focus:ring-lavenderViolet/30 focus:border-lavenderViolet/30 transition-all"
                                     />
                                   </td>
                                 );
@@ -564,52 +580,55 @@ export default function StarterPackClient() {
           )}
 
           {/* Navigation & Save Status */}
-          <div className="mt-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setCurrent(Math.max(0, current - 1))}
-                disabled={current === 0}
-                className="px-5 py-2.5 rounded-full text-sm font-marcellus transition-all
-                  bg-gray-50 text-warmCharcoal/70 border border-gray-100
-                  hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                Back
-              </button>
-              {current < steps.length - 1 ? (
+            <div className="mt-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setCurrent(current + 1)}
-                  className="px-5 py-2.5 rounded-full text-sm font-marcellus text-white transition-all
-                    hover:opacity-90 shadow-md"
-                  style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
+                  onClick={() => setCurrent(Math.max(0, current - 1))}
+                  disabled={current === 0}
+                  className="px-5 py-2.5 rounded-full text-[3rem] font-marcellus transition-all
+                    bg-gray-50 text-warmCharcoal/70 border border-gray-100
+                    hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                  Next
+                  Back
                 </button>
-              ) : (
-                <button
-                  onClick={() => setShowSummary(true)}
-                  className="px-5 py-2.5 rounded-full text-sm font-marcellus text-white transition-all
-                    hover:opacity-90 shadow-md"
-                  style={{ background: 'linear-gradient(135deg, #6B5B95, #9C88FF)' }}
-                >
-                  ✨ Complete &amp; Review
-                </button>
-              )}
-            </div>
+                {current < steps.length - 1 ? (
+                  <button
+                    onClick={() => setCurrent(current + 1)}
+                    className="px-5 py-2.5 rounded-full text-[3rem] font-marcellus text-white transition-all
+                      hover:opacity-90 shadow-md"
+                    style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowSummary(true)}
+                    className="px-5 py-2.5 rounded-full text-[3rem] font-marcellus text-white transition-all
+                      hover:opacity-90 shadow-md"
+                    style={{ background: 'linear-gradient(135deg, #6B5B95, #9C88FF)' }}
+                  >
+                    ✨ Complete &amp; Review
+                  </button>
+                )}
+              </div>
 
-            <div className="flex items-center gap-2 text-xs text-warmCharcoal/40 font-marcellus">
-              {saving ? (
-                <>
-                  <span className="inline-block w-2 h-2 rounded-full bg-softGold animate-pulse" />
-                  Saving…
-                </>
-              ) : (
-                <>
-                  <span className="inline-block w-2 h-2 rounded-full bg-green-400" />
-                  All changes saved
-                </>
-              )}
+              <div className="flex items-center gap-2 text-[2.5rem] text-warmCharcoal/40 font-marcellus">
+                {saving ? (
+                  <>
+                    <span className="inline-block w-2 h-2 rounded-full bg-softGold animate-pulse" />
+                    Saving…
+                  </>
+                ) : (
+                  <>
+                    <span className="inline-block w-2 h-2 rounded-full bg-green-400" />
+                    All changes saved
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+              <div className="mt-10 text-center text-[2.5rem] text-warmCharcoal/60 font-marcellus">
+                If you have trouble accessing the Starter Pack, contact support.
+              </div>
         </div>
       </div>
 

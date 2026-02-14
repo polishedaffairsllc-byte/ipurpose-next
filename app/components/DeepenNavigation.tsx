@@ -10,7 +10,7 @@ export default function DeepenNavigation() {
         <Link
           href="/"
           className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #4b4e6d, rgba(75, 78, 109, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
+          style={{ background: 'linear-gradient(to right, #4b4e6d, rgba(75, 78, 109, 0.3))', color: '#FFFFFF', fontSize: '54px' }}
         >
           Home
         </Link>
@@ -18,7 +18,7 @@ export default function DeepenNavigation() {
         <Link
           href="/dashboard"
           className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #9c88ff, rgba(156, 136, 255, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
+          style={{ background: 'linear-gradient(to right, #9c88ff, rgba(156, 136, 255, 0.3))', color: '#FFFFFF', fontSize: '54px' }}
         >
           Dashboard
         </Link>
@@ -26,7 +26,7 @@ export default function DeepenNavigation() {
         <Link
           href="/systems"
           className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #e6c87c, rgba(230, 200, 124, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
+          style={{ background: 'linear-gradient(to right, #e6c87c, rgba(230, 200, 124, 0.3))', color: '#FFFFFF', fontSize: '54px' }}
         >
           Systems
         </Link>
@@ -34,7 +34,7 @@ export default function DeepenNavigation() {
         <Link
           href="/insights"
           className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #4b4e6d, rgba(75, 78, 109, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
+          style={{ background: 'linear-gradient(to right, #4b4e6d, rgba(75, 78, 109, 0.3))', color: '#FFFFFF', fontSize: '54px' }}
         >
           Reflections
         </Link>
@@ -42,7 +42,7 @@ export default function DeepenNavigation() {
         <Link
           href="/community"
           className="flex-1 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #fcc4b7, rgba(252, 196, 183, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
+          style={{ background: 'linear-gradient(to right, #fcc4b7, rgba(252, 196, 183, 0.3))', color: '#FFFFFF', fontSize: '54px' }}
         >
           Community
         </Link>
@@ -51,7 +51,7 @@ export default function DeepenNavigation() {
           <button
             type="submit"
             className="w-full px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ background: 'linear-gradient(to right, #d4af37, rgba(212, 175, 55, 0.3))', color: '#FFFFFF', fontSize: '18px' }}
+            style={{ background: 'linear-gradient(to right, #d4af37, rgba(212, 175, 55, 0.3))', color: '#FFFFFF', fontSize: '54px' }}
           >
             Logout
           </button>

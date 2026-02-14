@@ -46,18 +46,18 @@ export default function AboutPage() {
 
         {/* Why iPurpose Exists */}
         <section className="space-y-4">
-          <h2 className="text-center font-marcellus text-warmCharcoal" style={{ fontSize: '36px' }}>
+          <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
             Why iPurpose Exists
           </h2>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
             iPurpose exists to address a persistent gap:<br />
             traditional business often ignores the soul,<br />
             while spiritual work often ignores structure.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
             Many capable, thoughtful people find themselves overwhelmed, disconnected, or stuck between intuition and implementation. They know something matters deeply to them — but struggle to translate that knowing into sustainable action.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
             iPurpose™ was created to hold both meaning and method, without asking people to abandon either.
           </p>
         </section>
@@ -65,62 +65,62 @@ export default function AboutPage() {
         {/* Decorative Divider */}
         <div className="flex items-center justify-center gap-4 py-12">
           <div style={{ height: '2px', width: '200px', background: 'linear-gradient(to right, transparent, #9c88ff)' }}></div>
-          <div style={{ fontSize: '24px', color: '#9c88ff' }}>✦</div>
+          <div style={{ fontSize: '54px', color: '#9c88ff' }}>✦</div>
           <div style={{ height: '2px', width: '200px', background: 'linear-gradient(to left, transparent, #9c88ff)' }}></div>
         </div>
 
         {/* Philosophy Section */}
         <section className="space-y-2">
           <div>
-            <h2 className="text-center font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '36px' }}>
+            <h2 className="text-center text-warmCharcoal mb-2" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
               The iPurpose Philosophy
             </h2>
-            <p className="text-center text-warmCharcoal/80 font-marcellus" style={{ fontSize: '40px' }}>
+            <p className="text-center text-warmCharcoal/80" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
               Soul → Systems → AI™
             </p>
-            <p className="text-center text-warmCharcoal/75 italic mt-2" style={{ fontSize: '40px' }}>
+            <p className="text-center text-warmCharcoal/75 italic mt-2" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
               This is not a slogan. It is a sequence.
             </p>
           </div>
-          
           <div className="space-y-4 pl-4 border-l-4 border-lavenderViolet">
             <div>
-              <h3 className="text-center font-marcellus text-warmCharcoal mb-1" style={{ fontSize: '20px' }}>Soul — Alignment before action.</h3>
-                <p className="text-center text-warmCharcoal/75" style={{ fontSize: '16px' }}>
+              <h3 className="text-center text-warmCharcoal mb-1" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+                Soul — Alignment before action.
+              </h3>
+              <p className="text-center text-warmCharcoal/75" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
                 Know yourself and your values before deciding what to build.
               </p>
             </div>
-            
             {/* Small Divider */}
             <div className="flex items-center justify-center gap-2 py-4">
               <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, #9c88ff)' }}></div>
               <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#9c88ff' }}></div>
               <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, #9c88ff)' }}></div>
             </div>
-            
             <div>
-              <h3 className="text-center font-marcellus text-warmCharcoal mb-1" style={{ fontSize: '20px' }}>Systems — Structure before scale.</h3>
-                <p className="text-center text-warmCharcoal/75" style={{ fontSize: '16px' }}>
+              <h3 className="text-center text-warmCharcoal mb-1" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+                Systems — Structure before scale.
+              </h3>
+              <p className="text-center text-warmCharcoal/75" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
                 Create frameworks that support sustainability, not burnout.
               </p>
             </div>
-            
             {/* Small Divider */}
             <div className="flex items-center justify-center gap-2 py-4">
               <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, #9c88ff)' }}></div>
               <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#9c88ff' }}></div>
               <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, #9c88ff)' }}></div>
             </div>
-            
             <div>
-              <h3 className="text-center font-marcellus text-warmCharcoal mb-1" style={{ fontSize: '20px' }}>AI — Automation only after clarity.</h3>
-                <p className="text-center text-warmCharcoal/75" style={{ fontSize: '16px' }}>
+              <h3 className="text-center text-warmCharcoal mb-1" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+                AI — Automation only after clarity.
+              </h3>
+              <p className="text-center text-warmCharcoal/75" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
                 Use technology to amplify human intention — not replace it.
               </p>
             </div>
           </div>
-          
-          <p className="text-center text-warmCharcoal/75 leading-relaxed font-marcellus pt-2" style={{ fontSize: '16px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed pt-2" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
             When this order is respected, technology serves the human — not the other way around.
           </p>
         </section>
@@ -128,25 +128,25 @@ export default function AboutPage() {
         {/* Decorative Divider */}
         <div className="flex items-center justify-center gap-4 py-12">
           <div style={{ height: '2px', width: '200px', background: 'linear-gradient(to right, transparent, #fcc4b7)' }}></div>
-          <div style={{ fontSize: '24px', color: '#fcc4b7' }}>✦</div>
+          <div style={{ fontSize: '54px', color: '#fcc4b7' }}>✦</div>
           <div style={{ height: '2px', width: '200px', background: 'linear-gradient(to left, transparent, #fcc4b7)' }}></div>
         </div>
 
         {/* What iPurpose Is (and Is Not) */}
         <section className="space-y-4">
-          <h2 className="text-center font-marcellus text-warmCharcoal" style={{ fontSize: '36px' }}>
+          <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
             What iPurpose Is (and Is Not)
           </h2>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
             iPurpose is not about hustle, hype, or extraction.<br />
             It is not optimization without meaning.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
             It is about building what is true,<br />
             at a pace that is sustainable,<br />
             in a way that is ethical, grounded, and alive.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
             The aim is coherence — so your work, decisions, and systems no longer conflict with who you are.
           </p>
         </section>
@@ -161,11 +161,10 @@ export default function AboutPage() {
         {/* About the Founder */}
         <section className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10">
           <div>
-            <h2 className="text-center font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '36px' }}>
+            <h2 className="text-center text-warmCharcoal mb-2" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
               About the Founder
             </h2>
           </div>
-          
           <div>
             <div className="float-left mb-4" style={{ marginRight: '24px' }}>
               <div className="border-4 border-lavenderViolet rounded-lg overflow-hidden shadow-lg">
@@ -180,10 +179,10 @@ export default function AboutPage() {
               <h3 className="text-2xl font-marcellus text-warmCharcoal mt-4 mb-1">Renita Hamilton</h3>
               <p className="text-lg font-marcellus text-lavenderViolet">Founder of iPurpose</p>
             </div>
-            <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '18px' }}>
+            <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '35px' }}>
               Renita Hamilton is a strategist and entrepreneur working at the intersection of alignment, systems, and technology.
             </p>
-            <p className="text-warmCharcoal/75 leading-relaxed mt-4" style={{ fontSize: '18px' }}>
+            <p className="text-warmCharcoal/75 leading-relaxed mt-4" style={{ fontSize: '35px' }}>
               She created iPurpose from the belief — and lived experience — that people should not have to choose between meaning and practicality. Her work helps individuals build lives and work that reflect who they are, while remaining structured, ethical, and sustainable in the real world.
             </p>
             <div className="clear-both"></div>
@@ -192,8 +191,10 @@ export default function AboutPage() {
 
         {/* Next Steps */}
         <section className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
-          <h2 className="text-center font-marcellus text-warmCharcoal" style={{ fontSize: '36px' }}>
-            Next Steps
+          <h2 className="text-center font-marcellus text-warmCharcoal" style={{ fontSize: '79px' }}>
+            <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+              Next Steps
+            </h2>
           </h2>
           <div className="space-y-3 sm:space-y-4 flex flex-col">
             <Link

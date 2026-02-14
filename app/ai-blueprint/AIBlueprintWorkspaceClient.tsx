@@ -25,7 +25,7 @@ export default function AIBlueprintWorkspace({ email, claimed }: { email?: strin
             <h1 className="heading-hero mb-4 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
               Your AI Blueprint
             </h1>
-            <p className="relative z-10 font-italiana text-xl sm:text-2xl md:text-3xl px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0,0,0,0.4)', color: '#FFFFFF' }}>
+            <p className="relative z-10 font-italiana text-[3.5rem] sm:text-[4.5rem] md:text-[6rem] px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0,0,0,0.4)', color: '#FFFFFF' }}>
               Use AI without losing your voice
             </p>
           </section>
@@ -38,7 +38,7 @@ export default function AIBlueprintWorkspace({ email, claimed }: { email?: strin
 
           {email && (
             <p className="text-center text-sm text-warmCharcoal/60 font-marcellus">
-              Signed in as <strong>{email}</strong>
+              <span className="text-[2.5rem] sm:text-[3rem]">Signed in as <strong>{email}</strong></span>
             </p>
           )}
 

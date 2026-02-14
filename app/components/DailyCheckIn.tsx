@@ -84,9 +84,9 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
     return (
       <Card accent="salmon" className="mb-8">
           <div className="text-center py-6 space-y-3">
-            <p style={{ fontSize: '24px', marginBottom: '4px' }}>✨</p>
-            <p style={{ fontFamily: 'Marcellus, serif', fontSize: '18px', color: '#2A2A2A', marginBottom: '4px' }}>Saved. Your check-in is part of your ongoing Soul record.</p>
-            <p style={{ fontSize: '14px', color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif' }}>
+            <p style={{ fontSize: '96px', marginBottom: '4px' }}>✨</p>
+            <p style={{ fontFamily: 'Marcellus, serif', fontSize: '72px', color: '#2A2A2A', marginBottom: '4px' }}>Saved. Your check-in is part of your ongoing Soul record.</p>
+            <p style={{ fontSize: '56px', color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif' }}>
               Thanks — today you might benefit from:
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -94,9 +94,9 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
                 <span
                   key={item}
                   style={{
-                    padding: '4px 12px',
+                    padding: '8px 24px',
                     borderRadius: '9999px',
-                    fontSize: '12px',
+                    fontSize: '48px',
                     fontFamily: 'Marcellus, serif',
                     border: suggestions.includes(item) ? '1px solid #4B4E6D' : '1px solid rgba(42,42,42,0.15)',
                     color: suggestions.includes(item) ? '#4B4E6D' : 'rgba(42,42,42,0.7)',
@@ -114,15 +114,15 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
   return (
     <Card accent="salmon" className="mb-8">
-      <p style={{ fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.45)', fontFamily: 'Marcellus, serif', marginBottom: '16px' }}>
+      <p style={{ fontSize: '48px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.45)', fontFamily: 'Marcellus, serif', marginBottom: '16px' }}>
           Today's Alignment Check
       </p>
-      <p style={{ fontSize: '14px', color: 'rgba(42,42,42,0.6)', fontFamily: 'Marcellus, serif', marginBottom: '16px' }}>You've checked in {checkinsLast7} of the last 7 days.</p>
+      <p style={{ fontSize: '56px', color: 'rgba(42,42,42,0.6)', fontFamily: 'Marcellus, serif', marginBottom: '16px' }}>You've checked in {checkinsLast7} of the last 7 days.</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Emotions */}
         <div>
-          <p style={{ fontSize: '14px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '12px' }}>How are you feeling?</p>
+          <p style={{ fontSize: '56px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '12px' }}>How are you feeling?</p>
           <div className="flex flex-wrap gap-2">
             {EMOTIONS.map(emotion => (
               <button
@@ -130,9 +130,9 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
                 type="button"
                 onClick={() => toggleEmotion(emotion)}
                 style={{
-                  padding: '8px 16px',
+                  padding: '16px 32px',
                   borderRadius: '9999px',
-                  fontSize: '14px',
+                  fontSize: '56px',
                   fontFamily: 'Marcellus, serif',
                   transition: 'all 0.2s',
                   border: selectedEmotions.includes(emotion) ? '2px solid #FCC4B7' : '2px solid rgba(42,42,42,0.15)',
@@ -151,7 +151,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Alignment Slider */}
         <div>
-          <p style={{ fontSize: '14px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '12px' }}>
+          <p style={{ fontSize: '56px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '12px' }}>
             Alignment with your purpose right now: <strong>{alignment}/10</strong>
           </p>
           <input
@@ -162,7 +162,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
             onChange={(e) => setAlignment(parseInt(e.target.value))}
             className="w-full"
           />
-          <div className="flex justify-between mt-2" style={{ fontSize: '12px', color: 'rgba(42,42,42,0.5)', fontFamily: 'Marcellus, serif' }}>
+          <div className="flex justify-between mt-2" style={{ fontSize: '48px', color: 'rgba(42,42,42,0.5)', fontFamily: 'Marcellus, serif' }}>
             <span>Off track</span>
             <span>Aligned</span>
           </div>
@@ -170,13 +170,13 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Need */}
         <div>
-          <p style={{ fontSize: '14px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '8px' }}>One thing you need today…</p>
+          <p style={{ fontSize: '56px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '8px' }}>One thing you need today…</p>
           <input
             type="text"
             value={need}
             onChange={(e) => setNeed(e.target.value)}
             placeholder="Rest, clarity, connection…"
-            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(42,42,42,0.2)', fontSize: '14px', fontFamily: 'Marcellus, serif' }}
+            style={{ width: '100%', padding: '16px 24px', borderRadius: '8px', border: '1px solid rgba(42,42,42,0.2)', fontSize: '56px', fontFamily: 'Marcellus, serif' }}
           />
         </div>
 

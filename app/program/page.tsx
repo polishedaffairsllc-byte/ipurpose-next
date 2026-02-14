@@ -64,7 +64,7 @@ export default function ProgramPage() {
       {/* Decorative Divider */}
       <div className="flex items-center justify-center gap-4 py-8">
         <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
-        <span style={{ fontSize: '24px', color: '#E6C87C' }}>✦</span>
+        <span style={{ fontSize: '54px', color: '#E6C87C' }}>✦</span>
         <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
       </div>
 
@@ -76,28 +76,28 @@ export default function ProgramPage() {
           </h2>
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>A Defined Purpose & Priorities Statement</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>A documented articulation of what you're building and why.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>A Defined Purpose & Priorities Statement</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>A documented articulation of what you're building and why.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>Core Systems Aligned to Your Goals</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>Workflows, processes, and strategy designed to support your direction.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>Core Systems Aligned to Your Goals</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>Workflows, processes, and strategy designed to support your direction.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>A Practical AI Usage Plan</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>Clear guidelines for where and how AI supports your work.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>A Practical AI Usage Plan</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>Clear guidelines for where and how AI supports your work.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>Peer Network</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>A small cohort of thoughtful builders navigating similar challenges.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>Peer Network</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>A small cohort of thoughtful builders navigating similar challenges.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>A Defined Direction Forward</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>Clear next steps based on the systems and decisions you've built.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>A Defined Direction Forward</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>Clear next steps based on the systems and decisions you've built.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '20px' }}>Clarity Blueprint</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '16px' }}>A documented plan you'll reference for months to come.</p>
+              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>Clarity Blueprint</h3>
+              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>A documented plan you'll reference for months to come.</p>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function ProgramPage() {
       {/* Decorative Divider */}
       <div className="flex items-center justify-center gap-4 py-8">
         <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-        <span style={{ fontSize: '24px', color: '#9C88FF' }}>✦</span>
+        <span style={{ fontSize: '54px', color: '#9C88FF' }}>✦</span>
         <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
       </div>
 
@@ -127,27 +127,27 @@ export default function ProgramPage() {
             Program Format & Cohorts
           </h2>
           <div className="space-y-6 text-warmCharcoal/75 mb-8 sm:mb-12 mx-auto max-w-2xl text-center" style={{ fontSize: '40px' }}>
-            <p>
+            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
               <strong>Format:</strong> 6 weekly 90-minute group calls + asynchronous work between sessions. Totally online and cohort-based.
             </p>
-            <p>
+            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
               <strong>Cohort Size:</strong> 8–12 people to keep it intimate and real.
             </p>
-            <p>
+            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
               <strong>Next Cohort:</strong> Launching {cohortLabel} ({cohortMonth} {cohortYear}). Limited spots available.
             </p>
-            <p>
+            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
               <strong>Time Commitment:</strong> ~3–4 hours per week (1.5 hours live + 1.5–2.5 hours self-guided work).
             </p>
           </div>
           <div className="bg-white/50 border border-lavenderViolet/20 rounded-2xl p-4 sm:p-6 md:p-8 text-center">
-            <p className="text-warmCharcoal mb-4 sm:mb-6" style={{ fontSize: '40px' }}>
+            <p className="text-warmCharcoal mb-4 sm:mb-6" style={{ fontSize: '54px' }}>
               Want to learn more before committing? Join our upcoming info session.
             </p>
             <Link
               href="/info-session"
               className="inline-block px-8 py-4 bg-lavenderViolet text-white rounded-full font-marcellus hover:bg-indigoDeep transition"
-              style={{ fontSize: '40px' }}
+              style={{ fontSize: '54px', fontFamily: 'Marcellus, serif' }}
             >
               Reserve Your Info Session Spot
             </Link>
@@ -168,14 +168,14 @@ export default function ProgramPage() {
           <Link
             href="/clarity-check"
             className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
+            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
           >
             Take the Clarity Check
           </Link>
           <Link
             href="/info-session"
             className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '35px' }}
+            style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
           >
             Join the Info Session
           </Link>

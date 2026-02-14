@@ -34,49 +34,49 @@ export default async function DeepenPage() {
     return (
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center space-y-6 mb-16">
-          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '55px' }}>
+          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '112px' }}>
             Your Deepening Journey
           </h1>
 
           {/* Decorative Divider */}
           <div className="flex items-center justify-center gap-3">
-            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
-            <span className="text-lavenderViolet text-xl">✦</span>
-            <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+            <div style={{ height: '4px', width: '180px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
+            <span className="text-lavenderViolet" style={{ fontSize: '54px' }}>✦</span>
+            <div style={{ height: '4px', width: '180px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
           </div>
 
-          <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '28px' }}>
+          <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '54px' }}>
             You have premium access. Choose where to go next.
           </p>
-          <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '18px' }}>
+          <p className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '35px' }}>
             Your membership is active — $59/month, cancel anytime.
           </p>
         </div>
 
-        <div className="space-y-6 max-w-2xl mx-auto">
+        <div className="space-y-10 max-w-2xl mx-auto">
           <a
             href="/systems"
-            className="block px-6 sm:px-8 py-5 sm:py-6 rounded-2xl font-marcellus text-white hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(135deg, #E6C87C, #d4af37)', fontSize: '32px' }}
+            className="block px-6 sm:px-8 py-7 sm:py-10 rounded-2xl font-marcellus text-white hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(135deg, #E6C87C, #d4af37)', fontSize: '54px' }}
           >
-            <span className="block text-center" style={{ fontSize: '35px' }}>Systems</span>
-            <span className="block text-center text-white/70 mt-1" style={{ fontSize: '18px' }}>Build your framework, workflows &amp; monetization tools</span>
+            <span className="block text-center" style={{ fontSize: '79px' }}>Systems</span>
+            <span className="block text-center text-white/70 mt-2" style={{ fontSize: '35px' }}>Build your framework, workflows &amp; monetization tools</span>
           </a>
           <a
             href="/insights"
-            className="block px-6 sm:px-8 py-5 sm:py-6 rounded-2xl font-marcellus text-white hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(135deg, #4B4E6D, #3a3d56)', fontSize: '32px' }}
+            className="block px-6 sm:px-8 py-7 sm:py-10 rounded-2xl font-marcellus text-white hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(135deg, #4B4E6D, #3a3d56)', fontSize: '54px' }}
           >
-            <span className="block text-center" style={{ fontSize: '35px' }}>Reflections</span>
-            <span className="block text-center text-white/70 mt-1" style={{ fontSize: '18px' }}>Review alignment trends, journal insights &amp; growth patterns</span>
+            <span className="block text-center" style={{ fontSize: '79px' }}>Reflections</span>
+            <span className="block text-center text-white/70 mt-2" style={{ fontSize: '35px' }}>Review alignment trends, journal insights &amp; growth patterns</span>
           </a>
           <a
             href="/community"
-            className="block px-6 sm:px-8 py-5 sm:py-6 rounded-2xl font-marcellus text-white hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(135deg, #FCC4B7, #e8a090)', fontSize: '32px' }}
+            className="block px-6 sm:px-8 py-7 sm:py-10 rounded-2xl font-marcellus text-white hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(135deg, #FCC4B7, #e8a090)', fontSize: '54px' }}
           >
-            <span className="block text-center" style={{ fontSize: '35px' }}>Community</span>
-            <span className="block text-center text-white/70 mt-1" style={{ fontSize: '18px' }}>Group reflections, shared wisdom &amp; connection</span>
+            <span className="block text-center" style={{ fontSize: '79px' }}>Community</span>
+            <span className="block text-center text-white/70 mt-2" style={{ fontSize: '35px' }}>Group reflections, shared wisdom &amp; connection</span>
           </a>
         </div>
       </div>

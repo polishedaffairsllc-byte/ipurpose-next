@@ -41,13 +41,13 @@ export default function WelcomePopup() {
         >
           {/* Modal Content Wrapper to avoid overlap */}
           <div className="w-full flex flex-col items-center mt-16 text-center">
-            <p className="font-italiana mb-4" style={{ color: '#ffffff', fontSize: '32px' }}>
+            <p className="font-italiana mb-4" style={{ color: '#ffffff', fontSize: '128px', fontFamily: 'Italiana, serif' }}>
               Who am I really…
             </p>
-            <p className="font-italiana mb-2" style={{ color: '#ffffff', fontSize: '40px' }}>
+            <p className="font-italiana mb-2" style={{ color: '#ffffff', fontSize: '160px', fontFamily: 'Italiana, serif' }}>
               Welcome to iPurpose<sup style={{ fontSize: '0.4em' }}>™</sup>
             </p>
-            <p className="mb-6 leading-relaxed font-italiana" style={{ color: '#ffffff', fontSize: '18px' }}>
+            <p className="mb-6 leading-relaxed font-italiana" style={{ color: '#ffffff', fontSize: '72px', fontFamily: 'Italiana, serif' }}>
               We're going to help you understand who you are and how you're meant to move.
               <br />
               There's no wrong place to start. Most people begin with our free Clarity Check, or you can explore Discover first.
@@ -58,7 +58,7 @@ export default function WelcomePopup() {
                 href="/clarity-check"
                 onClick={() => setIsOpen(false)}
                 className="inline-block px-8 py-4 rounded-full font-italiana font-bold text-center hover:opacity-90 transition-opacity"
-                style={{ background: '#9c88ff', color: '#000000', fontSize: '18px' }}
+                style={{ background: '#9c88ff', color: '#000000', fontSize: '72px', fontFamily: 'Italiana, serif' }}
                 aria-label="Take the Clarity Check assessment"
               >
                 Take the Clarity Check
@@ -68,7 +68,7 @@ export default function WelcomePopup() {
                 href="/discover"
                 onClick={() => setIsOpen(false)}
                 className="inline-block px-8 py-4 rounded-full font-italiana font-bold text-center hover:opacity-90 transition-opacity"
-                style={{ background: '#fcc4b7', color: '#000000', fontSize: '18px' }}
+                style={{ background: '#fcc4b7', color: '#000000', fontSize: '72px', fontFamily: 'Italiana, serif' }}
                 aria-label="Explore Discover section"
               >
                 Explore Discover
@@ -77,7 +77,7 @@ export default function WelcomePopup() {
               <button
                 onClick={() => setIsOpen(false)}
                 className="inline-block px-8 py-4 rounded-full font-italiana font-bold text-center hover:opacity-90 transition-opacity"
-                style={{ background: '#e6c87c', color: '#000000', fontSize: '18px' }}
+                style={{ background: '#e6c87c', color: '#000000', fontSize: '72px', fontFamily: 'Italiana, serif' }}
                 aria-label="Dismiss welcome popup"
               >
                 I'll explore on my own
