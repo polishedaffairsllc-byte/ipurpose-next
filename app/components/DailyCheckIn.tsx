@@ -106,25 +106,25 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
   return (
     <Card accent="salmon" className="mb-8">
-      <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus" style={{ fontSize: '40px' }}>
+      <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus text-xs">
           Today's Alignment Check
       </p>
-      <p className="text-warmCharcoal/60 font-marcellus mb-4" style={{ fontSize: '40px' }}>You've checked in {checkinsLast7} of the last 7 days.</p>
+      <p className="text-warmCharcoal/60 font-marcellus mb-4 text-sm">You've checked in {checkinsLast7} of the last 7 days.</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Emotions */}
         <div>
-          <p className="font-marcellus text-warmCharcoal mb-3" style={{ fontSize: '40px' }}>How are you feeling?</p>
+          <p className="font-marcellus text-warmCharcoal mb-3 text-sm">How are you feeling?</p>
           <div className="flex flex-wrap gap-2">
             {EMOTIONS.map(emotion => (
               <button
                 key={emotion}
                 type="button"
                 onClick={() => toggleEmotion(emotion)}
-                className={`px-3 py-1 rounded-full text-xs transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-marcellus transition-all border-2 ${
                   selectedEmotions.includes(emotion)
-                    ? 'bg-salmonPeach text-white'
-                    : 'bg-salmonPeach/20 text-warmCharcoal hover:bg-salmonPeach/40'
+                    ? 'bg-salmonPeach text-white border-salmonPeach shadow-md scale-105'
+                    : 'bg-white text-warmCharcoal/70 border-warmCharcoal/15 hover:border-salmonPeach/50 hover:bg-salmonPeach/5'
                 }`}
               >
                 {emotion}
@@ -135,7 +135,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Alignment Slider */}
         <div>
-          <p className="font-marcellus text-warmCharcoal mb-3" style={{ fontSize: '40px' }}>
+          <p className="font-marcellus text-warmCharcoal mb-3 text-sm">
             Alignment with your purpose right now: <span className="font-bold">{alignment}/10</span>
           </p>
           <input
@@ -146,7 +146,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
             onChange={(e) => setAlignment(parseInt(e.target.value))}
             className="w-full"
           />
-          <div className="flex justify-between text-warmCharcoal/50 mt-2 font-marcellus" style={{ fontSize: '40px' }}>
+          <div className="flex justify-between text-warmCharcoal/50 mt-2 font-marcellus text-xs">
             <span>Off track</span>
             <span>Aligned</span>
           </div>
@@ -154,7 +154,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Need */}
         <div>
-          <p className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>One thing you need today…</p>
+          <p className="font-marcellus text-warmCharcoal mb-2 text-sm">One thing you need today…</p>
           <input
             type="text"
             value={need}

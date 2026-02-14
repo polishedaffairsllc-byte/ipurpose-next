@@ -59,11 +59,11 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
         <div className="flex items-center gap-3">
           <span className="text-2xl">{practice.icon}</span>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal flex items-center gap-2" style={{ fontSize: '40px' }}>
+            <h3 className="font-marcellus text-warmCharcoal text-base flex items-center gap-2">
               {practice.title}
               {suggested && <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Suggested for today</span>}
             </h3>
-            <p className="text-warmCharcoal/60 font-marcellus" style={{ fontSize: '40px' }}>{practice.duration}-{practice.duration + 5} minutes</p>
+            <p className="text-warmCharcoal/60 font-marcellus text-sm">{practice.duration}-{practice.duration + 5} minutes</p>
           </div>
         </div>
         <Button
@@ -84,7 +84,7 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
         </Button>
       </div>
 
-      <p className="text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus" style={{ fontSize: '40px' }}>
+      <p className="text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus text-sm">
         {practice.description}
       </p>
 
@@ -93,12 +93,12 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
           {step === 'instructions' && (
             <div className="space-y-4">
               <div>
-                <p className="uppercase tracking-widest text-warmCharcoal/55 mb-3 font-marcellus" style={{ fontSize: '40px' }}>Instructions</p>
+                <p className="uppercase tracking-widest text-warmCharcoal/55 mb-3 font-marcellus text-xs">Instructions</p>
                 <ol className="space-y-3">
                   {practice.instructions.map((instruction, idx) => (
                     <li key={idx} className="flex gap-3">
                       <span className="font-bold text-lavenderViolet flex-shrink-0">{idx + 1}</span>
-                      <p className="text-warmCharcoal/70 font-marcellus" style={{ fontSize: '40px' }}>{instruction}</p>
+                      <p className="text-warmCharcoal/70 font-marcellus text-sm">{instruction}</p>
                     </li>
                   ))}
                 </ol>
