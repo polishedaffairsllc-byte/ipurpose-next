@@ -332,7 +332,7 @@ export default async function SoulPage() {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Button href="/labs">Continue to Labs</Button>
-                  <Button variant="secondary" href="/inner-compass">Inner Compass</Button>
+                  <Button variant="secondary" href="/soul/chat">Inner Compass</Button>
                   <Button variant="ghost" href="/dashboard">End session</Button>
                 </div>
               </div>
