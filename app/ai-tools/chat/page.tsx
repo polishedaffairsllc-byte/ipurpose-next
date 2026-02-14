@@ -5,12 +5,23 @@
  * Interactive chat for content generation and creative assistance
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import GPTChat from '../../components/GPTChat';
 
 export default function AIToolsGPTPage() {
+  const searchParams = useSearchParams();
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [showChat, setShowChat] = useState(false);
+
+  // Auto-select tool from query param (e.g. /ai-tools/chat?tool=Content+Writing)
+  useEffect(() => {
+    const toolParam = searchParams.get('tool');
+    if (toolParam) {
+      setSelectedTool(toolParam);
+      setShowChat(true);
+    }
+  }, [searchParams]);
 
   const tools = [
     {

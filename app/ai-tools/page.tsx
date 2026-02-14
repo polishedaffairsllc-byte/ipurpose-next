@@ -48,7 +48,7 @@ export default async function AIToolsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Generate aligned content, offers, and messaging that resonates deeply with your audience and feels true to your soul.
               </p>
-              <Button variant="primary" size="sm" className="w-full">
+              <Button variant="primary" size="sm" className="w-full" href="/ai-tools/chat?tool=Content+Writing">
                 Launch Studio
               </Button>
             </Card>
@@ -64,7 +64,7 @@ export default async function AIToolsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Turn complex ideas into clear, compelling language. Help your audience understand why your work matters and how it serves them.
               </p>
-              <Button variant="primary" size="sm" className="w-full">
+              <Button variant="primary" size="sm" className="w-full" href="/ai-tools/chat?tool=Marketing+Copy">
                 Try Articulator
               </Button>
             </Card>
@@ -80,7 +80,7 @@ export default async function AIToolsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
                 Extract patterns, themes, and wisdom from your journal entries, client calls, and strategic reflections.
               </p>
-              <Button variant="primary" size="sm" className="w-full">
+              <Button variant="primary" size="sm" className="w-full" href="/ai-tools/chat?tool=Brainstorming">
                 Open Synthesizer
               </Button>
             </Card>
@@ -99,7 +99,7 @@ export default async function AIToolsPage() {
               <p className="text-xs text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Draft nurturing, value-packed emails for your audience.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Email+Drafts">
                 Generate →
               </Button>
             </Card>
@@ -110,7 +110,7 @@ export default async function AIToolsPage() {
               <p className="text-xs text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Create aligned social posts that invite conversation.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Content+Writing">
                 Generate →
               </Button>
             </Card>
@@ -121,7 +121,7 @@ export default async function AIToolsPage() {
               <p className="text-xs text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Build high-converting pages with soulful language.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Marketing+Copy">
                 Generate →
               </Button>
             </Card>
@@ -132,7 +132,7 @@ export default async function AIToolsPage() {
               <p className="text-xs text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Create compelling video and podcast scripts.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Content+Writing">
                 Generate →
               </Button>
             </Card>
@@ -151,7 +151,7 @@ export default async function AIToolsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Design compelling offers that align with your purpose and your audience's needs.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Marketing+Copy">
                 Start Building →
               </Button>
             </Card>
@@ -162,7 +162,7 @@ export default async function AIToolsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Understand your market landscape and identify strategic opportunities.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Brainstorming">
                 Analyze Market →
               </Button>
             </Card>
@@ -173,7 +173,7 @@ export default async function AIToolsPage() {
               <p className="text-sm text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus">
                 Take a seed idea and explore 10 aligned directions for your business.
               </p>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" href="/ai-tools/chat?tool=Brainstorming">
                 Expand Ideas →
               </Button>
             </Card>
@@ -198,7 +198,7 @@ export default async function AIToolsPage() {
             <p className="text-sm text-warmCharcoal/65 mb-6 leading-relaxed font-marcellus">
               String together prompts, data sources, and outputs to create powerful workflows that run on autopilot. Perfect for recurring content, client onboarding, and strategic planning.
             </p>
-            <Button variant="secondary">
+            <Button variant="secondary" href="/ai-tools/chat">
               Explore Automation Library
             </Button>
           </Card>
