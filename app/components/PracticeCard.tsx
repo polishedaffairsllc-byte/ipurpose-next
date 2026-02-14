@@ -57,13 +57,13 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
     <Card hover>
       <div className="flex items-center justify-between gap-3 mb-2">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{practice.icon}</span>
+          <span style={{ fontSize: '24px' }}>{practice.icon}</span>
           <div>
-            <h3 className="font-marcellus text-warmCharcoal text-base flex items-center gap-2">
+            <h3 className="flex items-center gap-2" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '16px' }}>
               {practice.title}
-              {suggested && <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Suggested for today</span>}
+              {suggested && <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '9999px', backgroundColor: '#d1fae5', color: '#065f46' }}>Suggested for today</span>}
             </h3>
-            <p className="text-warmCharcoal/60 font-marcellus text-sm">{practice.duration}-{practice.duration + 5} minutes</p>
+            <p style={{ color: 'rgba(42,42,42,0.6)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>{practice.duration}-{practice.duration + 5} minutes</p>
           </div>
         </div>
         <Button
@@ -84,7 +84,7 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
         </Button>
       </div>
 
-      <p className="text-warmCharcoal/65 mb-4 leading-relaxed font-marcellus text-sm">
+      <p className="mb-4 leading-relaxed" style={{ color: 'rgba(42,42,42,0.65)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
         {practice.description}
       </p>
 
@@ -93,12 +93,12 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
           {step === 'instructions' && (
             <div className="space-y-4">
               <div>
-                <p className="uppercase tracking-widest text-warmCharcoal/55 mb-3 font-marcellus text-xs">Instructions</p>
+                <p className="mb-3" style={{ textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>Instructions</p>
                 <ol className="space-y-3">
                   {practice.instructions.map((instruction, idx) => (
                     <li key={idx} className="flex gap-3">
-                      <span className="font-bold text-lavenderViolet flex-shrink-0">{idx + 1}</span>
-                      <p className="text-warmCharcoal/70 font-marcellus text-sm">{instruction}</p>
+                      <span style={{ fontWeight: 'bold', color: '#9C88FF', flexShrink: 0 }}>{idx + 1}</span>
+                      <p style={{ color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>{instruction}</p>
                     </li>
                   ))}
                 </ol>
@@ -116,20 +116,21 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
 
           {step === 'reflection' && (
             <div className="space-y-4">
-              <div className="bg-salmonPeach/5 p-4 rounded-lg">
-                <p className="text-sm text-warmCharcoal/70 font-marcellus">
+              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(252,196,183,0.05)' }}>
+                <p style={{ fontSize: '14px', color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif' }}>
                   Take your time. When you're done, come back here.
                 </p>
               </div>
 
               <div>
-                <p className="text-sm font-marcellus text-warmCharcoal mb-2">Reflection (optional)</p>
+                <p className="mb-2" style={{ fontSize: '14px', fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Reflection (optional)</p>
                 <textarea
                   value={reflection}
                   onChange={(e) => setReflection(e.target.value)}
                   placeholder="What came up for you? Any insights?"
-                  className="w-full px-3 py-2 rounded-lg border border-warmCharcoal/20 text-sm font-marcellus"
+                  className="w-full"
                   rows={4}
+                  style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(42,42,42,0.2)', fontSize: '14px', fontFamily: 'Marcellus, serif' }}
                 />
               </div>
 
@@ -137,7 +138,7 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
                 <Button onClick={handleComplete} disabled={loading} className="w-full">
                   I'm Ready
                 </Button>
-                <p className="text-xs text-warmCharcoal/60 text-center font-marcellus">
+                <p className="text-center" style={{ fontSize: '12px', color: 'rgba(42,42,42,0.6)', fontFamily: 'Marcellus, serif' }}>
                   This saves your reflection and closes the practice.
                 </p>
               </div>
@@ -146,12 +147,12 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
 
           {step === 'confirmation' && (
             <div className="text-center py-4 space-y-3">
-              <p className="text-3xl">🎉</p>
-              <p className="font-marcellus text-lg text-warmCharcoal">Practice saved</p>
-              <p className="text-sm text-warmCharcoal/70 font-marcellus">
+              <p style={{ fontSize: '30px' }}>🎉</p>
+              <p style={{ fontFamily: 'Marcellus, serif', fontSize: '18px', color: '#2A2A2A' }}>Practice saved</p>
+              <p style={{ fontSize: '14px', color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif' }}>
                 This reflection will be available in your Soul history and Insights.
               </p>
-              <p className="text-xs text-warmCharcoal/55 font-marcellus">Take a breath, then choose what’s next.</p>
+              <p style={{ fontSize: '12px', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif' }}>Take a breath, then choose what's next.</p>
             </div>
           )}
         </div>

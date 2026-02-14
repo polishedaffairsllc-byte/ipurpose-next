@@ -206,8 +206,8 @@ export default async function SoulPage() {
           />
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">Soul Alignment</h1>
-            <div className="inline-block bg-black/25 backdrop-blur-sm rounded-2xl px-8 py-4">
-              <p className="text-warmCharcoal/80 font-marcellus text-lg drop-shadow-lg">
+            <div className="inline-block backdrop-blur-sm rounded-2xl px-8 py-4" style={{ backgroundColor: 'rgba(0,0,0,0.25)' }}>
+              <p style={{ color: 'rgba(42,42,42,0.8)', fontFamily: 'Marcellus, serif', fontSize: '18px' }}>
                 Self-understanding over self-judgment. Your inner work is the foundation.
               </p>
             </div>
@@ -219,10 +219,10 @@ export default async function SoulPage() {
         <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 mb-6">
           <Card accent="salmon" className="flex flex-col justify-between">
             <div className="space-y-3">
-              <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase font-marcellus text-xs">
+              <p style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>
                 {welcomeMessage}
               </p>
-              <p className="text-warmCharcoal/75 font-marcellus text-sm">
+              <p style={{ color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
                 {content.alignmentMessage}
               </p>
             </div>
@@ -233,10 +233,10 @@ export default async function SoulPage() {
           </Card>
 
           <Card accent="lavender" className="relative">
-            <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus text-xs">
+            <p className="mb-3" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>
               YOUR SOUL → SYSTEMS → AI™ FOUNDATION
             </p>
-            <p className="text-warmCharcoal/75 leading-relaxed font-marcellus text-sm">
+            <p className="leading-relaxed" style={{ color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
               Soul work creates the foundation for everything you build. When you're aligned internally,
               your systems flow naturally and your AI tools amplify what truly matters.
             </p>
@@ -246,18 +246,18 @@ export default async function SoulPage() {
         {/* Archetype-Adaptive Growth Edge */}
         <div id="orientation" className="mb-12">
           <Card accent="lavender" className="mb-8">
-            <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus text-xs">
+            <p className="mb-4" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.45)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>
               Your Growth Edge
             </p>
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
                 {content.growthEdgeFocus.map((focus, index) => (
-                  <span key={index} className="px-3 py-1 rounded-full bg-warmCharcoal/10 text-warmCharcoal font-marcellus text-sm">
+                  <span key={index} className="rounded-full" style={{ padding: '4px 12px', backgroundColor: 'rgba(42,42,42,0.1)', color: '#2A2A2A', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
                     {focus}
                   </span>
                 ))}
               </div>
-              <p className="text-warmCharcoal/70 font-marcellus mt-4 text-sm">
+              <p className="mt-4" style={{ color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
                 These areas are where your archetype naturally grows. Notice them without forcing change.
               </p>
             </div>
@@ -271,9 +271,9 @@ export default async function SoulPage() {
                 <Card accent="salmon" className="mb-8">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus text-xs">Check-in</p>
-                      <p className="font-marcellus text-warmCharcoal text-base">You're set for today.</p>
-                      <p className="text-warmCharcoal/70 font-marcellus text-sm">You've checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
+                      <p className="mb-2" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>Check-in</p>
+                      <p style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '16px' }}>You're set for today.</p>
+                      <p style={{ color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>You've checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <Button href="#practices">Go to practices</Button>
@@ -291,19 +291,19 @@ export default async function SoulPage() {
             
             {/* Archetype-Specific Reflection Prompts */}
             <Card accent="salmon" className="mb-6">
-              <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-3 font-marcellus text-xs">
+              <p className="mb-3" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>
                 Reflection Prompts for You
               </p>
               <div className="space-y-2">
                 {content.reflectionPrompts.map((prompt, index) => (
-                  <p key={index} className="text-warmCharcoal/75 font-marcellus text-sm">
+                  <p key={index} style={{ color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
                     • {prompt}
                   </p>
                 ))}
               </div>
             </Card>
 
-            <p className="text-warmCharcoal/70 font-marcellus mb-4 text-sm">
+            <p className="mb-4" style={{ color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>
               Suggested based on your check-in and archetype. Primary practices are most aligned for you.
             </p>
             <div className="grid md:grid-cols-2 gap-6">
@@ -324,11 +324,11 @@ export default async function SoulPage() {
             <Card accent="lavender" className="mt-10">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <p className="font-medium tracking-widest text-warmCharcoal/55 uppercase mb-2 font-marcellus text-xs">Ready to deepen?</p>
-                  <p className="font-marcellus text-warmCharcoal mb-2 text-base">
+                  <p className="mb-2" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)', fontFamily: 'Marcellus, serif', fontSize: '12px' }}>Ready to deepen?</p>
+                  <p className="mb-2" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '16px' }}>
                     {content.labsBridgeText}
                   </p>
-                  <p className="text-warmCharcoal/70 font-marcellus text-sm">Your awareness here is saved to your Soul record. Over time, these patterns shape your Insights and future guidance.</p>
+                  <p style={{ color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif', fontSize: '14px' }}>Your awareness here is saved to your Soul record. Over time, these patterns shape your Insights and future guidance.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Button href="/labs">Continue to Labs</Button>

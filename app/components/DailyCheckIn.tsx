@@ -84,16 +84,24 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
     return (
       <Card accent="salmon" className="mb-8">
           <div className="text-center py-6 space-y-3">
-            <p className="text-2xl mb-1">✨</p>
-            <p className="font-marcellus text-lg text-warmCharcoal mb-1">Saved. Your check-in is part of your ongoing Soul record.</p>
-            <p className="text-sm text-warmCharcoal/70 font-marcellus">
+            <p style={{ fontSize: '24px', marginBottom: '4px' }}>✨</p>
+            <p style={{ fontFamily: 'Marcellus, serif', fontSize: '18px', color: '#2A2A2A', marginBottom: '4px' }}>Saved. Your check-in is part of your ongoing Soul record.</p>
+            <p style={{ fontSize: '14px', color: 'rgba(42,42,42,0.7)', fontFamily: 'Marcellus, serif' }}>
               Thanks — today you might benefit from:
             </p>
-            <div className="flex flex-wrap justify-center gap-2 text-xs font-marcellus">
+            <div className="flex flex-wrap justify-center gap-2">
               {['Rest', 'Structure', 'Reflection', 'Expression'].map((item) => (
                 <span
                   key={item}
-                  className={`px-3 py-1 rounded-full border ${suggestions.includes(item) ? 'border-indigoDeep text-indigoDeep bg-indigoDeep/10' : 'border-warmCharcoal/15 text-warmCharcoal/70'}`}
+                  style={{
+                    padding: '4px 12px',
+                    borderRadius: '9999px',
+                    fontSize: '12px',
+                    fontFamily: 'Marcellus, serif',
+                    border: suggestions.includes(item) ? '1px solid #4B4E6D' : '1px solid rgba(42,42,42,0.15)',
+                    color: suggestions.includes(item) ? '#4B4E6D' : 'rgba(42,42,42,0.7)',
+                    backgroundColor: suggestions.includes(item) ? 'rgba(75,78,109,0.1)' : 'transparent',
+                  }}
                 >
                   {item}
                 </span>
@@ -106,26 +114,34 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
   return (
     <Card accent="salmon" className="mb-8">
-      <p className="font-medium tracking-widest text-warmCharcoal/45 uppercase mb-4 font-marcellus text-xs">
+      <p style={{ fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.45)', fontFamily: 'Marcellus, serif', marginBottom: '16px' }}>
           Today's Alignment Check
       </p>
-      <p className="text-warmCharcoal/60 font-marcellus mb-4 text-sm">You've checked in {checkinsLast7} of the last 7 days.</p>
+      <p style={{ fontSize: '14px', color: 'rgba(42,42,42,0.6)', fontFamily: 'Marcellus, serif', marginBottom: '16px' }}>You've checked in {checkinsLast7} of the last 7 days.</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Emotions */}
         <div>
-          <p className="font-marcellus text-warmCharcoal mb-3 text-sm">How are you feeling?</p>
+          <p style={{ fontSize: '14px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '12px' }}>How are you feeling?</p>
           <div className="flex flex-wrap gap-2">
             {EMOTIONS.map(emotion => (
               <button
                 key={emotion}
                 type="button"
                 onClick={() => toggleEmotion(emotion)}
-                className={`px-4 py-2 rounded-full text-sm font-marcellus transition-all border-2 ${
-                  selectedEmotions.includes(emotion)
-                    ? 'bg-salmonPeach text-white border-salmonPeach shadow-md scale-105'
-                    : 'bg-white text-warmCharcoal/70 border-warmCharcoal/15 hover:border-salmonPeach/50 hover:bg-salmonPeach/5'
-                }`}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '9999px',
+                  fontSize: '14px',
+                  fontFamily: 'Marcellus, serif',
+                  transition: 'all 0.2s',
+                  border: selectedEmotions.includes(emotion) ? '2px solid #FCC4B7' : '2px solid rgba(42,42,42,0.15)',
+                  backgroundColor: selectedEmotions.includes(emotion) ? '#FCC4B7' : '#fff',
+                  color: selectedEmotions.includes(emotion) ? '#fff' : 'rgba(42,42,42,0.7)',
+                  transform: selectedEmotions.includes(emotion) ? 'scale(1.05)' : 'scale(1)',
+                  boxShadow: selectedEmotions.includes(emotion) ? '0 4px 12px rgba(252,196,183,0.4)' : 'none',
+                  cursor: 'pointer',
+                }}
               >
                 {emotion}
               </button>
@@ -135,8 +151,8 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Alignment Slider */}
         <div>
-          <p className="font-marcellus text-warmCharcoal mb-3 text-sm">
-            Alignment with your purpose right now: <span className="font-bold">{alignment}/10</span>
+          <p style={{ fontSize: '14px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '12px' }}>
+            Alignment with your purpose right now: <strong>{alignment}/10</strong>
           </p>
           <input
             type="range"
@@ -146,7 +162,7 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
             onChange={(e) => setAlignment(parseInt(e.target.value))}
             className="w-full"
           />
-          <div className="flex justify-between text-warmCharcoal/50 mt-2 font-marcellus text-xs">
+          <div className="flex justify-between mt-2" style={{ fontSize: '12px', color: 'rgba(42,42,42,0.5)', fontFamily: 'Marcellus, serif' }}>
             <span>Off track</span>
             <span>Aligned</span>
           </div>
@@ -154,13 +170,13 @@ export default function DailyCheckIn({ checkinsLast7 }: Props) {
 
         {/* Need */}
         <div>
-          <p className="font-marcellus text-warmCharcoal mb-2 text-sm">One thing you need today…</p>
+          <p style={{ fontSize: '14px', color: '#2A2A2A', fontFamily: 'Marcellus, serif', marginBottom: '8px' }}>One thing you need today…</p>
           <input
             type="text"
             value={need}
             onChange={(e) => setNeed(e.target.value)}
             placeholder="Rest, clarity, connection…"
-            className="w-full px-3 py-2 rounded-lg border border-warmCharcoal/20 text-sm font-marcellus"
+            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(42,42,42,0.2)', fontSize: '14px', fontFamily: 'Marcellus, serif' }}
           />
         </div>
 
