@@ -186,7 +186,6 @@ export default function StarterPackLanding() {
             disabled={loading}
             className="px-8 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
-            style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
           >
             {loading ? 'Starting checkout…' : 'Start with the Starter Pack'}
           </button>
@@ -238,7 +237,6 @@ export default function StarterPackLanding() {
             disabled={loading}
             className="px-8 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
-            style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
           >
             {loading ? 'Starting checkout…' : 'Start with the Starter Pack'}
           </button>

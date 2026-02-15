@@ -1,4 +1,8 @@
 import { cookies } from 'next/headers';
+
+// This route reads cookies (session/entitlement checks) and must be server-rendered.
+// Make the rendering mode explicit so Next knows this page is intentionally dynamic.
+export const dynamic = 'force-dynamic';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { deriveFounderContext } from '@/lib/isFounder';
 import StarterPackLanding from './StarterPackLandingClient';
