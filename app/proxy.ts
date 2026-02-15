@@ -42,7 +42,6 @@ const GATED_ROUTES: Record<string, EntitlementTier> = {
   '/labs': 'FREE',
   '/integration': 'BASIC_PAID',
 };
-};
 
 function getRequiredTier(path: string): EntitlementTier {
   for (const [route, tier] of Object.entries(GATED_ROUTES)) {
@@ -82,3 +81,4 @@ export async function onProxy(request: NextRequest) {
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|videos).*)'],
 };
+
