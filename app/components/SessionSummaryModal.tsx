@@ -68,7 +68,7 @@ export function SessionSummaryModal({
     `);
     printWindow.document.close();
     printWindow.print();
-  }, []);
+  }, [userName]);
 
   const handleDownload = useCallback(() => {
     const text = generateTextContent(session, entries);
