@@ -147,33 +147,6 @@ export default function StarterPackLanding() {
         </div>
       </section>
 
-      {/* ── Who This Is For / What This Is Not ── */}
-      <section className="container max-w-4xl mx-auto px-6 py-16">
-        <div className="grid gap-12 sm:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>Who This Is For</h2>
-            <p className="text-base text-warmCharcoal/70 mb-4">This is for you if:</p>
-            <ul className="space-y-3 text-base text-warmCharcoal/70">
-              <li className="flex items-start gap-3"><span className="text-lavenderViolet">✦</span> You feel stuck but can't explain why</li>
-              <li className="flex items-start gap-3"><span className="text-lavenderViolet">✦</span> You have ideas but no clear direction</li>
-              <li className="flex items-start gap-3"><span className="text-lavenderViolet">✦</span> You've been pouring into others and lost focus on yourself</li>
-              <li className="flex items-start gap-3"><span className="text-lavenderViolet">✦</span> You're ready for clarity, not overwhelm</li>
-              <li className="flex items-start gap-3"><span className="text-lavenderViolet">✦</span> You want a starting point that feels safe and grounded</li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>What This Is Not</h2>
-            <ul className="space-y-3 text-base text-warmCharcoal/70">
-              <li className="flex items-start gap-3"><span className="text-salmonPeach">✕</span> Not a personality test</li>
-              <li className="flex items-start gap-3"><span className="text-salmonPeach">✕</span> Not a hustle plan</li>
-              <li className="flex items-start gap-3"><span className="text-salmonPeach">✕</span> Not a pressure-filled transformation program</li>
-            </ul>
-            <p className="mt-6 text-lg font-italiana text-warmCharcoal/60 italic">It's a calm beginning.</p>
-          </div>
-        </div>
-      </section>
-
       {/* ── Your Investment / CTA ── */}
       <section className="bg-gradient-to-br from-lavenderViolet/5 via-transparent to-softGold/5 py-20">
         <div className="container max-w-3xl mx-auto px-6 text-center">
@@ -195,53 +168,6 @@ export default function StarterPackLanding() {
           </p>
 
           <p className="mt-2 text-sm text-warmCharcoal/50">
-            Already purchased? <Link href="/login?next=/starter-pack" className="underline text-lavenderViolet">Sign in to access your Starter Pack</Link>
-          </p>
-        </div>
-      </section>
-
-      {/* ── Where This Leads ── */}
-      <section className="container max-w-3xl mx-auto px-6 py-16 text-center">
-        <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>Where This Leads</h2>
-        <p className="text-base text-warmCharcoal/70 mb-8">
-          The Starter Pack is the entry point into the iPurpose path.<br />
-          From here, you may choose to continue into:
-        </p>
-        <div className="grid gap-4 sm:grid-cols-3 text-left">
-          <div className="p-5 rounded-xl border border-lavenderViolet/10 bg-white">
-            <h3 className="font-semibold text-base mb-1" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>AI Blueprint</h3>
-            <p className="text-sm text-warmCharcoal/60">For learning how to use AI with intention</p>
-          </div>
-          <div className="p-5 rounded-xl border border-lavenderViolet/10 bg-white">
-            <h3 className="font-semibold text-base mb-1" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>Deepen</h3>
-            <p className="text-sm text-warmCharcoal/60">For ongoing inner work and alignment</p>
-          </div>
-          <div className="p-5 rounded-xl border border-lavenderViolet/10 bg-white">
-            <h3 className="font-semibold text-base mb-1" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>Accelerator</h3>
-            <p className="text-sm text-warmCharcoal/60">For building systems, offers, and income around your purpose</p>
-          </div>
-        </div>
-        <p className="mt-6 text-sm text-warmCharcoal/50 italic">
-          There's no pressure to move forward. You'll know when you're ready.
-        </p>
-      </section>
-
-      {/* ── Final Invitation ── */}
-      <section className="bg-gradient-to-b from-white to-lavenderViolet/5 py-20">
-        <div className="container max-w-2xl mx-auto px-6 text-center">
-          <p className="text-lg text-warmCharcoal/70 mb-2">If you've been waiting for the "right time" to get clear…</p>
-          <p className="text-2xl font-italiana text-warmCharcoal/90 mb-8">This is a gentle place to begin.</p>
-
-          <button
-            onClick={handleCheckout}
-            disabled={loading}
-            className="px-8 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
-          >
-            {loading ? 'Starting checkout…' : 'Start with the Starter Pack'}
-          </button>
-
-          <p className="mt-6 text-sm text-warmCharcoal/50">
             Already purchased? <Link href="/login?next=/starter-pack" className="underline text-lavenderViolet">Sign in to access your Starter Pack</Link>
           </p>
         </div>
