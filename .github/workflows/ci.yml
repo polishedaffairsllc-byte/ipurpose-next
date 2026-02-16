@@ -54,7 +54,7 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npx eslint . --max-warnings 0 || echo "⚠️  ESLint warnings present (non-blocking)"
+        run: npx eslint .
 
       - name: TypeScript type check
         run: npx tsc --noEmit
