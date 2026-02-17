@@ -106,38 +106,38 @@ export default function StarterPackLanding() {
 
             {/* Card 2 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Purpose Reflection Prompts</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ lineHeight: '1.6' }}>Simple, thoughtful prompts that help you slow down and listen inward.</p>
-              <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>Designed to help you:</p>
-              <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Notice patterns in your life</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Recognize what keeps calling you</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Put language to what you've been feeling</li>
+              <h3 className="text-xl font-semibold mb-3 font-italiana text-display-h3" style={{ color: '#2A2A2A' }}>Purpose Reflection Prompts</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4 font-marcellus text-display-emphasis" style={{ lineHeight: '1.6' }}>Simple, thoughtful prompts that help you slow down and listen inward.</p>
+              <p className="text-sm font-medium text-warmCharcoal/60 mb-2 font-marcellus text-display-emphasis">Designed to help you:</p>
+              <ul className="space-y-2 text-sm text-warmCharcoal/70 font-marcellus text-display-emphasis">
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> Notice patterns in your life</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> Recognize what keeps calling you</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> Put language to what you've been feeling</li>
               </ul>
             </div>
 
             {/* Card 3 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Personal Insight Snapshot</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ lineHeight: '1.6' }}>A grounded look at where you are right now — not who you "should" be.</p>
-              <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>This helps you:</p>
-              <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Name your current season</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> See your strengths more clearly</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Identify your next small step</li>
+              <h3 className="text-xl font-semibold mb-3 font-italiana text-display-h3" style={{ color: '#2A2A2A' }}>Personal Insight Snapshot</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4 font-marcellus text-display-emphasis" style={{ lineHeight: '1.6' }}>A grounded look at where you are right now — not who you "should" be.</p>
+              <p className="text-sm font-medium text-warmCharcoal/60 mb-2 font-marcellus text-display-emphasis">This helps you:</p>
+              <ul className="space-y-2 text-sm text-warmCharcoal/70 font-marcellus text-display-emphasis">
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> Name your current season</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> See your strengths more clearly</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> Identify your next small step</li>
               </ul>
             </div>
 
             {/* Card 4 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Gentle Direction Forward</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ lineHeight: '1.6' }}>Once you complete the Starter Pack, you'll have a clearer sense of:</p>
-              <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What you want to build</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What needs healing or attention</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Whether you're ready to go deeper</li>
+              <h3 className="text-xl font-semibold mb-3 font-italiana text-display-h3" style={{ color: '#2A2A2A' }}>Gentle Direction Forward</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4 font-marcellus text-display-emphasis" style={{ lineHeight: '1.6' }}>Once you complete the Starter Pack, you'll have a clearer sense of:</p>
+              <ul className="space-y-2 text-sm text-warmCharcoal/70 font-marcellus text-display-emphasis">
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> What you want to build</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> What needs healing or attention</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold\">•</span> Whether you're ready to go deeper</li>
               </ul>
-              <p className="mt-4 text-sm text-warmCharcoal/60 italic" style={{ fontSize: '20px', lineHeight: '1.6' }}>From there, you can move into the next stage when the timing feels right.</p>
+              <p className="mt-4 text-sm text-warmCharcoal/60 italic font-marcellus text-display-emphasis">From there, you can move into the next stage when the timing feels right.</p>
             </div>
           </div>
         </div>
