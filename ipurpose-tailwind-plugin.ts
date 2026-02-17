@@ -55,7 +55,7 @@ export const iPurposeTailwindPlugin = plugin(
     addUtilities({
       // HERO / DISPLAY HEADINGS - 112px responsive
       '.text-hero': {
-        fontFamily: designTokens.typography.fontFamily.italiana,
+        fontFamily: designTokens.typography.fontFamily.italiana.join(', '),
         fontSize: designTokens.typography.displayFontSize.hero,
         fontWeight: '400',
         lineHeight: '1.2',
@@ -64,7 +64,7 @@ export const iPurposeTailwindPlugin = plugin(
 
       // SECTION HEADINGS (H2) - 54-62px responsive
       '.text-h2': {
-        fontFamily: designTokens.typography.fontFamily.italiana,
+        fontFamily: designTokens.typography.fontFamily.italiana.join(', '),
         fontSize: designTokens.typography.displayFontSize.h2,
         fontWeight: '400',
         lineHeight: '1.25',
@@ -73,7 +73,7 @@ export const iPurposeTailwindPlugin = plugin(
 
       // SUBHEADINGS (H3) - 36-48px responsive
       '.text-h3': {
-        fontFamily: designTokens.typography.fontFamily.italiana,
+        fontFamily: designTokens.typography.fontFamily.italiana.join(', '),
         fontSize: designTokens.typography.displayFontSize.h3,
         fontWeight: '400',
         lineHeight: '1.3',
@@ -81,7 +81,7 @@ export const iPurposeTailwindPlugin = plugin(
 
       // EMPHASIS TEXT - 20-24px responsive (important descriptions)
       '.text-emphasis': {
-        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontFamily: designTokens.typography.fontFamily.marcellus.join(', '),
         fontSize: designTokens.typography.displayFontSize.emphasis,
         fontWeight: '400',
         lineHeight: '1.6',
@@ -89,7 +89,7 @@ export const iPurposeTailwindPlugin = plugin(
 
       // BODY TEXT - 16px standard
       '.text-body': {
-        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontFamily: designTokens.typography.fontFamily.marcellus.join(', '),
         fontSize: '1rem',
         fontWeight: '400',
         lineHeight: '1.5',
@@ -97,7 +97,7 @@ export const iPurposeTailwindPlugin = plugin(
 
       // BODY SMALL - 14px standard
       '.text-body-small': {
-        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontFamily: designTokens.typography.fontFamily.marcellus.join(', '),
         fontSize: '0.875rem',
         fontWeight: '400',
         lineHeight: '1.5',
@@ -105,7 +105,7 @@ export const iPurposeTailwindPlugin = plugin(
 
       // CAPTION - 12px standard
       '.text-caption': {
-        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontFamily: designTokens.typography.fontFamily.marcellus.join(', '),
         fontSize: '0.75rem',
         fontWeight: '500',
         lineHeight: '1.5',

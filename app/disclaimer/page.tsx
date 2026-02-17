@@ -187,10 +187,11 @@ export default function DisclaimerPage() {
                 <span className="font-marcellus text-base text-gray-600 italic">This platform is designed to support—not replace—professional care.</span>
               </p>
             </section>
-                </div>
-              </div>
-            </main>
-            <Footer />
+            </div>
           </div>
-    );
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
 }
