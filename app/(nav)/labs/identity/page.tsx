@@ -116,49 +116,46 @@ export default function IdentityLabPage() {
 
   return (
     <div className="container max-w-4xl mx-auto px-6 md:px-10 py-10">
-      <h1 className="font-semibold text-warmCharcoal" style={{ fontSize: '40px' }}>Identity Lab</h1>
-      <p className="mt-3 text-warmCharcoal/70" style={{ fontSize: '40px' }}>
+      <h1 className="text-h2 font-semibold text-warmCharcoal">Identity Lab</h1>
+      <p className="text-body mt-3 text-warmCharcoal/70">
         Define the core aspects of who you are and what you stand for.
       </p>
 
       {loading ? (
-        <p className="mt-6 text-warmCharcoal/60" style={{ fontSize: '40px' }}>Loading...</p>
+        <p className="text-body mt-6 text-warmCharcoal/60">Loading...</p>
       ) : (
         <div className="mt-6 space-y-4">
           <div className="space-y-3">
-            <label className="font-medium text-warmCharcoal" style={{ fontSize: '40px' }}>Self-Perception Map</label>
+            <label className="text-body font-medium text-warmCharcoal">Self-Perception Map</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-warmCharcoal"
-              style={{ fontSize: '40px' }}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-warmCharcoal text-body"
               placeholder="How do you experience yourself when no one is listening?"
               value={selfPerceptionMap}
               onChange={(e) => setSelfPerceptionMap(e.target.value)}
             />
           </div>
           <div className="space-y-3">
-            <label className="font-medium text-warmCharcoal" style={{ fontSize: '40px' }}>Self-Concept Map</label>
+            <label className="text-body font-medium text-warmCharcoal">Self-Concept Map</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-warmCharcoal"
-              style={{ fontSize: '40px' }}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-warmCharcoal text-body"
               placeholder="What do you believe about who you are?"
               value={selfConceptMap}
               onChange={(e) => setSelfConceptMap(e.target.value)}
             />
           </div>
           <div className="space-y-3">
-            <label className="font-medium text-warmCharcoal" style={{ fontSize: '40px' }}>Self-Narrative Map</label>
+            <label className="text-body font-medium text-warmCharcoal">Self-Narrative Map</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-warmCharcoal"
-              style={{ fontSize: '40px' }}
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-warmCharcoal text-body"
               placeholder="What story do you tell about your life so far?"
               value={selfNarrativeMap}
               onChange={(e) => setSelfNarrativeMap(e.target.value)}
             />
           </div>
-          <label className="flex items-center gap-2 text-warmCharcoal/70" style={{ fontSize: '40px' }}>
+          <label className="text-body flex items-center gap-2 text-warmCharcoal/70">
             <input
               type="checkbox"
               checked={completeEnough}
@@ -166,7 +163,7 @@ export default function IdentityLabPage() {
             />
             This is complete enough for now.
           </label>
-          {status ? <div className="text-warmCharcoal/70" style={{ fontSize: '40px' }}>{status}</div> : null}
+          {status ? <div className="text-body text-warmCharcoal/70">{status}</div> : null}
           <div className="flex gap-3 flex-wrap">
             <Button onClick={save} disabled={saving}>
               {saving ? "Saving..." : "Save"}

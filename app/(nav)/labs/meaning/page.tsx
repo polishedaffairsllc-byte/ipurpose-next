@@ -116,46 +116,46 @@ export default function MeaningLabPage() {
 
   return (
     <div className="container max-w-4xl mx-auto px-6 md:px-10 py-10">
-      <h1 className="text-4xl font-semibold text-warmCharcoal">Meaning Lab</h1>
-      <p className="mt-3 text-sm text-warmCharcoal/70">
+      <h1 className="text-h2 text-warmCharcoal">Meaning Lab</h1>
+      <p className="mt-3 text-body text-warmCharcoal/70">
         Clarify the themes, values, and impact that give your work meaning.
       </p>
 
       {loading ? (
-        <p className="mt-6 text-sm text-warmCharcoal/60">Loading...</p>
+        <p className="mt-6 text-body text-warmCharcoal/60">Loading...</p>
       ) : (
         <div className="mt-6 space-y-4">
           <div className="space-y-3">
-            <label className="text-sm font-medium text-warmCharcoal">Value Structure</label>
+            <label className="text-body font-medium text-warmCharcoal">Value Structure</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-body text-warmCharcoal"
               placeholder="What do you care about most deeply?"
               value={valueStructure}
               onChange={(e) => setValueStructure(e.target.value)}
             />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-warmCharcoal">Coherence Structure</label>
+            <label className="text-body font-medium text-warmCharcoal">Coherence Structure</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-body text-warmCharcoal"
               placeholder="What makes life feel meaningful or grounded?"
               value={coherenceStructure}
               onChange={(e) => setCoherenceStructure(e.target.value)}
             />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-warmCharcoal">Direction Structure</label>
+            <label className="text-body font-medium text-warmCharcoal">Direction Structure</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-body text-warmCharcoal"
               placeholder="Where do you feel drawn or called?"
               value={directionStructure}
               onChange={(e) => setDirectionStructure(e.target.value)}
             />
           </div>
-          <label className="flex items-center gap-2 text-sm text-warmCharcoal/70">
+          <label className="flex items-center gap-2 text-body text-warmCharcoal/70">
             <input
               type="checkbox"
               checked={completeEnough}
@@ -163,7 +163,7 @@ export default function MeaningLabPage() {
             />
             This is complete enough for now.
           </label>
-          {status ? <div className="text-sm text-warmCharcoal/70">{status}</div> : null}
+          {status ? <div className="text-body text-warmCharcoal/70">{status}</div> : null}
           <div className="flex gap-3 flex-wrap">
             <Button onClick={save} disabled={saving}>
               {saving ? "Saving..." : "Save"}

@@ -116,46 +116,46 @@ export default function AgencyLabPage() {
 
   return (
     <div className="container max-w-4xl mx-auto px-6 md:px-10 py-10">
-      <h1 className="text-4xl font-semibold text-warmCharcoal">Agency Lab</h1>
-      <p className="mt-3 text-sm text-warmCharcoal/70">
+      <h1 className="text-h2 text-warmCharcoal">Agency Lab</h1>
+      <p className="mt-3 text-body text-warmCharcoal/70">
         Identify where you can act decisively and build momentum.
       </p>
 
       {loading ? (
-        <p className="mt-6 text-sm text-warmCharcoal/60">Loading...</p>
+        <p className="mt-6 text-body text-warmCharcoal/60">Loading...</p>
       ) : (
         <div className="mt-6 space-y-4">
           <div className="space-y-3">
-            <label className="text-sm font-medium text-warmCharcoal">Awareness Patterns</label>
+            <label className="text-body font-medium text-warmCharcoal">Awareness Patterns</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-body text-warmCharcoal"
               placeholder="When do you notice yourself reacting or becoming alert?"
               value={awarenessPatterns}
               onChange={(e) => setAwarenessPatterns(e.target.value)}
             />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-warmCharcoal">Decision Patterns</label>
+            <label className="text-body font-medium text-warmCharcoal">Decision Patterns</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-body text-warmCharcoal"
               placeholder="How do you make decisions when it matters?"
               value={decisionPatterns}
               onChange={(e) => setDecisionPatterns(e.target.value)}
             />
           </div>
           <div className="space-y-3">
-            <label className="text-sm font-medium text-warmCharcoal">Action Patterns</label>
+            <label className="text-body font-medium text-warmCharcoal">Action Patterns</label>
             <textarea
               rows={6}
-              className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
+              className="w-full px-4 py-3 border border-ip-border rounded-xl text-body text-warmCharcoal"
               placeholder="How do you follow through once you decide?"
               value={actionPatterns}
               onChange={(e) => setActionPatterns(e.target.value)}
             />
           </div>
-          <label className="flex items-center gap-2 text-sm text-warmCharcoal/70">
+          <label className="flex items-center gap-2 text-body text-warmCharcoal/70">
             <input
               type="checkbox"
               checked={completeEnough}
@@ -163,7 +163,7 @@ export default function AgencyLabPage() {
             />
             This is complete enough for now.
           </label>
-          {status ? <div className="text-sm text-warmCharcoal/70">{status}</div> : null}
+          {status ? <div className="text-body text-warmCharcoal/70">{status}</div> : null}
           <div className="flex gap-3 flex-wrap">
             <Button onClick={save} disabled={saving}>
               {saving ? "Saving..." : "Save"}

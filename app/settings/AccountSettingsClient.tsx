@@ -50,10 +50,10 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
             </div>
           )}
           <div className="flex-1">
-            <h1 className="font-semibold text-warmCharcoal mb-2" style={{ fontSize: '40px' }}>
+            <h1 className="text-h2 font-semibold text-warmCharcoal mb-2">
               {loadingProfile ? 'Account Settings' : `Account Settings, ${displayName || 'Friend'}`}
             </h1>
-            <p className="text-warmCharcoal/70" style={{ fontSize: '40px' }}>Manage your account, security, and preferences.</p>
+            <p className="text-body text-warmCharcoal/70">Manage your account, security, and preferences.</p>
           </div>
         </div>
       </div>
@@ -64,12 +64,11 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-3 font-medium transition ${
+            className={`px-4 py-3 font-medium transition text-body ${
               activeTab === tab
                 ? 'text-indigoDeep border-b-2 border-indigoDeep'
                 : 'text-warmCharcoal/60 hover:text-warmCharcoal'
             }`}
-            style={{ fontSize: '40px' }}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
@@ -82,8 +81,8 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
         {activeTab === 'profile' && (
           <div className="space-y-6">
             <Card accent="lavender" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Profile</h2>
-              <p className="text-warmCharcoal/70 mb-4" style={{ fontSize: '40px' }}>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Profile</h2>
+              <p className="text-body text-warmCharcoal/70 mb-4">
                 Manage your display name and profile photo.
               </p>
               <Link href="/profile/edit">
@@ -94,11 +93,11 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
             </Card>
 
             <Card accent="lavender" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Email Address</h2>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Email Address</h2>
               <div className="space-y-3">
                 <div>
-                  <label className="font-medium text-warmCharcoal/70" style={{ fontSize: '40px' }}>Current Email</label>
-                  <p className="mt-2 text-warmCharcoal" style={{ fontSize: '40px' }}>{userEmail}</p>
+                  <label className="text-body font-medium text-warmCharcoal/70">Current Email</label>
+                  <p className="mt-2 text-body text-warmCharcoal">{userEmail}</p>
                 </div>
                 <Button variant="secondary" className="text-sm">
                   Change Email
@@ -107,8 +106,8 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
             </Card>
 
             <Card accent="lavender" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Profile Information</h2>
-              <p className="text-warmCharcoal/70 mb-4" style={{ fontSize: '40px' }}>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Profile Information</h2>
+              <p className="text-body text-warmCharcoal/70 mb-4">
                 Update your name, photo, and other profile details.
               </p>
               <Link href="/profile/edit">
@@ -124,8 +123,8 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
         {activeTab === 'security' && (
           <div className="space-y-6">
             <Card accent="lavender" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Password</h2>
-              <p className="text-warmCharcoal/70 mb-4" style={{ fontSize: '40px' }}>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Password</h2>
+              <p className="text-body text-warmCharcoal/70 mb-4">
                 Update your password to keep your account secure.
               </p>
               <Button
@@ -168,8 +167,8 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
             </Card>
 
             <Card accent="lavender" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Active Sessions</h2>
-              <p className="text-warmCharcoal/70 mb-4" style={{ fontSize: '40px' }}>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Active Sessions</h2>
+              <p className="text-body text-warmCharcoal/70 mb-4">
                 Manage your login sessions and sign out from other devices.
               </p>
               <Button variant="secondary" className="text-sm">
@@ -183,7 +182,7 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
         {activeTab === 'notifications' && (
           <div className="space-y-6">
             <Card accent="lavender" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Email Notifications</h2>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Email Notifications</h2>
               <div className="space-y-4">
                 {[
                   { label: 'Daily digest', description: 'Get a daily summary of your activity' },
@@ -194,8 +193,8 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
                   <label key={notif.label} className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" defaultChecked className="w-4 h-4" />
                     <div>
-                      <p className="font-medium text-warmCharcoal" style={{ fontSize: '40px' }}>{notif.label}</p>
-                      <p className="text-warmCharcoal/60" style={{ fontSize: '40px' }}>{notif.description}</p>
+                      <p className="text-body font-medium text-warmCharcoal">{notif.label}</p>
+                      <p className="text-body-small text-warmCharcoal/60">{notif.description}</p>
                     </div>
                   </label>
                 ))}
@@ -208,22 +207,22 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
         {activeTab === 'billing' && (
           <div className="space-y-6">
             <Card accent="gold" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Subscription</h2>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Subscription</h2>
               <div className="space-y-3">
                 <div>
-                  <label className="font-medium text-warmCharcoal/70" style={{ fontSize: '40px' }}>Current Plan</label>
-                  <p className="mt-2 text-warmCharcoal" style={{ fontSize: '40px' }}>Accelerator • $1,497/year</p>
+                  <label className="text-body font-medium text-warmCharcoal/70">Current Plan</label>
+                  <p className="mt-2 text-body text-warmCharcoal">Accelerator • $1,497/year</p>
                 </div>
                 <div>
-                  <label className="font-medium text-warmCharcoal/70" style={{ fontSize: '40px' }}>Renewal Date</label>
-                  <p className="mt-2 text-warmCharcoal" style={{ fontSize: '40px' }}>February 3, 2027</p>
+                  <label className="text-body font-medium text-warmCharcoal/70">Renewal Date</label>
+                  <p className="mt-2 text-body text-warmCharcoal">February 3, 2027</p>
                 </div>
               </div>
             </Card>
 
             <Card accent="gold" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Billing & Payment</h2>
-              <p className="text-warmCharcoal/70 mb-4" style={{ fontSize: '40px' }}>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Billing & Payment</h2>
+              <p className="text-body text-warmCharcoal/70 mb-4">
                 Manage your billing information and payment methods.
               </p>
               <Button variant="secondary" className="text-sm">
@@ -232,8 +231,8 @@ export default function AccountSettingsClient({ userEmail = 'user@example.com' }
             </Card>
 
             <Card accent="salmon" className="p-6">
-              <h2 className="font-semibold text-warmCharcoal mb-4" style={{ fontSize: '40px' }}>Danger Zone</h2>
-              <p className="text-warmCharcoal/70 mb-4" style={{ fontSize: '40px' }}>
+              <h2 className="text-h3 font-semibold text-warmCharcoal mb-4">Danger Zone</h2>
+              <p className="text-body text-warmCharcoal/70 mb-4">
                 Delete your account and all associated data. This action cannot be undone.
               </p>
               <Button variant="secondary" className="text-sm bg-red-50 text-red-700 hover:bg-red-100">
