@@ -17,14 +17,13 @@ interface StickyNoteProps {
 }
 
 const noteColors = [
-  { bg: 'bg-yellow-100', border: 'border-yellow-200', shadow: 'shadow-yellow-200' },
-  { bg: 'bg-pink-100', border: 'border-pink-200', shadow: 'shadow-pink-200' },
-  { bg: 'bg-blue-100', border: 'border-blue-200', shadow: 'shadow-blue-200' },
-  { bg: 'bg-green-100', border: 'border-green-200', shadow: 'shadow-green-200' },
-  { bg: 'bg-purple-100', border: 'border-purple-200', shadow: 'shadow-purple-200' },
-  { bg: 'bg-rose-100', border: 'border-rose-200', shadow: 'shadow-rose-200' },
-  { bg: 'bg-sky-100', border: 'border-sky-200', shadow: 'shadow-sky-200' },
-  { bg: 'bg-amber-100', border: 'border-amber-200', shadow: 'shadow-amber-200' },
+  '#fff3da', // creamButter
+  '#d4af37', // deepGold
+  '#e6c87c', // lightGold
+  '#88b04b', // sage
+  '#fcc4b7', // salmonPeach
+  '#9c88ff', // lavenderViolet
+  '#4b4e6d', // indigoDeep
 ];
 
 export default function StickyNote({ id, title, body, userId, createdAt }: StickyNoteProps) {
@@ -34,11 +33,14 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
     return noteColors[index];
   }, [id]);
 
+  // Determine text color based on background - white text for dark indigo
+  const textColor = useMemo(() => {
+    return colorScheme === '#4b4e6d' ? '#ffffff' : '#2A2A2A';
+  }, [colorScheme]);
+
   // Use ID to determine consistent rotation for this note
   const rotation = useMemo(() => {
-    const hash = id.charCodeAt(0) + id.charCodeAt(id.length - 1);
-    const degrees = ((hash % 8) - 4); // -4 to +4 degrees
-    return degrees;
+    return 0; // No rotation
   }, [id]);
 
   // Format date
@@ -62,10 +64,16 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
   return (
     <Link href={`/community/post/${id}`}>
       <div
-        className={`relative h-48 p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 ${colorScheme.bg} ${colorScheme.border} shadow-md`}
+        className="relative p-4 rounded-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105"
         style={{
+          width: '300px',
+          height: '300px',
+          backgroundColor: colorScheme,
+          border: `1px solid ${colorScheme}`,
           transform: `rotate(${rotation}deg)`,
           transformOrigin: 'center',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)',
+          fontFamily: 'Caveat, cursive',
         }}
       >
         {/* Pushpin */}
@@ -76,17 +84,17 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
           {/* Title and Body */}
           <div className="flex-1 overflow-hidden">
             {title && (
-              <h3 className="font-caveat text-lg font-bold text-warmCharcoal mb-1 line-clamp-1">
+              <h3 className="font-caveat text-lg font-bold mb-1 line-clamp-1" style={{ color: textColor }}>
                 {title}
               </h3>
             )}
-            <p className="font-caveat text-sm text-warmCharcoal/80 line-clamp-4 leading-relaxed">
+            <p className="font-caveat text-sm line-clamp-4 leading-relaxed" style={{ color: textColor, opacity: 0.8 }}>
               {body}
             </p>
           </div>
 
           {/* Footer */}
-          <div className="text-xs text-warmCharcoal/60 pt-2 border-t border-current/20">
+          <div className="text-xs pt-2 border-t" style={{ color: textColor, opacity: 0.6, borderColor: textColor }}>
             <p>{formatDate(createdAt)}</p>
           </div>
         </div>

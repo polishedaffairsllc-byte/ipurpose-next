@@ -9,13 +9,19 @@ export const designTokens = {
   // ============================================================================
   colors: {
     // Primary Brand Colors
-    lavenderViolet: '#9C88FF',
-    indigoDeep: '#4B4E6D',
-    salmonPeach: '#FCC4B7',
-    softGold: '#F5E8C7',
+    lavenderViolet: '#9c88ff',
+    indigoDeep: '#4b4e6d',
+    salmonPeach: '#fcc4b7',
+    softGold: '#d4af37',
     warmCharcoal: '#2A2A2A',
-    offWhite: '#FAFAFA',
+    offWhite: '#fff3da',
     midnight: '#0B0B14',
+    
+    // Additional Brand Colors
+    creamButter: '#fff3da',
+    deepGold: '#d4af37',
+    lightGold: '#e6c87c',
+    sage: '#88b04b',
 
     // Semantic Colors
     success: '#10B981',
