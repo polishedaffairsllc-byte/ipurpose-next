@@ -1,0 +1,13 @@
+
+> ipurpose-next@0.1.1 dev
+> next dev
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ⚠ turbopack.root should be absolute, using: /Users/renita.hamilton/Desktop/ipurpose-next
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.1.225:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1366ms

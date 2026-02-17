@@ -326,8 +326,8 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
           <div className="container max-w-6xl mx-auto px-6 space-y-6">
             <div className="space-y-2 text-center">
               <p className="text-xs font-semibold tracking-[0.3em] uppercase text-warmCharcoal/60">Dev Harness</p>
-              <h1 className="text-3xl font-marcellus text-warmCharcoal">Calendar Sync — Auth Bypassed</h1>
-              <p className="text-sm text-warmCharcoal/70">
+              <h1 className="text-display-hero font-italiana text-warmCharcoal">Calendar Sync — Auth Bypassed</h1>
+              <p className="text-sm text-warmCharcoal/70 font-marcellus">
                 Rendering `CalendarOperationalClient` without Firebase session so automated tests can verify step switching locally.
               </p>
             </div>
@@ -398,7 +398,7 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <p className="text-xs font-semibold tracking-wide text-warmCharcoal/70 mb-1">Primary Path · Live Now</p>
-                      <h3 className="font-marcellus text-2xl text-warmCharcoal">Build Your First System (30 Minutes)</h3>
+                      <h3 className="font-italiana text-display-h3 text-warmCharcoal">Build Your First System (30 Minutes)</h3>
                     </div>
                     <span className="text-xs font-semibold px-3 py-1 rounded-full bg-salmonPeach/20 text-warmCharcoal">🟢 Live</span>
                   </div>
@@ -440,7 +440,7 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
                       <p className="text-xs font-semibold tracking-wide text-warmCharcoal/70 mb-1">
                         Secondary Path · {isUnlocked ? "Unlocked" : "Locked"}
                       </p>
-                      <h3 className="font-marcellus text-xl text-warmCharcoal">Deepen & Scale This System</h3>
+                      <h3 className="font-italiana text-display-h3 text-warmCharcoal">Deepen & Scale This System</h3>
                     </div>
                     <span className={`text-xs font-semibold px-3 py-1 rounded-full ${isUnlocked ? "bg-lavenderViolet/20 text-indigoDeep" : "bg-warmCharcoal/10 text-warmCharcoal/70"}`}>
                       {isUnlocked ? "🔓 Unlocked" : "🔒 Locked"}
@@ -476,8 +476,8 @@ export default async function SystemDetailPage({ params }: { params: Promise<{ s
               <Card className="p-6 shadow-soft-md">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <p className="text-xs font-semibold tracking-wide text-indigoDeep/70 uppercase">Outputs</p>
-                    <h3 className="font-marcellus text-xl text-warmCharcoal">What You Can Build Here</h3>
+                    <p className="text-xs font-semibold tracking-wide text-indigoDeep/70 mb-1">Outputs</p>
+                    <h3 className="font-italiana text-display-h3 text-warmCharcoal">What You Can Build Here</h3>
                   </div>
                   <span className="text-sm text-warmCharcoal/60 font-marcellus">Everything stays editable.</span>
                 </div>

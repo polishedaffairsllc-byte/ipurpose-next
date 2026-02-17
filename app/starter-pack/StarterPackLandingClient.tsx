@@ -51,19 +51,19 @@ export default function StarterPackLanding() {
             }}
           >
             <div className="absolute inset-0 bg-black/50" />
-            <h1 className="heading-hero mb-4 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-              <span style={{ fontFamily: 'Marcellus, serif', fontSize: '135px', color: '#FFFFFF' }}>iPurpose Starter Pack</span>
+            <h1 className="heading-hero mb-4 text-white relative z-10 text-display-hero">
+              iPurpose Starter Pack
             </h1>
-            <p className="relative z-10 font-italiana text-xl sm:text-2xl md:text-3xl px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm text-warmCharcoal/70" style={{ backgroundColor: 'rgba(0,0,0,0.4)', color: '#FFFFFF' }}>
-              <span style={{ fontFamily: 'Marcellus, serif', fontSize: '24px', color: '#FFFFFF' }}>Explore Our Offering</span>
+            <p className="relative z-10 font-italiana text-display-emphasis px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-warmCharcoal/70" style={{ backgroundColor: 'rgba(0,0,0,0.4)', color: '#FFFFFF' }}>
+              Explore Our Offering
             </p>
           </section>
 
           <div className="text-center max-w-2xl mx-auto">
-            <p className="text-warmCharcoal/80 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+            <p className="text-warmCharcoal/80 leading-relaxed font-marcellus text-display-emphasis">
               If you're feeling pulled in a hundred directions, unsure where to focus, or ready to finally get intentional about your next season — this is your first step.
             </p>
-            <p className="mt-4 text-warmCharcoal/70 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+            <p className="mt-4 text-warmCharcoal/70 leading-relaxed font-marcellus text-display-emphasis">
               The Starter Pack is a guided entry point into the <strong>Soul → Systems → AI™</strong> journey. It helps you slow down, get honest about where you are, and begin building from clarity instead of pressure.
             </p>
             {error && (
@@ -75,43 +75,39 @@ export default function StarterPackLanding() {
 
       {/* ── What This Is ── */}
       <section className="container max-w-3xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold text-center mb-6" style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>What This Is</h2>
-        <p className="text-center text-warmCharcoal/80 mb-8" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
-          A simple, structured starting place designed to help you:
-        </p>
+        <h2 className="text-center mb-6 font-italiana text-display-h2" style={{ color: '#2A2A2A' }}>What This Is</h2>
+        <p className="text-center text-warmCharcoal/80 mb-8 font-marcellus text-display-emphasis">A simple, structured starting place designed to help you:</p>
         <ul className="space-y-3 text-base sm:text-lg text-warmCharcoal/80 max-w-xl mx-auto">
-          <li className="flex items-start gap-3" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}><span className="text-lavenderViolet mt-1">✦</span> Get clear on who you are right now</li>
-          <li className="flex items-start gap-3" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}><span className="text-lavenderViolet mt-1">✦</span> Understand what matters most in this season</li>
-          <li className="flex items-start gap-3" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}><span className="text-lavenderViolet mt-1">✦</span> Identify where you feel stuck, scattered, or uncertain</li>
-          <li className="flex items-start gap-3" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}><span className="text-lavenderViolet mt-1">✦</span> Begin moving forward with intention</li>
+          <li className="flex items-start gap-3 font-marcellus text-display-emphasis"><span className="text-lavenderViolet mt-1">✦</span> Get clear on who you are right now</li>
+          <li className="flex items-start gap-3 font-marcellus text-display-emphasis"><span className="text-lavenderViolet mt-1">✦</span> Understand what matters most in this season</li>
+          <li className="flex items-start gap-3 font-marcellus text-display-emphasis"><span className="text-lavenderViolet mt-1">✦</span> Identify where you feel stuck, scattered, or uncertain</li>
+          <li className="flex items-start gap-3 font-marcellus text-display-emphasis"><span className="text-lavenderViolet mt-1">✦</span> Begin moving forward with intention</li>
         </ul>
-        <p className="text-center mt-8 text-base text-warmCharcoal/60 italic">
-          <span style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>This is not a course. It's a starting point.</span>
-        </p>
+        <p className="text-center mt-8 text-base text-warmCharcoal/60 italic font-marcellus text-display-emphasis">This is not a course. It's a starting point.</p>
       </section>
 
       {/* ── What You'll Receive ── */}
       <section className="bg-gradient-to-b from-white to-lavenderViolet/5 py-16">
         <div className="container max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center mb-12" style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>What You'll Receive</h2>
+          <h2 className="text-center mb-12 font-italiana text-display-h2" style={{ color: '#2A2A2A' }}>What You'll Receive</h2>
 
           <div className="grid gap-8 sm:grid-cols-2">
             {/* Card 1 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Clarity Check Experience</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>A guided reflection that helps you see your current life and direction more clearly.</p>
-              <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>You'll explore:</p>
-              <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Where your energy is going</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What feels aligned vs. misaligned</li>
-                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What you're carrying that may no longer fit</li>
+              <h3 className="text-xl font-semibold mb-3 font-italiana text-display-h3" style={{ color: '#2A2A2A' }}>Clarity Check Experience</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4 font-marcellus text-display-emphasis" style={{ lineHeight: '1.6' }}>A guided reflection that helps you see your current life and direction more clearly.</p>
+              <p className="text-sm font-medium text-warmCharcoal/60 mb-2 font-marcellus text-display-emphasis">You'll explore:</p>
+              <ul className="space-y-2 text-sm text-warmCharcoal/70 font-marcellus text-display-emphasis">
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> Where your energy is going</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> What feels aligned vs. misaligned</li>
+                <li className="flex items-center justify-center gap-2"><span className="text-softGold">•</span> What you're carrying that may no longer fit</li>
               </ul>
             </div>
 
             {/* Card 2 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Purpose Reflection Prompts</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>Simple, thoughtful prompts that help you slow down and listen inward.</p>
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Purpose Reflection Prompts</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ lineHeight: '1.6' }}>Simple, thoughtful prompts that help you slow down and listen inward.</p>
               <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>Designed to help you:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
                 <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Notice patterns in your life</li>
@@ -122,8 +118,8 @@ export default function StarterPackLanding() {
 
             {/* Card 3 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Personal Insight Snapshot</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>A grounded look at where you are right now — not who you "should" be.</p>
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Personal Insight Snapshot</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ lineHeight: '1.6' }}>A grounded look at where you are right now — not who you "should" be.</p>
               <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>This helps you:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
                 <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Name your current season</li>
@@ -134,8 +130,8 @@ export default function StarterPackLanding() {
 
             {/* Card 4 */}
             <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Gentle Direction Forward</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>Once you complete the Starter Pack, you'll have a clearer sense of:</p>
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A' }}>Gentle Direction Forward</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ lineHeight: '1.6' }}>Once you complete the Starter Pack, you'll have a clearer sense of:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
                 <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What you want to build</li>
                 <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What needs healing or attention</li>
@@ -150,15 +146,14 @@ export default function StarterPackLanding() {
       {/* ── Your Investment / CTA ── */}
       <section className="bg-gradient-to-br from-lavenderViolet/5 via-transparent to-softGold/5 py-20">
         <div className="container max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>Your Investment</h2>
-          <p className="text-xl text-warmCharcoal/80 mb-2">Starter Pack — <strong>$27</strong> <span className="text-base text-warmCharcoal/60">(one-time)</span></p>
-          <p className="text-base text-warmCharcoal/60 mb-8">A small step that opens the door to deeper clarity.</p>
-
+          <h2 className="text-center mb-3 font-italiana text-display-h2" style={{ color: '#2A2A2A' }}>Your Investment</h2>
+          <p className="text-xl text-warmCharcoal/80 mb-2 font-marcellus">Starter Pack — <strong>$27</strong> <span className="text-base text-warmCharcoal/60">(one-time)</span></p>
+          <p className="text-base text-warmCharcoal/60 mb-8 font-marcellus">A small step that opens the door to deeper clarity.</p>
           <button
             onClick={handleCheckout}
             disabled={loading}
-            className="px-8 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+            className="px-8 py-4 rounded-full font-marcellus text-white text-lg text-display-h3 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
           >
             {loading ? 'Starting checkout…' : 'Start with the Starter Pack'}
           </button>

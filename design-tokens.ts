@@ -81,7 +81,7 @@ export const designTokens = {
       montserrat: ['Montserrat', 'sans-serif'],
     },
 
-    // Font Sizes
+    // Font Sizes - Base Scale
     fontSize: {
       xs: '0.75rem',      // 12px
       sm: '0.875rem',     // 14px
@@ -93,6 +93,14 @@ export const designTokens = {
       '4xl': '2.25rem',   // 36px
       '5xl': '3rem',      // 48px
       '6xl': '3.75rem',   // 60px
+    },
+
+    // Display Font Sizes - Large Responsive Headings
+    displayFontSize: {
+      'hero': 'clamp(3.75rem, 12vw, 7rem)',        // 112px - page hero only
+      'h2': 'clamp(2.5rem, 7vw, 3.875rem)',         // 54-62px - section headings
+      'h3': 'clamp(2rem, 5vw, 3rem)',               // 36-48px - subheadings
+      'emphasis': 'clamp(1.25rem, 3vw, 1.5rem)',   // 20-24px - important content
     },
 
     // Font Weights
@@ -120,60 +128,63 @@ export const designTokens = {
       widest: '0.2em',
     },
 
-    // Typography Scale
+    // Typography Scale - CANONICAL
     scale: {
+      // Headings use Italiana
       h1: {
-        fontFamily: 'Marcellus',
+        fontFamily: 'Italiana',
         fontSize: '3rem',        // 48px
-        fontWeight: 600,
+        fontWeight: 400,
         lineHeight: 1.2,
         letterSpacing: '-0.025em',
       },
       h2: {
-        fontFamily: 'Marcellus',
+        fontFamily: 'Italiana',
         fontSize: '2.25rem',     // 36px
-        fontWeight: 600,
+        fontWeight: 400,
         lineHeight: 1.25,
         letterSpacing: '-0.025em',
       },
       h3: {
-        fontFamily: 'Marcellus',
+        fontFamily: 'Italiana',
         fontSize: '1.875rem',    // 30px
-        fontWeight: 600,
+        fontWeight: 400,
         lineHeight: 1.3,
       },
       h4: {
-        fontFamily: 'Marcellus',
+        fontFamily: 'Italiana',
         fontSize: '1.5rem',      // 24px
-        fontWeight: 600,
+        fontWeight: 400,
         lineHeight: 1.4,
       },
       h5: {
-        fontFamily: 'Marcellus',
+        fontFamily: 'Italiana',
         fontSize: '1.25rem',     // 20px
-        fontWeight: 600,
+        fontWeight: 400,
         lineHeight: 1.5,
       },
       h6: {
-        fontFamily: 'Marcellus',
+        fontFamily: 'Italiana',
         fontSize: '1.125rem',    // 18px
-        fontWeight: 600,
+        fontWeight: 400,
         lineHeight: 1.5,
       },
+      // Body text uses Marcellus
       body: {
-        fontFamily: 'Montserrat',
+        fontFamily: 'Marcellus',
         fontSize: '1rem',        // 16px
         fontWeight: 400,
         lineHeight: 1.5,
       },
       bodySmall: {
-        fontFamily: 'Montserrat',
+        fontFamily: 'Marcellus',
         fontSize: '0.875rem',    // 14px
         fontWeight: 400,
         lineHeight: 1.5,
       },
+      // Captions use Marcellus
       caption: {
-        fontFamily: 'Montserrat',
+        fontFamily: 'Marcellus',
         fontSize: '0.75rem',     // 12px
         fontWeight: 500,
         lineHeight: 1.5,
@@ -423,11 +434,11 @@ export const designTokens = {
       },
     },
 
-    // Section Heading Component
+    // Section Heading Component - uses Italiana
     sectionHeading: {
-      fontFamily: 'Marcellus',
+      fontFamily: 'Italiana',
       color: '#2A2A2A',
-      fontWeight: 600,
+      fontWeight: 400,
       letterSpacing: '-0.025em',
       sizes: {
         h2: { fontSize: '1.5rem', md: '1.875rem' },

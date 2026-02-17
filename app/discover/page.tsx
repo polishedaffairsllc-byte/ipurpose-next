@@ -39,7 +39,7 @@ export default function DiscoverPage() {
             Discover iPurpose<span style={{ fontSize: '0.3em', verticalAlign: 'super' }}>™</span>
           </h1>
           <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', display: 'flex', justifyContent: 'center' }}>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '135px', fontFamily: 'Italiana, serif', width: '100%', textAlign: 'center' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 text-display-hero" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', width: '100%', textAlign: 'center' }}>
               Soul + Systems + AI<sup style={{ fontSize: '0.3em' }}>™</sup>
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function DiscoverPage() {
 
         {/* What iPurpose Is */}
         <section className="rounded-2xl p-8 sm:p-12" style={{ background: 'linear-gradient(to bottom right, rgba(156,136,255,0.05), transparent)', border: '1px solid rgba(156,136,255,0.1)' }}>
-          <h2 style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '112px', textAlign: 'center', marginBottom: '24px' }}>
+          <h2 className="font-italiana text-display-h2" style={{ color: '#2A2A2A', textAlign: 'center', marginBottom: '24px' }}>
             What iPurpose is
           </h2>
           <div className="flex gap-8 items-center">
@@ -65,25 +65,25 @@ export default function DiscoverPage() {
               style={{ width: '400px', height: '300px', marginRight: '52px' }}
             />
             <div className="space-y-4 sm:space-y-6 text-left">
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 iPurpose is an orientation framework for moments when what you're building no longer feels coherent.
               </p>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 It's for people who are capable, thoughtful, and trying to do something meaningful—yet feel internally scattered, misaligned, or unsure how to move forward without burning themselves out.
               </p>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 iPurpose integrates three layers of development:
               </p>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 <strong>Soul</strong> — understanding who you are, what matters to you, and how you naturally move through the world
               </p>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 <strong>Systems</strong> — translating that clarity into structures, workflows, and decisions that are sustainable in real life
               </p>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 <strong>AI</strong> — offering supportive guidance that reinforces clarity rather than replacing personal responsibility
               </p>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 The goal isn't optimization or reinvention.<br />
               The goal is coherence—so the way you live, work, and build no longer contradicts who you are.
             </p>
@@ -100,21 +100,21 @@ export default function DiscoverPage() {
 
         {/* Who It's For */}
         <section className="rounded-2xl p-8 sm:p-12" style={{ background: 'linear-gradient(to bottom right, rgba(252,196,183,0.05), transparent)', border: '1px solid rgba(252,196,183,0.1)' }}>
-          <h2 style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '112px', textAlign: 'center', marginBottom: '24px' }}>
+          <h2 className="font-italiana text-display-h2" style={{ color: '#2A2A2A', textAlign: 'center', marginBottom: '24px' }}>
             Who it's for
           </h2>
           <div className="flex gap-8 items-center">
             <div className="space-y-4 sm:space-y-6 text-left">
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
                 iPurpose may be for you if:
               </p>
-              <ul className="space-y-3 sm:space-y-4" style={{ fontSize: '79px', listStyle: 'none', padding: 0, color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <ul className="space-y-3 sm:space-y-4 font-marcellus text-display-emphasis" style={{ listStyle: 'none', padding: 0, color: 'rgba(42,42,42,0.75)' }}>
                 <li>You're building something, but it doesn't fully feel settled or true yet</li>
                 <li>The vision makes sense, but your inner alignment hasn't quite caught up</li>
                 <li>You want clarity without burnout</li>
                 <li>You want structure that supports your actual life—not an idealized version of it</li>
               </ul>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
               This work is especially supportive for people who want to act ethically, live with intention, and become better stewards of their time, energy, and responsibilities.
             </p>
             </div>
@@ -134,7 +134,7 @@ export default function DiscoverPage() {
 
         {/* This May Not Be For You */}
         <section className="rounded-2xl p-8 sm:p-12" style={{ background: 'linear-gradient(to bottom right, rgba(42,42,42,0.05), transparent)', border: '1px solid rgba(42,42,42,0.1)' }}>
-          <h2 style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '112px', textAlign: 'center', marginBottom: '24px' }}>
+          <h2 className="font-italiana text-display-h2" style={{ color: '#2A2A2A', textAlign: 'center', marginBottom: '24px' }}>
             This may not be for you if…
           </h2>
           <div className="flex gap-8 items-center">
@@ -145,12 +145,12 @@ export default function DiscoverPage() {
               style={{ width: '400px', height: '300px', marginRight: '52px' }}
             />
             <div className="space-y-4 sm:space-y-6 text-left">
-              <ul className="space-y-3 sm:space-y-4 inline-block" style={{ fontSize: '79px', listStyle: 'none', padding: 0, color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <ul className="space-y-3 sm:space-y-4 inline-block font-marcellus text-display-emphasis" style={{ listStyle: 'none', padding: 0, color: 'rgba(42,42,42,0.75)' }}>
                 <li>You're looking for quick fixes, hype, or constant motivation</li>
                 <li>You want tactics without reflection</li>
                 <li>You expect automation, systems, or AI to replace self-awareness or accountability</li>
               </ul>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
               iPurpose is designed for people who want to do the right thing—starting with themselves.
             </p>
             </div>
@@ -164,17 +164,17 @@ export default function DiscoverPage() {
 
         {/* How It Works */}
         <section className="bg-gradient-to-br from-green-50 to-transparent rounded-2xl p-8 sm:p-12 border border-green-100">
-          <h2 style={{ fontFamily: 'Marcellus, serif', color: '#2A2A2A', fontSize: '112px', textAlign: 'center', marginBottom: '24px' }}>
+          <h2 className="font-italiana text-display-h2" style={{ color: '#2A2A2A', textAlign: 'center', marginBottom: '24px' }}>
             How it works
           </h2>
           <div className="flex gap-8 items-center justify-between">
             <div className="space-y-4 sm:space-y-6 text-left flex-1">
-              <ul className="space-y-3 sm:space-y-4 inline-block" style={{ fontSize: '79px', listStyle: 'none', padding: 0, color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <ul className="space-y-3 sm:space-y-4 inline-block font-marcellus text-display-emphasis" style={{ listStyle: 'none', padding: 0, color: 'rgba(42,42,42,0.75)' }}>
                 <li><strong>Soul</strong> helps you clarify identity, values, and internal alignment</li>
                 <li><strong>Systems</strong> helps you apply that clarity through structure, follow-through, and practical design</li>
                 <li><strong>AI</strong> provides support and perspective once clarity is established—not before</li>
               </ul>
-              <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
               Together, these layers help you move from self-understanding to ethical, sustainable action.
             </p>
             </div>
@@ -197,36 +197,36 @@ export default function DiscoverPage() {
           <div className="space-y-3 sm:space-y-4 flex flex-col">
             <Link
               href="/clarity-check"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
             >
               Take the Clarity Check
             </Link>
             <Link
               href="/starter-pack"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))' }}
             >
               Get the Starter Pack — $27
             </Link>
             <Link
               href="/ai-blueprint"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
             >
               Get the AI Blueprint — $47
             </Link>
             <Link
               href="/program"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))' }}
             >
               Explore the iPurpose Accelerator™
             </Link>
             <Link
               href="/about"
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))' }}
             >
               About iPurpose
             </Link>

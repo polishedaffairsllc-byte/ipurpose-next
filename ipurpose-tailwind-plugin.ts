@@ -113,6 +113,11 @@ export const iPurposeTailwindPlugin = plugin(
           '4xl': designTokens.typography.fontSize['4xl'],
           '5xl': designTokens.typography.fontSize['5xl'],
           '6xl': designTokens.typography.fontSize['6xl'],
+          // Display sizes - responsive with clamp()
+          'display-hero': designTokens.typography.displayFontSize.hero,
+          'display-h2': designTokens.typography.displayFontSize.h2,
+          'display-h3': designTokens.typography.displayFontSize.h3,
+          'display-emphasis': designTokens.typography.displayFontSize.emphasis,
         },
 
         // Font weights

@@ -41,10 +41,10 @@ export default function ProgramPage() {
             {/* Dark Overlay */}
             <div className="absolute inset-0 bg-black/50"></div>
             
-            <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+            <h1 className="heading-hero mb-6 text-white relative z-10 text-display-hero">
               iPurpose Accelerator<sup style={{ fontSize: '0.3em' }}>™</sup>
             </h1>
-            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '22px' }}>
+            <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-display-emphasis" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
               Six weeks to clarify your purpose and build aligned systems
             </p>
           </section>
@@ -71,33 +71,33 @@ export default function ProgramPage() {
       {/* Outcomes */}
       <div className="bg-gradient-to-br from-softGold/10 via-transparent to-lavenderViolet/10 py-12 sm:py-16 md:py-20">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6">
-          <h2 className="font-marcellus text-warmCharcoal text-center mb-8 sm:mb-12" style={{ fontSize: '32px' }}>
+          <h2 className="font-marcellus text-warmCharcoal text-center mb-8 sm:mb-12 text-display-h2">
             By the End, You'll Have Built:
           </h2>
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>A Defined Purpose & Priorities Statement</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>A documented articulation of what you're building and why.</p>
+              <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">A Defined Purpose & Priorities Statement</h3>
+              <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">A documented articulation of what you're building and why.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>Core Systems Aligned to Your Goals</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>Workflows, processes, and strategy designed to support your direction.</p>
+              <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">Core Systems Aligned to Your Goals</h3>
+              <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">Workflows, processes, and strategy designed to support your direction.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>A Practical AI Usage Plan</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>Clear guidelines for where and how AI supports your work.</p>
+              <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">A Practical AI Usage Plan</h3>
+              <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">Clear guidelines for where and how AI supports your work.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>Peer Network</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>A small cohort of thoughtful builders navigating similar challenges.</p>
+              <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">Peer Network</h3>
+              <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">A small cohort of thoughtful builders navigating similar challenges.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>A Defined Direction Forward</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>Clear next steps based on the systems and decisions you've built.</p>
+              <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">A Defined Direction Forward</h3>
+              <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">Clear next steps based on the systems and decisions you've built.</p>
             </div>
             <div className="text-center">
-              <h3 className="font-marcellus text-warmCharcoal mb-2" style={{ fontSize: '54px' }}>Clarity Blueprint</h3>
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>A documented plan you'll reference for months to come.</p>
+              <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">Clarity Blueprint</h3>
+              <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">A documented plan you'll reference for months to come.</p>
             </div>
           </div>
         </div>
@@ -123,31 +123,30 @@ export default function ProgramPage() {
       {/* Format & Next Cohort */}
       <div className="bg-gradient-to-br from-lavenderViolet/5 via-transparent to-salmonPeach/5 py-20">
         <div className="container max-w-4xl mx-auto px-6">
-          <h2 className="font-marcellus text-warmCharcoal text-center mb-12" style={{ fontSize: '50px' }}>
+          <h2 className="font-marcellus text-warmCharcoal text-center mb-12 text-display-h2">
             Program Format & Cohorts
           </h2>
-          <div className="space-y-6 text-warmCharcoal/75 mb-8 sm:mb-12 mx-auto max-w-2xl text-center" style={{ fontSize: '40px' }}>
-            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+          <div className="space-y-6 text-warmCharcoal/75 mb-8 sm:mb-12 mx-auto max-w-2xl text-center">
+            <p className="font-marcellus text-display-emphasis">
               <strong>Format:</strong> 6 weekly 90-minute group calls + asynchronous work between sessions. Totally online and cohort-based.
             </p>
-            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+            <p className="font-marcellus text-display-emphasis">
               <strong>Cohort Size:</strong> 8–12 people to keep it intimate and real.
             </p>
-            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+            <p className="font-marcellus text-display-emphasis">
               <strong>Next Cohort:</strong> Launching {cohortLabel} ({cohortMonth} {cohortYear}). Limited spots available.
             </p>
-            <p style={{ fontSize: '79px', color: 'rgba(42,42,42,0.75)', fontFamily: 'Marcellus, serif' }}>
+            <p className="font-marcellus text-display-emphasis">
               <strong>Time Commitment:</strong> ~3–4 hours per week (1.5 hours live + 1.5–2.5 hours self-guided work).
             </p>
           </div>
           <div className="bg-white/50 border border-lavenderViolet/20 rounded-2xl p-4 sm:p-6 md:p-8 text-center">
-            <p className="text-warmCharcoal mb-4 sm:mb-6" style={{ fontSize: '54px' }}>
+            <p className="text-warmCharcoal mb-4 sm:mb-6 font-marcellus text-display-h3">
               Want to learn more before committing? Join our upcoming info session.
             </p>
             <Link
               href="/info-session"
-              className="inline-block px-8 py-4 bg-lavenderViolet text-white rounded-full font-marcellus hover:bg-indigoDeep transition"
-              style={{ fontSize: '54px', fontFamily: 'Marcellus, serif' }}
+              className="inline-block px-8 py-4 bg-lavenderViolet text-white rounded-full font-marcellus text-display-h3 hover:bg-indigoDeep transition"
             >
               Reserve Your Info Session Spot
             </Link>
@@ -157,25 +156,25 @@ export default function ProgramPage() {
 
       {/* CTA Section */}
       <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 text-center">
-        <h2 className="font-marcellus text-warmCharcoal mb-4 sm:mb-6" style={{ fontSize: '50px' }}>
+        <h2 className="font-italiana text-warmCharcoal mb-4 sm:mb-6 text-display-h2">
           Next Steps
         </h2>
-        <p className="text-warmCharcoal/75 mb-8 sm:mb-12" style={{ fontSize: '40px' }}>
+        <p className="text-warmCharcoal/75 mb-8 sm:mb-12 font-marcellus text-display-emphasis">
           Understand your fit through a clarity check, or attend an info session to ask questions about the program structure and community.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center flex-wrap">
           <ProgramEnrollButton />
           <Link
             href="/clarity-check"
-            className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+            className="px-8 py-4 rounded-full font-marcellus text-white text-center text-display-h3 hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
           >
             Take the Clarity Check
           </Link>
           <Link
             href="/info-session"
-            className="px-8 py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+            className="px-8 py-4 rounded-full font-marcellus text-white text-center text-display-h3 hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(to right, #E8967A, rgba(232, 150, 122, 0))' }}
           >
             Join the Info Session
           </Link>

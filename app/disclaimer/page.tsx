@@ -15,21 +15,22 @@ export default function DisclaimerPage() {
       <main className="relative z-10 max-w-4xl mx-auto px-6 py-16 lg:py-24">
         <div className="bg-white border border-gray-200 rounded-2xl p-8 lg:p-12 shadow-lg">
           <h1 className="font-italiana text-[#4b4e6d] mb-8" style={{ fontSize: '60px' }}>
-            Disclaimer
+            <span className="font-italiana text-display-hero text-[#4b4e6d]">Disclaimer</span>
           </h1>
           
           <p className="text-gray-600 mb-12" style={{ fontSize: '24px' }}>
-            Last updated: February 4, 2026
+            <span className="font-marcellus text-base text-gray-600">Last updated: February 4, 2026</span>
           </p>
 
           <div className="space-y-8 text-gray-700" style={{ fontSize: '28px', lineHeight: '1.6' }}>
+            <div className="font-marcellus text-base text-gray-700 space-y-8">
             <p>
               The information provided on iPurpose (the "Platform") is intended for educational, informational, and reflective purposes only. By accessing or using this Platform, you acknowledge and agree to the terms of this Disclaimer.
             </p>
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                Not Medical, Mental Health, or Legal Advice
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">Not Medical, Mental Health, or Legal Advice</span>
               </h2>
               <p className="mb-4">
                 iPurpose does not provide medical, psychological, psychiatric, legal, or financial advice.
@@ -44,7 +45,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                Personal Responsibility & Self-Directed Use
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">Personal Responsibility & Self-Directed Use</span>
               </h2>
               <p className="mb-4">
                 Your participation in iPurpose is voluntary and self-directed.
@@ -62,7 +63,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                AI-Guided Content & Limitations
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">AI-Guided Content & Limitations</span>
               </h2>
               <p className="mb-4">
                 Some features of iPurpose include AI-assisted tools and guidance.
@@ -80,7 +81,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                Coaching, Programs, & Educational Content
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">Coaching, Programs, & Educational Content</span>
               </h2>
               <p className="mb-3">
                 Any coaching-style language, programs, or frameworks offered through iPurpose are:
@@ -97,7 +98,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                No Guarantees or Warranties
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">No Guarantees or Warranties</span>
               </h2>
               <p className="mb-4">
                 While iPurpose is designed with care and intention, the Platform is provided "as is" and "as available."
@@ -115,7 +116,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                External Links & Third-Party Resources
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">External Links & Third-Party Resources</span>
               </h2>
               <p className="mb-4">
                 The Platform may include links to third-party websites, tools, or resources.
@@ -132,7 +133,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                Limitation of Liability
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">Limitation of Liability</span>
               </h2>
               <p className="mb-4">
                 To the fullest extent permitted by law, iPurpose and its creators, operators, and affiliates shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from or related to your use of the Platform.
@@ -144,7 +145,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                If You Are Experiencing Distress
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">If You Are Experiencing Distress</span>
               </h2>
               <p className="mb-4">
                 If you are experiencing acute emotional distress, thoughts of self-harm, or a mental health emergency, please seek immediate help from a qualified professional or contact local emergency services.
@@ -156,7 +157,7 @@ export default function DisclaimerPage() {
 
             <section>
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                Contact
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">Contact</span>
               </h2>
               <p className="mb-3">
                 If you have questions about this Disclaimer or the Platform, you may contact:
@@ -174,7 +175,7 @@ export default function DisclaimerPage() {
 
             <section className="pt-8 border-t border-gray-200">
               <h2 className="font-italiana text-[#4b4e6d] mb-4" style={{ fontSize: '40px' }}>
-                Acceptance of This Disclaimer
+                <span className="font-italiana text-display-h2 text-[#4b4e6d]">Acceptance of This Disclaimer</span>
               </h2>
               <p>
                 By using this Platform, you acknowledge that you have read, understood, and agreed to this Disclaimer.
@@ -183,7 +184,7 @@ export default function DisclaimerPage() {
 
             <section className="pt-8 mt-8 border-t border-gray-200 text-center">
               <p className="text-gray-600 italic" style={{ fontSize: '30px' }}>
-                This platform is designed to support—not replace—professional care.
+                <span className="font-marcellus text-base text-gray-600 italic">This platform is designed to support—not replace—professional care.</span>
               </p>
             </section>
           </div>
