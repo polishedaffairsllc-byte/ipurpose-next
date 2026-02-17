@@ -246,18 +246,18 @@ export default async function SoulPage() {
         {/* Archetype-Adaptive Growth Edge */}
         <div id="orientation" className="mb-12">
           <Card accent="lavender" className="mb-8">
-            <p className="mb-4" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.45)', fontFamily: 'Marcellus, serif', fontSize: '48px' }}>
+            <p className="text-body mb-4" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.45)' }}>
               Your Growth Edge
             </p>
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
                 {content.growthEdgeFocus.map((focus, index) => (
-                  <span key={index} className="rounded-full" style={{ padding: '8px 24px', backgroundColor: 'rgba(42,42,42,0.1)', color: '#2A2A2A', fontFamily: 'Marcellus, serif', fontSize: '56px' }}>
+                  <span key={index} className="text-body rounded-full" style={{ padding: '8px 24px', backgroundColor: 'rgba(42,42,42,0.1)', color: '#2A2A2A' }}>
                     {focus}
                   </span>
                 ))}
               </div>
-              <p className="mt-4 font-marcellus" style={{ color: 'rgba(42,42,42,0.7)', fontSize: '56px' }}>
+              <p className="text-body mt-4" style={{ color: 'rgba(42,42,42,0.7)' }}>
                 These areas are where your archetype naturally grows. Notice them without forcing change.
               </p>
             </div>
@@ -271,9 +271,9 @@ export default async function SoulPage() {
                 <Card accent="salmon" className="mb-8">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <p className="font-italiana" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)', fontSize: '48px' }}>Check-in</p>
-                      <p className="font-italiana" style={{ color: '#2A2A2A', fontSize: '64px' }}>You're set for today.</p>
-                      <p className="font-marcellus" style={{ color: 'rgba(42,42,42,0.7)', fontSize: '56px' }}>You've checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
+                      <p className="text-body" style={{ fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(42,42,42,0.55)' }}>Check-in</p>
+                      <p className="text-h3" style={{ color: '#2A2A2A' }}>You're set for today.</p>
+                      <p className="text-body" style={{ color: 'rgba(42,42,42,0.7)' }}>You've checked in {checkinStats.last7Count} of the last 7 days. If you want to add more, start a practice below.</p>
                     </div>
                     <div className="flex flex-wrap gap-3">
                       <Button href="#practices">Go to practices</Button>

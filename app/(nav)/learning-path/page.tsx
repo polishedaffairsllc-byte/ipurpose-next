@@ -58,10 +58,10 @@ export default function LearningPathPage() {
     <div className="container max-w-5xl mx-auto px-6 md:px-10 py-10">
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.5rem' }}>
+        <h1 className="text-h2" style={{ color: '#2A2A2A', marginBottom: '0.5rem' }}>
           Learning Path
         </h1>
-        <p style={{ fontSize: '0.875rem', color: 'rgba(42, 42, 42, 0.7)' }}>
+        <p className="text-body-small" style={{ color: 'rgba(42, 42, 42, 0.7)' }}>
           Follow the path to complete your Orientation
         </p>
       </div>

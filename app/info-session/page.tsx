@@ -52,25 +52,25 @@ export default function InfoSessionPage() {
             <h1 className="heading-hero mb-6 text-warmCharcoal text-center">
               Reserve Your Info Session Spot
             </h1>
-            <p className="text-warmCharcoal/75 text-center mb-12" style={{ fontSize: '35px' }}>
+            <p className="text-body text-warmCharcoal/75 text-center mb-12">
               Join a live conversation about the iPurpose program, ask questions, and see if it's the right fit for you.
             </p>
 
             <div className="bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-6 border border-lavenderViolet/10 mb-8">
-              <p className="text-warmCharcoal/75" style={{ fontSize: '35px' }}>
+              <p className="text-body text-warmCharcoal/75">
                 <strong>Next Session:</strong> Coming soon (dates announced to registrants)
               </p>
-              <p className="text-warmCharcoal/75 mt-2" style={{ fontSize: '35px' }}>
+              <p className="text-body text-warmCharcoal/75 mt-2">
                 <strong>Format:</strong> Live group call, 30–45 minutes
               </p>
-              <p className="text-warmCharcoal/75 mt-2" style={{ fontSize: '35px' }}>
+              <p className="text-body text-warmCharcoal/75 mt-2">
                 <strong>What to Expect:</strong> Program overview, Q&A, next steps
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-8 border border-lavenderViolet/10">
               <div>
-                <label className="block font-medium text-warmCharcoal mb-2" style={{ fontSize: '35px' }}>
+                <label className="text-body block font-medium text-warmCharcoal mb-2">
                   Your Name
                 </label>
                 <input
@@ -78,14 +78,13 @@ export default function InfoSessionPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50"
+                  className="text-body w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50"
                   placeholder="E.g., Sarah"
-                  style={{ fontSize: '35px' }}
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-warmCharcoal mb-2" style={{ fontSize: '35px' }}>
+                <label className="text-body block font-medium text-warmCharcoal mb-2">
                   Your Email
                 </label>
                 <input
@@ -93,9 +92,8 @@ export default function InfoSessionPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50"
+                  className="text-body w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50"
                   placeholder="sarah@example.com"
-                  style={{ fontSize: '35px' }}
                 />
               </div>
 
@@ -108,13 +106,12 @@ export default function InfoSessionPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white font-marcellus py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled"
-                style={{ fontSize: '35px' }}
+                className="text-body w-full bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-disabled"
               >
                 {loading ? 'Registering...' : 'Reserve My Spot'}
               </button>
 
-              <p className="text-warmCharcoal/60 text-center" style={{ fontSize: '35px' }}>
+              <p className="text-body-small text-warmCharcoal/60 text-center">
                 We'll send you session details and timing via email.
               </p>
             </form>

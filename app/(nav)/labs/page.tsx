@@ -74,14 +74,14 @@ export default function LabsHubPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Labs</h1>
-          <p className="text-white/85 font-marcellus drop-shadow-lg" style={{ fontSize: '40px' }}>
+          <p className="text-body text-white/85 drop-shadow-lg">
             Complete the Identity, Meaning, and Agency labs to unlock integration.
           </p>
         </div>
       </div>
 
       {/* Orientation anchor */}
-      <p className="text-warmCharcoal/70 italic mb-6" style={{ fontSize: '40px' }}>
+      <p className="text-body text-warmCharcoal/70 italic mb-6">
         Labs turn insight into readiness. Complete all three to unlock Integration.
       </p>
 
@@ -96,8 +96,8 @@ export default function LabsHubPage() {
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {labMeta.map((lab) => (
           <div key={lab.key} className="rounded-2xl border border-ip-border bg-white/80 p-6">
-            <h2 className="font-semibold text-warmCharcoal" style={{ fontSize: '40px' }}>{lab.title}</h2>
-            <p className="mt-2 text-warmCharcoal/70" style={{ fontSize: '40px' }}>
+            <h2 className="text-h3 font-semibold text-warmCharcoal">{lab.title}</h2>
+            <p className="text-body mt-2 text-warmCharcoal/70">
               Status: {labs[lab.key] || "not_started"}
             </p>
             <Link

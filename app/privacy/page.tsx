@@ -10,8 +10,8 @@ export default function PrivacyPage() {
   return (
     <>
       <PublicHeader />
-      <main style={{ padding: 32, maxWidth: 800, margin: "0 auto", lineHeight: 1.8, fontSize: '24px' }}>
-        <h1>Privacy Policy — iPurpose</h1>
+      <main className="text-body" style={{ padding: 32, maxWidth: 800, margin: "0 auto", lineHeight: 1.8 }}>
+        <h1 className="text-h2">Privacy Policy — iPurpose</h1>
         
         <p><strong>Effective date: January 15, 2026</strong></p>
         
