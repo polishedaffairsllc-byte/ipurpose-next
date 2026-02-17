@@ -51,8 +51,67 @@ export const iPurposeTailwindPlugin = plugin(
       },
     });
 
-    // Typography utilities from design tokens
+    // Typography utilities - canonical scales
     addUtilities({
+      // HERO / DISPLAY HEADINGS - 112px responsive
+      '.text-hero': {
+        fontFamily: designTokens.typography.fontFamily.italiana,
+        fontSize: designTokens.typography.displayFontSize.hero,
+        fontWeight: '400',
+        lineHeight: '1.2',
+        letterSpacing: '-0.025em',
+      },
+
+      // SECTION HEADINGS (H2) - 54-62px responsive
+      '.text-h2': {
+        fontFamily: designTokens.typography.fontFamily.italiana,
+        fontSize: designTokens.typography.displayFontSize.h2,
+        fontWeight: '400',
+        lineHeight: '1.25',
+        letterSpacing: '-0.025em',
+      },
+
+      // SUBHEADINGS (H3) - 36-48px responsive
+      '.text-h3': {
+        fontFamily: designTokens.typography.fontFamily.italiana,
+        fontSize: designTokens.typography.displayFontSize.h3,
+        fontWeight: '400',
+        lineHeight: '1.3',
+      },
+
+      // EMPHASIS TEXT - 20-24px responsive (important descriptions)
+      '.text-emphasis': {
+        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontSize: designTokens.typography.displayFontSize.emphasis,
+        fontWeight: '400',
+        lineHeight: '1.6',
+      },
+
+      // BODY TEXT - 16px standard
+      '.text-body': {
+        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontSize: '1rem',
+        fontWeight: '400',
+        lineHeight: '1.5',
+      },
+
+      // BODY SMALL - 14px standard
+      '.text-body-small': {
+        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontSize: '0.875rem',
+        fontWeight: '400',
+        lineHeight: '1.5',
+      },
+
+      // CAPTION - 12px standard
+      '.text-caption': {
+        fontFamily: designTokens.typography.fontFamily.marcellus,
+        fontSize: '0.75rem',
+        fontWeight: '500',
+        lineHeight: '1.5',
+      },
+
+      // Legacy brand text (kept for backwards compatibility)
       '.text-brand': {
         fontFamily: designTokens.typography.scale.brand.fontFamily,
         fontSize: designTokens.typography.scale.brand.fontSize,
