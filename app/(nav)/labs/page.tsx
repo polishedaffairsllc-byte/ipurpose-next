@@ -72,11 +72,13 @@ export default function LabsHubPage() {
       <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-8 rounded-3xl">
         <VideoBackground src="/videos/water-reflection.mp4" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
-        <div className="relative z-10 text-center px-4 max-w-4xl">
+        <div className="relative z-10 text-center px-4 max-w-4xl w-full">
           <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Labs</h1>
-          <p className="text-body text-white/85 drop-shadow-lg">
-            Complete the Identity, Meaning, and Agency labs to unlock integration.
-          </p>
+          <div className="w-full backdrop-blur-sm rounded-2xl px-8 py-4" style={{ backgroundColor: 'rgba(0,0,0,0.25)' }}>
+            <p className="text-body text-white drop-shadow-lg" style={{ color: '#ffffff' }}>
+              Complete the Identity, Meaning, and Agency labs to unlock integration.
+            </p>
+          </div>
         </div>
       </div>
 

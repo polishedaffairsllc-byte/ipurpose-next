@@ -204,13 +204,15 @@ export default async function SoulPage() {
             alt="Soul journey"
             className="absolute inset-0 w-full h-full object-cover opacity-30"
           />
-          <div className="relative z-10 text-center px-4 max-w-4xl">
-            <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl text-display-hero">Soul Alignment</h1>
-            <div className="inline-block backdrop-blur-sm rounded-2xl px-8 py-4" style={{ backgroundColor: 'rgba(0,0,0,0.25)' }}>
-              <p className="font-italiana text-display-emphasis" style={{ color: 'rgba(42,42,42,0.8)' }}>
+          <div className="absolute inset-0 w-full" style={{ backgroundColor: 'rgba(0,0,0,0.25)', top: 'auto', bottom: '1rem' }}>
+            <div className="h-full flex items-center justify-center">
+              <p className="font-italiana text-display-emphasis px-8 py-4 text-center" style={{ color: '#ffffff' }}>
                 Self-understanding over self-judgment. Your inner work is the foundation.
               </p>
             </div>
+          </div>
+          <div className="relative z-10 text-center px-4 max-w-4xl">
+            <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl text-h2 pb-2" style={{ lineHeight: '1.5' }}>Soul Alignment</h1>
           </div>
         </div>
 

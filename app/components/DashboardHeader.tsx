@@ -10,7 +10,7 @@ export default function DashboardHeader() {
         <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-5">
           {/* Page Title / Breadcrumb Area */}
           <div className="flex items-center gap-3 sm:gap-4">
-            <h2 className="font-marcellus text-lg sm:text-xl md:text-2xl text-warmCharcoal">Dashboard</h2>
+            <h2 className="font-italiana text-lg sm:text-xl md:text-2xl text-warmCharcoal">Dashboard</h2>
           </div>
 
           {/* Right side: Profile + Actions */}

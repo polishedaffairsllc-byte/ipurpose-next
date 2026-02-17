@@ -39,7 +39,7 @@ export default function AboutPage() {
           <h1 className="heading-hero mb-6 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
             About iPurpose<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span>
           </h1>
-          <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF', fontSize: '22px' }}>
+          <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-h2" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#ffffff' }}>
             A framework for building what matters — without losing yourself.
           </p>
         </section>
