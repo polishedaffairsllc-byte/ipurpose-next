@@ -191,10 +191,8 @@ export default function AboutPage() {
 
         {/* Next Steps */}
         <section className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
-          <h2 className="text-center font-marcellus text-warmCharcoal" style={{ fontSize: '79px' }}>
-            <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
-              Next Steps
-            </h2>
+          <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+            Next Steps
           </h2>
           <div className="space-y-3 sm:space-y-4 flex flex-col">
             <Link
