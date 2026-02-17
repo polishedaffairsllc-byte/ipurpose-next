@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import VideoBackground from "@/app/components/VideoBackground";
+import StickyNote from "@/app/components/StickyNote";
 
 type Post = {
   id: string;
@@ -135,7 +136,7 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="container max-w-5xl mx-auto px-6 md:px-10 py-10">
+    <div className="container max-w-6xl mx-auto px-6 md:px-10 py-10">
       <div className="relative h-[56vh] flex items-center justify-center overflow-hidden mb-10">
         <VideoBackground src="/videos/water-reflection.mp4" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
@@ -151,7 +152,7 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-6 flex flex-wrap gap-2 mb-8">
         {spaces.map((space) => (
           <button
             key={space.key}
@@ -167,7 +168,8 @@ export default function CommunityPage() {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-[1.6fr,0.9fr]">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 mb-8">
+        {/* Post Creation Section */}
         <div className="rounded-2xl border border-ip-border bg-white/80 p-5 space-y-3">
           <input
             className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
@@ -178,7 +180,7 @@ export default function CommunityPage() {
           <textarea
             rows={5}
             className="w-full px-4 py-3 border border-ip-border rounded-xl text-sm text-warmCharcoal"
-            placeholder="Share a reflection"
+            placeholder="Leave a note..."
             value={body}
             onChange={(e) => setBody(e.target.value)}
           />
@@ -187,17 +189,18 @@ export default function CommunityPage() {
             disabled={posting}
             className="px-4 py-2 rounded-full bg-ip-accent text-white text-sm"
           >
-            {posting ? "Posting..." : "Post"}
+            {posting ? "Posting..." : "Leave a Note"}
           </button>
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
         </div>
 
+        {/* Guidelines Section */}
         <div className="rounded-2xl border border-ip-border bg-ip-surface/60 p-5">
           <h3 className="text-lg font-semibold text-warmCharcoal">Guidelines</h3>
           <ul className="mt-3 space-y-2 text-sm text-warmCharcoal/70">
             {(guidelinesBySpace[spaceKey] ?? []).map((item) => (
               <li key={item} className="flex gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-ip-accent" />
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-ip-accent flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
@@ -205,27 +208,28 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      {loading ? <p className="mt-6 text-sm text-warmCharcoal/60">Loading...</p> : null}
-      <div className="mt-6 space-y-4">
-        {posts.map((post) => (
-          <Link
-            key={post.id}
-            href={`/community/post/${post.id}`}
-            className="block rounded-2xl border border-ip-border bg-white/80 p-5"
-          >
-            <h2 className="text-lg font-semibold text-warmCharcoal">{post.title || "Reflection"}</h2>
-            <p className="mt-2 text-sm text-warmCharcoal/70 line-clamp-3">{post.body}</p>
-          </Link>
-        ))}
-      </div>
+      {/* Sticky Notes Grid */}
+      {loading ? (
+        <p className="text-center text-sm text-warmCharcoal/60">Loading notes...</p>
+      ) : posts.length === 0 ? (
+        <p className="text-center text-sm text-warmCharcoal/60">No notes yet. Be the first to share!</p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+          {posts.map((post) => (
+            <StickyNote key={post.id} {...post} />
+          ))}
+        </div>
+      )}
+
+      {/* Load More Button */}
       {nextCursor ? (
-        <div className="mt-6">
+        <div className="flex justify-center">
           <button
             onClick={() => loadPosts(spaceKey, nextCursor)}
             disabled={loadingMore}
-            className="px-4 py-2 rounded-full border border-ip-border text-sm text-warmCharcoal"
+            className="px-4 py-2 rounded-full border border-ip-border text-sm text-warmCharcoal hover:bg-white/50"
           >
-            {loadingMore ? "Loading..." : "Load more"}
+            {loadingMore ? "Loading..." : "Load more notes"}
           </button>
         </div>
       ) : null}

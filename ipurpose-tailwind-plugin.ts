@@ -158,6 +158,7 @@ export const iPurposeTailwindPlugin = plugin(
           italiana: designTokens.typography.fontFamily.italiana,
           marcellus: designTokens.typography.fontFamily.marcellus,
           montserrat: designTokens.typography.fontFamily.montserrat,
+          caveat: designTokens.typography.fontFamily.caveat,
         },
 
         // Font sizes

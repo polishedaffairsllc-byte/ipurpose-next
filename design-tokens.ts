@@ -79,6 +79,7 @@ export const designTokens = {
       italiana: ['Italiana', 'serif'],
       marcellus: ['Marcellus', 'serif'],
       montserrat: ['Montserrat', 'sans-serif'],
+      caveat: ['Caveat', 'cursive'],
     },
 
     // Font Sizes - Base Scale
