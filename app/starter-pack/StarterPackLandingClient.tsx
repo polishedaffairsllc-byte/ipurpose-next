@@ -54,8 +54,8 @@ export default function StarterPackLanding() {
             <h1 className="heading-hero mb-4 text-white relative z-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
               <span style={{ fontFamily: 'Marcellus, serif', fontSize: '135px', color: '#FFFFFF' }}>iPurpose Starter Pack</span>
             </h1>
-            <p className="relative z-10 font-italiana text-xl sm:text-2xl md:text-3xl px-4 sm:px-6 py-2 sm:py-3 rounded-lg" style={{ backgroundColor: 'rgba(0,0,0,0.4)', color: '#FFFFFF' }}>
-              <span style={{ fontFamily: 'Italiana, serif', fontSize: '112px', color: '#FFFFFF' }}>Begin your clarity journey. Start simple. Start grounded.</span>
+            <p className="relative z-10 font-italiana text-xl sm:text-2xl md:text-3xl px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm text-warmCharcoal/70" style={{ backgroundColor: 'rgba(0,0,0,0.4)', color: '#FFFFFF' }}>
+              <span style={{ fontFamily: 'Marcellus, serif', fontSize: '24px', color: '#FFFFFF' }}>Explore Our Offering</span>
             </p>
           </section>
 
@@ -97,51 +97,51 @@ export default function StarterPackLanding() {
 
           <div className="grid gap-8 sm:grid-cols-2">
             {/* Card 1 */}
-            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>Clarity Check Experience</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4">A guided reflection that helps you see your current life and direction more clearly.</p>
-              <p className="text-sm font-medium text-warmCharcoal/60 mb-2">You'll explore:</p>
+            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Clarity Check Experience</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>A guided reflection that helps you see your current life and direction more clearly.</p>
+              <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>You'll explore:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Where your energy is going</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> What feels aligned vs. misaligned</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> What you're carrying that may no longer fit</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Where your energy is going</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What feels aligned vs. misaligned</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What you're carrying that may no longer fit</li>
               </ul>
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>Purpose Reflection Prompts</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4">Simple, thoughtful prompts that help you slow down and listen inward.</p>
-              <p className="text-sm font-medium text-warmCharcoal/60 mb-2">Designed to help you:</p>
+            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Purpose Reflection Prompts</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>Simple, thoughtful prompts that help you slow down and listen inward.</p>
+              <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>Designed to help you:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Notice patterns in your life</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Recognize what keeps calling you</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Put language to what you've been feeling</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Notice patterns in your life</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Recognize what keeps calling you</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Put language to what you've been feeling</li>
               </ul>
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>Personal Insight Snapshot</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4">A grounded look at where you are right now — not who you "should" be.</p>
-              <p className="text-sm font-medium text-warmCharcoal/60 mb-2">This helps you:</p>
+            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Personal Insight Snapshot</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>A grounded look at where you are right now — not who you "should" be.</p>
+              <p className="text-sm font-medium text-warmCharcoal/60 mb-2" style={{ fontSize: '22px' }}>This helps you:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Name your current season</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> See your strengths more clearly</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Identify your next small step</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Name your current season</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> See your strengths more clearly</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Identify your next small step</li>
               </ul>
             </div>
 
             {/* Card 4 */}
-            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8">
-              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '54px', color: '#2A2A2A' }}>Gentle Direction Forward</h3>
-              <p className="text-base text-warmCharcoal/70 mb-4">Once you complete the Starter Pack, you'll have a clearer sense of:</p>
+            <div className="bg-white rounded-2xl shadow-sm border border-lavenderViolet/10 p-6 sm:p-8 flex flex-col items-center text-center">
+              <h3 className="text-xl font-semibold mb-3" style={{ fontFamily: 'Marcellus, serif', fontSize: '62px', color: '#2A2A2A' }}>Gentle Direction Forward</h3>
+              <p className="text-base text-warmCharcoal/70 mb-4" style={{ fontSize: '24px', lineHeight: '1.6' }}>Once you complete the Starter Pack, you'll have a clearer sense of:</p>
               <ul className="space-y-2 text-sm text-warmCharcoal/70">
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> What you want to build</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> What needs healing or attention</li>
-                <li className="flex items-start gap-2"><span className="text-softGold">•</span> Whether you're ready to go deeper</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What you want to build</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> What needs healing or attention</li>
+                <li className="flex items-center justify-center gap-2" style={{ fontSize: '22px' }}><span className="text-softGold">•</span> Whether you're ready to go deeper</li>
               </ul>
-              <p className="mt-4 text-sm text-warmCharcoal/60 italic">From there, you can move into the next stage when the timing feels right.</p>
+              <p className="mt-4 text-sm text-warmCharcoal/60 italic" style={{ fontSize: '20px', lineHeight: '1.6' }}>From there, you can move into the next stage when the timing feels right.</p>
             </div>
           </div>
         </div>
