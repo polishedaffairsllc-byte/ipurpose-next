@@ -67,6 +67,7 @@ export default function LoginPage() {
       <div className="w-full flex justify-start px-6 py-4 md:px-8 md:py-6">
         <a 
           href="/" 
+          className="text-body-small"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -78,8 +79,6 @@ export default function LoginPage() {
             borderRadius: '0.5rem',
             background: 'linear-gradient(135deg, #9C88FF 0%, #6B5B95 100%)',
             color: 'white',
-            fontFamily: 'Marcellus, serif',
-            fontSize: '0.875rem',
             fontWeight: '500',
             textDecoration: 'none',
             boxShadow: '0 4px 12px rgba(156, 136, 255, 0.3)',

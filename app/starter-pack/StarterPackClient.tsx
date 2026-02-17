@@ -641,7 +641,7 @@ export default function StarterPackClient() {
           >
             {/* Action bar */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(42,42,42,0.1)' }}>
-              <p style={{ fontSize: '0.875rem', color: 'rgba(42,42,42,0.6)', textAlign: 'center', margin: 0 }}>
+              <p className="text-body-small" style={{ color: 'rgba(42,42,42,0.6)', textAlign: 'center', margin: 0 }}>
                 💡 <strong>Tip:</strong> Print or download your workbook to keep a copy of your reflections
               </p>
               <div style={{ display: 'flex', gap: '0.75rem' }}>
