@@ -136,18 +136,18 @@ export default function CommunityPage() {
 
   return (
     <div className="container max-w-5xl mx-auto px-6 md:px-10 py-10">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b0c14] text-white mb-8" style={{ height: '320px' }}>
+      <div className="relative h-[56vh] flex items-center justify-center overflow-hidden mb-10">
         <VideoBackground src="/videos/water-reflection.mp4" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
         <div className="absolute inset-0 w-full" style={{ backgroundColor: 'rgba(0,0,0,0.25)', top: 'auto', bottom: '1rem' }}>
           <div className="h-full flex items-center justify-center">
-            <p className="text-xl md:text-2xl font-marcellus px-8 py-4 text-center" style={{ color: '#ffffff' }}>
+            <p className="font-marcellus text-display-emphasis px-8 py-4 text-center" style={{ color: '#ffffff' }}>
               A calm space for reflection and dialogue. Speak from lived experience.
             </p>
           </div>
         </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl pt-8">
-          <h1 className="heading-hero text-white drop-shadow-2xl">Community</h1>
+        <div className="relative z-10 text-center px-4 max-w-4xl">
+          <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Community</h1>
         </div>
       </div>
 
