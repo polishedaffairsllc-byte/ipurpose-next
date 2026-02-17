@@ -54,7 +54,7 @@ export default function InternalNavbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`px-4 py-2 rounded-lg font-italiana transition-all ${
                     isActive(item.href)
                       ? 'bg-lavenderViolet/20 text-lavenderViolet'
                       : 'text-white/70 hover:text-white hover:bg-white/5'
@@ -67,7 +67,7 @@ export default function InternalNavbar() {
               <form action="/api/auth/logout" method="post" className="ml-2">
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-salmonPeach hover:bg-white/5 transition-all"
+                  className="px-4 py-2 rounded-lg font-italiana text-white/70 hover:text-salmonPeach hover:bg-white/5 transition-all"
                   style={{ fontSize: '18px' }}
                 >
                   Logout

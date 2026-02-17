@@ -185,11 +185,15 @@ export default async function SystemsPage() {
             alt="Systems and structure"
             className="absolute inset-0 w-full h-full object-cover opacity-30"
           />
+          <div className="absolute inset-0 w-full" style={{ backgroundColor: 'rgba(0,0,0,0.25)', top: 'auto', bottom: '1rem' }}>
+            <div className="h-full flex items-center justify-center">
+              <p className="font-marcellus text-xl md:text-2xl px-8 py-4 text-center" style={{ color: '#ffffff' }}>
+                Build the structures that carry your purpose. Organize, automate, and streamline your flow.
+              </p>
+            </div>
+          </div>
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-warmCharcoal drop-shadow-2xl">Systems</h1>
-            <p className="text-xl md:text-2xl text-warmCharcoal/80 font-marcellus drop-shadow-lg">
-              Build the structures that carry your purpose. Organize, automate, and streamline your flow.
-            </p>
           </div>
         </div>
 

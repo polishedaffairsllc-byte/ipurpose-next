@@ -28,11 +28,15 @@ export default async function InsightsPage() {
         <div className="relative h-[48vh] flex items-center justify-center overflow-hidden mb-10 rounded-3xl">
           <VideoBackground src="/videos/water-reflection.mp4" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
+          <div className="absolute inset-0 w-full" style={{ backgroundColor: 'rgba(0,0,0,0.25)', top: 'auto', bottom: '1rem' }}>
+            <div className="h-full flex items-center justify-center">
+              <p className="text-xl md:text-2xl font-marcellus px-8 py-4 text-center" style={{ color: '#ffffff' }}>
+                Real data from your check-ins and practices. The more you use iPurpose, the smarter this becomes.
+              </p>
+            </div>
+          </div>
           <div className="relative z-10 text-center px-4 max-w-4xl">
             <h1 className="heading-hero mb-4 text-white drop-shadow-2xl">Reflections</h1>
-            <p className="text-xl md:text-2xl text-white/85 font-marcellus drop-shadow-lg">
-              Real data from your check-ins and practices. The more you use iPurpose, the smarter this becomes.
-            </p>
           </div>
         </div>
 
