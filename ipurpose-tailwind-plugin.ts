@@ -53,7 +53,7 @@ export const iPurposeTailwindPlugin = plugin(
 
     // Typography utilities - canonical scales
     addUtilities({
-      // HERO / DISPLAY HEADINGS - 112px responsive
+      // HERO / DISPLAY HEADINGS - 40-56px responsive
       '.text-hero': {
         fontFamily: designTokens.typography.fontFamily.italiana.join(', '),
         fontSize: designTokens.typography.displayFontSize.hero,
@@ -62,7 +62,7 @@ export const iPurposeTailwindPlugin = plugin(
         letterSpacing: '-0.025em',
       },
 
-      // SECTION HEADINGS (H2) - 54-62px responsive
+      // SECTION HEADINGS (H2) - 28-36px responsive
       '.text-h2': {
         fontFamily: designTokens.typography.fontFamily.italiana.join(', '),
         fontSize: designTokens.typography.displayFontSize.h2,
@@ -71,7 +71,7 @@ export const iPurposeTailwindPlugin = plugin(
         letterSpacing: '-0.025em',
       },
 
-      // SUBHEADINGS (H3) - 36-48px responsive
+      // SUBHEADINGS (H3) - 20-28px responsive
       '.text-h3': {
         fontFamily: designTokens.typography.fontFamily.italiana.join(', '),
         fontSize: designTokens.typography.displayFontSize.h3,
@@ -79,7 +79,7 @@ export const iPurposeTailwindPlugin = plugin(
         lineHeight: '1.3',
       },
 
-      // EMPHASIS TEXT - 20-24px responsive (important descriptions)
+      // EMPHASIS TEXT - 16-20px responsive (important descriptions)
       '.text-emphasis': {
         fontFamily: designTokens.typography.fontFamily.marcellus.join(', '),
         fontSize: designTokens.typography.displayFontSize.emphasis,

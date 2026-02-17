@@ -97,10 +97,10 @@ export const designTokens = {
 
     // Display Font Sizes - Large Responsive Headings
     displayFontSize: {
-      'hero': 'clamp(3.75rem, 12vw, 7rem)',        // 112px - page hero only
-      'h2': 'clamp(2.5rem, 7vw, 3.875rem)',         // 54-62px - section headings
-      'h3': 'clamp(2rem, 5vw, 3rem)',               // 36-48px - subheadings
-      'emphasis': 'clamp(1.25rem, 3vw, 1.5rem)',   // 20-24px - important content
+      'hero': 'clamp(2.5rem, 8vw, 3.5rem)',        // 40-56px - page hero
+      'h2': 'clamp(1.75rem, 5vw, 2.25rem)',        // 28-36px - section headings
+      'h3': 'clamp(1.25rem, 3vw, 1.75rem)',        // 20-28px - subheadings
+      'emphasis': 'clamp(1rem, 2vw, 1.25rem)',    // 16-20px - important content
     },
 
     // Font Weights
