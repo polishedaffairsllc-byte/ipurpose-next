@@ -215,8 +215,7 @@ export default function CohortRegistrationForm({
       >
         <div className="text-5xl mb-6">✦</div>
         <h2
-          className="font-italiana text-warmCharcoal mb-3"
-          style={{ fontSize: "clamp(24px, 4vw, 36px)" }}
+          className="text-h3 font-italiana text-warmCharcoal mb-3"
         >
           You Are Registered
         </h2>
@@ -652,14 +651,13 @@ function StepHeader({
     <div className="mb-2">
       <div className="flex items-center gap-3 mb-1">
         <span
-          className="font-italiana text-lavenderViolet/60"
-          style={{ fontSize: "14px", letterSpacing: "0.15em" }}
+          className="text-caption font-italiana text-lavenderViolet/60"
+          style={{ letterSpacing: "0.15em" }}
         >
           §{numeral}
         </span>
         <h2
-          className="font-italiana text-warmCharcoal"
-          style={{ fontSize: "clamp(20px, 3vw, 28px)" }}
+          className="text-h3 font-italiana text-warmCharcoal"
         >
           {title}
         </h2>

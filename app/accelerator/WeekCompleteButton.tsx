@@ -33,12 +33,11 @@ export default function WeekCompleteButton({ week, isCompleted }: WeekCompleteBu
     <button
       onClick={handleToggle}
       disabled={loading}
-      className={`w-full px-6 py-4 rounded-2xl font-marcellus text-center transition-all duration-300 ${
+      className={`text-body-small w-full px-6 py-4 rounded-2xl font-marcellus text-center transition-all duration-300 ${
         completed
           ? 'bg-green-50 text-green-700 border-2 border-green-200'
           : 'bg-warmCharcoal/5 text-warmCharcoal/60 border-2 border-warmCharcoal/10 hover:border-warmCharcoal/30'
       } disabled:opacity-50`}
-      style={{ fontSize: '16px' }}
     >
       {loading
         ? 'Saving...'

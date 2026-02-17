@@ -95,7 +95,7 @@ export default async function AcceleratorPage() {
     return (
       <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center space-y-6">
-          <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '60px' }}>
+          <h1 className="text-h2 font-italiana text-warmCharcoal">
             iPurpose Accelerator<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span>
           </h1>
 
@@ -105,12 +105,12 @@ export default async function AcceleratorPage() {
             <div style={{ height: '2px', width: '100px', background: 'linear-gradient(to right, transparent, #E6C87C, transparent)' }}></div>
           </div>
 
-          <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '45px' }}>
+          <p className="text-body font-marcellus text-warmCharcoal/70">
             Six weeks to clarify your purpose and build aligned systems.
           </p>
 
           <div className="rounded-2xl p-8 sm:p-12 mt-8" style={{ background: 'linear-gradient(135deg, rgba(230, 200, 124, 0.15), rgba(230, 200, 124, 0.05))' }}>
-            <p className="font-marcellus text-warmCharcoal/60" style={{ fontSize: '45px' }}>
+            <p className="text-body font-marcellus text-warmCharcoal/60">
               You don&apos;t have access to the Accelerator yet.
             </p>
             <a

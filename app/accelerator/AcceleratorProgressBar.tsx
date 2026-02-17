@@ -32,10 +32,9 @@ export default function AcceleratorProgressBar({ currentWeek, completedWeeks }: 
               />
               {/* Week label */}
               <span
-                className={`font-marcellus text-center leading-tight ${
+                className={`text-caption font-marcellus text-center leading-tight ${
                   isLocked ? 'text-warmCharcoal/30' : 'text-warmCharcoal/60'
                 }`}
-                style={{ fontSize: '12px' }}
               >
                 {isCompleted ? '✓' : stage.week}
               </span>

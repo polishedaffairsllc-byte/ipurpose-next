@@ -88,7 +88,7 @@ export default async function RegisterPage() {
                 background: "linear-gradient(to right, transparent, #E6C87C)",
               }}
             />
-            <span className="font-italiana text-warmCharcoal/30" style={{ fontSize: "14px", letterSpacing: "0.3em" }}>
+            <span className="text-caption font-italiana text-warmCharcoal/30" style={{ letterSpacing: "0.3em" }}>
               {enrollableCohort.label.toUpperCase()}
             </span>
             <div
@@ -102,15 +102,14 @@ export default async function RegisterPage() {
           </div>
 
           <h1
-            className="font-italiana text-warmCharcoal"
-            style={{ fontSize: "clamp(28px, 5vw, 48px)", letterSpacing: "0.04em" }}
+            className="text-h2 font-italiana text-warmCharcoal"
+            style={{ letterSpacing: "0.04em" }}
           >
             Cohort Registration
           </h1>
 
           <p
-            className="font-marcellus text-warmCharcoal/50 mt-3"
-            style={{ fontSize: "clamp(14px, 2.5vw, 18px)" }}
+            className="text-body font-marcellus text-warmCharcoal/50 mt-3"
           >
             Begin your six-week journey in purpose-driven transformation
           </p>
