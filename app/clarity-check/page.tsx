@@ -78,18 +78,18 @@ export default function ClarityCheckPage() {
               {/* Dark Overlay */}
               <div className="absolute inset-0 bg-black/50"></div>
               
-              <h1 className="heading-hero mb-6 text-white relative z-10 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-                <span style={{ fontFamily: 'Marcellus, serif', fontSize: '135px', color: '#FFFFFF' }}>Take Your Clarity Check</span>
+              <h1 className="heading-hero mb-6 text-white relative z-10 text-display-hero">
+                Take Your Clarity Check
               </h1>
-              <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-[40px]" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
-                <span style={{ fontFamily: 'Italiana, serif', fontSize: '112px', color: '#FFFFFF' }}>Twelve questions to unlock your direction</span>
+              <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-display-emphasis" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
+                Twelve questions to unlock your direction
               </p>
             </section>
 
             <form onSubmit={handleSubmit} className="space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
               <div>
-                <label className="block font-medium text-warmCharcoal mb-2 text-[40px]">
-                  <span style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>Your Name</span>
+                <label className="block font-medium text-warmCharcoal mb-2 font-marcellus text-display-emphasis">
+                  Your Name
                 </label>
                 <input
                   type="text"
@@ -97,14 +97,14 @@ export default function ClarityCheckPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50"
-                  style={{ fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+                  style={{ fontFamily: 'Marcellus, serif' }}
                   placeholder="E.g., Sarah"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-warmCharcoal mb-2 text-[40px]">
-                  <span style={{ fontFamily: 'Marcellus, serif', fontSize: '79px', color: '#2A2A2A' }}>Your Email</span>
+                <label className="block font-medium text-warmCharcoal mb-2 font-marcellus text-display-emphasis">
+                  Your Email
                 </label>
                 <input
                   type="email"
@@ -112,7 +112,7 @@ export default function ClarityCheckPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50"
-                  style={{ fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+                  style={{ fontFamily: 'Marcellus, serif' }}
                   placeholder="sarah@example.com"
                 />
               </div>
@@ -142,8 +142,8 @@ export default function ClarityCheckPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+                className="w-full px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
               >
                 {loading ? 'Submitting...' : 'Take the Clarity Check'}
               </button>
@@ -151,25 +151,25 @@ export default function ClarityCheckPage() {
           </div>
         ) : (
           <div className="text-center py-8 sm:py-12">
-            <div className="text-5xl sm:text-6xl mb-4 sm:mb-6" style={{ fontSize: '120px' }}>✓</div>
-            <h2 className="font-marcellus text-warmCharcoal mb-3 sm:mb-4" style={{ fontSize: '79px' }}>
+            <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">✓</div>
+            <h2 className="font-italiana text-warmCharcoal mb-3 sm:mb-4 text-display-h2">
               You're in.
             </h2>
-            <p className="text-warmCharcoal/75 mb-8 sm:mb-12" style={{ fontSize: '54px', fontFamily: 'Marcellus, serif' }}>
+            <p className="text-warmCharcoal/75 mb-8 sm:mb-12 font-marcellus text-display-emphasis">
               Now take the assessment. 12 quick questions to understand where you truly stand.
             </p>
             <div className="space-y-3 sm:space-y-4 flex flex-col mb-6 sm:mb-8">
               <Link
                 href="/clarity-check-numeric"
-                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-                style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
               >
                 Take the Clarity Check Assessment
               </Link>
               <Link
                 href="/program"
-                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', fontSize: '79px', fontFamily: 'Marcellus, serif' }}
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))' }}
               >
                 Or explore the iPurpose Accelerator™
               </Link>

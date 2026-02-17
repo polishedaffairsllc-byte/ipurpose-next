@@ -46,18 +46,18 @@ export default function AboutPage() {
 
         {/* Why iPurpose Exists */}
         <section className="space-y-4">
-          <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+          <h2 className="text-center text-warmCharcoal font-italiana text-display-h2">
             Why iPurpose Exists
           </h2>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed font-marcellus text-display-emphasis">
             iPurpose exists to address a persistent gap:<br />
             traditional business often ignores the soul,<br />
             while spiritual work often ignores structure.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed font-marcellus text-display-emphasis">
             Many capable, thoughtful people find themselves overwhelmed, disconnected, or stuck between intuition and implementation. They know something matters deeply to them — but struggle to translate that knowing into sustainable action.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed font-marcellus text-display-emphasis">
             iPurpose™ was created to hold both meaning and method, without asking people to abandon either.
           </p>
         </section>
@@ -72,22 +72,22 @@ export default function AboutPage() {
         {/* Philosophy Section */}
         <section className="space-y-2">
           <div>
-            <h2 className="text-center text-warmCharcoal mb-2" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+            <h2 className="text-center text-warmCharcoal mb-2 font-italiana text-display-h2">
               The iPurpose Philosophy
             </h2>
-            <p className="text-center text-warmCharcoal/80" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+            <p className="text-center text-warmCharcoal/80 font-italiana text-display-emphasis">
               Soul → Systems → AI™
             </p>
-            <p className="text-center text-warmCharcoal/75 italic mt-2" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+            <p className="text-center text-warmCharcoal/75 italic mt-2 font-marcellus text-display-emphasis">
               This is not a slogan. It is a sequence.
             </p>
           </div>
           <div className="space-y-4 pl-4 border-l-4 border-lavenderViolet">
             <div>
-              <h3 className="text-center text-warmCharcoal mb-1" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+              <h3 className="text-center text-warmCharcoal mb-1 font-italiana text-display-h3">
                 Soul — Alignment before action.
               </h3>
-              <p className="text-center text-warmCharcoal/75" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
+              <p className="text-center text-warmCharcoal/75 font-marcellus text-display-emphasis">
                 Know yourself and your values before deciding what to build.
               </p>
             </div>
@@ -98,10 +98,10 @@ export default function AboutPage() {
               <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, #9c88ff)' }}></div>
             </div>
             <div>
-              <h3 className="text-center text-warmCharcoal mb-1" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+              <h3 className="text-center text-warmCharcoal mb-1 font-italiana text-display-h3">
                 Systems — Structure before scale.
               </h3>
-              <p className="text-center text-warmCharcoal/75" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
+              <p className="text-center text-warmCharcoal/75 font-marcellus text-display-emphasis">
                 Create frameworks that support sustainability, not burnout.
               </p>
             </div>
@@ -112,15 +112,15 @@ export default function AboutPage() {
               <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, #9c88ff)' }}></div>
             </div>
             <div>
-              <h3 className="text-center text-warmCharcoal mb-1" style={{ fontFamily: 'Italiana, serif', fontSize: '54px' }}>
+              <h3 className="text-center text-warmCharcoal mb-1 font-italiana text-display-h3">
                 AI — Automation only after clarity.
               </h3>
-              <p className="text-center text-warmCharcoal/75" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
+              <p className="text-center text-warmCharcoal/75 font-marcellus text-display-emphasis">
                 Use technology to amplify human intention — not replace it.
               </p>
             </div>
           </div>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed pt-2" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed pt-2 font-marcellus text-display-emphasis">
             When this order is respected, technology serves the human — not the other way around.
           </p>
         </section>
@@ -134,14 +134,14 @@ export default function AboutPage() {
 
         {/* What iPurpose Is (and Is Not) */}
         <section className="space-y-4">
-          <h2 className="text-center text-warmCharcoal" style={{ fontFamily: 'Italiana, serif', fontSize: '79px' }}>
+          <h2 className="text-center text-warmCharcoal font-italiana text-display-h2">
             What iPurpose Is (and Is Not)
           </h2>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed font-marcellus text-display-emphasis">
             iPurpose is not about hustle, hype, or extraction.<br />
             It is not optimization without meaning.
           </p>
-          <p className="text-center text-warmCharcoal/75 leading-relaxed" style={{ fontFamily: 'Italiana, serif', fontSize: '35px' }}>
+          <p className="text-center text-warmCharcoal/75 leading-relaxed font-marcellus text-display-emphasis">
             It is about building what is true,<br />
             at a pace that is sustainable,<br />
             in a way that is ethical, grounded, and alive.
