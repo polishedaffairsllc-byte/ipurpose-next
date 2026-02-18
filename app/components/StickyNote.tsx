@@ -85,11 +85,11 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
           style={{
             width: '20px',
             height: '20px',
-            backgroundColor: '#d32f2f',
+            backgroundColor: '#d4af37',
             borderRadius: '50% 50% 50% 0',
             transform: 'translate(-50%, -50%) rotate(-45deg)',
             boxShadow: '0 3px 6px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3)',
-            border: '2px solid #b71c1c',
+            border: '2px solid #b8860b',
           }}
         />
         
