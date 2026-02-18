@@ -383,7 +383,7 @@ export default async function AcceleratorPage() {
                   }}
                 >
                   <div className="w-full pt-1">
-                    <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
+                    <span className="font-marcellus text-warmCharcoal/50 block uppercase" style={{ fontSize: '18px', letterSpacing: '0.2em', marginBottom: '8px', fontWeight: '600' }}>
                       {stage.subtitle}
                     </span>
                     <span className="block font-italiana" style={{ fontSize: '40px', color: '#4B4E6D' }}>
@@ -407,7 +407,7 @@ export default async function AcceleratorPage() {
                   }}
                 >
                   <div className="w-full pt-1">
-                    <span className="font-marcellus text-warmCharcoal/20 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
+                    <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: '18px', letterSpacing: '0.2em', marginBottom: '8px', fontWeight: '600' }}>
                       {stage.subtitle}
                     </span>
                     <span className="block font-italiana text-warmCharcoal/40" style={{ fontSize: '40px' }}>
