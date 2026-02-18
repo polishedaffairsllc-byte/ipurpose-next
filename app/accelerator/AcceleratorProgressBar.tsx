@@ -73,7 +73,7 @@ export default function AcceleratorProgressBar({ currentWeek, completedWeeks }: 
                   isLocked ? 'text-warmCharcoal/30' : 'text-warmCharcoal/60'
                 }`}
               >
-                {isCompleted ? '✓' : stage.week}
+                {isCompleted ? '✓' : ['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
               </span>
             </div>
           );
