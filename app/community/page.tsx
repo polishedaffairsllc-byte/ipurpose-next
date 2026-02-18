@@ -211,11 +211,11 @@ export default function CommunityPage() {
       {/* Sticky Notes Grid */}
       <div className="mb-8 relative rounded-3xl p-12 backdrop-blur-md border-2 border-white/50 bg-gradient-to-br from-white/75 to-slate-100/60 min-h-[600px]">
         {/* Meeting icons scattered in background */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 text-warmCharcoal/40 text-8xl font-bold overflow-hidden rounded-3xl">
-          <div className="absolute top-8 left-8">💡</div>
-          <div className="absolute top-16 right-12">✓</div>
-          <div className="absolute bottom-12 left-1/4">🤝</div>
-          <div className="absolute bottom-16 right-1/3">📌</div>
+        <div className="absolute inset-0 pointer-events-none opacity-25 text-warmCharcoal/30 text-8xl font-bold overflow-hidden rounded-3xl z-0">
+          <div className="absolute top-8 left-8">📌</div>
+          <div className="absolute top-16 right-12">💡</div>
+          <div className="absolute bottom-12 left-1/4">✓</div>
+          <div className="absolute bottom-16 right-1/3">🤝</div>
         </div>
         
         <p className="text-sm text-warmCharcoal/70 mb-6 text-center relative z-10">
@@ -226,7 +226,7 @@ export default function CommunityPage() {
         ) : posts.length === 0 ? (
           <p className="text-center text-sm text-warmCharcoal/60">No notes yet. Be the first to share!</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-10 justify-items-center relative z-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 gap-y-12 justify-items-center relative z-10">
             {posts.map((post) => (
               <StickyNote key={post.id} {...post} />
             ))}
