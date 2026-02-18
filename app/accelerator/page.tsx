@@ -13,6 +13,7 @@ import {
   getDaysUntilStart,
 } from "@/lib/accelerator/stages";
 import AcceleratorProgressBar from "./AcceleratorProgressBar";
+import ResetProgressButton from "./ResetProgressButton";
 import Link from "next/link";
 
 export default async function AcceleratorPage() {
@@ -255,6 +256,9 @@ export default async function AcceleratorPage() {
         <p className="font-marcellus text-warmCharcoal/35 text-center mt-4" style={{ fontSize: '28px', letterSpacing: '0.1em' }}>
           {completedWeeks.length} of 6 stages complete
         </p>
+        <div className="mt-6 text-center">
+          <ResetProgressButton />
+        </div>
       </div>
 
       {/* ═══ Grace-Period Catch-Up Banner ═══ */}

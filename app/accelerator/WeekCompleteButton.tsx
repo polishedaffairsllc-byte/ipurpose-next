@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface WeekCompleteButtonProps {
   week: number;
@@ -10,6 +11,7 @@ interface WeekCompleteButtonProps {
 export default function WeekCompleteButton({ week, isCompleted }: WeekCompleteButtonProps) {
   const [completed, setCompleted] = useState(isCompleted);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleToggle = async () => {
     setLoading(true);
@@ -21,6 +23,10 @@ export default function WeekCompleteButton({ week, isCompleted }: WeekCompleteBu
       });
       if (res.ok) {
         setCompleted(!completed);
+        // Refresh the accelerator dashboard to update progress bar
+        setTimeout(() => {
+          router.refresh();
+        }, 500);
       }
     } catch (err) {
       console.error('Failed to update progress:', err);
