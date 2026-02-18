@@ -364,7 +364,7 @@ export default async function AcceleratorPage() {
       </div>
 
       {/* ═══ Stage Cards — Academic Syllabus Style ═══ */}
-      <div className="space-y-0 max-w-2xl mx-auto mb-16">
+      <div className="space-y-6 max-w-2xl mx-auto mb-16">
         {ACCELERATOR_STAGES.map((stage, index) => {
           const isUnlocked = stage.week <= effectiveUnlocked;
           const isCompleted = completedWeeks.includes(stage.week);
@@ -379,7 +379,6 @@ export default async function AcceleratorPage() {
                   className="flex items-start gap-5 sm:gap-7 px-6 sm:px-8 py-6 sm:py-7 hover:opacity-90 transition-all duration-300 group block"
                   style={{
                     borderLeft: `3px solid ${stage.color}`,
-                    borderBottom: isLast ? 'none' : '1px solid rgba(75, 78, 109, 0.08)',
                     background: isCurrent ? `${stage.colorFaded}` : 'transparent',
                   }}
                 >
@@ -411,7 +410,6 @@ export default async function AcceleratorPage() {
                   className="flex items-start gap-5 sm:gap-7 px-6 sm:px-8 py-6 sm:py-7 opacity-40 cursor-not-allowed"
                   style={{
                     borderLeft: '3px solid #d1d5db',
-                    borderBottom: isLast ? 'none' : '1px solid rgba(75, 78, 109, 0.05)',
                   }}
                 >
                   <div className="shrink-0 text-center" style={{ width: '70px' }}>
