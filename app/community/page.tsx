@@ -210,14 +210,15 @@ export default function CommunityPage() {
 
       {/* Sticky Notes Grid */}
       <div className="mb-8 relative rounded-3xl p-12 min-h-[600px]" style={{
-        background: `
+        backgroundImage: `
           radial-gradient(ellipse at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
           radial-gradient(ellipse at 80% 70%, rgba(140, 176, 75, 0.06) 0%, transparent 40%),
           linear-gradient(135deg, #c9a961 0%, #d4b896 25%, #c9a961 50%, #d4b896 75%, #c9a961 100%)
         `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         border: '3px solid #8b7355',
         boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.1)',
-        backgroundSize: '200% 200%',
       }}>
         {/* Decorative pushpins scattered around the board */}
         {/* Removed - keeping only sticky note pushpins */}
