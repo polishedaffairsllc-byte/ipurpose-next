@@ -231,14 +231,10 @@ export default async function AcceleratorPage() {
         </h1>
 
         {/* Cohort badge — like a course catalog label */}
-        <div className="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-full border border-warmCharcoal/15" style={{ background: 'rgba(75, 78, 109, 0.04)' }}>
-          <span className="font-marcellus text-warmCharcoal/60 uppercase" style={{ fontSize: '28px', letterSpacing: '0.2em' }}>
+        <div className="mt-4">
+          <p className="font-marcellus text-warmCharcoal/50 uppercase" style={{ fontSize: '18px', letterSpacing: '0.2em', fontWeight: '600' }}>
             {userCohort.label}
-          </span>
-          <span className="text-warmCharcoal/20">·</span>
-          <span className="font-marcellus text-warmCharcoal/40" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
-            Starts {formattedStart}
-          </span>
+          </p>
         </div>
 
         {/* Decorative rule — academic double-line */}
