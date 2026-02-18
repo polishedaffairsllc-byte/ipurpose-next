@@ -238,6 +238,29 @@ export default function CommunityPage() {
             {posts.map((post) => (
               <StickyNote key={post.id} {...post} />
             ))}
+            {/* Blank placeholder sticky notes for visual fullness */}
+            {posts.length < 8 && (
+              <>
+                {[...Array(Math.min(3, 8 - posts.length))].map((_, idx) => (
+                  <div
+                    key={`blank-${idx}`}
+                    className="relative p-4 rounded-sm cursor-default transition-all duration-300"
+                    style={{
+                      width: '300px',
+                      height: '300px',
+                      backgroundColor: '#fffbf0',
+                      border: '1px solid #e8dcc0',
+                      transform: `rotate(${[-2, 1, -1][idx % 3]}deg)`,
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
+                      opacity: 0.6,
+                    }}
+                  >
+                    {/* Pushpin */}
+                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-300 rounded-full shadow-md border border-gray-400" />
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
