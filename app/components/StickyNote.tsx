@@ -67,7 +67,7 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
   return (
     <Link href={`/community/post/${id}`}>
       <div
-        className="relative p-4 rounded-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105"
+        className="relative p-4 rounded-sm cursor-pointer transition-all duration-300 hover:scale-105"
         style={{
           width: '300px',
           height: '300px',
@@ -77,6 +77,15 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
           transformOrigin: 'center',
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)',
           fontFamily: 'Caveat, cursive',
+          transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.5)';
+          e.currentTarget.style.transform = `rotate(${rotation}deg) translateY(-8px)`;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.5)';
+          e.currentTarget.style.transform = `rotate(${rotation}deg)`;
         }}
       >
         {/* Pushpin */}
