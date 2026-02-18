@@ -210,14 +210,15 @@ export default function CommunityPage() {
 
       {/* Sticky Notes Grid */}
       <div className="mb-8 relative rounded-3xl p-12 min-h-[600px]" style={{
-        background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(240,240,240,0.7) 100%)',
-        border: '2px solid rgba(255,255,255,0.6)',
-        backdropFilter: 'blur(12px)',
+        background: 'linear-gradient(135deg, #c9a961 0%, #d4b896 25%, #c9a961 50%, #d4b896 75%, #c9a961 100%)',
+        border: '3px solid #8b7355',
+        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.1)',
+        backgroundSize: '200% 200%',
       }}>
         {/* Meeting icons scattered in background */}
         <div className="absolute inset-0 pointer-events-none text-8xl font-bold overflow-hidden rounded-3xl z-0" style={{
-          opacity: 0.25,
-          color: 'rgba(117, 76, 36, 0.3)',
+          opacity: 0.15,
+          color: 'rgba(80, 50, 20, 0.4)',
         }}>
           <div className="absolute top-8 left-8">📌</div>
           <div className="absolute top-16 right-12">💡</div>
