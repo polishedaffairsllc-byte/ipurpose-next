@@ -312,7 +312,7 @@ export default async function AcceleratorPage() {
       {/* ═══ Welcome — Drop Cap Style ═══ */}
       <div className="max-w-2xl mx-auto mb-14 text-center">
         <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '45px', lineHeight: '1.8' }}>
-          <span className="font-italiana float-left mr-2" style={{ fontSize: '28px', lineHeight: '0.85', color: '#9C88FF', marginTop: '4px' }}>
+          <span className="font-italiana float-left mr-2" style={{ fontSize: '56px', lineHeight: '0.85', color: '#d4af37', marginTop: '4px', fontWeight: 'bold' }}>
             W
           </span>
           {userName ? `elcome back, ${userName}${soulIdentity ? ` the ${soulIdentity}` : ''}.` : 'elcome.'}{' '}
