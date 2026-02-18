@@ -387,11 +387,11 @@ export default async function AcceleratorPage() {
                     <span className="font-italiana block" style={{ fontSize: '50px', color: stage.color }}>
                       {isCompleted ? '✓' : ['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
                     </span>
-                    <span className="font-marcellus text-warmCharcoal/30 block" style={{ fontSize: '22px', letterSpacing: '0.15em' }}>
-                      {stage.subtitle.toUpperCase()}
-                    </span>
                   </div>
                   <div className="flex-1 pt-1">
+                    <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
+                      {stage.subtitle}
+                    </span>
                     <span className="block font-italiana" style={{ fontSize: '40px', color: '#4B4E6D' }}>
                       {stage.title}
                     </span>
@@ -416,12 +416,12 @@ export default async function AcceleratorPage() {
                     <span className="font-italiana block text-warmCharcoal/30" style={{ fontSize: '50px' }}>
                       {['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
                     </span>
-                    <span className="font-marcellus text-warmCharcoal/20 block" style={{ fontSize: '22px', letterSpacing: '0.15em' }}>
-                      {stage.subtitle.toUpperCase()}
-                    </span>
                   </div>
                   <div className="pt-1">
-                    <span className="block font-italiana text-warmCharcoal/40 mt-1" style={{ fontSize: '40px' }}>
+                    <span className="font-marcellus text-warmCharcoal/20 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
+                      {stage.subtitle}
+                    </span>
+                    <span className="block font-italiana text-warmCharcoal/40" style={{ fontSize: '40px' }}>
                       {stage.title}
                     </span>
                     <span className="block font-marcellus text-warmCharcoal/25 mt-2" style={{ fontSize: '28px', fontStyle: 'italic' }}>
