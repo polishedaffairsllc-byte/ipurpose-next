@@ -389,7 +389,7 @@ export default async function AcceleratorPage() {
                       {isCompleted ? '✓' : ['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
                     </span>
                     <span className="font-marcellus text-warmCharcoal/30 block" style={{ fontSize: '22px', letterSpacing: '0.15em' }}>
-                      WEEK {stage.week}
+                      {stage.subtitle.toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1 pt-1">
@@ -422,7 +422,7 @@ export default async function AcceleratorPage() {
                       {['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
                     </span>
                     <span className="font-marcellus text-warmCharcoal/20 block" style={{ fontSize: '22px', letterSpacing: '0.15em' }}>
-                      WEEK {stage.week}
+                      {stage.subtitle.toUpperCase()}
                     </span>
                   </div>
                   <div className="pt-1">
