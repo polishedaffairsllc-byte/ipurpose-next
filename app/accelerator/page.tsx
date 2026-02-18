@@ -376,13 +376,13 @@ export default async function AcceleratorPage() {
               {isUnlocked ? (
                 <Link
                   href={`/accelerator/week/${stage.week}`}
-                  className="flex items-start gap-5 sm:gap-7 px-6 sm:px-8 py-6 sm:py-7 hover:opacity-90 transition-all duration-300 group block"
+                  className="flex flex-col items-center justify-center gap-5 sm:gap-7 px-6 sm:px-8 py-6 sm:py-7 hover:opacity-90 transition-all duration-300 group block text-center"
                   style={{
                     borderLeft: `3px solid ${stage.color}`,
                     background: isCurrent ? `${stage.colorFaded}` : 'transparent',
                   }}
                 >
-                  <div className="flex-1 pt-1">
+                  <div className="w-full pt-1">
                     <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
                       {stage.subtitle}
                     </span>
@@ -401,12 +401,12 @@ export default async function AcceleratorPage() {
                 </Link>
               ) : (
                 <div
-                  className="flex items-start gap-5 sm:gap-7 px-6 sm:px-8 py-6 sm:py-7 opacity-40 cursor-not-allowed"
+                  className="flex flex-col items-center justify-center gap-5 sm:gap-7 px-6 sm:px-8 py-6 sm:py-7 opacity-40 cursor-not-allowed text-center"
                   style={{
                     borderLeft: '3px solid #d1d5db',
                   }}
                 >
-                  <div className="pt-1">
+                  <div className="w-full pt-1">
                     <span className="font-marcellus text-warmCharcoal/20 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
                       {stage.subtitle}
                     </span>
