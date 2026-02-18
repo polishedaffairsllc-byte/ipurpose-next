@@ -393,10 +393,7 @@ export default async function AcceleratorPage() {
                     </span>
                   </div>
                   <div className="flex-1 pt-1">
-                    <span className="block font-marcellus text-warmCharcoal/40 uppercase" style={{ fontSize: '25px', letterSpacing: '0.25em' }}>
-                      {stage.subtitle}
-                    </span>
-                    <span className="block font-italiana mt-1" style={{ fontSize: '40px', color: '#4B4E6D' }}>
+                    <span className="block font-italiana" style={{ fontSize: '40px', color: '#4B4E6D' }}>
                       {stage.title}
                     </span>
                     <span className="block font-marcellus text-warmCharcoal/50 mt-2" style={{ fontSize: '32px', lineHeight: '1.6', fontStyle: 'italic' }}>
@@ -426,9 +423,6 @@ export default async function AcceleratorPage() {
                     </span>
                   </div>
                   <div className="pt-1">
-                    <span className="block font-marcellus text-warmCharcoal/30 uppercase" style={{ fontSize: '25px', letterSpacing: '0.25em' }}>
-                      {stage.subtitle}
-                    </span>
                     <span className="block font-italiana text-warmCharcoal/40 mt-1" style={{ fontSize: '40px' }}>
                       {stage.title}
                     </span>
