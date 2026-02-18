@@ -382,12 +382,6 @@ export default async function AcceleratorPage() {
                     background: isCurrent ? `${stage.colorFaded}` : 'transparent',
                   }}
                 >
-                  {/* Roman numeral / stage number */}
-                  <div className="shrink-0 text-center" style={{ width: '70px' }}>
-                    <span className="font-italiana block" style={{ fontSize: '50px', color: stage.color }}>
-                      {isCompleted ? '✓' : ['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
-                    </span>
-                  </div>
                   <div className="flex-1 pt-1">
                     <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
                       {stage.subtitle}
@@ -412,11 +406,6 @@ export default async function AcceleratorPage() {
                     borderLeft: '3px solid #d1d5db',
                   }}
                 >
-                  <div className="shrink-0 text-center" style={{ width: '70px' }}>
-                    <span className="font-italiana block text-warmCharcoal/30" style={{ fontSize: '50px' }}>
-                      {['I', 'II', 'III', 'IV', 'V', 'VI'][stage.week - 1]}
-                    </span>
-                  </div>
                   <div className="pt-1">
                     <span className="font-marcellus text-warmCharcoal/20 block uppercase" style={{ fontSize: '14px', letterSpacing: '0.15em', marginBottom: '4px' }}>
                       {stage.subtitle}
