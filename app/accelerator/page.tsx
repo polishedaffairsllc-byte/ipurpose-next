@@ -364,7 +364,7 @@ export default async function AcceleratorPage() {
       </div>
 
       {/* ═══ Stage Cards — Academic Syllabus Style ═══ */}
-      <div className="space-y-6 max-w-2xl mx-auto mb-16">
+      <div className="space-y-8 max-w-2xl mx-auto mb-16">
         {ACCELERATOR_STAGES.map((stage, index) => {
           const isUnlocked = stage.week <= effectiveUnlocked;
           const isCompleted = completedWeeks.includes(stage.week);
@@ -372,7 +372,7 @@ export default async function AcceleratorPage() {
           const isLast = index === ACCELERATOR_STAGES.length - 1;
 
           return (
-            <div key={stage.week} className="relative">
+            <div key={stage.week} className="relative rounded-lg overflow-hidden" style={{ background: 'rgba(75, 78, 109, 0.02)' }}>
               {isUnlocked ? (
                 <Link
                   href={`/accelerator/week/${stage.week}`}
