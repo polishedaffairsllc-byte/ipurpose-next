@@ -234,33 +234,12 @@ export default function CommunityPage() {
         ) : posts.length === 0 ? (
           <p className="text-center text-sm text-warmCharcoal/60">No notes yet. Be the first to share!</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 gap-y-12 justify-items-center relative z-10">
-            {posts.map((post) => (
-              <StickyNote key={post.id} {...post} />
+          <div className="flex flex-wrap justify-center gap-8 gap-y-12 relative z-10">
+            {posts.map((post, idx) => (
+              <div key={post.id} style={{ marginTop: idx % 2 === 1 ? '60px' : '0px' }}>
+                <StickyNote {...post} />
+              </div>
             ))}
-            {/* Blank placeholder sticky notes for visual fullness */}
-            {posts.length < 8 && (
-              <>
-                {[...Array(Math.min(3, 8 - posts.length))].map((_, idx) => (
-                  <div
-                    key={`blank-${idx}`}
-                    className="relative p-4 rounded-sm cursor-default transition-all duration-300"
-                    style={{
-                      width: '300px',
-                      height: '300px',
-                      backgroundColor: '#fffbf0',
-                      border: '1px solid #e8dcc0',
-                      transform: `rotate(${[-2, 1, -1][idx % 3]}deg)`,
-                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
-                      opacity: 0.6,
-                    }}
-                  >
-                    {/* Pushpin */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-300 rounded-full shadow-md border border-gray-400" />
-                  </div>
-                ))}
-              </>
-            )}
           </div>
         )}
       </div>
