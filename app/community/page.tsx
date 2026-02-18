@@ -209,9 +209,9 @@ export default function CommunityPage() {
       </div>
 
       {/* Sticky Notes Grid */}
-      <div className="mb-8 relative rounded-3xl p-12 backdrop-blur-sm border-2 border-white/30 bg-gradient-to-br from-white/60 to-slate-100/40 min-h-[600px]">
+      <div className="mb-8 relative rounded-3xl p-12 backdrop-blur-md border-2 border-white/50 bg-gradient-to-br from-white/75 to-slate-100/60 min-h-[600px]">
         {/* Meeting icons scattered in background */}
-        <div className="absolute inset-0 pointer-events-none opacity-10 text-warmCharcoal text-7xl font-bold overflow-hidden rounded-3xl">
+        <div className="absolute inset-0 pointer-events-none opacity-20 text-warmCharcoal/40 text-8xl font-bold overflow-hidden rounded-3xl">
           <div className="absolute top-8 left-8">💡</div>
           <div className="absolute top-16 right-12">✓</div>
           <div className="absolute bottom-12 left-1/4">🤝</div>
