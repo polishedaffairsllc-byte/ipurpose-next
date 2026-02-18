@@ -80,7 +80,18 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
         }}
       >
         {/* Pushpin */}
-        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-red-500 rounded-full shadow-md border border-red-600" />
+        <div 
+          className="absolute -top-3 left-1/2 transform -translate-x-1/2 pointer-events-none"
+          style={{
+            width: '20px',
+            height: '20px',
+            backgroundColor: '#d32f2f',
+            borderRadius: '50% 50% 50% 0',
+            transform: 'translate(-50%, -50%) rotate(-45deg)',
+            boxShadow: '0 3px 6px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3)',
+            border: '2px solid #b71c1c',
+          }}
+        />
         
         {/* Content */}
         <div className="h-full flex flex-col justify-between">
