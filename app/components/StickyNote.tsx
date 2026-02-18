@@ -40,7 +40,10 @@ export default function StickyNote({ id, title, body, userId, createdAt }: Stick
 
   // Use ID to determine consistent rotation for this note
   const rotation = useMemo(() => {
-    return 0; // No rotation
+    const charCode = id.charCodeAt(0);
+    const rotationValues = [-3, -2, -1, 0, 1, 2, 3];
+    const index = charCode % rotationValues.length;
+    return rotationValues[index];
   }, [id]);
 
   // Format date
