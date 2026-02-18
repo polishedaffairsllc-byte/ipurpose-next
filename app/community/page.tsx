@@ -215,6 +215,38 @@ export default function CommunityPage() {
         boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.1)',
         backgroundSize: '200% 200%',
       }}>
+        {/* Decorative pushpins scattered around the board */}
+        <div className="absolute top-12 right-16 pointer-events-none z-10">
+          <div style={{
+            width: '16px',
+            height: '16px',
+            backgroundColor: '#d32f2f',
+            borderRadius: '50% 50% 50% 0',
+            transform: 'rotate(-45deg)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          }} />
+        </div>
+        <div className="absolute top-1/3 left-12 pointer-events-none z-10">
+          <div style={{
+            width: '16px',
+            height: '16px',
+            backgroundColor: '#f44336',
+            borderRadius: '50% 50% 50% 0',
+            transform: 'rotate(-45deg)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          }} />
+        </div>
+        <div className="absolute bottom-20 right-1/4 pointer-events-none z-10">
+          <div style={{
+            width: '16px',
+            height: '16px',
+            backgroundColor: '#d32f2f',
+            borderRadius: '50% 50% 50% 0',
+            transform: 'rotate(-45deg)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          }} />
+        </div>
+        
         {/* Meeting icons scattered in background */}
         <div className="absolute inset-0 pointer-events-none text-8xl font-bold overflow-hidden rounded-3xl z-0" style={{
           opacity: 0.15,
