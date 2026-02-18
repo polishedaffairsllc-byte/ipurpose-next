@@ -22,25 +22,58 @@ export default function WelcomePopup() {
         onClick={() => setIsOpen(false)}
       />
 
-      {/* Popup */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center w-screen h-screen">
+      {/* Popup - Full Screen Container */}
+      <div 
+        className="fixed inset-0 z-50 w-screen h-screen overflow-hidden" 
+        onClick={() => setIsOpen(false)}
+      >
+        {/* Modal Inner - Scrollable Content */}
         <div
-          className="bg-black shadow-xl w-full h-full pt-20 px-0 pb-0 backdrop-blur-md z-50 flex flex-col justify-center items-center relative"
+          className="w-full h-full backdrop-blur-md z-50 flex flex-col items-center py-24 px-4 relative overflow-y-auto overflow-x-hidden"
           style={{
             background: 'rgba(0,0,0,0.92)',
             zIndex: 50,
-            width: '100vw',
-            height: '100vh',
             borderRadius: 0,
-            paddingTop: '5rem',
-            paddingLeft: 0,
-            paddingRight: 0,
-            paddingBottom: 0,
             opacity: 0.92,
           }}
+          onClick={(e) => e.stopPropagation()}
         >
-          {/* Modal Content Wrapper to avoid overlap */}
-          <div className="w-full flex flex-col items-center mt-16 text-center">
+          {/* Close Button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            aria-label="Close welcome popup"
+            style={{
+              position: 'fixed',
+              top: '2rem',
+              right: '2rem',
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              cursor: 'pointer',
+              fontSize: '2rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'rgba(255, 255, 255, 0.8)',
+              zIndex: 100,
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            }}
+          >
+            ✕
+          </button>
+
+          {/* Modal Content */}
+          <div className="w-full flex flex-col items-center text-center">
             <p className="font-italiana mb-4" style={{ color: '#ffffff', fontSize: '128px', fontFamily: 'Italiana, serif' }}>
               Who am I really…
             </p>

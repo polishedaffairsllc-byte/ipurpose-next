@@ -189,8 +189,27 @@ export function IntegrationSummaryModal({
   if (!isOpen) return null;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }} data-print-modal>
-      <div style={{ backgroundColor: 'white', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '56rem', width: '100%', maxHeight: '80vh', overflow: 'auto', margin: '2rem 0', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div
+      style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+      onClick={onClose}
+    >
+      <div
+        style={{ backgroundColor: 'white', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '56rem', width: '100%', maxHeight: '80vh', display: 'flex', flexDirection: 'column', position: 'relative' }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          aria-label="Close integration summary"
+          style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', width: '40px', height: '40px', borderRadius: '50%', border: '2px solid rgba(42, 42, 42, 0.2)', background: 'white', cursor: 'pointer', fontSize: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(42, 42, 42, 0.6)', zIndex: 10, transition: 'all 0.2s ease' }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#f5f5f5'; e.currentTarget.style.borderColor = 'rgba(42, 42, 42, 0.4)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'rgba(42, 42, 42, 0.2)'; }}
+        >
+          ✕
+        </button>
+
+        {/* Scrollable Content */}
+        <div style={{ overflowY: 'auto', overflowX: 'hidden', flex: 1, padding: '2.5rem 2rem 2rem' }} data-print-modal>
         {/* Actions - Top */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(42, 42, 42, 0.1)' }}>
           <p style={{ fontSize: '0.875rem', color: 'rgba(42, 42, 42, 0.6)', textAlign: 'center', margin: 0 }}>
