@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { trackServerPurchase } from '@/lib/ga4-server';
+import { sendMetaPurchaseEvent } from '@/lib/meta-capi';
 import crypto from 'crypto';
 
 // Force this route to be dynamic (no build-time prerendering)
@@ -127,6 +128,20 @@ export async function POST(request: NextRequest) {
       } catch (ga4Error) {
         console.error('[GA4] Failed to track purchase:', ga4Error);
         // Don't fail the webhook if GA4 fails - continue with order processing
+      }
+
+      // Send Meta Conversions API purchase event (server-side)
+      try {
+        await sendMetaPurchaseEvent(
+          email,
+          purchasePrice,
+          'USD',
+          product, // content_id
+          productDisplayNameAnalytics // content_name
+        );
+      } catch (metaError) {
+        console.error('[Meta CAPI] Failed to track purchase:', metaError);
+        // Don't fail the webhook if Meta CAPI fails - continue with order processing
       }
 
       // Map Stripe product keys to entitlement field names
