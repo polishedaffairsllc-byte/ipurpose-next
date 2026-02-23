@@ -17,7 +17,7 @@ const PRODUCT_PRICE_MAP: { [key: string]: string } = {
 const PRODUCT_PRICING: { [key: string]: number } = {
   'starter_pack': 27,
   'ai_blueprint': 47,
-  'accelerator': 297,
+  'accelerator': 1497,
   'deepen_membership': 0, // subscription, no fixed price here
 };
 

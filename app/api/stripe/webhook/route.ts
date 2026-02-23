@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       const PRODUCT_PRICING: Record<string, number> = {
         'starter_pack': 27,
         'ai_blueprint': 47,
-        'accelerator': 297,
+        'accelerator': 1497,
         'deepen_membership': 0,
       };
       const PRODUCT_DISPLAY_NAMES_ANALYTICS: Record<string, string> = {

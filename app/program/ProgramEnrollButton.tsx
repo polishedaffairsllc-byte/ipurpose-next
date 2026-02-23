@@ -18,7 +18,7 @@ export default function ProgramEnrollButton() {
       
       // Track GA4 event
       trackEvent('accelerator_checkout_started', {
-        value: 297,
+        value: 1497,
         currency: 'USD',
         product_name: 'Accelerator',
         cohort: cohort.id,
@@ -26,7 +26,7 @@ export default function ProgramEnrollButton() {
       });
 
       // Track Meta Pixel event
-      trackInitiateCheckout('Accelerator', 297, 'USD');
+      trackInitiateCheckout('Accelerator', 1497, 'USD');
 
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',

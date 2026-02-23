@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { getCanonicalMetadata } from '@/lib/canonical';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   robots: 'index, follow',
+  alternates: getCanonicalMetadata('/program'),
 };
 
 export default function ProgramPage() {
@@ -64,7 +66,7 @@ export default function ProgramPage() {
             Join the {cohortLabel}
           </h2>
           <p className="text-lg sm:text-xl font-marcellus text-warmCharcoal/80 mb-4">
-            <strong>Starts {cohortMonth} {cohortStart.getDate()}, {cohortYear}</strong> • <strong>$297</strong> • <strong>6 weeks</strong>
+            <strong>Starts {cohortMonth} {cohortStart.getDate()}, {cohortYear}</strong> • <strong>$1,497</strong> • <strong>6 weeks</strong>
           </p>
           {isUrgent && daysUntilStart > 0 && (
             <p className="text-base sm:text-lg font-semibold text-salmonPeach mb-6 animate-pulse">
