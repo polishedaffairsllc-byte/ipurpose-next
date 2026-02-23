@@ -59,6 +59,27 @@ export default function StarterPackLanding() {
             </p>
           </section>
 
+          {/* ── ABOVE-THE-FOLD CTA ── */}
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-warmCharcoal" style={{ color: '#2A2A2A' }}>
+              Ready to begin?
+            </h2>
+            <p className="text-base sm:text-lg text-warmCharcoal/70 mb-6 font-marcellus">
+              <strong>$27</strong> — One-time investment. Instant access.
+            </p>
+            <button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="px-8 sm:px-12 py-3 sm:py-4 rounded-full font-marcellus text-white text-base sm:text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg inline-block mb-4"
+              style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
+            >
+              {loading ? 'Starting checkout…' : 'Purchase Now – $27'}
+            </button>
+            <p className="text-sm text-warmCharcoal/50 font-marcellus">
+              No credit card required upfront. Cancel anytime.
+            </p>
+          </div>
+
           <div className="text-center max-w-2xl mx-auto">
             <p className="text-warmCharcoal/80 leading-relaxed font-marcellus text-display-emphasis">
               If you're feeling pulled in a hundred directions, unsure where to focus, or ready to finally get intentional about your next season — this is your first step.

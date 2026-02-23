@@ -22,6 +22,12 @@ export default function ProgramPage() {
   const cohortLabel = cohort.label;
   const cohortMonth = cohortStart.toLocaleString('default', { month: 'long' });
   const cohortYear = cohortStart.getFullYear();
+  
+  // Calculate days until cohort start
+  const now = new Date();
+  const daysUntilStart = Math.ceil((cohortStart.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  const isUrgent = daysUntilStart <= 14;
+  
   return (
     <div className="relative min-h-screen bg-white">
       {/* Public Header */}
@@ -48,6 +54,27 @@ export default function ProgramPage() {
               Six weeks to clarify your purpose and build aligned systems
             </p>
           </section>
+        </div>
+      </div>
+
+      {/* ─── ABOVE-THE-FOLD CTA ─── */}
+      <div className="bg-gradient-to-r from-lavenderViolet/10 to-salmonPeach/10 border-b-2 border-lavenderViolet/20">
+        <div className="container max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-3 text-warmCharcoal">
+            Join the {cohortLabel}
+          </h2>
+          <p className="text-lg sm:text-xl font-marcellus text-warmCharcoal/80 mb-4">
+            <strong>Starts {cohortMonth} {cohortStart.getDate()}, {cohortYear}</strong> • <strong>$297</strong> • <strong>6 weeks</strong>
+          </p>
+          {isUrgent && daysUntilStart > 0 && (
+            <p className="text-base sm:text-lg font-semibold text-salmonPeach mb-6 animate-pulse">
+              🔥 Limited seats — Only {daysUntilStart} days until start
+            </p>
+          )}
+          <ProgramEnrollButton />
+          <p className="text-sm text-warmCharcoal/60 font-marcellus mt-4">
+            Max 8 participants per cohort. One-time payment. Limited time offer.
+          </p>
         </div>
       </div>
 

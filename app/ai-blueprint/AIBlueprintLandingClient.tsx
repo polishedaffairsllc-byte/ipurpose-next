@@ -59,6 +59,28 @@ export default function AIBlueprintLandingClient() {
               Design your purpose-aligned systems with AI
             </p>
           </section>
+
+          {/* ── ABOVE-THE-FOLD CTA ── */}
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 bg-white rounded-2xl p-6 sm:p-8 shadow-lg">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-warmCharcoal">
+              Get your Blueprint today
+            </h2>
+            <p className="text-base sm:text-lg text-warmCharcoal/70 mb-6 font-marcellus">
+              <strong>$47</strong> — One-time investment. Lifetime access.
+            </p>
+            <button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="px-8 sm:px-12 py-3 sm:py-4 rounded-full font-marcellus text-white text-base sm:text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg inline-block mb-4"
+              style={{ background: 'linear-gradient(135deg, #9C88FF, #E6C87C)' }}
+            >
+              {loading ? 'Starting checkout…' : 'Purchase Now – $47'}
+            </button>
+            <p className="text-sm text-warmCharcoal/50 font-marcellus">
+              30-day satisfaction guarantee. Full refund if not satisfied.
+            </p>
+          </div>
+
           <div className="text-center">
             <p className="text-warmCharcoal/80 mb-6 sm:mb-8 text-[45px] text-center">
               Use AI without losing your voice, values, or peace.

@@ -71,32 +71,54 @@ export default async function Home() {
           </div>
         </div>
         <div className="relative w-full bg-black/20 backdrop-blur-sm px-4 sm:px-6 lg:px-12" style={{ zIndex: 10, paddingTop: '0.0045rem', paddingBottom: '6rem' }}>
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-h2 text-center mb-8 sm:mb-12 md:mb-16" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-h2 text-center mb-12 sm:mb-16 md:mb-20" style={{ color: '#FFFFFF', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
               Start Your Journey
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                <h3 className="text-h3 mb-4 !text-white" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
-                <p className="text-body !text-white mb-6" style={{ color: '#FFFFFF' }}>Take a guided assessment to discover your core values and purpose.</p>
-                <Link href="/clarity-check" className="text-body inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}>
-                  Start Assessment
+
+            {/* PRIMARY CTA: Clarity Check */}
+            <div className="mb-12 sm:mb-16">
+              <div className="relative p-8 sm:p-10 rounded-2xl backdrop-blur-sm border-2 border-white/40 text-center" style={{ backgroundColor: 'rgba(156, 136, 255, 0.15)' }}>
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white/20 px-4 py-1 rounded-full text-xs sm:text-sm font-marcellus text-white">
+                  MOST POPULAR
+                </div>
+                <h3 className="text-h2 mb-3 !text-white" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
+                <p className="text-body !text-white mb-2 font-marcellus" style={{ color: '#FFFFFF', opacity: 0.9 }}>
+                  <strong>Free</strong> — Takes 5 minutes
+                </p>
+                <p className="text-body !text-white mb-8" style={{ color: '#FFFFFF', opacity: 0.85 }}>
+                  Discover your core values and get instant clarity on what matters most.
+                </p>
+                <Link href="/clarity-check" className="text-body inline-block px-8 sm:px-12 py-3 sm:py-4 rounded-full transition-all hover:opacity-90 font-semibold" style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}>
+                  Take the Assessment
                 </Link>
               </div>
-              <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                <h3 className="text-h3 mb-4 !text-white" style={{ color: '#FFFFFF' }}>Starter Pack</h3>
-                <p className="text-body !text-white mb-6" style={{ color: '#FFFFFF' }}>Get foundational tools and exercises to begin your clarity journey.</p>
-                <Link href="/starter-pack" className="text-body inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #e6c87c, rgba(230, 200, 124, 0.7))', color: '#FFFFFF' }}>
+            </div>
+
+            {/* SECONDARY CTA: Starter Pack */}
+            <div className="mb-12 sm:mb-16">
+              <div className="relative p-8 sm:p-10 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                <h3 className="text-h3 mb-3 !text-white" style={{ color: '#FFFFFF' }}>Starter Pack</h3>
+                <p className="text-body !text-white mb-2 font-marcellus" style={{ color: '#FFFFFF', opacity: 0.9 }}>
+                  <strong>$27</strong> — One-time purchase
+                </p>
+                <p className="text-body !text-white mb-8" style={{ color: '#FFFFFF', opacity: 0.85 }}>
+                  Foundational tools and exercises to deepen your clarity journey and build from a place of intention.
+                </p>
+                <Link href="/starter-pack" className="text-body inline-block px-8 sm:px-12 py-3 sm:py-4 rounded-full transition-all hover:opacity-90 font-semibold" style={{ background: 'linear-gradient(to right, #e6c87c, rgba(230, 200, 124, 0.7))', color: '#FFFFFF' }}>
                   Explore Offer
                 </Link>
               </div>
-              <div className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all md:col-span-2 lg:col-span-1 text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                <h3 className="text-h3 mb-4 !text-white" style={{ color: '#FFFFFF' }}>AI Blueprint</h3>
-                <p className="text-body !text-white mb-6" style={{ color: '#FFFFFF' }}>Let AI help you build a personalized action plan for clarity.</p>
-                <Link href="/ai-blueprint" className="text-body inline-block px-6 sm:px-8 py-2 sm:py-3 rounded-full transition-all hover:opacity-90" style={{ background: 'linear-gradient(to right, #9c88ff, rgba(156, 136, 255, 0.7))', color: '#FFFFFF' }}>
-                  Explore Offer
+            </div>
+
+            {/* TERTIARY: AI Blueprint (Text Link) */}
+            <div className="text-center">
+              <p className="text-body !text-white mb-2" style={{ color: '#FFFFFF', opacity: 0.9 }}>
+                Ready for the next level?{' '}
+                <Link href="/ai-blueprint" className="underline hover:opacity-70 transition-opacity font-semibold">
+                  Explore the AI Blueprint
                 </Link>
-              </div>
+              </p>
             </div>
           </div>
         </div>
