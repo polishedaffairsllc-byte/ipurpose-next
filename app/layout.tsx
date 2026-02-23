@@ -5,6 +5,7 @@ import { AuthContextProvider } from './context/AuthContext';
 import BackgroundLayer from "./components/BackgroundLayer";
 import InternalNavbar from "./components/InternalNavbar";
 import VideoBackground from "./components/VideoBackground";
+import PixelInitializer from "./components/PixelInitializer";
 
 export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
@@ -29,6 +30,9 @@ export default function RootLayout({
       <head>
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
+        {/* Pixel Initialization (Meta Pixel) */}
+        <PixelInitializer />
+        
         {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}

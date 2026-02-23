@@ -1,19 +1,36 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import StarterPackNav from '../components/StarterPackNav';
 import Footer from '../components/Footer';
+import { trackEvent } from '@/lib/analytics';
+import { trackViewContent, trackInitiateCheckout } from '@/lib/meta-pixel';
 
 export default function StarterPackLanding() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Track page view on mount
+  useEffect(() => {
+    trackViewContent('Starter Pack', 'product', 27, 'USD');
+  }, []);
+
   const handleCheckout = async () => {
     setLoading(true);
     setError('');
     try {
+      // Track GA4 event
+      trackEvent('starter_pack_checkout_started', {
+        value: 27,
+        currency: 'USD',
+        product_name: 'Starter Pack',
+      });
+
+      // Track Meta Pixel event
+      trackInitiateCheckout('Starter Pack', 27, 'USD');
+
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

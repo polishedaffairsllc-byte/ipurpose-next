@@ -13,6 +13,22 @@ const PRODUCT_PRICE_MAP: { [key: string]: string } = {
   'deepen_membership': 'STRIPE_PRICE_ID_DEEPEN',
 };
 
+// Product pricing for event tracking
+const PRODUCT_PRICING: { [key: string]: number } = {
+  'starter_pack': 27,
+  'ai_blueprint': 47,
+  'accelerator': 297,
+  'deepen_membership': 0, // subscription, no fixed price here
+};
+
+// Product display names
+const PRODUCT_NAMES: { [key: string]: string } = {
+  'starter_pack': 'Starter Pack',
+  'ai_blueprint': 'AI Blueprint',
+  'accelerator': 'Accelerator',
+  'deepen_membership': 'Deepen Membership',
+};
+
 // Product to success URL mapping
 const PRODUCT_SUCCESS_URL_MAP: { [key: string]: string } = {
   'starter_pack': '/purchase/success?product=starter_pack&session_id={CHECKOUT_SESSION_ID}',
@@ -130,7 +146,36 @@ export async function POST(request: NextRequest) {
       throw new Error('No checkout URL returned from Stripe');
     }
 
-    return NextResponse.json({ url: session.url, sessionId: session.id });
+    // Log checkout event for analytics tracking
+    const eventName = `${product}_checkout_started`;
+    const price = PRODUCT_PRICING[product] || 0;
+    const productName = PRODUCT_NAMES[product] || product;
+    
+    console.log('[Analytics Event]', {
+      event: eventName,
+      product,
+      productName,
+      price,
+      currency: 'USD',
+      sessionId: session.id,
+      cohort,
+      timestamp: new Date().toISOString(),
+    });
+
+    return NextResponse.json({ 
+      url: session.url, 
+      sessionId: session.id,
+      // Include event tracking info for client-side GTM integration
+      analyticsEvent: {
+        name: eventName,
+        data: {
+          product,
+          productName,
+          value: price,
+          currency: 'USD',
+        }
+      }
+    });
   } catch (error) {
     console.error('Stripe checkout session creation error:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);

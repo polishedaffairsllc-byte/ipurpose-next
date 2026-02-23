@@ -1,18 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
+import { trackEvent } from '@/lib/analytics';
+import { trackViewContent, trackInitiateCheckout } from '@/lib/meta-pixel';
 
 export default function AIBlueprintLandingClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Track page view on mount
+  useEffect(() => {
+    trackViewContent('AI Blueprint', 'product', 47, 'USD');
+  }, []);
+
   const handleCheckout = async () => {
     setLoading(true);
     setError('');
     try {
+      // Track GA4 event
+      trackEvent('ai_blueprint_checkout_started', {
+        value: 47,
+        currency: 'USD',
+        product_name: 'AI Blueprint',
+      });
+
+      // Track Meta Pixel event
+      trackInitiateCheckout('AI Blueprint', 47, 'USD');
+
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

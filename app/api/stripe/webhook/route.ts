@@ -82,6 +82,36 @@ export async function POST(request: NextRequest) {
 
       console.log('Enrollment recorded:', sessionId);
 
+      // Log purchase analytics event
+      const PRODUCT_PRICING: Record<string, number> = {
+        'starter_pack': 27,
+        'ai_blueprint': 47,
+        'accelerator': 297,
+        'deepen_membership': 0,
+      };
+      const PRODUCT_DISPLAY_NAMES_ANALYTICS: Record<string, string> = {
+        'starter_pack': 'Starter Pack',
+        'ai_blueprint': 'AI Blueprint',
+        'accelerator': 'Accelerator',
+        'deepen_membership': 'Deepen Membership',
+      };
+      
+      const purchasePrice = PRODUCT_PRICING[product] || 0;
+      const productDisplayNameAnalytics = PRODUCT_DISPLAY_NAMES_ANALYTICS[product] || product;
+      const purchaseEventName = `${product}_purchased`;
+      
+      console.log('[Analytics Event]', {
+        event: purchaseEventName,
+        product,
+        productName: productDisplayNameAnalytics,
+        value: purchasePrice,
+        currency: 'USD',
+        sessionId,
+        email,
+        cohort,
+        timestamp: new Date().toISOString(),
+      });
+
       // Map Stripe product keys to entitlement field names
       const PRODUCT_ENTITLEMENT_MAP: Record<string, string> = {
         'starter_pack': 'starterPack',
@@ -146,19 +176,13 @@ export async function POST(request: NextRequest) {
       }
 
       // Product display names and destination URLs
-      const PRODUCT_DISPLAY_NAMES: Record<string, string> = {
-        'starter_pack': 'Starter Pack',
-        'ai_blueprint': 'AI Blueprint',
-        'accelerator': 'Accelerator',
-        'deepen_membership': 'Deepen Membership',
-      };
       const PRODUCT_URLS: Record<string, string> = {
         'starter_pack': '/starter-pack',
         'ai_blueprint': '/ai-blueprint',
         'accelerator': '/accelerator',
         'deepen_membership': '/deepen',
       };
-      const productDisplayName = PRODUCT_DISPLAY_NAMES[product] || product;
+      const productDisplayName = productDisplayNameAnalytics;
       const productPath = PRODUCT_URLS[product] || '/';
 
       // Send fulfillment email (if configured)
