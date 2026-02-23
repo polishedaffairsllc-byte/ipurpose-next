@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
   // Canonical domain (lowercase for consistency)
   const CANONICAL_DOMAIN = 'ipurposesoul.com';
   
-  // List of domains that should redirect to canonical
+  // List of domains that should redirect to canonical (DO NOT include canonical domain itself)
   const REDIRECT_DOMAINS = [
     'mshmltn.com',
     'www.mshmltn.com',
@@ -30,14 +30,16 @@ export function middleware(request: NextRequest) {
     'www.ipurposesoul.online',
     'ipurpose.com',
     'www.ipurpose.com',
-    'www.ipurposesoul.com', // www to non-www redirect
+    // NOTE: www.ipurposesoul.com is NOT listed here because Vercel handles www → non-www
+    // at the DNS/infrastructure level. Adding it here creates an infinite loop.
   ];
   
   // Normalize host (remove port if present, lowercase)
   const normalizedHost = host.split(':')[0].toLowerCase();
   
   // Check if current host needs redirect
-  if (REDIRECT_DOMAINS.includes(normalizedHost)) {
+  // IMPORTANT: Only redirect if it's in the redirect list AND not already on canonical domain
+  if (REDIRECT_DOMAINS.includes(normalizedHost) && normalizedHost !== CANONICAL_DOMAIN) {
     // Construct canonical URL
     const canonicalUrl = `https://${CANONICAL_DOMAIN}${pathname}${search}`;
     
@@ -47,7 +49,7 @@ export function middleware(request: NextRequest) {
     });
   }
   
-  // Allow request to continue if on canonical domain
+  // Allow request to continue if on canonical domain or unrecognized host
   return NextResponse.next();
 }
 
