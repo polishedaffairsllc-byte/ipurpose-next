@@ -5,7 +5,7 @@ import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import StarterPackNav from '../components/StarterPackNav';
 import Footer from '../components/Footer';
-import { trackEvent } from '@/lib/analytics';
+import { trackEvent, trackViewItem, trackBeginCheckout } from '@/lib/analytics';
 import { trackViewContent, trackInitiateCheckout } from '@/lib/meta-pixel';
 
 export default function StarterPackLanding() {
@@ -14,6 +14,16 @@ export default function StarterPackLanding() {
 
   // Track page view on mount
   useEffect(() => {
+    // GA4: Standard view_item event
+    trackViewItem({
+      itemId: 'starter_pack',
+      itemName: 'Starter Pack',
+      itemCategory: 'digital_product',
+      price: 27,
+      currency: 'USD',
+    });
+
+    // Meta Pixel: Track product view
     trackViewContent('Starter Pack', 'product', 27, 'USD');
   }, []);
 
@@ -21,14 +31,21 @@ export default function StarterPackLanding() {
     setLoading(true);
     setError('');
     try {
-      // Track GA4 event
-      trackEvent('starter_pack_checkout_started', {
+      // GA4: Standard begin_checkout event
+      trackBeginCheckout({
         value: 27,
         currency: 'USD',
-        product_name: 'Starter Pack',
+        items: [
+          {
+            item_id: 'starter_pack',
+            item_name: 'Starter Pack',
+            price: 27,
+            quantity: 1,
+          },
+        ],
       });
 
-      // Track Meta Pixel event
+      // Meta Pixel event
       trackInitiateCheckout('Starter Pack', 27, 'USD');
 
       const response = await fetch('/api/stripe/create-checkout-session', {

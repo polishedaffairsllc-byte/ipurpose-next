@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
-import { trackEvent } from '@/lib/analytics';
+import { trackEvent, trackViewItem, trackBeginCheckout } from '@/lib/analytics';
 import { trackViewContent, trackInitiateCheckout } from '@/lib/meta-pixel';
 
 export default function AIBlueprintLandingClient() {
@@ -13,6 +13,16 @@ export default function AIBlueprintLandingClient() {
 
   // Track page view on mount
   useEffect(() => {
+    // GA4: Standard view_item event
+    trackViewItem({
+      itemId: 'ai_blueprint',
+      itemName: 'AI Blueprint',
+      itemCategory: 'digital_product',
+      price: 47,
+      currency: 'USD',
+    });
+
+    // Meta Pixel: Track product view
     trackViewContent('AI Blueprint', 'product', 47, 'USD');
   }, []);
 
@@ -20,14 +30,21 @@ export default function AIBlueprintLandingClient() {
     setLoading(true);
     setError('');
     try {
-      // Track GA4 event
-      trackEvent('ai_blueprint_checkout_started', {
+      // GA4: Standard begin_checkout event
+      trackBeginCheckout({
         value: 47,
         currency: 'USD',
-        product_name: 'AI Blueprint',
+        items: [
+          {
+            item_id: 'ai_blueprint',
+            item_name: 'AI Blueprint',
+            price: 47,
+            quantity: 1,
+          },
+        ],
       });
 
-      // Track Meta Pixel event
+      // Meta Pixel event
       trackInitiateCheckout('AI Blueprint', 47, 'USD');
 
       const response = await fetch('/api/stripe/create-checkout-session', {

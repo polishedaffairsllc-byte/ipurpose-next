@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { trackServerPurchase } from '@/lib/ga4-server';
 import crypto from 'crypto';
 
 // Force this route to be dynamic (no build-time prerendering)
@@ -111,6 +112,22 @@ export async function POST(request: NextRequest) {
         cohort,
         timestamp: new Date().toISOString(),
       });
+
+      // Send GA4 purchase event via Measurement Protocol (server-side)
+      try {
+        await trackServerPurchase(
+          sessionId, // transaction_id
+          purchasePrice, // value
+          productDisplayNameAnalytics, // productName
+          product, // productId
+          'USD', // currency
+          undefined, // userId (optional, could extract from Firestore)
+          session.client_secret?.split('_secret_')[0] // clientId from Stripe session
+        );
+      } catch (ga4Error) {
+        console.error('[GA4] Failed to track purchase:', ga4Error);
+        // Don't fail the webhook if GA4 fails - continue with order processing
+      }
 
       // Map Stripe product keys to entitlement field names
       const PRODUCT_ENTITLEMENT_MAP: Record<string, string> = {

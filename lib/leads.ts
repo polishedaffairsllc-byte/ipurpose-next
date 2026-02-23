@@ -4,6 +4,7 @@
  */
 
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { trackServerGenerateLead } from '@/lib/ga4-server';
 import { Timestamp } from 'firebase-admin/firestore';
 
 export type LeadSource = 'clarity-check' | 'info-session' | 'contact';
@@ -199,6 +200,14 @@ export async function processLead(
       referer: context.referer || null,
       pathname: context.pathname || null,
     });
+
+    // Send GA4 generate_lead event for new leads only
+    try {
+      await trackServerGenerateLead(source, normalizedEmail);
+    } catch (ga4Error) {
+      console.error(`[GA4] Failed to track ${source} lead:`, ga4Error);
+      // Don't fail the lead creation if GA4 fails
+    }
 
     console.log(`[LEADS] New ${source} submission:`, { id, name, email: normalizedEmail, context });
     return { ok: true, id, deduped: false };

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
+import { trackSignUp } from '@/lib/analytics';
 import Link from 'next/link';
 
 export default function SignupPage() {
@@ -34,6 +35,9 @@ export default function SignupPage() {
     try {
       const auth = getFirebaseAuth();
       const credential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Track GA4 sign_up event
+      trackSignUp('email');
 
       // Get idToken and create a server-side session cookie
       const idToken = await credential.user.getIdToken();

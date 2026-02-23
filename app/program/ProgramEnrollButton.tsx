@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { getEnrollableCohort } from '@/lib/accelerator/stages';
-import { trackEvent } from '@/lib/analytics';
+import { trackEvent, trackBeginCheckout } from '@/lib/analytics';
 import { trackInitiateCheckout } from '@/lib/meta-pixel';
 
 export default function ProgramEnrollButton() {
@@ -16,16 +16,21 @@ export default function ProgramEnrollButton() {
     try {
       const cohort = getEnrollableCohort();
       
-      // Track GA4 event
-      trackEvent('accelerator_checkout_started', {
+      // GA4: Standard begin_checkout event
+      trackBeginCheckout({
         value: 1497,
         currency: 'USD',
-        product_name: 'Accelerator',
-        cohort: cohort.id,
-        cohort_label: cohort.label,
+        items: [
+          {
+            item_id: `accelerator_${cohort.id}`,
+            item_name: `Accelerator ${cohort.label}`,
+            price: 1497,
+            quantity: 1,
+          },
+        ],
       });
 
-      // Track Meta Pixel event
+      // Meta Pixel event
       trackInitiateCheckout('Accelerator', 1497, 'USD');
 
       const response = await fetch('/api/stripe/create-checkout-session', {

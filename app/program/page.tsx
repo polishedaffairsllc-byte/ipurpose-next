@@ -4,6 +4,7 @@ import { getCanonicalMetadata } from '@/lib/canonical';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
+import AcceleratorViewItemTracker from './AcceleratorViewItemTracker';
 import { getEnrollableCohort } from '@/lib/accelerator/stages';
 
 export const metadata: Metadata = {
@@ -32,6 +33,9 @@ export default function ProgramPage() {
   
   return (
     <div className="relative min-h-screen bg-white">
+      {/* GA4 Event Tracker */}
+      <AcceleratorViewItemTracker />
+      
       {/* Public Header */}
       <PublicHeader />
       
