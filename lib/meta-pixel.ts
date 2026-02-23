@@ -35,8 +35,10 @@ export const initMetaPixel = () => {
   window.fbq = function () {
     // @ts-ignore
     window.fbq.callMethod
-      ? window.fbq.callMethod.apply(window.fbq, arguments)
-      : window.fbq.queue.push(arguments);
+      ? // @ts-ignore
+        window.fbq.callMethod.apply(window.fbq, arguments)
+      : // @ts-ignore
+        window.fbq.queue.push(arguments);
   };
 
   // Set initial queue
