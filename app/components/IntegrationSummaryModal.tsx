@@ -454,7 +454,12 @@ export function IntegrationSummaryModal({
             ))}
           </ol>
         </div>
+
+        {/* Close Scrollable Content div */}
       </div>
+      {/* Close Modal Container div */}
     </div>
+    {/* Close Outer Backdrop div */}
+  </div>
   );
 }

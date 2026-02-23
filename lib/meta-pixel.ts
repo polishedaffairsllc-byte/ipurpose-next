@@ -8,7 +8,7 @@
 // Declare fbq function on window
 declare global {
   interface Window {
-    fbq: (...args: any[]) => void;
+    fbq?: (...args: any[]) => void;
   }
 }
 
