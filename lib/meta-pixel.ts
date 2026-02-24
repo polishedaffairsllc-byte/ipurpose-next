@@ -2,22 +2,26 @@
  * Meta Pixel (Facebook Pixel) Utility
  * Handles tracking of user actions for Meta conversion measurement
  * 
- * To use: Set NEXT_PUBLIC_META_PIXEL_ID in .env.local
+ * To use: Set NEXT_PUBLIC_META_PIXEL_ID in .env.local or Vercel environment variables
  */
 
 // Declare fbq function on window
 declare global {
   interface Window {
     fbq?: (...args: any[]) => void;
+    _fbq?: (...args: any[]) => void;
   }
 }
-
-const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 /**
  * Initialize Meta Pixel (must be called once on app load)
  */
 export const initMetaPixel = () => {
+  // Get pixel ID from environment (read at runtime, not build time)
+  const PIXEL_ID = typeof window !== 'undefined' 
+    ? process.env.NEXT_PUBLIC_META_PIXEL_ID 
+    : null;
+
   if (!PIXEL_ID) {
     console.warn('[Meta Pixel] NEXT_PUBLIC_META_PIXEL_ID not configured. Pixel not initialized.');
     return;
@@ -75,6 +79,8 @@ export const trackViewContent = (
   value?: number,
   currency?: string
 ) => {
+  const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  
   if (!PIXEL_ID || typeof window === 'undefined' || !window.fbq) {
     console.debug('[Meta Pixel] ViewContent not tracked (pixel not initialized)');
     return;
@@ -104,6 +110,8 @@ export const trackInitiateCheckout = (
   value: number,
   currency: string = 'USD'
 ) => {
+  const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  
   if (!PIXEL_ID || typeof window === 'undefined' || !window.fbq) {
     console.debug('[Meta Pixel] InitiateCheckout not tracked (pixel not initialized)');
     return;
@@ -127,6 +135,8 @@ export const trackPurchase = (
   value: number,
   currency: string = 'USD'
 ) => {
+  const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  
   if (!PIXEL_ID || typeof window === 'undefined' || !window.fbq) {
     console.debug('[Meta Pixel] Purchase not tracked (pixel not initialized)');
     return;
@@ -150,6 +160,8 @@ export const trackAddToCart = (
   value: number,
   currency: string = 'USD'
 ) => {
+  const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  
   if (!PIXEL_ID || typeof window === 'undefined' || !window.fbq) {
     console.debug('[Meta Pixel] AddToCart not tracked (pixel not initialized)');
     return;
@@ -169,6 +181,8 @@ export const trackAddToCart = (
  * Track custom event
  */
 export const trackMetaEvent = (eventName: string, eventData?: Record<string, any>) => {
+  const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  
   if (!PIXEL_ID || typeof window === 'undefined' || !window.fbq) {
     console.debug(`[Meta Pixel] ${eventName} not tracked (pixel not initialized)`);
     return;
