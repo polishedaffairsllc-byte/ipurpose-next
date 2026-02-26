@@ -219,21 +219,21 @@ export default async function AcceleratorPage() {
         {/* Top ornamental border */}
         <div className="flex items-center justify-center gap-4 mb-6">
           <div style={{ height: '1px', flex: 1, maxWidth: '120px', background: 'linear-gradient(to right, transparent, #4B4E6D)' }}></div>
-          <span className="font-italiana text-warmCharcoal/30" style={{ fontSize: '35px', letterSpacing: '0.3em' }}>EST. 2025</span>
+          <span className="font-italiana text-warmCharcoal/30" style={{ fontSize: 'clamp(20px, 4vw, 35px)', letterSpacing: '0.3em' }}>EST. 2025</span>
           <div style={{ height: '1px', flex: 1, maxWidth: '120px', background: 'linear-gradient(to left, transparent, #4B4E6D)' }}></div>
         </div>
 
         {/* Title with academic styling */}
-        <p className="font-marcellus text-warmCharcoal/40 uppercase mb-3" style={{ fontSize: '14px', letterSpacing: '0.15em' }}>
+        <p className="font-marcellus text-warmCharcoal/40 uppercase mb-3" style={{ fontSize: 'clamp(12px, 2vw, 14px)', letterSpacing: '0.15em' }}>
           A Six-Week Intensive in Purpose-Driven Transformation
         </p>
-        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: '60px', letterSpacing: '0.04em' }}>
+        <h1 className="font-italiana text-warmCharcoal" style={{ fontSize: 'clamp(36px, 8vw, 60px)', letterSpacing: '0.04em' }}>
           iPurpose Accelerator<span style={{ fontSize: '0.5em', verticalAlign: 'super' }}>™</span>
         </h1>
 
         {/* Cohort badge — like a course catalog label */}
         <div className="mt-4">
-          <p className="font-marcellus text-warmCharcoal/50 uppercase" style={{ fontSize: '18px', letterSpacing: '0.2em', fontWeight: '600' }}>
+          <p className="font-marcellus text-warmCharcoal/50 uppercase" style={{ fontSize: 'clamp(14px, 3vw, 18px)', letterSpacing: '0.2em', fontWeight: '600' }}>
             {userCohort.label}
           </p>
         </div>
@@ -245,7 +245,7 @@ export default async function AcceleratorPage() {
         </div>
 
         {/* Guiding Principle — Epigraph */}
-        <p className="font-marcellus text-warmCharcoal/40 mt-8 mx-auto italic" style={{ fontSize: '35px', lineHeight: '1.7', maxWidth: '600px' }}>
+        <p className="font-marcellus text-warmCharcoal/40 mt-8 mx-auto italic" style={{ fontSize: 'clamp(18px, 5vw, 35px)', lineHeight: '1.7', maxWidth: '600px' }}>
           &ldquo;Clarity precedes action. Alignment precedes impact.&rdquo;
         </p>
       </div>
@@ -253,7 +253,7 @@ export default async function AcceleratorPage() {
       {/* ═══ Progress Bar ═══ */}
       <div className="mb-12">
         <AcceleratorProgressBar currentWeek={effectiveUnlocked} completedWeeks={completedWeeks} />
-        <p className="font-marcellus text-warmCharcoal/35 text-center mt-4" style={{ fontSize: '28px', letterSpacing: '0.1em' }}>
+        <p className="font-marcellus text-warmCharcoal/35 text-center mt-4" style={{ fontSize: 'clamp(18px, 4vw, 28px)', letterSpacing: '0.1em' }}>
           {completedWeeks.length} of 6 stages complete
         </p>
         <div className="mt-6 text-center">
@@ -311,13 +311,13 @@ export default async function AcceleratorPage() {
 
       {/* ═══ Welcome — Drop Cap Style ═══ */}
       <div className="max-w-3xl mx-auto mb-14 text-center">
-        <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: '45px', lineHeight: '1.6' }}>
+        <p className="font-marcellus text-warmCharcoal/70" style={{ fontSize: 'clamp(24px, 5vw, 45px)', lineHeight: '1.6' }}>
           <span style={{ 
             fontFamily: 'Crimson Text, serif', 
             float: 'left', 
             marginRight: '12px',
             marginTop: '-6px',
-            fontSize: '120px', 
+            fontSize: 'clamp(80px, 15vw, 120px)', 
             lineHeight: '0.8', 
             color: '#d4af37', 
             fontWeight: 'bold', 
@@ -337,13 +337,13 @@ export default async function AcceleratorPage() {
 
       {/* ═══ Next Live Session — Seminar Card ═══ */}
       <div className="max-w-xl mx-auto mb-14 p-6 sm:p-8 text-center" style={{ background: 'rgba(75, 78, 109, 0.03)', border: '1px solid rgba(75, 78, 109, 0.1)', borderTop: '3px solid #4B4E6D' }}>
-        <p className="font-marcellus text-warmCharcoal/40 uppercase tracking-widest mb-1" style={{ fontSize: '25px', letterSpacing: '0.25em' }}>
+        <p className="font-marcellus text-warmCharcoal/40 uppercase tracking-widest mb-1" style={{ fontSize: 'clamp(16px, 3vw, 25px)', letterSpacing: '0.25em' }}>
           Live Seminar
         </p>
-        <p className="font-italiana text-warmCharcoal" style={{ fontSize: '45px' }}>
+        <p className="font-italiana text-warmCharcoal" style={{ fontSize: 'clamp(28px, 6vw, 45px)' }}>
           {userCohort.liveCallDay}
         </p>
-        <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: '35px' }}>
+        <p className="font-marcellus text-warmCharcoal/50 mt-1" style={{ fontSize: 'clamp(18px, 5vw, 35px)' }}>
           {userCohort.liveCallTimes.join('  ·  ')}
         </p>
         <div className="mt-3 mx-auto" style={{ height: '1px', maxWidth: '60px', background: '#E6C87C' }}></div>
@@ -353,12 +353,12 @@ export default async function AcceleratorPage() {
       <div className="max-w-2xl mx-auto mb-8">
         <div className="flex items-center gap-4 mb-2">
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.15)' }}></div>
-          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: '28px', letterSpacing: '0.3em' }}>
+          <p className="font-marcellus text-warmCharcoal/40 uppercase shrink-0" style={{ fontSize: 'clamp(18px, 4vw, 28px)', letterSpacing: '0.3em' }}>
             Curriculum
           </p>
           <div style={{ height: '1px', flex: 1, background: 'rgba(75, 78, 109, 0.15)' }}></div>
         </div>
-        <p className="font-marcellus text-warmCharcoal/40 text-center" style={{ fontSize: '32px', fontStyle: 'italic' }}>
+        <p className="font-marcellus text-warmCharcoal/40 text-center" style={{ fontSize: 'clamp(18px, 4vw, 32px)', fontStyle: 'italic' }}>
           Six stages. One coherent arc. Each builds on the last.
         </p>
       </div>
@@ -383,17 +383,17 @@ export default async function AcceleratorPage() {
                   }}
                 >
                   <div className="w-full pt-1">
-                    <span className="font-marcellus text-warmCharcoal/50 block uppercase" style={{ fontSize: '18px', letterSpacing: '0.2em', marginBottom: '8px', fontWeight: '600' }}>
+                    <span className="font-marcellus text-warmCharcoal/50 block uppercase" style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', letterSpacing: '0.2em', marginBottom: '8px', fontWeight: '600' }}>
                       {stage.subtitle}
                     </span>
-                    <span className="block font-italiana" style={{ fontSize: '40px', color: '#4B4E6D' }}>
+                    <span className="block font-italiana" style={{ fontSize: 'clamp(24px, 5vw, 40px)', color: '#4B4E6D' }}>
                       {stage.title}
                     </span>
-                    <span className="block font-marcellus text-warmCharcoal/50 mt-2" style={{ fontSize: '32px', lineHeight: '1.6', fontStyle: 'italic' }}>
+                    <span className="block font-marcellus text-warmCharcoal/50 mt-2" style={{ fontSize: 'clamp(18px, 4vw, 32px)', lineHeight: '1.6', fontStyle: 'italic' }}>
                       {stage.overview.about.split('.')[0]}.
                     </span>
                     {isCurrent && (
-                      <span className="inline-flex items-center gap-1 mt-3 px-3 py-1 rounded-full font-marcellus text-white" style={{ fontSize: '28px', background: stage.color, letterSpacing: '0.1em' }}>
+                      <span className="inline-flex items-center gap-1 mt-3 px-3 py-1 rounded-full font-marcellus text-white" style={{ fontSize: 'clamp(18px, 3vw, 28px)', background: stage.color, letterSpacing: '0.1em' }}>
                         ● Currently here
                       </span>
                     )}
@@ -407,13 +407,13 @@ export default async function AcceleratorPage() {
                   }}
                 >
                   <div className="w-full pt-1">
-                    <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: '18px', letterSpacing: '0.2em', marginBottom: '8px', fontWeight: '600' }}>
+                    <span className="font-marcellus text-warmCharcoal/30 block uppercase" style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', letterSpacing: '0.2em', marginBottom: '8px', fontWeight: '600' }}>
                       {stage.subtitle}
                     </span>
-                    <span className="block font-italiana text-warmCharcoal/40" style={{ fontSize: '40px' }}>
+                    <span className="block font-italiana text-warmCharcoal/40" style={{ fontSize: 'clamp(24px, 5vw, 40px)' }}>
                       {stage.title}
                     </span>
-                    <span className="block font-marcellus text-warmCharcoal/25 mt-2" style={{ fontSize: '28px', fontStyle: 'italic' }}>
+                    <span className="block font-marcellus text-warmCharcoal/25 mt-2" style={{ fontSize: 'clamp(18px, 4vw, 28px)', fontStyle: 'italic' }}>
                       Unlocks in Week {stage.week}
                     </span>
                   </div>
@@ -429,23 +429,23 @@ export default async function AcceleratorPage() {
         <div className="max-w-2xl mx-auto text-center pt-10 pb-4">
           {/* Certificate-style border */}
           <div className="p-8 sm:p-12" style={{ border: '2px solid rgba(156, 136, 255, 0.25)', borderTop: '4px solid #9C88FF', background: 'rgba(156, 136, 255, 0.03)' }}>
-            <p className="font-marcellus text-warmCharcoal/30 uppercase tracking-widest mb-4" style={{ fontSize: '25px', letterSpacing: '0.3em' }}>
+            <p className="font-marcellus text-warmCharcoal/30 uppercase tracking-widest mb-4" style={{ fontSize: 'clamp(16px, 3vw, 25px)', letterSpacing: '0.3em' }}>
               With Honors
             </p>
-            <h2 className="font-italiana text-warmCharcoal" style={{ fontSize: '50px', letterSpacing: '0.04em' }}>
+            <h2 className="font-italiana text-warmCharcoal" style={{ fontSize: 'clamp(32px, 8vw, 50px)', letterSpacing: '0.04em' }}>
               Curriculum Complete
             </h2>
             <div className="mt-4 mx-auto" style={{ maxWidth: '200px' }}>
               <div style={{ height: '2px', background: 'linear-gradient(to right, transparent, #9C88FF, transparent)' }}></div>
               <div className="mt-1" style={{ height: '1px', background: 'linear-gradient(to right, transparent, #9C88FF60, transparent)' }}></div>
             </div>
-            <p className="font-marcellus text-warmCharcoal/50 max-w-lg mx-auto mt-6" style={{ fontSize: '38px', lineHeight: '1.8', fontStyle: 'italic' }}>
+            <p className="font-marcellus text-warmCharcoal/50 max-w-lg mx-auto mt-6" style={{ fontSize: 'clamp(20px, 5vw, 38px)', lineHeight: '1.8', fontStyle: 'italic' }}>
               You have traversed the full arc — from purpose alignment to launch. The inner work continues. Deepen is where refinement lives.
             </p>
             <Link
               href="/deepen"
               className="inline-block mt-6 px-8 py-3 font-marcellus text-white hover:opacity-90 transition-opacity"
-              style={{ background: '#9C88FF', fontSize: '18px', letterSpacing: '0.1em' }}
+              style={{ background: '#9C88FF', fontSize: 'clamp(14px, 2.5vw, 18px)', letterSpacing: '0.1em' }}
             >
               CONTINUE WITH DEEPEN →
             </Link>
@@ -457,10 +457,10 @@ export default async function AcceleratorPage() {
       <div className="max-w-2xl mx-auto text-center mt-16">
         <div className="flex items-center justify-center gap-3">
           <div style={{ height: '1px', width: '40px', background: 'rgba(75, 78, 109, 0.15)' }}></div>
-          <span className="font-italiana text-warmCharcoal/20" style={{ fontSize: '28px' }}>✦</span>
+          <span className="font-italiana text-warmCharcoal/20" style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>✦</span>
           <div style={{ height: '1px', width: '40px', background: 'rgba(75, 78, 109, 0.15)' }}></div>
         </div>
-        <p className="font-marcellus text-warmCharcoal/25 mt-3" style={{ fontSize: '14px', letterSpacing: '0.1em' }}>
+        <p className="font-marcellus text-warmCharcoal/25 mt-3" style={{ fontSize: 'clamp(12px, 1.5vw, 14px)', letterSpacing: '0.1em' }}>
           iPurpose™ Accelerator · {userCohort.label}
         </p>
       </div>
