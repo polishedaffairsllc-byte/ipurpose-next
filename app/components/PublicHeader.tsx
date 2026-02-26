@@ -6,12 +6,24 @@ export default function PublicHeader() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(true);
 
   useEffect(() => {
     // Check if user has session cookie
     const hasCookie = document.cookie.includes('FirebaseSession');
     setIsLoggedIn(!!hasCookie);
+    
+    // Check screen size
+    setIsLargeScreen(window.innerWidth >= 1024);
+    
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+    
+    window.addEventListener('resize', handleResize);
     setMounted(true);
+    
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (!mounted) return null;
@@ -108,26 +120,28 @@ export default function PublicHeader() {
         )}
 
         {/* Mobile Menu Button - Only visible on small screens */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden p-2 ml-2 text-white hover:opacity-75"
-          style={{ color: '#FFFFFF' }}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
+        {!isLargeScreen && (
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 ml-2 text-white hover:opacity-75"
+            style={{ color: '#FFFFFF' }}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
+      {mobileMenuOpen && !isLargeScreen && (
         <nav className="lg:hidden border-t border-white/20 bg-black/95 backdrop-blur-md">
           <div className="flex flex-col p-4">
             <Link 
