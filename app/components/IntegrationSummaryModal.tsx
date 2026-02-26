@@ -245,17 +245,17 @@ export function IntegrationSummaryModal({
 
         {/* Header */}
         <div style={{ borderBottom: '1px solid rgba(42, 42, 42, 0.1)', paddingBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.25rem)', fontWeight: 'bold', color: '#2A2A2A', marginBottom: '0.5rem' }}>
             ✨ Integration Reflection — {todayDate}
           </h1>
-          <p style={{ color: 'rgba(42, 42, 42, 0.6)', fontSize: '50px', fontWeight: 'bold', fontFamily: 'Italiana, serif' }}>
+          <p style={{ color: 'rgba(42, 42, 42, 0.6)', fontSize: 'clamp(28px, 6vw, 50px)', fontWeight: 'bold', fontFamily: 'Italiana, serif' }}>
             {userName} the {userArchetype || "Explorer"}
           </p>
         </div>
 
         {/* Session Journal */}
         <div className="section">
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.125rem, 3vw, 1.5rem)', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
             Session Journal — Today
           </h2>
           {journalEntries.length === 0 ? (
@@ -288,13 +288,13 @@ export function IntegrationSummaryModal({
         {/* Lab Responses */}
         {labResponses && (
           <div className="section">
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.125rem, 3vw, 1.5rem)', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
               Lab Responses
             </h2>
             
             {/* Identity Lab */}
             <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.75rem' }}>
                 Identity Lab
               </h3>
               {labResponses.identity.selfPerceptionMap && (
@@ -331,7 +331,7 @@ export function IntegrationSummaryModal({
 
             {/* Meaning Lab */}
             <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.75rem' }}>
                 Meaning Lab
               </h3>
               {labResponses.meaning.valueStructure && (
@@ -368,7 +368,7 @@ export function IntegrationSummaryModal({
 
             {/* Agency Lab */}
             <div>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)', fontWeight: '600', color: '#2A2A2A', marginBottom: '0.75rem' }}>
                 Agency Lab
               </h3>
               {labResponses.agency.awarenessPatterns && (
@@ -407,7 +407,7 @@ export function IntegrationSummaryModal({
 
         {/* Emerging Themes */}
         <div className="section">
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.125rem, 3vw, 1.5rem)', fontWeight: '600', color: '#2A2A2A', marginBottom: '1rem' }}>
             Emerging Themes
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
