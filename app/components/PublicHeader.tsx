@@ -28,93 +28,87 @@ export default function PublicHeader() {
           Home
         </Link>
 
-        {/* Desktop Navigation - Hidden on mobile (under 768px) */}
-        <nav className="hidden md:flex items-center gap-2 flex-1 justify-center flex-wrap">
-          <Link 
-            href="/discover" 
-            className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ fontSize: '14px', color: '#FFFFFF' }}
-          >
-            Discover
-          </Link>
+        <Link 
+          href="/discover" 
+          className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+          style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', color: '#FFFFFF', fontSize: '40px' }}
+        >
+          Discover
+        </Link>
 
-          <Link 
-            href="/about" 
-            className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ fontSize: '14px', color: '#FFFFFF' }}
-          >
-            About
-          </Link>
+        <Link 
+          href="/about" 
+          className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+          style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', color: '#FFFFFF', fontSize: '40px' }}
+        >
+          About
+        </Link>
 
-          <Link 
-            href="/program" 
-            className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ fontSize: '14px', color: '#FFFFFF' }}
-          >
-            Accelerator™
-          </Link>
+        <Link 
+          href="/program" 
+          className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+          style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
+        >
+          iPurpose Accelerator™
+        </Link>
 
-          <Link
-            href="/clarity-check"
-            className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ fontSize: '14px', color: '#FFFFFF' }}
-          >
-            Clarity Check
-          </Link>
+        <Link
+          href="/clarity-check"
+          className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+          style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', color: '#FFFFFF', fontSize: '40px' }}
+        >
+          Clarity Check
+        </Link>
 
-          <Link 
-            href="/starter-pack" 
-            className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', color: '#FFFFFF', fontSize: '14px' }}
-          >
-            Starter Pack
-          </Link>
+        <Link 
+          href="/starter-pack" 
+          className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+          style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', color: '#FFFFFF', fontSize: '40px' }}
+        >
+          Starter Pack
+        </Link>
 
-          <Link 
-            href="/ai-blueprint" 
-            className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-            style={{ fontSize: '14px', color: '#FFFFFF' }}
-          >
-            AI Blueprint
-          </Link>
-        </nav>
+        <Link 
+          href="/ai-blueprint" 
+          className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+          style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', color: '#FFFFFF', fontSize: '40px' }}
+        >
+          AI Blueprint
+        </Link>
 
-        {/* Desktop Auth Menu - Hidden on mobile */}
-        <div className="hidden md:flex items-center gap-2">
-          {isLoggedIn ? (
-            <>
-              <Link
-                href="/dashboard"
-                className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-                style={{ fontSize: '14px', color: '#FFFFFF' }}
-              >
-                Dashboard
-              </Link>
-              <form action="/api/auth/logout" method="post">
-                <button 
-                  type="submit" 
-                  className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana hover:opacity-90 transition-opacity whitespace-nowrap"
-                  style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '14px' }}
-                >
-                  Logout
-                </button>
-              </form>
-            </>
-          ) : (
+        {isLoggedIn ? (
+          <>
             <Link
-              href="/login"
-              className="px-2 lg:px-3 py-1 lg:py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '14px' }}
+              href="/dashboard"
+              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', color: '#FFFFFF', fontSize: '40px' }}
             >
-              Login
+              Dashboard
             </Link>
-          )}
-        </div>
+            <form action="/api/auth/logout" method="post">
+              <button 
+                type="submit" 
+                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana hover:opacity-90 transition-opacity whitespace-nowrap"
+                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
+              >
+                Logout
+              </button>
+            </form>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+            style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
+          >
+            Login
+          </Link>
+        )}
 
-        {/* Mobile Menu Button - Only visible under 768px */}
+        {/* Mobile Menu Button - Only visible on small screens */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-white hover:opacity-75 transition-opacity"
+          className="lg:hidden p-2 ml-2 text-white hover:opacity-75"
           style={{ color: '#FFFFFF' }}
           aria-label="Toggle menu"
         >
@@ -130,13 +124,13 @@ export default function PublicHeader() {
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown - Only visible under 768px */}
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <nav className="md:hidden border-t border-white/20 bg-black/95 backdrop-blur-md">
+        <nav className="lg:hidden border-t border-white/20 bg-black/95 backdrop-blur-md">
           <div className="flex flex-col p-4">
             <Link 
               href="/discover" 
-              className="px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
               style={{ color: '#FFFFFF' }}
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -144,7 +138,7 @@ export default function PublicHeader() {
             </Link>
             <Link 
               href="/about" 
-              className="px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
               style={{ color: '#FFFFFF' }}
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -152,7 +146,7 @@ export default function PublicHeader() {
             </Link>
             <Link 
               href="/program" 
-              className="px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
               style={{ color: '#FFFFFF' }}
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -160,7 +154,7 @@ export default function PublicHeader() {
             </Link>
             <Link
               href="/clarity-check"
-              className="px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
               style={{ color: '#FFFFFF' }}
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -168,7 +162,7 @@ export default function PublicHeader() {
             </Link>
             <Link 
               href="/starter-pack" 
-              className="px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
               style={{ color: '#FFFFFF' }}
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -176,18 +170,18 @@ export default function PublicHeader() {
             </Link>
             <Link 
               href="/ai-blueprint" 
-              className="px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
               style={{ color: '#FFFFFF' }}
               onClick={() => setMobileMenuOpen(false)}
             >
               AI Blueprint
             </Link>
-            <div className="border-t border-white/20 mt-3 pt-3">
+            <div className="border-t border-white/20 mt-2 pt-2">
               {isLoggedIn ? (
                 <>
                   <Link 
                     href="/dashboard" 
-                    className="block px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+                    className="block px-4 py-2 text-sm hover:bg-white/10 rounded"
                     style={{ color: '#FFFFFF' }}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -196,7 +190,7 @@ export default function PublicHeader() {
                   <form action="/api/auth/logout" method="post" className="w-full">
                     <button 
                       type="submit" 
-                      className="w-full text-left px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-white/10 rounded"
                       style={{ color: '#FFFFFF' }}
                     >
                       Logout
@@ -206,7 +200,7 @@ export default function PublicHeader() {
               ) : (
                 <Link 
                   href="/login" 
-                  className="block px-4 py-3 text-sm font-italiana hover:bg-white/10 rounded transition-colors"
+                  className="block px-4 py-2 text-sm hover:bg-white/10 rounded"
                   style={{ color: '#FFFFFF' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
