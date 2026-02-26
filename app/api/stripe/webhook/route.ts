@@ -413,6 +413,61 @@ export async function POST(request: NextRequest) {
       } catch (emailErr) {
         console.error('Error sending fulfillment email:', emailErr);
       }
+
+      // Send founder notification email
+      try {
+        const resendApiKey = process.env.RESEND_API_KEY;
+        const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita@ipurposesoul.com';
+        const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@ipurposesoul.com';
+
+        if (resendApiKey && founderEmail && email) {
+          const { Resend } = await import('resend');
+          const resend = new Resend(resendApiKey);
+
+          const founderEmailHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 0; background: #f8f6f3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #2A2A2A; }
+    .wrapper { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+    .card { background: #ffffff; border-radius: 12px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .highlight { background: #f0ebff; border-left: 4px solid #9C88FF; padding: 16px; margin: 16px 0; border-radius: 4px; }
+    .footer { text-align: center; font-size: 12px; color: #999; margin-top: 24px; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <h2 style="margin-top: 0; color: #9C88FF;">🎉 New Purchase!</h2>
+    <p><strong>Product:</strong> ${productDisplayName}</p>
+    <p><strong>Customer Email:</strong> ${email}</p>
+    <p><strong>Amount:</strong> $${purchasePrice.toFixed(2)} USD</p>
+    <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+    <div class="highlight">
+      <p><strong>Session ID:</strong> <code>${sessionId}</code></p>
+    </div>
+    <p>Customer entitlements have been automatically tagged and fulfillment email sent.</p>
+  </div>
+  <div class="footer">
+    <p>iPurpose Purchase Notification</p>
+  </div>
+</div>
+</body>
+</html>`;
+
+          const founderResult = await resend.emails.send({
+            from: fromEmail,
+            to: founderEmail,
+            subject: `🎉 New Purchase: ${productDisplayName} from ${email}`,
+            html: founderEmailHtml,
+          });
+
+          console.log('Founder purchase notification sent:', founderResult);
+        }
+      } catch (founderEmailErr) {
+        console.error('Error sending founder notification:', founderEmailErr);
+      }
     }
 
     return NextResponse.json({ received: true });
