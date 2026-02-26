@@ -27,37 +27,37 @@ export default function PublicHeader() {
 
   return (
     <header className="relative z-20 w-full border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>
-      <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
+      <div className="flex items-center justify-between gap-2 p-4 lg:p-6">
         {/* Logo */}
         <Link 
           href="/" 
-          className="px-2 sm:px-3 py-2 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap text-sm sm:text-base"
+          className="px-3 lg:px-4 py-2 lg:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap text-base lg:text-lg"
           style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.3))', color: '#FFFFFF' }}
           aria-label="Home"
         >
           Home
         </Link>
 
-        {/* Desktop Navigation - Hidden on mobile */}
-        <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
-          <Link href="/discover" className="px-2 py-2 font-italiana hover:opacity-90 text-xs sm:text-sm text-white">Discover</Link>
-          <Link href="/about" className="px-2 py-2 font-italiana hover:opacity-90 text-xs sm:text-sm text-white">About</Link>
-          <Link href="/program" className="px-2 py-2 font-italiana hover:opacity-90 text-xs sm:text-sm text-white">Accelerator™</Link>
-          <Link href="/clarity-check" className="px-2 py-2 font-italiana hover:opacity-90 text-xs sm:text-sm text-white">Clarity</Link>
+        {/* Desktop Navigation - Hidden on mobile, Full on desktop */}
+        <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+          <Link href="/discover" className="px-3 lg:px-4 py-2 lg:py-3 font-italiana hover:opacity-90 text-sm lg:text-base text-white">Discover</Link>
+          <Link href="/about" className="px-3 lg:px-4 py-2 lg:py-3 font-italiana hover:opacity-90 text-sm lg:text-base text-white">About</Link>
+          <Link href="/program" className="px-3 lg:px-4 py-2 lg:py-3 font-italiana hover:opacity-90 text-sm lg:text-base text-white">Accelerator™</Link>
+          <Link href="/clarity-check" className="px-3 lg:px-4 py-2 lg:py-3 font-italiana hover:opacity-90 text-sm lg:text-base text-white">Clarity Check</Link>
         </nav>
 
         {/* Desktop Right Menu */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-2">
           <Link 
             href="/starter-pack" 
-            className="px-2 py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs sm:text-sm text-white"
+            className="px-3 lg:px-4 py-2 lg:py-3 rounded-full font-italiana text-center hover:opacity-90 text-sm lg:text-base text-white"
             style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))' }}
           >
             Starter Pack
           </Link>
           <Link 
             href="/ai-blueprint" 
-            className="hidden lg:inline-block px-2 py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs sm:text-sm text-white"
+            className="px-3 lg:px-4 py-2 lg:py-3 rounded-full font-italiana text-center hover:opacity-90 text-sm lg:text-base text-white"
           >
             AI Blueprint
           </Link>
@@ -65,14 +65,14 @@ export default function PublicHeader() {
             <>
               <Link
                 href="/dashboard"
-                className="hidden lg:inline-block px-2 py-2 font-italiana text-center hover:opacity-90 text-xs sm:text-sm text-white"
+                className="px-3 lg:px-4 py-2 lg:py-3 font-italiana text-center hover:opacity-90 text-sm lg:text-base text-white"
               >
                 Dashboard
               </Link>
               <form action="/api/auth/logout" method="post">
                 <button 
                   type="submit" 
-                  className="px-2 py-2 rounded-full font-italiana hover:opacity-90 text-xs sm:text-sm text-white"
+                  className="px-3 lg:px-4 py-2 lg:py-3 rounded-full font-italiana hover:opacity-90 text-sm lg:text-base text-white"
                   style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))' }}
                 >
                   Logout
@@ -82,7 +82,7 @@ export default function PublicHeader() {
           ) : (
             <Link
               href="/login"
-              className="px-2 py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs sm:text-sm text-white"
+              className="px-3 lg:px-4 py-2 lg:py-3 rounded-full font-italiana text-center hover:opacity-90 text-sm lg:text-base text-white"
               style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))' }}
             >
               Login
