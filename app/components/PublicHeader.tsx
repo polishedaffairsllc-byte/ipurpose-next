@@ -30,12 +30,12 @@ export default function PublicHeader() {
 
         {/* Desktop Navigation - Show on medium screens and up */}
         <nav className="hidden sm:flex items-center gap-1 flex-1 justify-center flex-wrap">
-          <Link href="/discover" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm text-white">Discover</Link>
-          <Link href="/about" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm text-white">About</Link>
-          <Link href="/program" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm text-white">Accelerator™</Link>
-          <Link href="/clarity-check" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm text-white">Clarity Check</Link>
-          <Link href="/starter-pack" className="px-2 md:px-3 py-1 md:py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs md:text-sm text-white" style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))' }}>Starter Pack</Link>
-          <Link href="/ai-blueprint" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm text-white">AI Blueprint</Link>
+          <Link href="/discover" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm" style={{ color: '#FFFFFF' }}>Discover</Link>
+          <Link href="/about" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm" style={{ color: '#FFFFFF' }}>About</Link>
+          <Link href="/program" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm" style={{ color: '#FFFFFF' }}>Accelerator™</Link>
+          <Link href="/clarity-check" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm" style={{ color: '#FFFFFF' }}>Clarity Check</Link>
+          <Link href="/starter-pack" className="px-2 md:px-3 py-1 md:py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs md:text-sm" style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', color: '#FFFFFF' }}>Starter Pack</Link>
+          <Link href="/ai-blueprint" className="px-2 md:px-3 py-1 md:py-2 font-italiana hover:opacity-90 text-xs md:text-sm" style={{ color: '#FFFFFF' }}>AI Blueprint</Link>
         </nav>
 
         {/* Desktop Auth Menu */}
@@ -44,15 +44,16 @@ export default function PublicHeader() {
             <>
               <Link
                 href="/dashboard"
-                className="px-2 md:px-3 py-1 md:py-2 font-italiana text-center hover:opacity-90 text-xs md:text-sm text-white"
+                className="px-2 md:px-3 py-1 md:py-2 font-italiana text-center hover:opacity-90 text-xs md:text-sm"
+                style={{ color: '#FFFFFF' }}
               >
                 Dashboard
               </Link>
               <form action="/api/auth/logout" method="post">
                 <button 
                   type="submit" 
-                  className="px-2 md:px-3 py-1 md:py-2 rounded-full font-italiana hover:opacity-90 text-xs md:text-sm text-white"
-                  style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))' }}
+                  className="px-2 md:px-3 py-1 md:py-2 rounded-full font-italiana hover:opacity-90 text-xs md:text-sm"
+                  style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF' }}
                 >
                   Logout
                 </button>
@@ -61,8 +62,8 @@ export default function PublicHeader() {
           ) : (
             <Link
               href="/login"
-              className="px-2 md:px-3 py-1 md:py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs md:text-sm text-white"
-              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))' }}
+              className="px-2 md:px-3 py-1 md:py-2 rounded-full font-italiana text-center hover:opacity-90 text-xs md:text-sm"
+              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', color: '#FFFFFF' }}
             >
               Login
             </Link>
@@ -91,23 +92,23 @@ export default function PublicHeader() {
       {mobileMenuOpen && (
         <nav className="sm:hidden border-t border-white/20 bg-black/90 backdrop-blur-md">
           <div className="flex flex-col p-3">
-            <Link href="/" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-            <Link href="/discover" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Discover</Link>
-            <Link href="/about" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>About</Link>
-            <Link href="/program" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Accelerator™</Link>
-            <Link href="/clarity-check" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Clarity Check</Link>
-            <Link href="/starter-pack" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Starter Pack</Link>
-            <Link href="/ai-blueprint" className="px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>AI Blueprint</Link>
+            <Link href="/" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Home</Link>
+            <Link href="/discover" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Discover</Link>
+            <Link href="/about" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>About</Link>
+            <Link href="/program" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Accelerator™</Link>
+            <Link href="/clarity-check" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Clarity Check</Link>
+            <Link href="/starter-pack" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Starter Pack</Link>
+            <Link href="/ai-blueprint" className="px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>AI Blueprint</Link>
             <div className="border-t border-white/20 mt-3 pt-3">
               {isLoggedIn ? (
                 <>
-                  <Link href="/dashboard" className="block px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                  <Link href="/dashboard" className="block px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Dashboard</Link>
                   <form action="/api/auth/logout" method="post" className="w-full">
-                    <button type="submit" className="w-full text-left px-4 py-3 text-base text-white hover:bg-white/10 rounded">Logout</button>
+                    <button type="submit" className="w-full text-left px-4 py-3 text-base hover:bg-white/10 rounded" style={{ color: '#FFFFFF' }}>Logout</button>
                   </form>
                 </>
               ) : (
-                <Link href="/login" className="block px-4 py-3 text-base text-white hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                <Link href="/login" className="block px-4 py-3 text-base hover:bg-white/10 rounded" onClick={() => setMobileMenuOpen(false)} style={{ color: '#FFFFFF' }}>Login</Link>
               )}
             </div>
           </div>
