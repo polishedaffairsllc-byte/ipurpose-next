@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getFirebaseAuth } from "@/lib/firebaseClient";
+import StarterPackCompletion from "./StarterPackCompletion";
 
 const DEFAULT_STEPS = [
   {
@@ -85,6 +86,7 @@ export default function StarterPackClient() {
   const [userName, setUserName] = useState<string>("");
   const [steps, setSteps] = useState(DEFAULT_STEPS);
   const [showSummary, setShowSummary] = useState(false);
+  const [showCompletion, setShowCompletion] = useState(false);
 
   useEffect(() => {
     const auth = getFirebaseAuth();
@@ -602,7 +604,7 @@ export default function StarterPackClient() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => setShowSummary(true)}
+                    onClick={() => setShowCompletion(true)}
                     className="px-5 py-2.5 rounded-full text-[3rem] font-marcellus text-white transition-all
                       hover:opacity-90 shadow-md"
                     style={{ background: 'linear-gradient(135deg, #6B5B95, #9C88FF)' }}
@@ -750,6 +752,15 @@ export default function StarterPackClient() {
             })}
           </div>
         </div>
+      )}
+
+      {/* ── Completion Screen ── */}
+      {showCompletion && (
+        <StarterPackCompletion 
+          userName={userName || "Friend"} 
+          values={values} 
+          completionDate={new Date()}
+        />
       )}
     </div>
   );
