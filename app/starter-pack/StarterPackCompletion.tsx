@@ -360,29 +360,138 @@ export default function StarterPackCompletion({ userName, values, completionDate
               </div>
             </div>
 
-            {/* Certificate of Completion */}
+            {/* Certificate of Completion - Diploma Style */}
             <div
               style={{
-                padding: "24px",
-                border: "2px solid #4B4E6D",
-                borderRadius: "12px",
+                padding: "40px 32px",
+                border: "3px solid #4B4E6D",
+                borderRadius: "2px",
                 textAlign: "center",
-                background: "rgba(75,78,109,0.02)",
+                background: "linear-gradient(135deg, rgba(75,78,109,0.08) 0%, rgba(156,136,255,0.04) 100%)",
+                position: "relative",
+                boxShadow: "0 8px 32px rgba(75,78,109,0.15)",
               }}
             >
-              <p style={{ fontFamily: "Italiana, serif", fontSize: "18px", letterSpacing: "0.05em", color: "#4B4E6D", marginBottom: "8px", textTransform: "uppercase" }}>
-                Certificate of Completion
+              {/* Decorative top border */}
+              <div style={{ position: "absolute", top: "12px", left: "20px", right: "20px", height: "1px", background: "#E6C87C" }}></div>
+              <div style={{ position: "absolute", top: "16px", left: "20px", right: "20px", height: "1px", background: "#9C88FF", opacity: 0.5 }}></div>
+
+              {/* Ornamental corner flourishes */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "20px",
+                  fontSize: "24px",
+                  color: "#E6C87C",
+                  opacity: 0.6,
+                }}
+              >
+                ❖
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  right: "20px",
+                  fontSize: "24px",
+                  color: "#E6C87C",
+                  opacity: 0.6,
+                }}
+              >
+                ❖
+              </div>
+
+              {/* Main Content */}
+              <p style={{ fontFamily: "Italiana, serif", fontSize: "16px", letterSpacing: "0.08em", color: "#4B4E6D", marginBottom: "24px", marginTop: "12px", textTransform: "uppercase", fontStyle: "italic" }}>
+                ✧ Certificate of Completion ✧
               </p>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "rgba(42,42,42,0.7)", marginBottom: "16px" }}>
-                This certifies that
+
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "13px", color: "rgba(42,42,42,0.6)", marginBottom: "20px", letterSpacing: "0.05em" }}>
+                Be It Known That
               </p>
-              <p style={{ fontFamily: "Italiana, serif", fontSize: "24px", color: "#2A2A2A", fontWeight: "bold", marginBottom: "4px" }}>
+
+              <p style={{ fontFamily: "Italiana, serif", fontSize: "32px", color: "#2A2A2A", fontWeight: "bold", marginBottom: "6px", letterSpacing: "0.02em" }}>
                 {userName}
               </p>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "13px", color: "rgba(42,42,42,0.7)" }}>
-                has successfully completed the
+
+              <div style={{ margin: "16px 0", height: "1px", background: "linear-gradient(to right, transparent, #4B4E6D, transparent)" }}></div>
+
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.65)", marginBottom: "8px", letterSpacing: "0.05em" }}>
+                has demonstrated dedication to self-discovery and successfully completed
               </p>
-              <p style={{ fontFamily: "Italiana, serif", fontSize: "18px", color: "#9C88FF", fontWeight: "bold", marginBottom: "16px" }}>
+
+              <p style={{ fontFamily: "Italiana, serif", fontSize: "20px", color: "#9C88FF", fontWeight: "bold", marginBottom: "6px", letterSpacing: "0.02em" }}>
+                The iPurpose™ Starter Pack
+              </p>
+
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "11px", color: "rgba(42,42,42,0.6)", marginBottom: "20px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                Clarity Framework
+              </p>
+
+              <div style={{ margin: "16px 0", height: "1px", background: "linear-gradient(to right, transparent, #E6C87C, transparent)" }}></div>
+
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "11px", color: "rgba(42,42,42,0.5)", marginBottom: "4px", letterSpacing: "0.05em" }}>
+                Awarded this day,
+              </p>
+
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "13px", color: "#4B4E6D", fontWeight: "600", marginBottom: "20px" }}>
+                {completionDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+              </p>
+
+              {/* Decorative seal */}
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  border: "2px solid #9C88FF",
+                  backgroundColor: "rgba(156,136,255,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: "16px",
+                  fontSize: "32px",
+                }}
+              >
+                ✨
+              </div>
+
+              {/* Decorative bottom border */}
+              <div style={{ position: "absolute", bottom: "16px", left: "20px", right: "20px", height: "1px", background: "#9C88FF", opacity: 0.5 }}></div>
+              <div style={{ position: "absolute", bottom: "12px", left: "20px", right: "20px", height: "1px", background: "#E6C87C" }}></div>
+
+              {/* Ornamental corner flourishes bottom */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "12px",
+                  left: "20px",
+                  fontSize: "24px",
+                  color: "#E6C87C",
+                  opacity: 0.6,
+                }}
+              >
+                ❖
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "12px",
+                  right: "20px",
+                  fontSize: "24px",
+                  color: "#E6C87C",
+                  opacity: 0.6,
+                }}
+              >
+                ❖
+              </div>
+
+              <p style={{ fontFamily: "Italiana, serif", fontSize: "14px", color: "#4B4E6D", marginTop: "12px", fontStyle: "italic", letterSpacing: "0.03em" }}>
+                iPurpose™ · Clarity, Connection, Purpose
+              </p>
+            </div>>
                 iPurpose™ Starter Pack
               </p>
               <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)" }}>
