@@ -11,6 +11,7 @@ interface CompletionProps {
 
 export default function StarterPackCompletion({ userName, values, completionDate }: CompletionProps) {
   const [downloading, setDownloading] = useState(false);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   const generateReflectionSheet = async () => {
     setDownloading(true);
@@ -122,244 +123,274 @@ export default function StarterPackCompletion({ userName, values, completionDate
   const formattedDate = completionDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-3xl w-full my-8 shadow-2xl">
-        <div className="relative">
-          {/* Certificate-Style Header */}
-          <div
-            className="relative px-6 sm:px-8 py-12 sm:py-16 text-center overflow-hidden"
-            style={{
-              background: "linear-gradient(135deg, rgba(156,136,255,0.1) 0%, rgba(230,200,124,0.1) 100%)",
-              borderBottom: "3px solid #9C88FF",
-            }}
-          >
-            <div className="absolute top-0 left-0 right-0 flex justify-center text-6xl opacity-10">✨</div>
+    <>
+      {/* Main Page Content - NOT a popup */}
+      <div className="w-full">
+        {/* Header */}
+        <div
+          className="relative px-6 sm:px-8 py-12 sm:py-16 text-center overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(156,136,255,0.1) 0%, rgba(230,200,124,0.1) 100%)",
+            borderBottom: "3px solid #9C88FF",
+          }}
+        >
+          <div className="absolute top-0 left-0 right-0 flex justify-center text-6xl opacity-10">✨</div>
 
-            <h2 style={{ fontSize: "clamp(28px, 6vw, 48px)", fontFamily: "Italiana, serif", color: "#2A2A2A", marginBottom: "8px" }}>
-              You've Completed the
-            </h2>
-            <h1 style={{ fontSize: "clamp(32px, 8vw, 56px)", fontFamily: "Italiana, serif", color: "#9C88FF", fontWeight: "bold", marginBottom: "16px" }}>
-              iPurpose Starter Pack
-            </h1>
+          <h2 style={{ fontSize: "clamp(28px, 6vw, 48px)", fontFamily: "Italiana, serif", color: "#2A2A2A", marginBottom: "8px" }}>
+            You've Completed the
+          </h2>
+          <h1 style={{ fontSize: "clamp(32px, 8vw, 56px)", fontFamily: "Italiana, serif", color: "#9C88FF", fontWeight: "bold", marginBottom: "16px" }}>
+            iPurpose Starter Pack
+          </h1>
 
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div style={{ height: "2px", flex: 1, maxWidth: "80px", background: "#E6C87C" }}></div>
-              <span style={{ fontFamily: "Marcellus, serif", color: "rgba(42,42,42,0.6)", fontSize: "14px", letterSpacing: "0.1em" }}>
-                CLARITY FRAMEWORK
-              </span>
-              <div style={{ height: "2px", flex: 1, maxWidth: "80px", background: "#E6C87C" }}></div>
-            </div>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div style={{ height: "2px", flex: 1, maxWidth: "80px", background: "#E6C87C" }}></div>
+            <span style={{ fontFamily: "Marcellus, serif", color: "rgba(42,42,42,0.6)", fontSize: "14px", letterSpacing: "0.1em" }}>
+              CLARITY FRAMEWORK
+            </span>
+            <div style={{ height: "2px", flex: 1, maxWidth: "80px", background: "#E6C87C" }}></div>
+          </div>
 
-            <p style={{ fontFamily: "Marcellus, serif", color: "rgba(42,42,42,0.7)", fontSize: "16px" }}>
-              {formattedDate}
+          <p style={{ fontFamily: "Marcellus, serif", color: "rgba(42,42,42,0.7)", fontSize: "16px" }}>
+            {formattedDate}
+          </p>
+        </div>
+
+        {/* Content */}
+        <div className="px-6 sm:px-8 py-10 sm:py-12 max-w-4xl mx-auto space-y-8">
+          {/* Congratulations Message */}
+          <div className="text-center space-y-3">
+            <p style={{ fontSize: "48px", marginBottom: "8px" }}>🎉</p>
+            <p style={{ fontFamily: "Marcellus, serif", fontSize: "24px", color: "#2A2A2A", fontWeight: "600" }}>
+              Congratulations, {userName}!
+            </p>
+            <p style={{ fontFamily: "Marcellus, serif", fontSize: "16px", color: "rgba(42,42,42,0.7)", maxWidth: "500px", margin: "0 auto" }}>
+              You've completed a comprehensive journey of self-discovery. The insights you've gathered are the foundation for all meaningful work.
             </p>
           </div>
 
-          {/* Content */}
-          <div className="px-6 sm:px-8 py-10 sm:py-12 space-y-8">
-            {/* Congratulations Message */}
-            <div className="text-center space-y-3">
-              <p style={{ fontSize: "48px", marginBottom: "8px" }}>🎉</p>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "24px", color: "#2A2A2A", fontWeight: "600" }}>
-                Congratulations, {userName}!
+          {/* Summary Recap */}
+          <div style={{ background: "rgba(156,136,255,0.05)", borderLeft: "4px solid #9C88FF", padding: "16px", borderRadius: "8px" }}>
+            <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#9C88FF", marginBottom: "8px", textTransform: "uppercase" }}>
+              Your Clarity Summary
+            </p>
+            <div className="space-y-3">
+              {values["purpose_statement"] && (
+                <div>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "4px" }}>
+                    Purpose Statement
+                  </p>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "#2A2A2A", fontStyle: "italic" }}>
+                    "{values["purpose_statement"]}"
+                  </p>
+                </div>
+              )}
+
+              {values["coreValues_three"] && (
+                <div>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "4px" }}>
+                    Core Values
+                  </p>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "#2A2A2A" }}>
+                    {values["coreValues_three"]}
+                  </p>
+                </div>
+              )}
+
+              {values["selfDiscovery_statement"] && (
+                <div>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "4px" }}>
+                    Alignment Statement
+                  </p>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "#2A2A2A", fontStyle: "italic" }}>
+                    "{values["selfDiscovery_statement"]}"
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Download Button and Certificate Button */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button
+              onClick={generateReflectionSheet}
+              disabled={downloading}
+              style={{
+                padding: "12px 32px",
+                borderRadius: "9999px",
+                fontFamily: "Marcellus, serif",
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "white",
+                background: "#9C88FF",
+                border: "none",
+                cursor: downloading ? "wait" : "pointer",
+                transition: "all 0.2s ease",
+                opacity: downloading ? 0.7 : 1,
+              }}
+              onMouseEnter={(e) => {
+                if (!downloading) (e.target as HTMLButtonElement).style.background = "#8A77E8";
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLButtonElement).style.background = "#9C88FF";
+              }}
+            >
+              {downloading ? "Generating..." : "📥 Download Reflection Sheet"}
+            </button>
+
+            <button
+              onClick={() => setShowCertificate(true)}
+              style={{
+                padding: "12px 32px",
+                borderRadius: "9999px",
+                fontFamily: "Marcellus, serif",
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "white",
+                background: "#E6C87C",
+                border: "none",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLButtonElement).style.background = "#D4B870";
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLButtonElement).style.background = "#E6C87C";
+              }}
+            >
+              🎓 View Certificate
+            </button>
+          </div>
+
+          {/* Next Steps */}
+          <div className="space-y-6 pt-4 border-t border-gray-200">
+            <div>
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "18px", fontWeight: "600", color: "#2A2A2A", marginBottom: "12px" }}>
+                What's Next?
               </p>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "16px", color: "rgba(42,42,42,0.7)", maxWidth: "500px", margin: "0 auto" }}>
-                You've completed a comprehensive journey of self-discovery. The insights you've gathered are the foundation for all meaningful work.
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "rgba(42,42,42,0.7)", marginBottom: "16px" }}>
+                Your Starter Pack is complete. Choose your next step based on where you are in your journey:
               </p>
             </div>
 
-            {/* Summary Recap */}
-            <div style={{ background: "rgba(156,136,255,0.05)", borderLeft: "4px solid #9C88FF", padding: "16px", borderRadius: "8px" }}>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#9C88FF", marginBottom: "8px", textTransform: "uppercase" }}>
-                Your Clarity Summary
-              </p>
-              <div className="space-y-3">
-                {values["purpose_statement"] && (
-                  <div>
-                    <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "4px" }}>
-                      Purpose Statement
-                    </p>
-                    <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "#2A2A2A", fontStyle: "italic" }}>
-                      "{values["purpose_statement"]}"
-                    </p>
-                  </div>
-                )}
-
-                {values["coreValues_three"] && (
-                  <div>
-                    <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "4px" }}>
-                      Core Values
-                    </p>
-                    <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "#2A2A2A" }}>
-                      {values["coreValues_three"]}
-                    </p>
-                  </div>
-                )}
-
-                {values["selfDiscovery_statement"] && (
-                  <div>
-                    <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "4px" }}>
-                      Alignment Statement
-                    </p>
-                    <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "#2A2A2A", fontStyle: "italic" }}>
-                      "{values["selfDiscovery_statement"]}"
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Download Button */}
-            <div className="flex justify-center">
-              <button
-                onClick={generateReflectionSheet}
-                disabled={downloading}
-                style={{
-                  padding: "12px 32px",
-                  borderRadius: "9999px",
-                  fontFamily: "Marcellus, serif",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  color: "white",
-                  background: "#9C88FF",
-                  border: "none",
-                  cursor: downloading ? "wait" : "pointer",
-                  transition: "all 0.2s ease",
-                  opacity: downloading ? 0.7 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  if (!downloading) (e.target as HTMLButtonElement).style.background = "#8A77E8";
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLButtonElement).style.background = "#9C88FF";
-                }}
-              >
-                {downloading ? "Generating..." : "📥 Download Reflection Sheet"}
-              </button>
-            </div>
-
-            {/* Next Steps */}
-            <div className="space-y-6 pt-4 border-t border-rgba(42,42,42,0.1)">
-              <div>
-                <p style={{ fontFamily: "Marcellus, serif", fontSize: "18px", fontWeight: "600", color: "#2A2A2A", marginBottom: "12px" }}>
-                  What's Next?
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Option 1: Clarity Check */}
+              <div style={{ padding: "16px", border: "2px solid #9C88FF", borderRadius: "12px", textAlign: "center" }}>
+                <p style={{ fontSize: "32px", marginBottom: "8px" }}>🔍</p>
+                <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#2A2A2A", marginBottom: "8px" }}>
+                  Deepen Your Clarity
                 </p>
-                <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", color: "rgba(42,42,42,0.7)", marginBottom: "16px" }}>
-                  Your Starter Pack is complete. Choose your next step based on where you are in your journey:
+                <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "12px" }}>
+                  Take the Clarity Check assessment to understand your core archetype and soul patterns.
                 </p>
+                <a
+                  href="/clarity-check"
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 16px",
+                    borderRadius: "9999px",
+                    fontFamily: "Marcellus, serif",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    color: "#9C88FF",
+                    border: "1px solid #9C88FF",
+                    textDecoration: "none",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLAnchorElement).style.background = "#9C88FF";
+                    (e.target as HTMLAnchorElement).style.color = "white";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLAnchorElement).style.background = "transparent";
+                    (e.target as HTMLAnchorElement).style.color = "#9C88FF";
+                  }}
+                >
+                  Begin Assessment
+                </a>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                {/* Option 1: Clarity Check */}
-                <div style={{ padding: "16px", border: "2px solid #9C88FF", borderRadius: "12px", textAlign: "center" }}>
-                  <p style={{ fontSize: "32px", marginBottom: "8px" }}>🔍</p>
-                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#2A2A2A", marginBottom: "8px" }}>
-                    Deepen Your Clarity
-                  </p>
-                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "12px" }}>
-                    Take the Clarity Check assessment to understand your core archetype and soul patterns.
-                  </p>
-                  <a
-                    href="/clarity-check"
-                    style={{
-                      display: "inline-block",
-                      padding: "8px 16px",
-                      borderRadius: "9999px",
-                      fontFamily: "Marcellus, serif",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      color: "#9C88FF",
-                      border: "1px solid #9C88FF",
-                      textDecoration: "none",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLAnchorElement).style.background = "#9C88FF";
-                      (e.target as HTMLAnchorElement).style.color = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLAnchorElement).style.background = "transparent";
-                      (e.target as HTMLAnchorElement).style.color = "#9C88FF";
-                    }}
-                  >
-                    Begin Assessment
-                  </a>
-                </div>
+              {/* Option 2: AI Blueprint */}
+              <div style={{ padding: "16px", border: "2px solid #E6C87C", borderRadius: "12px", textAlign: "center" }}>
+                <p style={{ fontSize: "32px", marginBottom: "8px" }}>🤖</p>
+                <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#2A2A2A", marginBottom: "8px" }}>
+                  Build with AI Blueprint
+                </p>
+                <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "12px" }}>
+                  Use AI tools to translate your clarity into concrete systems and plans.
+                </p>
+                <a
+                  href="/ai-blueprint"
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 16px",
+                    borderRadius: "9999px",
+                    fontFamily: "Marcellus, serif",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    color: "#E6C87C",
+                    border: "1px solid #E6C87C",
+                    textDecoration: "none",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLAnchorElement).style.background = "#E6C87C";
+                    (e.target as HTMLAnchorElement).style.color = "#2A2A2A";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLAnchorElement).style.background = "transparent";
+                    (e.target as HTMLAnchorElement).style.color = "#E6C87C";
+                  }}
+                >
+                  Explore Blueprint
+                </a>
+              </div>
 
-                {/* Option 2: AI Blueprint */}
-                <div style={{ padding: "16px", border: "2px solid #E6C87C", borderRadius: "12px", textAlign: "center" }}>
-                  <p style={{ fontSize: "32px", marginBottom: "8px" }}>🤖</p>
-                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#2A2A2A", marginBottom: "8px" }}>
-                    Build with AI Blueprint
-                  </p>
-                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "12px" }}>
-                    Use AI tools to translate your clarity into concrete systems and plans.
-                  </p>
-                  <a
-                    href="/ai-blueprint"
-                    style={{
-                      display: "inline-block",
-                      padding: "8px 16px",
-                      borderRadius: "9999px",
-                      fontFamily: "Marcellus, serif",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      color: "#E6C87C",
-                      border: "1px solid #E6C87C",
-                      textDecoration: "none",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLAnchorElement).style.background = "#E6C87C";
-                      (e.target as HTMLAnchorElement).style.color = "#2A2A2A";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLAnchorElement).style.background = "transparent";
-                      (e.target as HTMLAnchorElement).style.color = "#E6C87C";
-                    }}
-                  >
-                    Explore Blueprint
-                  </a>
-                </div>
-
-                {/* Option 3: Accelerator */}
-                <div style={{ padding: "16px", border: "2px solid #FCC4B7", borderRadius: "12px", textAlign: "center" }}>
-                  <p style={{ fontSize: "32px", marginBottom: "8px" }}>🚀</p>
-                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#2A2A2A", marginBottom: "8px" }}>
-                    Launch with Accelerator
-                  </p>
-                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "12px" }}>
-                    Join our 6-week cohort to transform clarity into action with community support.
-                  </p>
-                  <a
-                    href="/program"
-                    style={{
-                      display: "inline-block",
-                      padding: "8px 16px",
-                      borderRadius: "9999px",
-                      fontFamily: "Marcellus, serif",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      color: "#FCC4B7",
-                      border: "1px solid #FCC4B7",
-                      textDecoration: "none",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLAnchorElement).style.background = "#FCC4B7";
-                      (e.target as HTMLAnchorElement).style.color = "#2A2A2A";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLAnchorElement).style.background = "transparent";
-                      (e.target as HTMLAnchorElement).style.color = "#FCC4B7";
-                    }}
-                  >
-                    View Programs
-                  </a>
-                </div>
+              {/* Option 3: Accelerator */}
+              <div style={{ padding: "16px", border: "2px solid #FCC4B7", borderRadius: "12px", textAlign: "center" }}>
+                <p style={{ fontSize: "32px", marginBottom: "8px" }}>🚀</p>
+                <p style={{ fontFamily: "Marcellus, serif", fontSize: "14px", fontWeight: "600", color: "#2A2A2A", marginBottom: "8px" }}>
+                  Launch with Accelerator
+                </p>
+                <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginBottom: "12px" }}>
+                  Join our 6-week cohort to transform clarity into action with community support.
+                </p>
+                <a
+                  href="/program"
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 16px",
+                    borderRadius: "9999px",
+                    fontFamily: "Marcellus, serif",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    color: "#FCC4B7",
+                    border: "1px solid #FCC4B7",
+                    textDecoration: "none",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLAnchorElement).style.background = "#FCC4B7";
+                    (e.target as HTMLAnchorElement).style.color = "#2A2A2A";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLAnchorElement).style.background = "transparent";
+                    (e.target as HTMLAnchorElement).style.color = "#FCC4B7";
+                  }}
+                >
+                  View Programs
+                </a>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
 
+      {/* Certificate Modal Popup */}
+      {showCertificate && (
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", zIndex: 50, overflowY: "auto" }}>
+          <div style={{ backgroundColor: "white", borderRadius: "16px", maxWidth: "900px", width: "100%", marginTop: "32px", marginBottom: "32px", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)", margin: "32px auto" }}>
             {/* Certificate of Completion - Diploma Style */}
             <div
               style={{
@@ -372,9 +403,17 @@ export default function StarterPackCompletion({ userName, values, completionDate
                 boxShadow: "0 8px 32px rgba(75,78,109,0.15)",
               }}
             >
+              {/* School-Style Header */}
+              <p style={{ fontFamily: "Italiana, serif", fontSize: "clamp(24px, 6vw, 48px)", letterSpacing: "0.15em", color: "#4B4E6D", marginBottom: "4px", fontWeight: "bold", textShadow: "0 2px 4px rgba(75,78,109,0.1)" }}>
+                iPurpose School of Thought
+              </p>
+              <p style={{ fontFamily: "Marcellus, serif", fontSize: "clamp(16px, 4vw, 24px)", color: "#9C88FF", marginBottom: "16px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                Soul • Systems • AI
+              </p>
+
               {/* Decorative top border */}
-              <div style={{ position: "absolute", top: "12px", left: "20px", right: "20px", height: "1px", background: "#E6C87C" }}></div>
-              <div style={{ position: "absolute", top: "16px", left: "20px", right: "20px", height: "1px", background: "#9C88FF", opacity: 0.5 }}></div>
+              <div style={{ position: "absolute", top: "12px", left: "20px", right: "20px", height: "3px", background: "#E6C87C" }}></div>
+              <div style={{ position: "absolute", top: "18px", left: "20px", right: "20px", height: "2px", background: "#9C88FF", opacity: 0.5 }}></div>
 
               {/* Ornamental corner flourishes */}
               <div
@@ -403,7 +442,7 @@ export default function StarterPackCompletion({ userName, values, completionDate
               </div>
 
               {/* Main Content */}
-              <p style={{ fontFamily: "Italiana, serif", fontSize: "16px", letterSpacing: "0.08em", color: "#4B4E6D", marginBottom: "24px", marginTop: "12px", textTransform: "uppercase", fontStyle: "italic" }}>
+              <p style={{ fontFamily: "Italiana, serif", fontSize: "clamp(18px, 4vw, 28px)", letterSpacing: "0.08em", color: "#4B4E6D", marginBottom: "24px", marginTop: "12px", textTransform: "uppercase", fontWeight: "bold" }}>
                 ✧ Certificate of Completion ✧
               </p>
 
@@ -439,28 +478,48 @@ export default function StarterPackCompletion({ userName, values, completionDate
                 {completionDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
               </p>
 
-              {/* Decorative seal */}
-              <div
-                style={{
-                  display: "inline-block",
-                  width: "60px",
-                  height: "60px",
-                  borderRadius: "50%",
-                  border: "2px solid #9C88FF",
-                  backgroundColor: "rgba(156,136,255,0.08)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "16px",
-                  fontSize: "32px",
-                }}
-              >
-                ✨
+              {/* Logo Centered with Signature */}
+              <div style={{ marginTop: "24px", marginBottom: "16px", display: "flex", justifyContent: "center", alignItems: "flex-start", gap: "80px" }}>
+                {/* Logo in Center */}
+                <img 
+                  src="/images/my-logo.png" 
+                  alt="iPurpose Logo" 
+                  style={{ 
+                    height: "150px",
+                    display: "block",
+                    opacity: 0.9,
+                    flex: "0 0 auto"
+                  }} 
+                />
+                
+                {/* Renita Hamilton Signature on Right */}
+                <div style={{ textAlign: "center", flex: "0 0 auto", minWidth: "180px" }}>
+                  <img 
+                    src="/signatures/unnamed.png" 
+                    alt="Administrator Signature" 
+                    style={{ 
+                      height: "70px", 
+                      marginBottom: "0px",
+                      filter: "contrast(1.2) brightness(1.1)",
+                      backgroundColor: "white",
+                      display: "block",
+                      width: "auto",
+                      maxWidth: "100%"
+                    }} 
+                  />
+                  <div style={{ width: "100%", height: "1px", background: "#4B4E6D", marginTop: "2px", marginBottom: "4px" }}></div>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "#4B4E6D", letterSpacing: "0.05em", fontWeight: "600", margin: "0" }}>
+                    Renita Hamilton
+                  </p>
+                  <p style={{ fontFamily: "Marcellus, serif", fontSize: "10px", color: "#4B4E6D", letterSpacing: "0.05em", textTransform: "uppercase", margin: "0" }}>
+                    Administrator
+                  </p>
+                </div>
               </div>
 
               {/* Decorative bottom border */}
-              <div style={{ position: "absolute", bottom: "16px", left: "20px", right: "20px", height: "1px", background: "#9C88FF", opacity: 0.5 }}></div>
-              <div style={{ position: "absolute", bottom: "12px", left: "20px", right: "20px", height: "1px", background: "#E6C87C" }}></div>
+              <div style={{ position: "absolute", bottom: "16px", left: "20px", right: "20px", height: "2px", background: "#9C88FF", opacity: 0.5 }}></div>
+              <div style={{ position: "absolute", bottom: "12px", left: "20px", right: "20px", height: "3px", background: "#E6C87C" }}></div>
 
               {/* Ornamental corner flourishes bottom */}
               <div
@@ -491,51 +550,37 @@ export default function StarterPackCompletion({ userName, values, completionDate
               <p style={{ fontFamily: "Italiana, serif", fontSize: "14px", color: "#4B4E6D", marginTop: "12px", fontStyle: "italic", letterSpacing: "0.03em" }}>
                 iPurpose™ · Clarity, Connection, Purpose
               </p>
-            </div>>
-                iPurpose™ Starter Pack
-              </p>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)" }}>
-                Clarity Framework
-              </p>
-              <p style={{ fontFamily: "Marcellus, serif", fontSize: "12px", color: "rgba(42,42,42,0.6)", marginTop: "8px" }}>
-                {formattedDate}
-              </p>
-              <div style={{ marginTop: "16px", height: "1px", background: "rgba(75,78,109,0.3)" }}></div>
-              <p style={{ fontFamily: "Italiana, serif", fontSize: "16px", color: "#4B4E6D", marginTop: "12px", fontStyle: "italic" }}>
-                iPurpose™ · Clarity, Connection, Purpose
-              </p>
+            </div>
+
+            {/* Close Button */}
+            <div className="px-6 sm:px-8 py-6 border-t border-gray-200 flex justify-center">
+              <button
+                onClick={() => setShowCertificate(false)}
+                style={{
+                  padding: "10px 24px",
+                  borderRadius: "9999px",
+                  fontFamily: "Marcellus, serif",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  color: "#2A2A2A",
+                  background: "rgba(42,42,42,0.1)",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLButtonElement).style.background = "rgba(42,42,42,0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLButtonElement).style.background = "rgba(42,42,42,0.1)";
+                }}
+              >
+                Close Certificate
+              </button>
             </div>
           </div>
-
-          {/* Close Button */}
-          <div className="px-6 sm:px-8 py-6 border-t border-gray-200 flex justify-center">
-            <a
-              href="/dashboard"
-              style={{
-                padding: "10px 24px",
-                borderRadius: "9999px",
-                fontFamily: "Marcellus, serif",
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#2A2A2A",
-                background: "rgba(42,42,42,0.1)",
-                border: "none",
-                cursor: "pointer",
-                textDecoration: "none",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLAnchorElement).style.background = "rgba(42,42,42,0.15)";
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLAnchorElement).style.background = "rgba(42,42,42,0.1)";
-              }}
-            >
-              Return to Dashboard
-            </a>
-          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
