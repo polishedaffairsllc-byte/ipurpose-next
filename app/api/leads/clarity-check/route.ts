@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { rateLimit } from '@/lib/rate-limit-simple';
+import { scheduleEmailSequence } from '@/lib/email-automation';
 
 interface ClarityCheckRequest {
   name: string;
@@ -76,6 +77,19 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('[CLARITY CHECK] Success:', { id: result.id, deduped: result.deduped });
+
+    // Schedule email sequence (Day 1 + Day 5 with Founder's Rate)
+    try {
+      await scheduleEmailSequence({
+        email,
+        name,
+        submissionId: result.id,
+      });
+    } catch (emailError) {
+      console.error('[CLARITY CHECK] Email scheduling failed (non-blocking):', emailError);
+      // Don't fail the lead submission if emails fail
+    }
+
     return NextResponse.json({
       ok: true,
       id: result.id,

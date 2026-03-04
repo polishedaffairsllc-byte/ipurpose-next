@@ -294,3 +294,11 @@ export const trackAcceleratorPurchase = ({
     });
   }
 };
+
+// Track Clarity Check completion (when user views their results)
+export const trackClarityCheckCompleted = (email?: string) => {
+  trackEvent('clarity_check_completed', {
+    lead_type: 'clarity_check',
+    email: email,
+  });
+};
