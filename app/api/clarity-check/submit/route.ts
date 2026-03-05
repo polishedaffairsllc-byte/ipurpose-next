@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
-import { scheduleEmailSequence } from '@/lib/email-automation';
 
 export const dynamic = 'force-dynamic';
 
@@ -440,19 +439,9 @@ export async function POST(request: NextRequest) {
       // Continue anyway—we'll still return results
     }
 
-    // EMAIL SENDING: Send Day 1 thank you + schedule Day 5 offer
-    try {
-      await scheduleEmailSequence({
-        email: userEmail,
-        name: 'Friend', // User name not captured in this endpoint
-        submissionId: submissionDocId || '',
-        identityType,
-        totalScore: scores.totalScore,
-      });
-    } catch (emailError) {
-      console.error('Email automation failed (non-blocking):', emailError);
-      // Don't fail the submission if emails fail
-    }
+    // EMAIL SENDING: Handled by /api/leads/clarity-check endpoint
+    // This endpoint just stores the submission and returns results
+    // Email automation is triggered through the lead capture flow
 
     return NextResponse.json(
       {

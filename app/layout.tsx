@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased">
       <head>
-        {/* Google Ads Conversion Tracking */}
+        {/* Google Ads Conversion Tracking (updated from Call-Only to modern event-based tracking) */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=AW-17993147612"
@@ -44,7 +44,11 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'AW-17993147612');
+              // Legacy Call-Only configuration - migrating to event-based conversions
+              gtag('config', 'AW-17993147612', {
+                'allow_google_signals': true,
+                'allow_ad_personalization_signals': true
+              });
             `,
           }}
         />
