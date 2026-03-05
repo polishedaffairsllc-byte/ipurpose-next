@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       await scheduleEmailSequence({
         email,
         name,
-        submissionId: result.id,
+        submissionId: result.id || '',
       });
     } catch (emailError) {
       console.error('[CLARITY CHECK] Email scheduling failed (non-blocking):', emailError);

@@ -240,7 +240,7 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: '⏰ Your Founder's Rate is Ready ($27 for 7 Days)',
+      subject: "⏰ Your Founder's Rate is Ready ($27 for 7 Days)",
       html: htmlContent,
     });
     console.log(`[Email] Day 5 Founder's Rate sent to ${email}`);
