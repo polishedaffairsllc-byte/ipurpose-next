@@ -264,8 +264,8 @@ export async function scheduleEmailSequence(data: ClarityCheckEmailData) {
       email: data.email,
       name: data.name,
       submissionId: data.submissionId,
-      identityType: data.identityType,
-      totalScore: data.totalScore,
+      ...(data.identityType && { identityType: data.identityType }),
+      ...(data.totalScore && { totalScore: data.totalScore }),
       type: 'clarity_check_founders_rate',
       scheduledFor: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
       status: 'pending',

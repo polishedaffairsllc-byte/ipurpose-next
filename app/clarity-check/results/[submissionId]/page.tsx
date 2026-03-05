@@ -37,7 +37,14 @@ async function getSubmission(submissionId: string): Promise<SubmissionData | nul
       return null;
     }
 
-    return doc.data() as SubmissionData;
+    const data = doc.data() as SubmissionData;
+    
+    // Convert Firestore Timestamp to ISO string for client serialization
+    if (data.createdAt && typeof data.createdAt.toDate === 'function') {
+      data.createdAt = data.createdAt.toDate().toISOString();
+    }
+    
+    return data;
   } catch (error) {
     console.error('Error fetching submission:', error);
     return null;
