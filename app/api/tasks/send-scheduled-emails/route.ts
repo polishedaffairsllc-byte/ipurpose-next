@@ -31,12 +31,10 @@ export async function POST(request: NextRequest) {
       .firestore()
       .collection('emailTasks')
       .where('status', '==', 'pending')
-      .where('type', '==', 'clarity_check_founders_rate')
-      .where('scheduledFor', '<=', now)
       .limit(100) // Process up to 100 at a time
       .get();
 
-    console.log(`[SCHEDULER] Found ${tasksSnapshot.size} tasks to process`);
+    console.log(`[SCHEDULER] Found ${tasksSnapshot.size} potential tasks to process`);
 
     let processed = 0;
     let failed = 0;
@@ -44,6 +42,15 @@ export async function POST(request: NextRequest) {
     // Process each task
     for (const doc of tasksSnapshot.docs) {
       const task = doc.data();
+      
+      // Filter by type and scheduledFor in code (avoid needing composite index)
+      if (task.type !== 'clarity_check_founders_rate') {
+        continue;
+      }
+      
+      if (!task.scheduledFor || task.scheduledFor > now) {
+        continue;
+      }
 
       try {
         // Send the email
