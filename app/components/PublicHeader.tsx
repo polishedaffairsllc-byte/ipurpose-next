@@ -7,11 +7,16 @@ export default function PublicHeader() {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(true);
+  const [clarityCheckDone, setClarityCheckDone] = useState(false);
 
   useEffect(() => {
     // Check if user has session cookie
     const hasCookie = document.cookie.includes('FirebaseSession');
     setIsLoggedIn(!!hasCookie);
+    
+    // Check if clarity check has been completed
+    const quizDone = localStorage.getItem('clarityCheckCompleted') === 'true';
+    setClarityCheckDone(quizDone);
     
     // Check screen size
     setIsLargeScreen(window.innerWidth >= 1024);
@@ -59,13 +64,15 @@ export default function PublicHeader() {
               About
             </Link>
 
-            <Link 
-              href="/program" 
-              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
-            >
-              iPurpose Accelerator™
-            </Link>
+            {clarityCheckDone && (
+              <Link 
+                href="/program" 
+                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
+              >
+                iPurpose Accelerator™
+              </Link>
+            )}
 
             <Link
               href="/clarity-check"
@@ -75,21 +82,15 @@ export default function PublicHeader() {
               Clarity Check
             </Link>
 
-            <Link 
-              href="/starter-pack" 
-              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', color: '#FFFFFF', fontSize: '40px' }}
-            >
-              Starter Pack
-            </Link>
-
-            <Link 
-              href="/ai-blueprint" 
-              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', color: '#FFFFFF', fontSize: '40px' }}
-            >
-              AI Blueprint
-            </Link>
+            {clarityCheckDone && (
+              <Link 
+                href="/starter-pack" 
+                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+                style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', color: '#FFFFFF', fontSize: '40px' }}
+              >
+                Starter Pack
+              </Link>
+            )}
 
             {/* Desktop Auth - Show only on large screens */}
             {isLoggedIn ? (
@@ -164,14 +165,16 @@ export default function PublicHeader() {
             >
               About
             </Link>
-            <Link 
-              href="/program" 
-              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-              style={{ color: '#FFFFFF' }}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Accelerator™
-            </Link>
+            {clarityCheckDone && (
+              <Link 
+                href="/program" 
+                className="px-4 py-2 text-sm hover:bg-white/10 rounded"
+                style={{ color: '#FFFFFF' }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Accelerator™
+              </Link>
+            )}
             <Link
               href="/clarity-check"
               className="px-4 py-2 text-sm hover:bg-white/10 rounded"
@@ -180,22 +183,16 @@ export default function PublicHeader() {
             >
               Clarity Check
             </Link>
-            <Link 
-              href="/starter-pack" 
-              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-              style={{ color: '#FFFFFF' }}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Starter Pack
-            </Link>
-            <Link 
-              href="/ai-blueprint" 
-              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-              style={{ color: '#FFFFFF' }}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              AI Blueprint
-            </Link>
+            {clarityCheckDone && (
+              <Link 
+                href="/starter-pack" 
+                className="px-4 py-2 text-sm hover:bg-white/10 rounded"
+                style={{ color: '#FFFFFF' }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Starter Pack
+              </Link>
+            )}
             <div className="border-t border-white/20 mt-2 pt-2">
               {isLoggedIn ? (
                 <>

@@ -5,7 +5,6 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import VideoBackground from './components/VideoBackground';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
-import HomeClient from './components/HomeClient';
 
 export const metadata: Metadata = {
   title: "iPurpose™ | Clarity, Connection, and Purpose",
@@ -52,7 +51,6 @@ export default async function Home() {
   return (
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />
-        <HomeClient />
         <PublicHeader />
         <div className="relative w-full flex items-center justify-center p-4 sm:p-6 lg:p-12" style={{ zIndex: 10, minHeight: '80vh' }}>
           <div className="max-w-3xl text-center relative p-6 sm:p-8 md:p-12 lg:p-16" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.15) 100%)' }}>

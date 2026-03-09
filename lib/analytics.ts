@@ -296,21 +296,9 @@ export const trackAcceleratorPurchase = ({
 };
 
 // Track Clarity Check completion (when user views their results)
-// Also sends conversion event to Google Ads (AW-17993147612)
 export const trackClarityCheckCompleted = (email?: string) => {
   trackEvent('clarity_check_completed', {
     lead_type: 'clarity_check',
     email: email,
   });
-
-  // Send conversion to Google Ads
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'conversion', {
-      'conversion_id': 'AW-17993147612',
-      'conversion_label': 'clarity_check_completed',
-      'value': 1,
-      'currency': 'USD',
-      'email': email,
-    });
-  }
 };
