@@ -165,7 +165,7 @@ export default function ClarityCheckNumericPage() {
         // Fire Google Ads conversion tag on successful lead capture
         if (typeof window !== 'undefined' && window.gtag) {
           window.gtag('event', 'conversion', {
-            'send_to': 'AW-17993147612/clarity_check_lead',
+            'send_to': 'AW-17993147612/o_aWCOT7wYUcENzJ5oND',
             'value': 1.0,
             'currency': 'USD',
           });
