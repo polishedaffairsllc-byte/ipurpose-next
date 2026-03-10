@@ -480,6 +480,17 @@
   }
 }
 
+@keyframes ctaPulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(156, 136, 255, 0.4), 0 0 24px rgba(156, 136, 255, 0.15);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(156, 136, 255, 0.7), 0 0 40px rgba(156, 136, 255, 0.3);
+    transform: scale(1.03);
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

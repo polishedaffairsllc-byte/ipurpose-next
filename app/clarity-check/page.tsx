@@ -8,43 +8,58 @@ export default function ClarityCheckPage() {
       {/* Public Header */}
       <PublicHeader />
       
-      {/* Main Content */}
-      <div className="container max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20">
-        <section 
-          className="relative text-center space-y-4 sm:space-y-6 py-16 sm:py-24 px-4 sm:px-6 rounded-2xl overflow-hidden mb-8"
-          style={{
-            backgroundImage: 'url(/images/cosmic-timetraveler-Gg6Oz8026C8-unsplash.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/50"></div>
-          
-          <h1 className="heading-hero mb-6 text-white relative z-10 text-display-hero">
-            Take Your Clarity Check
+      {/* Hero — everything above the fold */}
+      <section
+        className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 overflow-hidden"
+        style={{
+          backgroundImage: 'url(/images/cosmic-timetraveler-Gg6Oz8026C8-unsplash.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          /* fill viewport minus header height so CTA is always visible */
+          minHeight: 'calc(100svh - 64px)',
+        }}
+      >
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/55" />
+
+        <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-5 max-w-xl mx-auto py-8 sm:py-12">
+          {/* Outcome-focused headline */}
+          <h1
+            className="font-italiana text-2xl sm:text-3xl md:text-4xl leading-snug tracking-tight"
+            style={{ color: '#FFFFFF', WebkitTextFillColor: '#FFFFFF' }}
+          >
+            Find Out Exactly Where You&rsquo;re Stuck&nbsp;&mdash; In&nbsp;Under&nbsp;3&nbsp;Minutes
           </h1>
-          <p className="text-white relative z-10 font-italiana px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-display-emphasis" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', color: '#FFFFFF' }}>
-            Twelve questions to unlock your direction
-          </p>
-        </section>
 
-        <div className="text-center space-y-6 bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-4 sm:p-6 md:p-8 border border-lavenderViolet/10">
-          <p className="text-warmCharcoal/80 font-marcellus text-display-emphasis leading-relaxed">
-            7 state questions + 5 identity questions. No sign-up required — just honest answers. 
-            Find out where you truly stand in under 3 minutes.
+          {/* Sub-headline — twelve questions context */}
+          <p
+            className="font-italiana text-lg sm:text-xl"
+            style={{ color: 'rgba(255,255,255,0.8)', WebkitTextFillColor: 'rgba(255,255,255,0.8)' }}
+          >
+            12 quick questions to unlock your next aligned step
           </p>
 
+          {/* Friction-reducing proof points — prominent, right above CTA */}
+          <p
+            className="font-marcellus text-base sm:text-lg md:text-xl tracking-wide"
+            style={{ color: '#FFFFFF', WebkitTextFillColor: '#FFFFFF' }}
+          >
+            No sign-up required&ensp;·&ensp;Just honest answers&ensp;·&ensp;100% free
+          </p>
+
+          {/* Primary CTA — large, unmissable, with pulse glow */}
           <Link
             href="/clarity-check-numeric"
-            className="inline-block w-full px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center text-display-emphasis hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
+            className="mt-2 inline-block w-full max-w-md px-8 py-4 sm:py-5 rounded-full font-marcellus text-white text-center text-lg sm:text-xl font-bold uppercase tracking-wider hover:scale-[1.03] hover:opacity-95 active:scale-100 transition-all animate-[ctaPulse_2s_ease-in-out_infinite]"
+            style={{ background: 'linear-gradient(135deg, #9C88FF 0%, #b8a9ff 100%)' }}
           >
-            Start the Clarity Check →
+            Click Here Now
           </Link>
+
+
         </div>
-      </div>
-      
+      </section>
+
       {/* Footer */}
       <Footer />
     </div>

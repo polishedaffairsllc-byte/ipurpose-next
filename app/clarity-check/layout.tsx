@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Clarity Check — Find Your Next Aligned Step',
-  description: 'Start here to gain clarity on what you\'re building and what comes next, with a grounded introduction to the iPurpose method.',
+  title: 'Find Out Where You\'re Stuck — Free Clarity Check in Under 3 Minutes',
+  description: 'Answer 12 quick questions to discover exactly where you\'re stuck and what your next aligned step should be. No sign-up required.',
   openGraph: {
-    title: 'Clarity Check — Find Your Next Aligned Step',
-    description: 'Start here to gain clarity on what you\'re building and what comes next, with a grounded introduction to the iPurpose method.',
+    title: 'Find Out Where You\'re Stuck — Free Clarity Check in Under 3 Minutes',
+    description: 'Answer 12 quick questions to discover exactly where you\'re stuck and what your next aligned step should be. No sign-up required.',
     type: 'website',
   },
   robots: 'index, follow',
