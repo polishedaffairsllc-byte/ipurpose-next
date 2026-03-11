@@ -31,7 +31,17 @@ export default function PublicHeader() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    // Show a skeleton header instead of nothing — prevents blank page flash
+    return (
+      <header className="relative z-20 w-full border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>
+        <div className="flex items-center justify-between gap-2 p-4 sm:p-6">
+          <div className="h-10 w-24 rounded-full bg-white/10 animate-pulse" />
+          <div className="h-10 w-32 rounded-full bg-white/10 animate-pulse" />
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="relative z-20 w-full border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>

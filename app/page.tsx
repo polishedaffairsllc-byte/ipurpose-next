@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import VideoBackground from './components/VideoBackground';
+import SplashVideoModal from './components/SplashVideoModal';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
 
@@ -49,6 +50,8 @@ export default async function Home() {
     }
   }
   return (
+    <>
+    <SplashVideoModal />
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />
         <PublicHeader />
@@ -122,5 +125,6 @@ export default async function Home() {
         </div>
         <Footer />
       </div>
+    </>
   );
 }
