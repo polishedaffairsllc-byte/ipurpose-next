@@ -24,6 +24,120 @@ interface ClarityCheckEmailData {
   totalScore?: number;
 }
 
+export interface ClarityCheckScores {
+  internalClarity: number;
+  readinessForSupport: number;
+  frictionBetweenInsightAndAction: number;
+  integrationAndMomentum: number;
+  totalScore: number;
+}
+
+/**
+ * Send results email to the user with their scores, summary and next step
+ */
+export async function sendClarityCheckResultsEmail(data: {
+  email: string;
+  name: string;
+  scores: ClarityCheckScores;
+  resultSummary: string;
+  nextStep: string;
+  submissionId: string;
+  identityType?: string;
+}) {
+  const { email, name, scores, resultSummary, nextStep, submissionId, identityType } = data;
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: 'Marcellus', serif; line-height: 1.6; color: #2A2A2A; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid #9C88FF; }
+          .header h1 { color: #9C88FF; margin: 0; font-size: 28px; }
+          .header p { color: #4B4E6D; margin: 10px 0 0 0; font-size: 14px; }
+          .content { padding: 30px 0; }
+          .total-score { background: linear-gradient(135deg, #9C88FF 0%, #6366b8 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+          .total-score .label { font-size: 14px; opacity: 0.9; }
+          .total-score .value { font-size: 48px; font-weight: 600; margin: 5px 0 0 0; font-family: 'Italiana', serif; }
+          .scores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+          .score-box { background: #f5f5f5; padding: 14px; border-radius: 8px; text-align: center; }
+          .score-box .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+          .score-box .value { font-size: 28px; font-weight: 600; color: #9C88FF; margin: 6px 0 0 0; }
+          .identity { background: rgba(156, 136, 255, 0.1); padding: 15px; border-left: 4px solid #9C88FF; margin: 20px 0; border-radius: 0 8px 8px 0; }
+          .summary { background: #f9f5ff; padding: 15px; border-radius: 8px; border-left: 4px solid #9C88FF; line-height: 1.7; margin-bottom: 20px; }
+          .next-step { background: #f5f5f5; padding: 15px; border-radius: 8px; line-height: 1.7; }
+          .cta-button { display: inline-block; background: linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.6)); color: white; padding: 12px 24px; border-radius: 24px; text-decoration: none; font-weight: bold; margin-top: 20px; }
+          .footer { text-align: center; padding-top: 30px; border-top: 1px solid #E6C87C; font-size: 12px; color: #4B4E6D; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>✨ Your Clarity Check Results</h1>
+            <p>Where you are right now — ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          </div>
+          <div class="content">
+            <p>Hi ${name},</p>
+            <p>Here are your full results from the Clarity Check.</p>
+
+            <div class="total-score">
+              <div class="label">Total Score</div>
+              <div class="value">${scores.totalScore} / 35</div>
+            </div>
+
+            <div class="scores-grid">
+              <div class="score-box"><div class="label">Internal Clarity</div><div class="value">${scores.internalClarity}</div></div>
+              <div class="score-box"><div class="label">Readiness for Support</div><div class="value">${scores.readinessForSupport}</div></div>
+              <div class="score-box"><div class="label">Friction Between Insight & Action</div><div class="value">${scores.frictionBetweenInsightAndAction}</div></div>
+              <div class="score-box"><div class="label">Integration & Momentum</div><div class="value">${scores.integrationAndMomentum}</div></div>
+            </div>
+
+            ${identityType ? `<div class="identity"><strong>Your Identity Type: ${identityType}</strong><p style="margin: 8px 0 0 0; font-size: 14px;">This reveals how you naturally show up in the world.</p></div>` : ''}
+
+            <h3 style="color: #4B4E6D;">Your Summary</h3>
+            <div class="summary">${resultSummary}</div>
+
+            <h3 style="color: #4B4E6D;">Your Next Step</h3>
+            <div class="next-step">${nextStep}</div>
+
+            <p style="text-align: center; margin-top: 30px;">
+              <a href="https://ipurposesoul.com/clarity-check/results/${submissionId}" class="cta-button">View Your Full Results →</a>
+            </p>
+          </div>
+          <div class="footer">
+            <p>© iPurpose Soul — Where Inner Alignment Becomes Coherent Action</p>
+            <p><a href="https://ipurposesoul.com" style="color: #9C88FF; text-decoration: none;">ipurposesoul.com</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: '✨ Your iPurpose Clarity Check Results',
+      html: htmlContent,
+    });
+    console.log(`[Email] Results email sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send results email to ${email}:`, error);
+    return false;
+  }
+}
+
+interface ClarityCheckEmailData {
+  email: string;
+  name: string;
+  submissionId: string;
+  identityType?: string;
+  totalScore?: number;
+}
+
 /**
  * Send Day 1 Thank You Email
  */

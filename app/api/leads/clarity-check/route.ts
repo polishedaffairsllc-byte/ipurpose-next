@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { rateLimit } from '@/lib/rate-limit-simple';
-import { scheduleEmailSequence } from '@/lib/email-automation';
+import { scheduleEmailSequence, sendClarityCheckResultsEmail, ClarityCheckScores } from '@/lib/email-automation';
 
 interface ClarityCheckRequest {
   name: string;
@@ -10,6 +10,15 @@ interface ClarityCheckRequest {
   submissionId?: string;
   identityType?: string;
   totalScore?: number;
+  scores?: {
+    internalClarity: number;
+    readinessForSupport: number;
+    frictionBetweenInsightAndAction: number;
+    integrationAndMomentum: number;
+    totalScore: number;
+  };
+  resultSummary?: string;
+  nextStep?: string;
 }
 
 // Rate limiter: 5 requests per minute per IP
@@ -33,7 +42,7 @@ function getRequestContext(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as ClarityCheckRequest;
-    const { name, email, website, submissionId: clientSubmissionId, identityType, totalScore } = body;
+    const { name, email, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep } = body;
 
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
@@ -81,20 +90,34 @@ export async function POST(request: NextRequest) {
 
     console.log('[CLARITY CHECK] Success:', { id: result.id, deduped: result.deduped });
 
-    // Schedule email sequence (Day 1 + Day 5 with Founder's Rate)
+    // Schedule email sequence (Day 1 thank-you + Day 5 founder's rate)
     try {
       await scheduleEmailSequence({
         email,
         name,
-        // Prefer the Firestore doc ID from processLead; fall back to the
-        // client-supplied submissionId from the quiz submission.
         submissionId: result.id || clientSubmissionId || '',
         ...(identityType && { identityType }),
         ...(totalScore !== undefined && { totalScore }),
       });
     } catch (emailError) {
       console.error('[CLARITY CHECK] Email scheduling failed (non-blocking):', emailError);
-      // Don't fail the lead submission if emails fail
+    }
+
+    // Send full results email if scores were provided by the client
+    if (scores && resultSummary && nextStep) {
+      try {
+        await sendClarityCheckResultsEmail({
+          email,
+          name,
+          scores: scores as ClarityCheckScores,
+          resultSummary,
+          nextStep,
+          submissionId: clientSubmissionId || '',
+          identityType,
+        });
+      } catch (resultsEmailError) {
+        console.error('[CLARITY CHECK] Results email failed (non-blocking):', resultsEmailError);
+      }
     }
 
     return NextResponse.json({

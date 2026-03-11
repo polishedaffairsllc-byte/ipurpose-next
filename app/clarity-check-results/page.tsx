@@ -65,8 +65,8 @@ export default function ClarityCheckResultsPage() {
     setCaptureLoading(true);
 
     try {
-      // Pull submissionId and identityType from sessionStorage so the email
-      // includes the correct results link and identity type personalisation.
+      // Pull full results from sessionStorage so the email includes scores,
+      // summary, next step, identity type and a working results link.
       const stored = sessionStorage.getItem('clarityCheckResults');
       const sessionData = stored ? JSON.parse(stored) : {};
 
@@ -80,6 +80,9 @@ export default function ClarityCheckResultsPage() {
           submissionId: sessionData.submissionId || '',
           identityType: sessionData.identityType || '',
           totalScore: sessionData.scores?.totalScore ?? undefined,
+          scores: sessionData.scores ?? undefined,
+          resultSummary: sessionData.resultSummary ?? undefined,
+          nextStep: sessionData.nextStep ?? undefined,
         }),
       });
 

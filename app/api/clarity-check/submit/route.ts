@@ -439,9 +439,12 @@ export async function POST(request: NextRequest) {
       // Continue anyway—we'll still return results
     }
 
-    // EMAIL SENDING: Handled by /api/leads/clarity-check endpoint
-    // This endpoint just stores the submission and returns results
-    // Email automation is triggered through the lead capture flow
+    // Send founder notification for every quiz completion (non-blocking)
+    try {
+      await sendFounderNotification(userEmail, scores, summary, submissionDocId);
+    } catch (notifyError) {
+      console.error('Founder notification failed (non-blocking):', notifyError);
+    }
 
     return NextResponse.json(
       {
