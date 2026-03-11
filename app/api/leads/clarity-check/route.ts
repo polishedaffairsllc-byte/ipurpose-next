@@ -7,6 +7,9 @@ interface ClarityCheckRequest {
   name: string;
   email: string;
   website?: string; // Honeypot field
+  submissionId?: string;
+  identityType?: string;
+  totalScore?: number;
 }
 
 // Rate limiter: 5 requests per minute per IP
@@ -30,7 +33,7 @@ function getRequestContext(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as ClarityCheckRequest;
-    const { name, email, website } = body;
+    const { name, email, website, submissionId: clientSubmissionId, identityType, totalScore } = body;
 
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
@@ -83,7 +86,11 @@ export async function POST(request: NextRequest) {
       await scheduleEmailSequence({
         email,
         name,
-        submissionId: result.id || '',
+        // Prefer the Firestore doc ID from processLead; fall back to the
+        // client-supplied submissionId from the quiz submission.
+        submissionId: result.id || clientSubmissionId || '',
+        ...(identityType && { identityType }),
+        ...(totalScore !== undefined && { totalScore }),
       });
     } catch (emailError) {
       console.error('[CLARITY CHECK] Email scheduling failed (non-blocking):', emailError);

@@ -1,9 +1,13 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import PublicHeader from '../components/PublicHeader';
-import Footer from '../components/Footer';
+/**
+ * /clarity-check-numeric is the legacy URL used in existing Google Ads campaigns.
+ * Traffic is permanently redirected to /clarity-check-quiz so the ad destination
+ * keeps working while the new split-URL flow handles conversion tracking.
+ */
+export default function ClarityCheckNumericRedirect() {
+  redirect('/clarity-check-quiz');
+}
 
 interface ResultsData {
   scores: {
@@ -331,7 +335,7 @@ export default function ClarityCheckNumericPage() {
               <h2 className="text-2xl font-italiana text-warmCharcoal mb-8">Dimension Scores</h2>
               <div className="scores-grid grid grid-cols-2 gap-6">
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                  <p className="text-sm font-marcellus text-warmCharcoal/60 uppercase tracking-wide mb-2">
+                  <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
                     Internal Clarity
                   </p>
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
@@ -341,7 +345,7 @@ export default function ClarityCheckNumericPage() {
                 </div>
 
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                  <p className="text-sm font-marcellus text-warmCharcoal/60 uppercase tracking-wide mb-2">
+                  <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
                     Readiness for Support
                   </p>
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
@@ -351,7 +355,7 @@ export default function ClarityCheckNumericPage() {
                 </div>
 
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                  <p className="text-sm font-marcellus text-warmCharcoal/60 uppercase tracking-wide mb-2">
+                  <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
                     Friction Between Insight & Action
                   </p>
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
@@ -361,7 +365,7 @@ export default function ClarityCheckNumericPage() {
                 </div>
 
                 <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                  <p className="text-sm font-marcellus text-warmCharcoal/60 uppercase tracking-wide mb-2">
+                  <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
                     Integration & Momentum
                   </p>
                   <p className="text-4xl font-italiana text-warmCharcoal mb-1">
@@ -560,7 +564,7 @@ export default function ClarityCheckNumericPage() {
           {/* Questions by Dimension */}
           {['Internal Clarity', 'Readiness for Support', 'Friction Between Insight and Action', 'Integration & Momentum'].map((dimension) => (
             <div key={dimension} className="space-y-8 pb-12 border-b border-warmCharcoal/10">
-              <h2 className="text-2xl font-marcellus text-warmCharcoal">{dimension}</h2>
+              <h2 className="text-3xl font-italiana text-lavenderViolet text-center">{dimension}</h2>
               {questions
                 .filter((q) => q.dimension === dimension)
                 .map((question) => (
