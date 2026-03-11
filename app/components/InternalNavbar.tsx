@@ -17,7 +17,7 @@ export default function InternalNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Hide on public pages
-  const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/terms' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/clarity-check-numeric' || pathname === '/program' || pathname === '/google-review' || pathname === '/info-session' || pathname === '/ipurpose-6-week' || pathname === '/starter-pack' || pathname === '/ai-blueprint';
+  const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/terms' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/clarity-check-numeric' || pathname === '/clarity-check-quiz' || pathname === '/clarity-check-results' || pathname === '/program' || pathname === '/google-review' || pathname === '/info-session' || pathname === '/ipurpose-6-week' || pathname === '/starter-pack' || pathname === '/ai-blueprint';
   const isOrientationRoute = pathname === '/orientation' || pathname.startsWith('/orientation/');
   const isIntegrationRoute = pathname === '/integration' || pathname.startsWith('/integration/');
   const isLearningRoute = pathname === '/learning-path' || pathname === '/ethics' || pathname === '/onboarding';
