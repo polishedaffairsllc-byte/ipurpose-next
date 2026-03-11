@@ -22,7 +22,7 @@ export default function ClarityCheckPage() {
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/55" />
 
-        <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-5 max-w-xl mx-auto py-8 sm:py-12">
+        <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-5 max-w-xl mx-auto">
           {/* Outcome-focused headline */}
           <h1
             className="font-italiana text-2xl sm:text-3xl md:text-4xl leading-snug tracking-tight"
@@ -50,10 +50,10 @@ export default function ClarityCheckPage() {
           {/* Primary CTA — large, unmissable, with pulse glow */}
           <Link
             href="/clarity-check-numeric"
-            className="mt-2 inline-block w-full max-w-md px-8 py-4 sm:py-5 rounded-full font-marcellus text-white text-center text-lg sm:text-xl font-bold uppercase tracking-wider hover:scale-[1.03] hover:opacity-95 active:scale-100 transition-all animate-[ctaPulse_2s_ease-in-out_infinite]"
+            className="mt-2 inline-block w-full max-w-md px-8 py-4 sm:py-5 rounded-full font-marcellus text-white text-center text-lg sm:text-xl font-bold tracking-wide hover:scale-[1.03] hover:opacity-95 active:scale-100 transition-all animate-[ctaPulse_2s_ease-in-out_infinite]"
             style={{ background: 'linear-gradient(135deg, #9C88FF 0%, #b8a9ff 100%)' }}
           >
-            Click Here Now
+            Show Me →
           </Link>
 
 
