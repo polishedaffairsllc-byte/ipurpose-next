@@ -6,34 +6,32 @@ import { createPortal } from 'react-dom';
 export default function SplashVideoModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Only show if not already seen this session
     const seen = sessionStorage.getItem('splashSeen');
     if (!seen) {
       setIsOpen(true);
     }
   }, []);
 
-  // Try to unmute automatically once the video starts playing
+  // Try to play with sound first; fall back to muted if browser blocks it
   useEffect(() => {
     if (!isOpen) return;
     const video = videoRef.current;
     if (!video) return;
 
-    const tryUnmute = () => {
-      video.muted = false;
-      video.play().then(() => {
-        setIsMuted(false);
-      }).catch(() => {
-        video.muted = true;
-        video.play().catch(() => {});
-      });
-    };
-    video.addEventListener('playing', tryUnmute, { once: true });
-    return () => video.removeEventListener('playing', tryUnmute);
+    // Attempt 1: play with audio
+    video.muted = false;
+    video.play().then(() => {
+      setIsMuted(false);
+    }).catch(() => {
+      // Browser blocked audio autoplay — fall back to muted
+      video.muted = true;
+      setIsMuted(true);
+      video.play().catch(() => {});
+    });
   }, [isOpen]);
 
   const toggleMute = useCallback(() => {
@@ -41,6 +39,10 @@ export default function SplashVideoModal() {
     if (!video) return;
     video.muted = !video.muted;
     setIsMuted(video.muted);
+    // If they just unmuted, restart so they don't miss the beginning
+    if (!video.muted) {
+      video.currentTime = 0;
+    }
   }, []);
 
   const dismiss = useCallback(() => {
@@ -77,8 +79,6 @@ export default function SplashVideoModal() {
       <video
         ref={videoRef}
         src="/videos/intro-vid-2026.mp4"
-        autoPlay
-        muted
         playsInline
         onEnded={dismiss}
         style={{
