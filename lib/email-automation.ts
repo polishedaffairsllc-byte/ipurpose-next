@@ -33,6 +33,108 @@ export interface ClarityCheckScores {
 }
 
 /**
+ * Notify the founder when someone takes the Clarity Check.
+ * Called twice: once on quiz submit (email may be unknown), once on email capture.
+ */
+export async function sendFounderNotification(data: {
+  submissionId: string;
+  scores: ClarityCheckScores;
+  resultSummary: string;
+  email?: string | null;
+  name?: string | null;
+  identityType?: string | null;
+  stage: 'quiz_completed' | 'email_captured';
+}) {
+  const { submissionId, scores, resultSummary, email, name, identityType, stage } = data;
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita@ipurposesoul.com';
+
+  if (!resendApiKey) {
+    console.warn('[Founder] RESEND_API_KEY not configured — skipping notification.');
+    return false;
+  }
+
+  const displayEmail = email || 'Not captured yet';
+  const displayName = name || 'Unknown';
+  const stageLabel = stage === 'email_captured'
+    ? '✅ Email Captured'
+    : '📋 Quiz Completed (no email yet)';
+  const subjectLine = stage === 'email_captured'
+    ? `✅ New Lead: ${name || email} took the Clarity Check`
+    : `📋 Someone took the Clarity Check (no email yet)`;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #2a2a2a; line-height: 1.6; }
+  .wrap { max-width: 600px; margin: 0 auto; padding: 24px; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    background: ${stage === 'email_captured' ? '#d4edda' : '#fff3cd'};
+    color: ${stage === 'email_captured' ? '#155724' : '#856404'}; }
+  h1 { font-size: 22px; margin: 16px 0 4px; }
+  .meta { background: #f5f5f5; border-radius: 8px; padding: 16px; margin: 16px 0; }
+  .row { display: flex; padding: 6px 0; border-bottom: 1px solid #e8e8e8; }
+  .row:last-child { border-bottom: none; }
+  .label { width: 140px; font-weight: 600; color: #555; font-size: 14px; }
+  .val { flex: 1; font-size: 14px; }
+  .scores { background: #f9f5ff; border-radius: 8px; padding: 16px; margin: 16px 0; }
+  .score-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; border-bottom: 1px solid #ede8ff; }
+  .score-row:last-child { border-bottom: none; font-weight: 700; padding-top: 10px; }
+  .summary-box { background: #f9f5ff; border-left: 4px solid #9C88FF; padding: 14px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 16px 0; }
+  .cta { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #9C88FF; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
+  .footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #eee; font-size: 12px; color: #999; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">${stageLabel}</span>
+  <h1>New Clarity Check Submission</h1>
+
+  <div class="meta">
+    <div class="row"><div class="label">Name</div><div class="val">${displayName}</div></div>
+    <div class="row"><div class="label">Email</div><div class="val">${displayEmail}</div></div>
+    ${identityType ? `<div class="row"><div class="label">Identity Type</div><div class="val">${identityType}</div></div>` : ''}
+    <div class="row"><div class="label">Submitted</div><div class="val">${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} ET</div></div>
+    <div class="row"><div class="label">Stage</div><div class="val">${stageLabel}</div></div>
+  </div>
+
+  <div class="scores">
+    <div class="score-row"><span>Internal Clarity</span><strong>${scores.internalClarity}</strong></div>
+    <div class="score-row"><span>Readiness for Support</span><strong>${scores.readinessForSupport}</strong></div>
+    <div class="score-row"><span>Friction Between Insight & Action</span><strong>${scores.frictionBetweenInsightAndAction}</strong></div>
+    <div class="score-row"><span>Integration & Momentum</span><strong>${scores.integrationAndMomentum}</strong></div>
+    <div class="score-row"><span>Total Score</span><strong>${scores.totalScore} / 35</strong></div>
+  </div>
+
+  <div class="summary-box">${resultSummary}</div>
+
+  <a href="https://ipurposesoul.com/deepen/admin/intake?submission=${submissionId}" class="cta">View Full Submission →</a>
+
+  <div class="footer"><p>Submission ID: ${submissionId}</p></div>
+</div>
+</body>
+</html>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(resendApiKey);
+    const result = await resend.emails.send({
+      from: 'info@ipurposesoul.com',
+      to: founderEmail,
+      subject: subjectLine,
+      html,
+    });
+    console.log(`[Founder] Notification sent (${stage}):`, result);
+    return true;
+  } catch (error) {
+    console.error(`[Founder] Failed to send notification (${stage}):`, error);
+    return false;
+  }
+}
+
+/**
  * Send results email to the user with their scores, summary and next step
  */
 export async function sendClarityCheckResultsEmail(data: {

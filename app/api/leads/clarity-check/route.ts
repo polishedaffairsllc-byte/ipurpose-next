@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { rateLimit } from '@/lib/rate-limit-simple';
-import { scheduleEmailSequence, sendClarityCheckResultsEmail, ClarityCheckScores } from '@/lib/email-automation';
+import { scheduleEmailSequence, sendClarityCheckResultsEmail, sendFounderNotification, ClarityCheckScores } from '@/lib/email-automation';
 
 interface ClarityCheckRequest {
   name: string;
@@ -118,6 +118,21 @@ export async function POST(request: NextRequest) {
       } catch (resultsEmailError) {
         console.error('[CLARITY CHECK] Results email failed (non-blocking):', resultsEmailError);
       }
+    }
+
+    // Notify founder that email was captured (step 2 — now we know who this person is)
+    try {
+      await sendFounderNotification({
+        submissionId: clientSubmissionId || result.id || '',
+        scores: (scores as ClarityCheckScores) ?? { internalClarity: 0, readinessForSupport: 0, frictionBetweenInsightAndAction: 0, integrationAndMomentum: 0, totalScore: totalScore ?? 0 },
+        resultSummary: resultSummary || '',
+        email,
+        name,
+        identityType: identityType ?? null,
+        stage: 'email_captured',
+      });
+    } catch (founderNotifyError) {
+      console.error('[CLARITY CHECK] Founder step-2 notification failed (non-blocking):', founderNotifyError);
     }
 
     return NextResponse.json({

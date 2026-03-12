@@ -125,7 +125,6 @@ export default function ClarityCheckQuizPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: 'anonymous@ipurposesoul.com',
           responses,
           identityResponses: Object.values(identityResponses),
         }),
