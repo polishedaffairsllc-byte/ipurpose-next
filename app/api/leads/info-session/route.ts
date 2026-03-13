@@ -130,7 +130,7 @@ async function sendFounderInfoSessionNotification(
 ) {
   const resendApiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-  const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita.hamilton@polishedaffairsllc.com';
+  const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita@ipurposesoul.com';
 
   if (!resendApiKey) {
     console.warn('RESEND_API_KEY not configured. Founder notification will not be sent.');
