@@ -65,7 +65,7 @@ export default function SplashIntro({ children }: { children: React.ReactNode })
         {/* Video */}
         <video
           ref={videoRef}
-          src="/videos/intro-vid-2026.mp4"
+          src="/videos/www.ipurposesoul.com.mp4"
           autoPlay
           muted
           playsInline
