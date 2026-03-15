@@ -23,7 +23,6 @@ interface ResultsData {
 
 export default function ClarityCheckResultsPage() {
   const [results, setResults] = useState<ResultsData | null>(null);
-  const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [captureEmail, setCaptureEmail] = useState('');
   const [captureName, setCaptureName] = useState('');
   const [captureWebsite, setCaptureWebsite] = useState(''); // Honeypot
@@ -158,189 +157,206 @@ export default function ClarityCheckResultsPage() {
             </p>
           </div>
 
-          {/* Total Score */}
-          <div className="bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-lg p-12 mb-12 text-center">
+          {/* Total Score — always visible */}
+          <div className="bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-lg p-12 mb-8 text-center">
             <p className="text-lg font-marcellus opacity-90 mb-3">Total Score</p>
             <p className="text-6xl font-italiana mb-2">{results.scores.totalScore}</p>
             <p className="font-marcellus opacity-75">out of 35</p>
           </div>
 
-          {/* Dimension Scores */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-italiana text-warmCharcoal mb-8">Dimension Scores</h2>
-            <div className="scores-grid grid grid-cols-2 gap-6">
-              <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
-                  Internal Clarity
-                </p>
-                <p className="text-4xl font-italiana text-warmCharcoal mb-1">
-                  {results.scores.internalClarity}
-                </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
-              </div>
-
-              <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
-                  Readiness for Support
-                </p>
-                <p className="text-4xl font-italiana text-warmCharcoal mb-1">
-                  {results.scores.readinessForSupport}
-                </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
-              </div>
-
-              <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
-                  Friction Between Insight & Action
-                </p>
-                <p className="text-4xl font-italiana text-warmCharcoal mb-1">
-                  {results.scores.frictionBetweenInsightAndAction}
-                </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
-              </div>
-
-              <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                <p className="text-base font-italiana text-lavenderViolet text-center mb-2">
-                  Integration & Momentum
-                </p>
-                <p className="text-4xl font-italiana text-warmCharcoal mb-1">
-                  {results.scores.integrationAndMomentum}
-                </p>
-                <p className="text-xs font-marcellus text-warmCharcoal/50">out of 5</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Summary */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Summary</h2>
-            <div className="bg-warmCharcoal/5 border-l-4 border-lavenderViolet rounded-lg p-8">
-              <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
-                {results.resultSummary}
-              </p>
-            </div>
-          </div>
-
-          {/* Identity Type */}
+          {/* Identity Type — always visible */}
           {results.identityType && (
             <div className="mb-12">
               <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Identity Type</h2>
               <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-8 border-2 border-lavenderViolet/20">
-                <p className="text-3xl font-italiana text-warmCharcoal mb-4">{results.identityType}</p>
-                <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
-                  {results.identityType === 'Visionary' &&
-                    'You see possibilities others miss and inspire change. You lead transformation and pioneer new approaches with a focus on future impact.'}
-                  {results.identityType === 'Builder' &&
-                    'You get things done and build reliable systems. You create practical plans, execute systematically, and deliver sustainable results.'}
-                  {results.identityType === 'Nurturer' &&
-                    'You understand people and create supportive environments. You care deeply about relationships and nurture growth in yourself and others.'}
-                  {results.identityType === 'Strategist' &&
-                    'You think strategically and solve complex problems. You analyze data, optimize for the best outcomes, and develop winning strategies.'}
-                  {results.identityType === 'Creator' &&
-                    'You innovate and bring fresh perspectives. You explore creative possibilities, express your unique vision, and bring new ideas to life.'}
+                <p className="text-3xl font-italiana text-warmCharcoal mb-2">{results.identityType}</p>
+                <p className="text-warmCharcoal/60 font-marcellus text-sm">
+                  Enter your email below to unlock what this means for you and your personalized next steps.
                 </p>
               </div>
             </div>
           )}
 
-          {/* Next Step */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Next Step</h2>
-            <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-8">
-              <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
-                {results.nextStep}
-              </p>
-            </div>
-          </div>
+          {/* Locked preview — blurred until email submitted */}
+          {!captureSubmitted && (
+            <div className="relative mb-12">
+              {/* Blurred content */}
+              <div style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none' }} aria-hidden="true">
+                <div className="mb-10">
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-8">Dimension Scores</h2>
+                  <div className="scores-grid grid grid-cols-2 gap-6">
+                    {['Internal Clarity', 'Readiness for Support', 'Friction Between Insight & Action', 'Integration & Momentum'].map((label) => (
+                      <div key={label} className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
+                        <p className="text-base font-italiana text-lavenderViolet text-center mb-2">{label}</p>
+                        <p className="text-4xl font-italiana text-warmCharcoal mb-1">—</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="mb-10">
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Summary</h2>
+                  <div className="bg-warmCharcoal/5 border-l-4 border-lavenderViolet rounded-lg p-8">
+                    <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
+                      Your personalized summary reveals where you are right now and what's keeping you from moving forward with clarity and confidence.
+                    </p>
+                  </div>
+                </div>
+                <div className="mb-10">
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Next Step</h2>
+                  <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-8">
+                    <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
+                      Your next step is a specific, personalized action designed to help you move from insight to momentum right now.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-          {/* CTA and Email Capture */}
-          <div className="print-hide text-center pt-8 space-y-6">
-            {!showEmailCapture && !captureSubmitted && (
-              <button
-                onClick={() => setShowEmailCapture(true)}
-                className="inline-block px-8 py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-lg hover:opacity-90 transition-opacity"
-              >
-                Get My Full Results + Next Steps
-              </button>
-            )}
-
-            {showEmailCapture && !captureSubmitted && (
-              <div className="max-w-md mx-auto bg-gradient-to-br from-lavenderViolet/5 to-salmonPeach/5 rounded-2xl p-6 sm:p-8 border border-lavenderViolet/10">
-                <h3 className="text-2xl font-italiana text-warmCharcoal mb-3">
-                  Get Your Personalized Next Steps
-                </h3>
-                <p className="text-warmCharcoal/70 font-marcellus mb-6">
-                  Enter your email to download your results and get your personalized next steps.
-                </p>
-                <form onSubmit={handleEmailCapture} className="space-y-4">
-                  <input
-                    type="text"
-                    required
-                    value={captureName}
-                    onChange={(e) => setCaptureName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
-                    placeholder="Your name"
-                  />
-                  <input
-                    type="email"
-                    required
-                    value={captureEmail}
-                    onChange={(e) => setCaptureEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
-                    placeholder="your@email.com"
-                  />
-                  {/* Honeypot field */}
-                  <div style={{ display: 'none' }}>
+              {/* Unlock overlay */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-white/95 rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 border border-lavenderViolet/20">
+                  <p className="text-2xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
+                  <p className="text-warmCharcoal/70 font-marcellus text-sm mb-6 text-center">
+                    Enter your email to receive your dimension breakdown, personalized summary, and next steps — free.
+                  </p>
+                  <form onSubmit={handleEmailCapture} className="space-y-4">
                     <input
                       type="text"
-                      value={captureWebsite}
-                      onChange={(e) => setCaptureWebsite(e.target.value)}
-                      autoComplete="off"
-                      tabIndex={-1}
+                      required
+                      value={captureName}
+                      onChange={(e) => setCaptureName(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
+                      placeholder="Your name"
                     />
+                    <input
+                      type="email"
+                      required
+                      value={captureEmail}
+                      onChange={(e) => setCaptureEmail(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
+                      placeholder="your@email.com"
+                    />
+                    {/* Honeypot field */}
+                    <div style={{ display: 'none' }}>
+                      <input
+                        type="text"
+                        value={captureWebsite}
+                        onChange={(e) => setCaptureWebsite(e.target.value)}
+                        autoComplete="off"
+                        tabIndex={-1}
+                      />
+                    </div>
+                    {captureError && (
+                      <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{captureError}</div>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={captureLoading}
+                      className="w-full px-6 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ background: 'linear-gradient(to right, #9C88FF, #4B4E6D)' }}
+                    >
+                      {captureLoading ? 'Sending...' : 'Send My Full Results →'}
+                    </button>
+                    <p className="text-xs text-warmCharcoal/40 font-marcellus text-center">No spam. Unsubscribe anytime.</p>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Full results — shown after email submitted */}
+          {captureSubmitted && (
+            <>
+              {/* Dimension Scores */}
+              <div className="mb-12">
+                <h2 className="text-2xl font-italiana text-warmCharcoal mb-8">Dimension Scores</h2>
+                <div className="scores-grid grid grid-cols-2 gap-6">
+                  <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
+                    <p className="text-base font-italiana text-lavenderViolet text-center mb-2">Internal Clarity</p>
+                    <p className="text-4xl font-italiana text-warmCharcoal mb-1">{results.scores.internalClarity}</p>
+                    <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
                   </div>
-                  {captureError && (
-                    <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{captureError}</div>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={captureLoading}
-                    className="w-full px-6 py-3 rounded-full font-marcellus text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))' }}
-                  >
-                    {captureLoading ? 'Sending...' : 'Send My Results'}
-                  </button>
-                </form>
+                  <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
+                    <p className="text-base font-italiana text-lavenderViolet text-center mb-2">Readiness for Support</p>
+                    <p className="text-4xl font-italiana text-warmCharcoal mb-1">{results.scores.readinessForSupport}</p>
+                    <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
+                  </div>
+                  <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
+                    <p className="text-base font-italiana text-lavenderViolet text-center mb-2">Friction Between Insight & Action</p>
+                    <p className="text-4xl font-italiana text-warmCharcoal mb-1">{results.scores.frictionBetweenInsightAndAction}</p>
+                    <p className="text-xs font-marcellus text-warmCharcoal/50">out of 10</p>
+                  </div>
+                  <div className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
+                    <p className="text-base font-italiana text-lavenderViolet text-center mb-2">Integration & Momentum</p>
+                    <p className="text-4xl font-italiana text-warmCharcoal mb-1">{results.scores.integrationAndMomentum}</p>
+                    <p className="text-xs font-marcellus text-warmCharcoal/50">out of 5</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Identity Type full blurb */}
+              {results.identityType && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">What Your Identity Type Means</h2>
+                  <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-8 border-2 border-lavenderViolet/20">
+                    <p className="text-3xl font-italiana text-warmCharcoal mb-4">{results.identityType}</p>
+                    <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
+                      {results.identityType === 'Visionary' && 'You see possibilities others miss and inspire change. You lead transformation and pioneer new approaches with a focus on future impact.'}
+                      {results.identityType === 'Builder' && 'You get things done and build reliable systems. You create practical plans, execute systematically, and deliver sustainable results.'}
+                      {results.identityType === 'Nurturer' && 'You understand people and create supportive environments. You care deeply about relationships and nurture growth in yourself and others.'}
+                      {results.identityType === 'Strategist' && 'You think strategically and solve complex problems. You analyze data, optimize for the best outcomes, and develop winning strategies.'}
+                      {results.identityType === 'Creator' && 'You innovate and bring fresh perspectives. You explore creative possibilities, express your unique vision, and bring new ideas to life.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Summary */}
+              <div className="mb-12">
+                <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Summary</h2>
+                <div className="bg-warmCharcoal/5 border-l-4 border-lavenderViolet rounded-lg p-8">
+                  <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">{results.resultSummary}</p>
+                </div>
+              </div>
+
+              {/* Next Step */}
+              <div className="mb-12">
+                <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Next Step</h2>
+                <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-8">
+                  <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">{results.nextStep}</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* CTA section */}
+          <div className="print-hide text-center pt-4 space-y-6">
+            {captureSubmitted && (
+              <div className="max-w-md mx-auto bg-green-50 border border-green-200 rounded-lg p-4 text-green-700 font-marcellus mb-4">
+                ✓ Check your inbox! Your full results and personalized next steps are on the way.
+              </div>
+            )}
+
+            {/* Starter Pack Offer — shown after email submitted */}
+            {captureSubmitted && (
+              <div className="max-w-md mx-auto bg-gradient-to-br from-lavenderViolet/10 to-salmonPeach/10 rounded-2xl p-6 sm:p-8 border border-lavenderViolet/20">
+                <h3 className="text-2xl font-italiana text-warmCharcoal mb-3">
+                  Ready to Turn Insight Into Action?
+                </h3>
+                <p className="text-warmCharcoal/70 font-marcellus mb-2">
+                  The iPurpose Starter Pack gives you the tools, templates, and clarity framework to move
+                  from where you are to where you want to be.
+                </p>
+                <p className="text-3xl font-italiana text-lavenderViolet mb-4">$27</p>
+                <a
+                  href="/starter-pack"
+                  className="inline-block w-full px-8 py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-lg hover:opacity-90 transition-opacity text-center"
+                >
+                  Get the Starter Pack →
+                </a>
               </div>
             )}
 
             {captureSubmitted && (
-              <div className="space-y-6">
-                <div className="max-w-md mx-auto bg-green-50 border border-green-200 rounded-lg p-4 text-green-700 font-marcellus">
-                  ✓ Check your inbox! Your full results and personalized next steps are on the way.
-                </div>
-
-                {/* Starter Pack Offer */}
-                <div className="max-w-md mx-auto bg-gradient-to-br from-lavenderViolet/10 to-salmonPeach/10 rounded-2xl p-6 sm:p-8 border border-lavenderViolet/20">
-                  <h3 className="text-2xl font-italiana text-warmCharcoal mb-3">
-                    Ready to Turn Insight Into Action?
-                  </h3>
-                  <p className="text-warmCharcoal/70 font-marcellus mb-2">
-                    The iPurpose Starter Pack gives you the tools, templates, and clarity framework to move
-                    from where you are to where you want to be.
-                  </p>
-                  <p className="text-3xl font-italiana text-lavenderViolet mb-4">$27</p>
-                  <a
-                    href="/starter-pack"
-                    className="inline-block w-full px-8 py-4 bg-gradient-to-r from-lavenderViolet to-indigoDeep text-white rounded-full font-marcellus text-lg hover:opacity-90 transition-opacity text-center"
-                  >
-                    Get the Starter Pack →
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {!captureSubmitted && (
               <button
                 onClick={() => window.print()}
                 className="inline-block px-8 py-4 bg-warmCharcoal text-white rounded-full font-marcellus text-lg hover:opacity-90 transition-opacity"
