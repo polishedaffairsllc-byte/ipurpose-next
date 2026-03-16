@@ -228,69 +228,7 @@ export default function ClarityCheckResultsPage() {
             </div>
           )}
 
-          {/* Email Capture Modal */}
-          {modalOpen && !captureSubmitted && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              style={{ backgroundColor: 'rgba(42, 42, 42, 0.6)', backdropFilter: 'blur(4px)' }}
-            >
-              <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
-                {/* Close button — only decorative; doesn't unlock, just reopens if needed */}
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="absolute top-4 right-4 text-warmCharcoal/40 hover:text-warmCharcoal/70 transition-colors text-2xl leading-none"
-                  aria-label="Close"
-                >
-                  ✕
-                </button>
 
-                <p className="text-3xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
-                <p className="text-warmCharcoal/70 font-marcellus text-sm mb-6 text-center">
-                  Enter your email to receive your dimension breakdown, personalized summary, and next steps — free.
-                </p>
-                <form onSubmit={handleEmailCapture} className="space-y-4">
-                  <input
-                    type="text"
-                    required
-                    value={captureName}
-                    onChange={(e) => setCaptureName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
-                    placeholder="Your name"
-                  />
-                  <input
-                    type="email"
-                    required
-                    value={captureEmail}
-                    onChange={(e) => setCaptureEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
-                    placeholder="your@email.com"
-                  />
-                  {/* Honeypot field */}
-                  <div style={{ display: 'none' }}>
-                    <input
-                      type="text"
-                      value={captureWebsite}
-                      onChange={(e) => setCaptureWebsite(e.target.value)}
-                      autoComplete="off"
-                      tabIndex={-1}
-                    />
-                  </div>
-                  {captureError && (
-                    <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{captureError}</div>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={captureLoading}
-                    className="w-full px-6 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ background: 'linear-gradient(to right, #9C88FF, #4B4E6D)' }}
-                  >
-                    {captureLoading ? 'Sending...' : 'Send My Full Results →'}
-                  </button>
-                  <p className="text-xs text-warmCharcoal/40 font-marcellus text-center">No spam. Unsubscribe anytime.</p>
-                </form>
-              </div>
-            </div>
-          )}
 
           {/* Full results — shown after email submitted */}
           {captureSubmitted && (
@@ -396,6 +334,69 @@ export default function ClarityCheckResultsPage() {
           </div>
         </div>
       </div>
+
+      {/* Email Capture Modal — rendered at root level so fixed positioning is never clipped */}
+      {modalOpen && !captureSubmitted && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(42, 42, 42, 0.6)', backdropFilter: 'blur(4px)' }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+            <button
+              onClick={() => setModalOpen(false)}
+              className="absolute top-4 right-4 text-warmCharcoal/40 hover:text-warmCharcoal/70 transition-colors text-2xl leading-none"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <p className="text-3xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
+            <p className="text-warmCharcoal/70 font-marcellus text-sm mb-6 text-center">
+              Enter your email to receive your dimension breakdown, personalized summary, and next steps — free.
+            </p>
+            <form onSubmit={handleEmailCapture} className="space-y-4">
+              <input
+                type="text"
+                required
+                value={captureName}
+                onChange={(e) => setCaptureName(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
+                placeholder="Your name"
+              />
+              <input
+                type="email"
+                required
+                value={captureEmail}
+                onChange={(e) => setCaptureEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
+                placeholder="your@email.com"
+              />
+              {/* Honeypot field */}
+              <div style={{ display: 'none' }}>
+                <input
+                  type="text"
+                  value={captureWebsite}
+                  onChange={(e) => setCaptureWebsite(e.target.value)}
+                  autoComplete="off"
+                  tabIndex={-1}
+                />
+              </div>
+              {captureError && (
+                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{captureError}</div>
+              )}
+              <button
+                type="submit"
+                disabled={captureLoading}
+                className="w-full px-6 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: 'linear-gradient(to right, #9C88FF, #4B4E6D)' }}
+              >
+                {captureLoading ? 'Sending...' : 'Send My Full Results →'}
+              </button>
+              <p className="text-xs text-warmCharcoal/40 font-marcellus text-center">No spam. Unsubscribe anytime.</p>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
