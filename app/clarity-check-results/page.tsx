@@ -177,88 +177,86 @@ export default function ClarityCheckResultsPage() {
             </div>
           )}
 
-          {/* Locked preview — blurred until email submitted */}
+          {/* Locked preview — blurred teaser + email form below */}
           {!captureSubmitted && (
-            <div className="relative mb-12">
-              {/* Blurred content */}
-              <div style={{ filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none' }} aria-hidden="true">
-                <div className="mb-10">
-                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-8">Dimension Scores</h2>
-                  <div className="scores-grid grid grid-cols-2 gap-6">
+            <div className="mb-12">
+              {/* Blurred content teaser */}
+              <div style={{ filter: 'blur(5px)', pointerEvents: 'none', userSelect: 'none' }} aria-hidden="true" className="mb-2">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-4">Dimension Scores</h2>
+                  <div className="scores-grid grid grid-cols-2 gap-4">
                     {['Internal Clarity', 'Readiness for Support', 'Friction Between Insight & Action', 'Integration & Momentum'].map((label) => (
-                      <div key={label} className="bg-warmCharcoal/5 rounded-lg p-6 border border-warmCharcoal/10">
-                        <p className="text-base font-italiana text-lavenderViolet text-center mb-2">{label}</p>
-                        <p className="text-4xl font-italiana text-warmCharcoal mb-1">—</p>
+                      <div key={label} className="bg-warmCharcoal/5 rounded-lg p-4 border border-warmCharcoal/10">
+                        <p className="text-sm font-italiana text-lavenderViolet text-center mb-1">{label}</p>
+                        <p className="text-3xl font-italiana text-warmCharcoal">—</p>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div className="mb-10">
-                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Summary</h2>
-                  <div className="bg-warmCharcoal/5 border-l-4 border-lavenderViolet rounded-lg p-8">
-                    <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-3">Your Summary</h2>
+                  <div className="bg-warmCharcoal/5 border-l-4 border-lavenderViolet rounded-lg p-6">
+                    <p className="text-base text-warmCharcoal font-marcellus leading-relaxed">
                       Your personalized summary reveals where you are right now and what's keeping you from moving forward with clarity and confidence.
                     </p>
                   </div>
                 </div>
-                <div className="mb-10">
-                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-6">Your Next Step</h2>
-                  <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-8">
-                    <p className="text-lg text-warmCharcoal font-marcellus leading-relaxed">
+                <div>
+                  <h2 className="text-2xl font-italiana text-warmCharcoal mb-3">Your Next Step</h2>
+                  <div className="bg-gradient-to-r from-lavenderViolet/10 to-indigoDeep/10 rounded-lg p-6">
+                    <p className="text-base text-warmCharcoal font-marcellus leading-relaxed">
                       Your next step is a specific, personalized action designed to help you move from insight to momentum right now.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Unlock overlay */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-white/95 rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 border border-lavenderViolet/20">
-                  <p className="text-2xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
-                  <p className="text-warmCharcoal/70 font-marcellus text-sm mb-6 text-center">
-                    Enter your email to receive your dimension breakdown, personalized summary, and next steps — free.
-                  </p>
-                  <form onSubmit={handleEmailCapture} className="space-y-4">
+              {/* Email form — always visible below the blurred preview */}
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-lavenderViolet/20 mt-6">
+                <p className="text-2xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
+                <p className="text-warmCharcoal/70 font-marcellus text-sm mb-6 text-center">
+                  Enter your email to receive your dimension breakdown, personalized summary, and next steps — free.
+                </p>
+                <form onSubmit={handleEmailCapture} className="space-y-4">
+                  <input
+                    type="text"
+                    required
+                    value={captureName}
+                    onChange={(e) => setCaptureName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
+                    placeholder="Your name"
+                  />
+                  <input
+                    type="email"
+                    required
+                    value={captureEmail}
+                    onChange={(e) => setCaptureEmail(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
+                    placeholder="your@email.com"
+                  />
+                  {/* Honeypot field */}
+                  <div style={{ display: 'none' }}>
                     <input
                       type="text"
-                      required
-                      value={captureName}
-                      onChange={(e) => setCaptureName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
-                      placeholder="Your name"
+                      value={captureWebsite}
+                      onChange={(e) => setCaptureWebsite(e.target.value)}
+                      autoComplete="off"
+                      tabIndex={-1}
                     />
-                    <input
-                      type="email"
-                      required
-                      value={captureEmail}
-                      onChange={(e) => setCaptureEmail(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-lavenderViolet/20 bg-white text-warmCharcoal placeholder-warmCharcoal/50 focus:outline-none focus:ring-2 focus:ring-lavenderViolet/50 font-marcellus"
-                      placeholder="your@email.com"
-                    />
-                    {/* Honeypot field */}
-                    <div style={{ display: 'none' }}>
-                      <input
-                        type="text"
-                        value={captureWebsite}
-                        onChange={(e) => setCaptureWebsite(e.target.value)}
-                        autoComplete="off"
-                        tabIndex={-1}
-                      />
-                    </div>
-                    {captureError && (
-                      <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{captureError}</div>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={captureLoading}
-                      className="w-full px-6 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ background: 'linear-gradient(to right, #9C88FF, #4B4E6D)' }}
-                    >
-                      {captureLoading ? 'Sending...' : 'Send My Full Results →'}
-                    </button>
-                    <p className="text-xs text-warmCharcoal/40 font-marcellus text-center">No spam. Unsubscribe anytime.</p>
-                  </form>
-                </div>
+                  </div>
+                  {captureError && (
+                    <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{captureError}</div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={captureLoading}
+                    className="w-full px-6 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ background: 'linear-gradient(to right, #9C88FF, #4B4E6D)' }}
+                  >
+                    {captureLoading ? 'Sending...' : 'Send My Full Results →'}
+                  </button>
+                  <p className="text-xs text-warmCharcoal/40 font-marcellus text-center">No spam. Unsubscribe anytime.</p>
+                </form>
               </div>
             </div>
           )}
