@@ -29,6 +29,7 @@ export default function ClarityCheckResultsPage() {
   const [captureLoading, setCaptureLoading] = useState(false);
   const [captureSubmitted, setCaptureSubmitted] = useState(false);
   const [captureError, setCaptureError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function ClarityCheckResultsPage() {
     try {
       const parsed: ResultsData = JSON.parse(stored);
       setResults(parsed);
+      setModalOpen(true); // Open email capture modal automatically
 
       // Fire Google Ads conversion tag — URL change is what Google Ads tracks,
       // but we also fire the event for belt-and-suspenders conversion measurement.
@@ -93,6 +95,7 @@ export default function ClarityCheckResultsPage() {
 
       if (data.ok) {
         setCaptureSubmitted(true);
+        setModalOpen(false);
         localStorage.setItem('clarityCheckCompleted', 'true');
         // Fire a second conversion event specifically for the email lead capture action
         if (typeof window !== 'undefined' && window.gtag) {
@@ -177,7 +180,7 @@ export default function ClarityCheckResultsPage() {
             </div>
           )}
 
-          {/* Locked preview — blurred teaser + email form below */}
+          {/* Locked preview — blurred teaser always visible */}
           {!captureSubmitted && (
             <div className="mb-12">
               {/* Blurred content teaser */}
@@ -211,9 +214,37 @@ export default function ClarityCheckResultsPage() {
                 </div>
               </div>
 
-              {/* Email form — always visible below the blurred preview */}
-              <div className="bg-white rounded-2xl shadow-lg p-8 border border-lavenderViolet/20 mt-6">
-                <p className="text-2xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
+              {/* Unlock button — opens modal */}
+              <div className="text-center mt-8">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="inline-block px-10 py-4 rounded-full font-marcellus text-white text-lg hover:opacity-90 transition-opacity"
+                  style={{ background: 'linear-gradient(to right, #9C88FF, #4B4E6D)' }}
+                >
+                  Unlock My Full Results →
+                </button>
+                <p className="text-xs text-warmCharcoal/40 font-marcellus mt-3">Free — no spam, unsubscribe anytime.</p>
+              </div>
+            </div>
+          )}
+
+          {/* Email Capture Modal */}
+          {modalOpen && !captureSubmitted && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              style={{ backgroundColor: 'rgba(42, 42, 42, 0.6)', backdropFilter: 'blur(4px)' }}
+            >
+              <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+                {/* Close button — only decorative; doesn't unlock, just reopens if needed */}
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="absolute top-4 right-4 text-warmCharcoal/40 hover:text-warmCharcoal/70 transition-colors text-2xl leading-none"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+
+                <p className="text-3xl font-italiana text-warmCharcoal mb-2 text-center">Unlock Your Full Results</p>
                 <p className="text-warmCharcoal/70 font-marcellus text-sm mb-6 text-center">
                   Enter your email to receive your dimension breakdown, personalized summary, and next steps — free.
                 </p>

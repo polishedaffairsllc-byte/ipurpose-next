@@ -71,13 +71,16 @@ function generateSummary(scores: ReturnType<typeof calculateDimensionScores>) {
   let nextStep = '';
 
   // Determine overall profile and next step
-  // Updated thresholds for max score of 35: 29+ (high), 20-28 (medium), <20 (low)
-  if (totalScore >= 29) {
+  // Thresholds for max score of 35 (7 questions × 5):
+  //   High Clarity:   ≥ 26  (top ~third — scoring 3.7+ avg per question)
+  //   Mixed Clarity:  17–25 (middle ~third — scoring 2.4–3.6 avg)
+  //   Low Clarity:    < 17  (lower ~third — scoring < 2.4 avg)
+  if (totalScore >= 26) {
     summary =
       "You have real clarity and forward motion right now. Your direction feels grounded, and you're open to support. The next step is integration - turning what you already know into a steady rhythm.";
     detail = "You scored highly across all dimensions, showing strong internal clarity, readiness for support, and integration. This indicates you're in a good position to take aligned action.";
     nextStep = 'Choose one simple structure to protect your momentum this week (a weekly plan, a daily priority, or a decision filter).';
-  } else if (totalScore >= 20) {
+  } else if (totalScore >= 17) {
     summary =
       "You have insight, but there's a gap between knowing and doing. You can sense what needs to shift, and you're open to support. This isn't a knowledge problem - it's a structure and follow-through problem.";
     detail = "Your scores show clarity in some areas but friction in translating insight to action. With the right systems and support, you can bridge this gap.";
