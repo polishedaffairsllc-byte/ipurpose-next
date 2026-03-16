@@ -31,7 +31,12 @@ export default function ClarityCheckResultsPage() {
   const [captureSubmitted, setCaptureSubmitted] = useState(false);
   const [captureError, setCaptureError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // Read results stored by the quiz page
@@ -337,7 +342,7 @@ export default function ClarityCheckResultsPage() {
       </div>
 
       {/* Email Capture Modal — portalled to document.body so fixed positioning is never clipped */}
-      {modalOpen && !captureSubmitted && typeof document !== 'undefined' && createPortal(
+      {mounted && modalOpen && !captureSubmitted && createPortal(
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ backgroundColor: 'rgba(42, 42, 42, 0.6)', backdropFilter: 'blur(4px)' }}
