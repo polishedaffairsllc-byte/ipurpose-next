@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
@@ -335,8 +336,8 @@ export default function ClarityCheckResultsPage() {
         </div>
       </div>
 
-      {/* Email Capture Modal — rendered at root level so fixed positioning is never clipped */}
-      {modalOpen && !captureSubmitted && (
+      {/* Email Capture Modal — portalled to document.body so fixed positioning is never clipped */}
+      {modalOpen && !captureSubmitted && typeof document !== 'undefined' && createPortal(
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ backgroundColor: 'rgba(42, 42, 42, 0.6)', backdropFilter: 'blur(4px)' }}
@@ -396,7 +397,7 @@ export default function ClarityCheckResultsPage() {
             </form>
           </div>
         </div>
-      )}
+      , document.body)}
 
       <Footer />
     </div>
