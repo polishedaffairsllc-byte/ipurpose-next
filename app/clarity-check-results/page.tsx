@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
@@ -31,12 +30,7 @@ export default function ClarityCheckResultsPage() {
   const [captureSubmitted, setCaptureSubmitted] = useState(false);
   const [captureError, setCaptureError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     // Read results stored by the quiz page
@@ -341,16 +335,29 @@ export default function ClarityCheckResultsPage() {
         </div>
       </div>
 
-      {/* Email Capture Modal — portalled to document.body so fixed positioning is never clipped */}
-      {mounted && modalOpen && !captureSubmitted && createPortal(
+      {/* Email Capture Modal */}
+      {modalOpen && !captureSubmitted && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ backgroundColor: 'rgba(42, 42, 42, 0.6)', backdropFilter: 'blur(4px)' }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(42, 42, 42, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            zIndex: 9999,
+          }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+          <div style={{ backgroundColor: 'white', borderRadius: '16px', width: '100%', maxWidth: '448px', padding: '32px', position: 'relative', boxShadow: '0 25px 50px rgba(0,0,0,0.25)' }}>
             <button
               onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 text-warmCharcoal/40 hover:text-warmCharcoal/70 transition-colors text-2xl leading-none"
+              style={{ position: 'absolute', top: '16px', right: '16px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#aaa', lineHeight: 1 }}
               aria-label="Close"
             >
               ✕
@@ -402,7 +409,7 @@ export default function ClarityCheckResultsPage() {
             </form>
           </div>
         </div>
-      , document.body)}
+      )}
 
       <Footer />
     </div>
