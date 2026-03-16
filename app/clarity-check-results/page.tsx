@@ -45,16 +45,6 @@ export default function ClarityCheckResultsPage() {
       const parsed: ResultsData = JSON.parse(stored);
       setResults(parsed);
       setModalOpen(true); // Open email capture modal automatically
-
-      // Fire Google Ads conversion tag — URL change is what Google Ads tracks,
-      // but we also fire the event for belt-and-suspenders conversion measurement.
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'conversion', {
-          send_to: 'AW-17993147612/o_aWCOT7wYUcENzJ5oND',
-          value: 1.0,
-          currency: 'USD',
-        });
-      }
     } catch {
       router.replace('/clarity-check-quiz');
     }
@@ -97,7 +87,7 @@ export default function ClarityCheckResultsPage() {
         setCaptureSubmitted(true);
         setModalOpen(false);
         localStorage.setItem('clarityCheckCompleted', 'true');
-        // Fire a second conversion event specifically for the email lead capture action
+        // Fire Google Ads conversion — triggered on email submit only
         if (typeof window !== 'undefined' && window.gtag) {
           window.gtag('event', 'conversion', {
             send_to: 'AW-17993147612/o_aWCOT7wYUcENzJ5oND',
