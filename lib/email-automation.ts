@@ -404,20 +404,6 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
 
           <hr class="divider">
 
-          <p>Five days ago, you took the Clarity Check.<br>
-          You saw something.<br>
-          A recognition.<br>
-          A shift.<br>
-          A sense that the life you&rsquo;ve been fitting yourself into might not actually be yours.</p>
-
-          <p>Most people ignore that.<br>
-          They go back to what&rsquo;s familiar.<br>
-          They tell themselves they&rsquo;ll figure it out later.</p>
-
-          <p>But if you&rsquo;re still here&hellip; something in you didn&rsquo;t let it go.</p>
-
-          <hr class="divider">
-
           <p>That&rsquo;s where the Starter Pack comes in.</p>
 
           <p>Not a course.<br>
