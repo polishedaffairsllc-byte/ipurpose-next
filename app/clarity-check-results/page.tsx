@@ -45,6 +45,13 @@ export default function ClarityCheckResultsPage() {
       const parsed: ResultsData = JSON.parse(stored);
       setResults(parsed);
       setModalOpen(true); // Open email capture modal automatically
+
+      // Fire "Clarity Check Completed" Google Ads conversion — triggers on results page load
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-17993147612/iHOfCOzks4ocENzJ5oND',
+        });
+      }
     } catch {
       router.replace('/clarity-check-quiz');
     }
