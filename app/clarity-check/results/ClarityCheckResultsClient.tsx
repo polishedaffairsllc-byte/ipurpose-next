@@ -114,7 +114,7 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
       <div className="print-hide sticky top-0 bg-white/95 backdrop-blur-sm border-b border-warmCharcoal/10 z-50">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
           <a
-            href="/clarity-check-numeric"
+            href="/clarity-check-quiz"
             className="text-warmCharcoal font-marcellus hover:text-lavenderViolet transition-colors"
           >
             ← Back

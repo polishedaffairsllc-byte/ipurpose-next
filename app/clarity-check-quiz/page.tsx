@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
@@ -11,6 +11,7 @@ export default function ClarityCheckQuizPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const identityQuestions = [
     {
@@ -156,7 +157,9 @@ export default function ClarityCheckQuizPage() {
       localStorage.setItem('clarityCheckCompleted', 'true');
 
       // Navigate to the dedicated results URL — this is what Google Ads tracks as a conversion
-      router.push('/clarity-check-results');
+      // Preserve gclid and UTM params so GA4 / Google Ads attribution is not lost
+      const qs = searchParams.toString();
+      router.push(qs ? `/clarity-check-results?${qs}` : '/clarity-check-results');
     } catch (err) {
       setError('An error occurred. Please try again.');
       console.error(err);

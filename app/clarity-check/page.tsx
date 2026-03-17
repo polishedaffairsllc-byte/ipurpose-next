@@ -1,8 +1,14 @@
+'use client';
+
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
 export default function ClarityCheckPage() {
+  const searchParams = useSearchParams();
+  const qs = searchParams.toString();
+  const ctaHref = qs ? `/clarity-check-quiz?${qs}` : '/clarity-check-quiz';
   return (
     <div className="relative min-h-screen bg-white">
       {/* Public Header */}
@@ -49,7 +55,7 @@ export default function ClarityCheckPage() {
 
           {/* Primary CTA — large, unmissable, with pulse glow */}
           <Link
-            href="/clarity-check-numeric"
+            href={ctaHref}
             className="mt-2 inline-block w-full max-w-md px-8 py-4 sm:py-5 rounded-full font-marcellus text-white text-center text-lg sm:text-xl font-bold tracking-wide hover:scale-[1.03] hover:opacity-95 active:scale-100 transition-all animate-[ctaPulse_2s_ease-in-out_infinite]"
             style={{ background: 'linear-gradient(135deg, #9C88FF 0%, #b8a9ff 100%)' }}
           >
