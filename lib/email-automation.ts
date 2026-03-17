@@ -5,16 +5,8 @@
  */
 
 import { firebaseAdmin } from './firebaseAdmin';
-import nodemailer from 'nodemailer';
 
-// Email configuration
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD?.replace(/\s/g, ''), // Remove spaces from app password
-  },
-});
+const FROM_ADDRESS = 'iPurpose <renita@ipurposesoul.com>';
 
 interface ClarityCheckEmailData {
   email: string;
@@ -332,8 +324,10 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
   `;
 
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: FROM_ADDRESS,
       to: email,
       subject: '✨ Your Clarity Check Results Are Ready',
       html: htmlContent,
@@ -352,100 +346,96 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
 export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailData) {
   const { email, name } = data;
 
+  const expiryDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="UTF-8">
         <style>
-          body { font-family: 'Marcellus', serif; line-height: 1.6; color: #2A2A2A; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { text-align: center; padding: 30px 20px; background: linear-gradient(to right, rgba(156, 136, 255, 0.1), rgba(252, 196, 183, 0.1)); border-radius: 12px; margin-bottom: 30px; }
-          .header h1 { color: #9C88FF; margin: 0; font-size: 32px; }
-          .header p { color: #4B4E6D; margin: 10px 0 0 0; font-size: 16px; }
-          .content { padding: 0; }
-          .content h2 { color: #4B4E6D; font-size: 22px; margin-top: 0; }
-          .content p { font-size: 16px; color: #2A2A2A; margin: 12px 0; }
-          .offer-box { 
-            background: rgba(156, 136, 255, 0.08); 
-            border: 2px solid #9C88FF; 
-            padding: 25px; 
-            border-radius: 12px; 
-            margin: 25px 0;
-            text-align: center;
-          }
-          .price-original { font-size: 18px; color: #4B4E6D; text-decoration: line-through; margin: 0; }
-          .price-founders { font-size: 42px; color: #9C88FF; font-weight: bold; margin: 10px 0; font-family: 'Italiana', serif; }
-          .offer-expires { font-size: 14px; color: #E74C3C; font-weight: bold; margin-top: 15px; }
-          .benefit-list { margin: 20px 0; text-align: left; }
-          .benefit-list li { margin: 10px 0; font-size: 16px; }
-          .cta-button { 
-            display: inline-block; 
-            background: linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.6));
-            color: white; 
-            padding: 16px 40px; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 20px;
-          }
-          .urgency { background: rgba(231, 76, 60, 0.05); border-left: 4px solid #E74C3C; padding: 15px; margin: 20px 0; }
-          .urgency p { margin: 0; font-size: 14px; color: #E74C3C; }
-          .footer { text-align: center; padding-top: 30px; border-top: 1px solid #E6C87C; font-size: 12px; color: #4B4E6D; }
-          .footer p { margin: 5px 0; }
+          body { font-family: Georgia, 'Times New Roman', serif; line-height: 1.9; color: #2A2A2A; background: #fff; }
+          .container { max-width: 580px; margin: 0 auto; padding: 48px 24px; }
+          p { font-size: 16px; margin: 0 0 16px 0; }
+          .offer { background: rgba(156, 136, 255, 0.06); border: 1px solid #9C88FF; border-radius: 10px; padding: 24px 28px; margin: 32px 0; }
+          .offer p { margin: 4px 0; }
+          .price { font-size: 28px; color: #9C88FF; font-weight: bold; margin: 8px 0 4px !important; }
+          .expires { font-size: 13px; color: #E74C3C; margin-top: 8px !important; }
+          .cta { display: inline-block; background: #9C88FF; color: #fff; padding: 14px 36px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 16px; margin: 24px 0; }
+          .divider { border: none; border-top: 1px solid #ede8f7; margin: 28px 0; }
+          .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #ede8f7; font-size: 12px; color: #bbb; text-align: center; }
+          .footer a { color: #9C88FF; text-decoration: none; }
         </style>
       </head>
       <body>
         <div class="container">
-          <div class="header">
-            <h1>The Clarity → Action Bridge</h1>
-            <p>A Founder's Special Rate (Just for You)</p>
+          <p>Hey ${name},</p>
+
+          <p>A few years ago, I lost my job.</p>
+
+          <p>And instead of just finding a new one, I spent a year trying to become what everyone else needed me to be.</p>
+
+          <p>
+            Different r&eacute;sum&eacute;.<br>
+            Different pitch.<br>
+            A different version of me &mdash; shaped around what fit <em>their</em> story.
+          </p>
+
+          <p>It was exhausting.<br>
+          And honestly&hellip; it wasn&rsquo;t working.</p>
+
+          <p>Then something shifted.</p>
+
+          <p>I stopped asking, &ldquo;what do they need?&rdquo;<br>
+          and started asking, &ldquo;what is actually mine to do?&rdquo;</p>
+
+          <p>That question changed everything.</p>
+
+          <p>iPurpose wasn&rsquo;t built as a brand. It came out of a moment &mdash; sitting in my car after another interview, wondering, &ldquo;Is there more for me than this?&rdquo; I knew I wasn&rsquo;t the only one asking that.</p>
+
+          <hr class="divider">
+
+          <p>Five days ago, you took the Clarity Check.<br>
+          You saw something.<br>
+          A recognition.<br>
+          A shift.<br>
+          A sense that the life you&rsquo;ve been fitting yourself into might not actually be yours.</p>
+
+          <p>Most people ignore that.<br>
+          They go back to what&rsquo;s familiar.<br>
+          They tell themselves they&rsquo;ll figure it out later.</p>
+
+          <p>But if you&rsquo;re still here&hellip; something in you didn&rsquo;t let it go.</p>
+
+          <hr class="divider">
+
+          <p>That&rsquo;s where the Starter Pack comes in.</p>
+
+          <p>Not a course.<br>
+          Not more information.<br>
+          It&rsquo;s the bridge between what you felt&hellip; and what you do with it.</p>
+
+          <div class="offer">
+            <p>For the next 7 days, I&rsquo;ve opened a founder&rsquo;s rate:</p>
+            <p class="price">$27 <span style="font-size:16px; color:#999; font-weight:normal; text-decoration:line-through;">$47</span></p>
+            <p class="expires">⏰ Available until ${expiryDate}</p>
           </div>
 
-          <div class="content">
-            <p>Hi ${name},</p>
+          <p style="text-align:center;">
+            <a href="https://ipurposesoul.com/starter-pack" class="cta">Step into the Starter Pack &rarr;</a>
+          </p>
 
-            <p>Five days ago, you took the Clarity Check. You learned where you stand—and maybe you're thinking about what comes next.</p>
+          <p>If that tug you felt during the Clarity Check is still there, this is your next step.</p>
 
-            <p>Here's the thing: clarity without a bridge to action stays stuck. The Starter Pack is that bridge.</p>
-
-            <div class="offer-box">
-              <p class="price-original">Regular price: $47</p>
-              <p class="price-founders">$27</p>
-              <p style="margin: 15px 0 0 0; font-size: 16px; color: #4B4E6D;"><strong>Founder's Rate</strong> — For early believers</p>
-              <p class="offer-expires">⏰ Expires in 7 Days</p>
-            </div>
-
-            <h2>What You Get:</h2>
-            <ul class="benefit-list">
-              <li>✓ The 7-Step Clarity Framework (workbook + video)</li>
-              <li>✓ Your personal Digital Insight Sheet (downloadable)</li>
-              <li>✓ The "Foundation to Action" integration guide</li>
-              <li>✓ Access to the iPurpose Labs (exclusive resources)</li>
-            </ul>
-
-            <p><strong>Why this matters:</strong> Most people understand themselves but never move the needle. The Starter Pack bridges that gap with a practical framework you can implement immediately.</p>
-
-            <div class="urgency">
-              <p><strong>⏰ 7-Day Founder's Rate Expires On:</strong> [DATE]</p>
-              <p style="margin-top: 8px;">After that, it returns to $47. This price is reserved for people who take action now.</p>
-            </div>
-
-            <p style="text-align: center; margin-top: 40px;">
-              <a href="https://ipurposesoul.com/starter-pack" class="cta-button">
-                Get the Founder's Rate →
-              </a>
-            </p>
-
-            <p style="margin-top: 30px; font-size: 14px; color: #4B4E6D; text-align: center;">
-              Questions? Reply to this email. I read every response.
-            </p>
-          </div>
+          <p>&mdash; Renita</p>
 
           <div class="footer">
-            <p>© iPurpose Soul — Where Inner Alignment Becomes Coherent Action</p>
-            <p><a href="https://ipurposesoul.com" style="color: #9C88FF; text-decoration: none;">ipurposesoul.com</a></p>
+            <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
           </div>
         </div>
       </body>
@@ -453,10 +443,12 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
   `;
 
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: FROM_ADDRESS,
       to: email,
-      subject: "⏰ Your Founder's Rate is Ready ($27 for 7 Days)",
+      subject: "🪞 I almost missed this about myself",
       html: htmlContent,
     });
     console.log(`[Email] Day 5 Founder's Rate sent to ${email}`);

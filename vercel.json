@@ -2,6 +2,12 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
+  "crons": [
+    {
+      "path": "/api/tasks/send-scheduled-emails",
+      "schedule": "0 14 * * *"
+    }
+  ],
   "framework": "nextjs",
   "outputDirectory": ".next",
   "regions": ["iad1"],

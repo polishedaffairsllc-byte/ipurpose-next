@@ -1,26 +1,42 @@
 /**
- * Email scheduler - runs periodically to send scheduled emails
- * This should be called via a Cloud Function or scheduled task (e.g., Cloud Scheduler)
- * 
- * Example: POST /api/tasks/send-scheduled-emails
- * This could be triggered by Cloud Scheduler every hour
+ * Email scheduler - triggered daily by Vercel Cron.
+ *
+ * Vercel Cron sends a GET request with:
+ *   Authorization: Bearer <CRON_SECRET>
+ *
+ * Manual testing is still possible via POST with:
+ *   Authorization: Bearer <SCHEDULER_SECRET_TOKEN>
+ *
+ * Setup:
+ *   - Add CRON_SECRET to Vercel project env vars (Vercel populates this automatically
+ *     when you add a cron job if you don't set it yourself — but set it explicitly).
+ *   - Keep SCHEDULER_SECRET_TOKEN in .env.local for local/manual testing only.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { sendClarityCheckFoundersRateEmail } from '@/lib/email-automation';
 
-export async function POST(request: NextRequest) {
-  try {
-    // Verify this is called from Cloud Scheduler or internal service
-    const authToken = request.headers.get('authorization');
-    const expectedToken = process.env.SCHEDULER_SECRET_TOKEN;
+function isAuthorized(request: NextRequest): boolean {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader) return false;
 
-    if (!expectedToken || authToken !== `Bearer ${expectedToken}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+  const cronSecret = process.env.CRON_SECRET;
+  const manualToken = process.env.SCHEDULER_SECRET_TOKEN;
+
+  // Primary: Vercel Cron uses CRON_SECRET
+  if (cronSecret && authHeader === `Bearer ${cronSecret}`) return true;
+
+  // Fallback: manual testing uses SCHEDULER_SECRET_TOKEN
+  if (manualToken && authHeader === `Bearer ${manualToken}`) return true;
+
+  return false;
+}
+
+async function runScheduler(request: NextRequest): Promise<NextResponse> {
+  try {
+    if (!isAuthorized(request)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const now = new Date();
@@ -111,11 +127,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[SCHEDULER] Unexpected error:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: String(error),
-      },
+      { success: false, error: String(error) },
       { status: 500 }
     );
   }
 }
+
+// Vercel Cron calls GET; manual testing can use POST
+export const GET = runScheduler;
+export const POST = runScheduler;
