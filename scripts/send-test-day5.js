@@ -20,6 +20,7 @@ const FROM_ADDRESS = 'iPurpose <renita@ipurposesoul.com>';
 
 const email = 'mshmltn@gmail.com';
 const name = 'Renita';
+const firstName = name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase();
 
 const expiryDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
   weekday: 'long',
@@ -49,7 +50,7 @@ const htmlContent = `
       </head>
       <body>
         <div class="container">
-          <p>Hey ${name},</p>
+          <p>Hey ${firstName},</p>
 
           <p>A few years ago, I lost my job.</p>
 

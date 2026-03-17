@@ -173,7 +173,7 @@ export async function sendClarityCheckResultsEmail(data: {
             <p>Where you are right now — ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
           <div class="content">
-            <p>Hi ${name},</p>
+            <p>Hi ${name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase()},</p>
             <p>Here are your full results from the Clarity Check.</p>
 
             <div class="total-score">
@@ -239,6 +239,7 @@ interface ClarityCheckEmailData {
  */
 export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData) {
   const { email, name, submissionId, identityType } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -278,7 +279,7 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
           </div>
 
           <div class="content">
-            <p>Hi ${name},</p>
+            <p>Hi ${firstName},</p>
 
             <p>Thank you for taking the Clarity Check. This wasn't just a quiz—it was an act of commitment to understanding yourself more deeply.</p>
 
@@ -347,6 +348,7 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
  */
 export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailData) {
   const { email, name } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';
 
   const expiryDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
     weekday: 'long',
@@ -376,7 +378,7 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
       </head>
       <body>
         <div class="container">
-          <p>Hey ${name},</p>
+          <p>Hey ${firstName},</p>
 
           <p>A few years ago, I lost my job.</p>
 
