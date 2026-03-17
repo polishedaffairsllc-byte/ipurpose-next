@@ -102,7 +102,7 @@ const htmlContent = `
           </div>
 
           <p style="text-align:center;">
-            <a href="https://ipurposesoul.com/starter-pack" class="cta">Step into the Starter Pack &rarr;</a>
+            <a href="https://ipurposesoul.com/starter-pack?utm_source=email&utm_medium=day5&utm_campaign=founders_rate" class="cta">Step into the Starter Pack &rarr;</a>
           </p>
 
           <p>If that tug you felt during the Clarity Check is still there, this is your next step.</p>
