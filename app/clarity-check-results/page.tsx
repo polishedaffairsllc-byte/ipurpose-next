@@ -45,13 +45,6 @@ export default function ClarityCheckResultsPage() {
       const parsed: ResultsData = JSON.parse(stored);
       setResults(parsed);
       setModalOpen(true); // Open email capture modal automatically
-
-      // Fire "Clarity Check Completed" Google Ads conversion — triggers on results page load
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'conversion', {
-          send_to: 'AW-17993147612/iHOfCOzks4ocENzJ5oND',
-        });
-      }
     } catch {
       router.replace('/clarity-check-quiz');
     }
@@ -94,8 +87,13 @@ export default function ClarityCheckResultsPage() {
         setCaptureSubmitted(true);
         setModalOpen(false);
         localStorage.setItem('clarityCheckCompleted', 'true');
-        // Fire Google Ads conversion — triggered on email submit only
+        // Fire both Google Ads conversions on email submit only (stricter lead-only counting)
         if (typeof window !== 'undefined' && window.gtag) {
+          // "Clarity Check Completed" — counts only when a real lead is captured
+          window.gtag('event', 'conversion', {
+            send_to: 'AW-17993147612/iHOfCOzks4ocENzJ5oND',
+          });
+          // "Submit Lead Form" — primary lead value conversion
           window.gtag('event', 'conversion', {
             send_to: 'AW-17993147612/o_aWCOT7wYUcENzJ5oND',
             value: 1.0,
