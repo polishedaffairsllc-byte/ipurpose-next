@@ -63,8 +63,15 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
       if (task.type !== 'clarity_check_founders_rate') {
         continue;
       }
-      
-      if (!task.scheduledFor || task.scheduledFor > now) {
+
+      // Normalize scheduledFor — Firestore Timestamp or plain Date/string
+      const scheduledFor: Date | null = task.scheduledFor
+        ? typeof task.scheduledFor.toDate === 'function'
+          ? task.scheduledFor.toDate()
+          : new Date(task.scheduledFor)
+        : null;
+
+      if (!scheduledFor || scheduledFor > now) {
         continue;
       }
 
