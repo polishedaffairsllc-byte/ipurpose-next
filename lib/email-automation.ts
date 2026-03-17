@@ -210,8 +210,10 @@ export async function sendClarityCheckResultsEmail(data: {
   `;
 
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: FROM_ADDRESS,
       to: email,
       subject: '✨ Your iPurpose Clarity Check Results',
       html: htmlContent,
