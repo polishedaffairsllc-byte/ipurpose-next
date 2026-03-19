@@ -42,7 +42,7 @@ export default function ClarityCheckPage() {
             className="font-italiana text-lg sm:text-xl"
             style={{ color: 'rgba(255,255,255,0.8)', WebkitTextFillColor: 'rgba(255,255,255,0.8)' }}
           >
-            12 quick questions to unlock your next aligned step
+            12 quick questions to see where you&rsquo;re stuck and what direction actually fits you
           </p>
 
           {/* Friction-reducing proof points — prominent, right above CTA */}
@@ -53,13 +53,21 @@ export default function ClarityCheckPage() {
             No sign-up required&ensp;·&ensp;Just honest answers&ensp;·&ensp;100% free
           </p>
 
+          {/* Bridge line — speaks to career-mode visitors */}
+          <p
+            className="font-marcellus text-sm sm:text-base italic max-w-sm"
+            style={{ color: 'rgba(255,255,255,0.7)', WebkitTextFillColor: 'rgba(255,255,255,0.7)' }}
+          >
+            If you&rsquo;ve been Googling &ldquo;what career is right for me&rdquo; &mdash; this will tell you more than any job test will.
+          </p>
+
           {/* Primary CTA — large, unmissable, with pulse glow */}
           <Link
             href={ctaHref}
             className="mt-2 inline-block w-full max-w-md px-8 py-4 sm:py-5 rounded-full font-marcellus text-white text-center text-lg sm:text-xl font-bold tracking-wide hover:scale-[1.03] hover:opacity-95 active:scale-100 transition-all animate-[ctaPulse_2s_ease-in-out_infinite]"
             style={{ background: 'linear-gradient(135deg, #9C88FF 0%, #b8a9ff 100%)' }}
           >
-            Show Me →
+            Start My Clarity Check →
           </Link>
 
 
