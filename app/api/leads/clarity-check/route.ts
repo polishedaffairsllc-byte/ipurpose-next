@@ -19,6 +19,12 @@ interface ClarityCheckRequest {
   };
   resultSummary?: string;
   nextStep?: string;
+  // UTM attribution
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
 }
 
 // Rate limiter: 5 requests per minute per IP
@@ -42,7 +48,7 @@ function getRequestContext(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as ClarityCheckRequest;
-    const { name, email, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep } = body;
+    const { name, email, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
 
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
@@ -73,7 +79,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Get request context
-    const context = getRequestContext(request);
+    const context = {
+      ...getRequestContext(request),
+      utm_source: utm_source || null,
+      utm_medium: utm_medium || null,
+      utm_campaign: utm_campaign || null,
+      utm_content: utm_content || null,
+      utm_term: utm_term || null,
+    };
 
     // Process lead (validates, dedupes, stores in Firestore)
     const result = await processLead('clarity-check', name, email, context);

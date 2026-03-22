@@ -21,6 +21,12 @@ export interface LeadData {
   ip?: string | null;
   referer?: string | null;
   pathname?: string | null;
+  // UTM attribution
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  utm_content?: string | null;
+  utm_term?: string | null;
 }
 
 /**
@@ -158,6 +164,11 @@ export async function processLead(
     ip?: string | null;
     referer?: string | null;
     pathname?: string | null;
+    utm_source?: string | null;
+    utm_medium?: string | null;
+    utm_campaign?: string | null;
+    utm_content?: string | null;
+    utm_term?: string | null;
   }
 ): Promise<{
   ok: boolean;
@@ -199,6 +210,11 @@ export async function processLead(
       ip: context.ip || null,
       referer: context.referer || null,
       pathname: context.pathname || null,
+      utm_source: context.utm_source || null,
+      utm_medium: context.utm_medium || null,
+      utm_campaign: context.utm_campaign || null,
+      utm_content: context.utm_content || null,
+      utm_term: context.utm_term || null,
     });
 
     // Send GA4 generate_lead event for new leads only

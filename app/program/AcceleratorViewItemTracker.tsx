@@ -13,7 +13,7 @@ export default function AcceleratorViewItemTracker() {
       itemId: 'accelerator',
       itemName: 'iPurpose Accelerator',
       itemCategory: 'cohort_program',
-      price: 1497,
+      price: 1997,
       currency: 'USD',
     });
   }, []);

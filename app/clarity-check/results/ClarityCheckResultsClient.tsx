@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import PrintButton from './PrintButton';
 import { trackClarityCheckCompleted } from '@/lib/analytics';
+import { useUTMParams } from '@/lib/hooks/useUTMParams';
 
 interface SubmissionData {
   email: string;
@@ -45,6 +46,7 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
   const [captureLoading, setCaptureLoading] = useState(false);
   const [captureSubmitted, setCaptureSubmitted] = useState(false);
   const [captureError, setCaptureError] = useState('');
+  const utmParams = useUTMParams();
 
   // Track clarity check completion when results are viewed
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
       const res = await fetch('/api/leads/clarity-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: captureName, email: captureEmail, website: captureWebsite }),
+        body: JSON.stringify({ name: captureName, email: captureEmail, website: captureWebsite, ...utmParams }),
       });
 
       const data = await res.json();

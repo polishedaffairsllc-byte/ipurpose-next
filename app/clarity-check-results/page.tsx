@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
+import { useUTMParams } from '@/lib/hooks/useUTMParams';
 
 interface ResultsData {
   scores: {
@@ -31,6 +32,7 @@ export default function ClarityCheckResultsPage() {
   const [captureError, setCaptureError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
+  const utmParams = useUTMParams();
 
   useEffect(() => {
     // Read results stored by the quiz page
@@ -74,6 +76,7 @@ export default function ClarityCheckResultsPage() {
           scores: sessionData.scores ?? undefined,
           resultSummary: sessionData.resultSummary ?? undefined,
           nextStep: sessionData.nextStep ?? undefined,
+          ...utmParams,
         }),
       });
 

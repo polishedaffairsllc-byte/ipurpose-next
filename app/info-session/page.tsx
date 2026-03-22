@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
+import { useUTMParams } from '@/lib/hooks/useUTMParams';
 
 export default function InfoSessionPage() {
   const [name, setName] = useState('');
@@ -12,6 +13,7 @@ export default function InfoSessionPage() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const utmParams = useUTMParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ export default function InfoSessionPage() {
       const res = await fetch('/api/leads/info-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ name, email, ...utmParams }),
       });
 
       if (!res.ok) {

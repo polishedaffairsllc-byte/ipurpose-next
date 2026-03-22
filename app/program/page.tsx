@@ -6,6 +6,36 @@ import Footer from '../components/Footer';
 import ProgramEnrollButton from './ProgramEnrollButton';
 import AcceleratorViewItemTracker from './AcceleratorViewItemTracker';
 import { getEnrollableCohort } from '@/lib/accelerator/stages';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+
+const EARLY_BIRD_SEATS = 4;
+const REGULAR_PRICE = 1997;
+const EARLY_BIRD_PRICE = 1497;
+
+async function getAcceleratorPricing(cohortId: string) {
+  try {
+    const earlyBirdPriceId = process.env.STRIPE_PRICE_ID_ACCELERATOR_EARLY_BIRD;
+    if (!earlyBirdPriceId) return { isEarlyBird: false, price: REGULAR_PRICE, seatsRemaining: 0 };
+
+    const db = firebaseAdmin.firestore();
+    const snap = await db
+      .collection('enrollments')
+      .where('product', '==', 'accelerator')
+      .where('cohort', '==', cohortId)
+      .count()
+      .get();
+
+    const enrolledCount = snap.data().count;
+    const seatsRemaining = Math.max(0, EARLY_BIRD_SEATS - enrolledCount);
+    return {
+      isEarlyBird: seatsRemaining > 0,
+      price: seatsRemaining > 0 ? EARLY_BIRD_PRICE : REGULAR_PRICE,
+      seatsRemaining,
+    };
+  } catch {
+    return { isEarlyBird: false, price: REGULAR_PRICE, seatsRemaining: 0 };
+  }
+}
 
 export const metadata: Metadata = {
   title: 'iPurpose Accelerator™ — From Insight to Action',
@@ -19,12 +49,16 @@ export const metadata: Metadata = {
   alternates: getCanonicalMetadata('/program'),
 };
 
-export default function ProgramPage() {
+export default async function ProgramPage() {
   const cohort = getEnrollableCohort();
   const cohortStart = new Date(cohort.startDate);
   const cohortLabel = cohort.label;
   const cohortMonth = cohortStart.toLocaleString('default', { month: 'long' });
   const cohortYear = cohortStart.getFullYear();
+
+  // Fetch early bird pricing (server-side — reads Firestore)
+  const { isEarlyBird, price, seatsRemaining } = await getAcceleratorPricing(cohort.id);
+  const displayPrice = `$${price.toLocaleString()}`;
   
   // Calculate days until cohort start
   const now = new Date();
@@ -69,15 +103,37 @@ export default function ProgramPage() {
           <h2 className="text-2xl sm:text-3xl font-semibold mb-3 text-warmCharcoal">
             Join the {cohortLabel}
           </h2>
-          <p className="text-lg sm:text-xl font-marcellus text-warmCharcoal/80 mb-4">
-            <strong>Starts {cohortMonth} {cohortStart.getDate()}, {cohortYear}</strong> • <strong>$1,497</strong> • <strong>6 weeks</strong>
-          </p>
+
+          {/* Pricing block */}
+          {isEarlyBird ? (
+            <div className="mb-4">
+              <span className="inline-block bg-softGold text-warmCharcoal text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-2">
+                🌟 Early Bird — {seatsRemaining} of {EARLY_BIRD_SEATS} seats left
+              </span>
+              <p className="text-lg sm:text-xl font-marcellus text-warmCharcoal/80">
+                <strong>Starts {cohortMonth} {cohortStart.getDate()}, {cohortYear}</strong>
+                &nbsp;•&nbsp;
+                <strong className="text-lavenderViolet">{displayPrice}</strong>
+                <span className="text-warmCharcoal/50 line-through ml-2 text-base">${REGULAR_PRICE.toLocaleString()}</span>
+                &nbsp;•&nbsp;
+                <strong>6 weeks</strong>
+              </p>
+              <p className="text-sm text-warmCharcoal/60 font-marcellus mt-1">
+                Early bird price — save ${(REGULAR_PRICE - EARLY_BIRD_PRICE).toLocaleString()} when you claim one of the first {EARLY_BIRD_SEATS} spots.
+              </p>
+            </div>
+          ) : (
+            <p className="text-lg sm:text-xl font-marcellus text-warmCharcoal/80 mb-4">
+              <strong>Starts {cohortMonth} {cohortStart.getDate()}, {cohortYear}</strong> • <strong>{displayPrice}</strong> • <strong>6 weeks</strong>
+            </p>
+          )}
+
           {isUrgent && daysUntilStart > 0 && (
             <p className="text-base sm:text-lg font-semibold text-salmonPeach mb-6 animate-pulse">
               🔥 Limited seats — Only {daysUntilStart} days until start
             </p>
           )}
-          <ProgramEnrollButton />
+          <ProgramEnrollButton price={price} isEarlyBird={isEarlyBird} />
           <p className="text-sm text-warmCharcoal/60 font-marcellus mt-4">
             Max 8 participants per cohort. One-time payment. Limited time offer.
           </p>
@@ -196,7 +252,7 @@ export default function ProgramPage() {
           Understand your fit through a clarity check, or attend an info session to ask questions about the program structure and community.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center flex-wrap">
-          <ProgramEnrollButton />
+          <ProgramEnrollButton price={price} isEarlyBird={isEarlyBird} />
           <Link
             href="/clarity-check"
             className="px-8 py-4 rounded-full font-marcellus text-white text-center text-display-h3 hover:opacity-90 transition-opacity"

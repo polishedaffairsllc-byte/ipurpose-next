@@ -7,6 +7,33 @@
 import { firebaseAdmin } from './firebaseAdmin';
 
 const FROM_ADDRESS = 'iPurpose <renita@ipurposesoul.com>';
+const SITE_URL = 'https://ipurposesoul.com';
+
+/**
+ * Check if an email address has opted out of marketing emails.
+ */
+async function isEmailOptedOut(email: string): Promise<boolean> {
+  try {
+    const db = firebaseAdmin.firestore();
+    const key = Buffer.from(email.trim().toLowerCase()).toString('base64');
+    const doc = await db.collection('email_opt_outs').doc(key).get();
+    return doc.exists;
+  } catch {
+    return false; // fail open — better to send than to block on an error
+  }
+}
+
+/**
+ * Build a standard unsubscribe footer HTML snippet.
+ */
+function unsubscribeFooter(email: string): string {
+  const link = `${SITE_URL}/api/unsubscribe?email=${encodeURIComponent(email)}`;
+  return `<p style="margin:0;font-size:11px;color:#bbb;">
+  You received this email because you signed up at ipurposesoul.com.
+  &nbsp;·&nbsp;
+  <a href="${link}" style="color:#bbb;text-decoration:underline;">Unsubscribe</a>
+</p>`;
+}
 
 interface ClarityCheckEmailData {
   email: string;
@@ -203,6 +230,7 @@ export async function sendClarityCheckResultsEmail(data: {
           <div class="footer">
             <p>© iPurpose Soul — Where Inner Alignment Becomes Coherent Action</p>
             <p><a href="https://ipurposesoul.com" style="color: #9C88FF; text-decoration: none;">ipurposesoul.com</a></p>
+            ${unsubscribeFooter(email)}
           </div>
         </div>
       </body>
@@ -320,6 +348,7 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
           <div class="footer">
             <p>© iPurpose Soul — Where Inner Alignment Becomes Coherent Action</p>
             <p><a href="https://ipurposesoul.com" style="color: #9C88FF; text-decoration: none;">ipurposesoul.com</a></p>
+            ${unsubscribeFooter(email)}
           </div>
         </div>
       </body>
@@ -440,6 +469,7 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
 
           <div class="footer">
             <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
+            ${unsubscribeFooter(email)}
           </div>
         </div>
       </body>
@@ -468,6 +498,13 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
  */
 export async function scheduleEmailSequence(data: ClarityCheckEmailData) {
   try {
+    // Skip the whole sequence if the user has already opted out
+    const optedOut = await isEmailOptedOut(data.email);
+    if (optedOut) {
+      console.log(`[Email] Skipping sequence for opted-out address: ${data.email}`);
+      return true;
+    }
+
     // Send Day 1 email immediately
     await sendClarityCheckThankYouEmail(data);
 

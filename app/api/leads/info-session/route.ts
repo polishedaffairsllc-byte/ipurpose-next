@@ -7,6 +7,12 @@ interface InfoSessionRequest {
   email: string;
   timezone?: string;
   notes?: string;
+  // UTM attribution
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
 }
 
 /**
@@ -214,10 +220,17 @@ async function sendFounderInfoSessionNotification(
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as InfoSessionRequest;
-    const { name, email, timezone, notes } = body;
+    const { name, email, timezone, notes, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
 
     // Get request context
-    const context = getRequestContext(request);
+    const context = {
+      ...getRequestContext(request),
+      utm_source: utm_source || null,
+      utm_medium: utm_medium || null,
+      utm_campaign: utm_campaign || null,
+      utm_content: utm_content || null,
+      utm_term: utm_term || null,
+    };
 
     // Process lead (validates, dedupes, stores in Firestore)
     const result = await processLead('info-session', name, email, context);

@@ -53,7 +53,7 @@ export default function ProgramsPage() {
       id: 'accelerator',
       title: 'Accelerator',
       subtitle: 'The complete program',
-      price: '$1,497',
+      price: '$1,997',
       description:
         'A comprehensive self-paced experience combining structured labs, AI tools, community access, and platform-native assets. Move at your own pace through Orientation, Soul, Systems, and Integration.',
       includes: [

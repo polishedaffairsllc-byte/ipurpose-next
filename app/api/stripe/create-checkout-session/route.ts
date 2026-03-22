@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getEnrollableCohort } from '@/lib/accelerator/stages';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -9,15 +10,21 @@ export const dynamic = 'force-dynamic';
 const PRODUCT_PRICE_MAP: { [key: string]: string } = {
   'starter_pack': 'STRIPE_PRICE_STARTER_PACK',
   'ai_blueprint': 'STRIPE_PRICE_ID_AI_BLUEPRINT',
-  'accelerator': 'STRIPE_PRICE_ID_6WEEK',
+  'accelerator': 'STRIPE_PRICE_ID_6WEEK',           // regular $1,997
   'deepen_membership': 'STRIPE_PRICE_ID_DEEPEN',
 };
+
+// Early-bird price ID (first 4 seats at $1,497)
+const ACCELERATOR_EARLY_BIRD_PRICE_ENV = 'STRIPE_PRICE_ID_ACCELERATOR_EARLY_BIRD';
+const ACCELERATOR_EARLY_BIRD_SEATS = 4;
+const ACCELERATOR_REGULAR_PRICE = 1997;
+const ACCELERATOR_EARLY_BIRD_PRICE = 1497;
 
 // Product pricing for event tracking
 const PRODUCT_PRICING: { [key: string]: number } = {
   'starter_pack': 27,
   'ai_blueprint': 47,
-  'accelerator': 1497,
+  'accelerator': ACCELERATOR_REGULAR_PRICE,
   'deepen_membership': 0, // subscription, no fixed price here
 };
 
@@ -71,7 +78,35 @@ export async function POST(request: NextRequest) {
     }
 
     // Get price ID from environment
-    const priceEnvVar = PRODUCT_PRICE_MAP[product];
+    let priceEnvVar = PRODUCT_PRICE_MAP[product];
+
+    // For accelerator: check if early-bird seats are still available
+    let effectivePrice = PRODUCT_PRICING[product] || 0;
+    if (product === 'accelerator') {
+      const earlyBirdPriceId = process.env[ACCELERATOR_EARLY_BIRD_PRICE_ENV];
+      if (earlyBirdPriceId) {
+        try {
+          const db = firebaseAdmin.firestore();
+          const enrollmentsSnap = await db
+            .collection('enrollments')
+            .where('product', '==', 'accelerator')
+            .where('cohort', '==', cohort)
+            .count()
+            .get();
+          const enrolledCount = enrollmentsSnap.data().count;
+          if (enrolledCount < ACCELERATOR_EARLY_BIRD_SEATS) {
+            priceEnvVar = ACCELERATOR_EARLY_BIRD_PRICE_ENV;
+            effectivePrice = ACCELERATOR_EARLY_BIRD_PRICE;
+            console.log(`[Accelerator] Early bird pricing applied (${enrolledCount}/${ACCELERATOR_EARLY_BIRD_SEATS} seats taken)`);
+          } else {
+            console.log(`[Accelerator] Regular pricing applied (${enrolledCount} enrolled, early bird closed)`);
+          }
+        } catch (e) {
+          console.warn('[Accelerator] Could not fetch enrollment count, falling back to regular price:', e);
+        }
+      }
+    }
+
     const priceId = process.env[priceEnvVar];
 
     if (!priceId) {
@@ -148,7 +183,7 @@ export async function POST(request: NextRequest) {
 
     // Log checkout event for analytics tracking
     const eventName = `${product}_checkout_started`;
-    const price = PRODUCT_PRICING[product] || 0;
+    const price = product === 'accelerator' ? effectivePrice : (PRODUCT_PRICING[product] || 0);
     const productName = PRODUCT_NAMES[product] || product;
     
     console.log('[Analytics Event]', {
