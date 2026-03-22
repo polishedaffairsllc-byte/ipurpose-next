@@ -15,7 +15,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
-import { sendClarityCheckFoundersRateEmail } from '@/lib/email-automation';
+import {
+  sendClarityCheckFoundersRateEmail,
+  sendNurtureEmail1,
+  sendNurtureEmail2,
+  sendNurtureEmail3,
+  sendNurtureEmail4,
+  sendNurtureEmail5,
+} from '@/lib/email-automation';
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
@@ -59,8 +66,9 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
     for (const doc of tasksSnapshot.docs) {
       const task = doc.data();
       
-      // Filter by type and scheduledFor in code (avoid needing composite index)
-      if (task.type !== 'clarity_check_founders_rate') {
+      // Filter by known types and scheduledFor in code (avoid needing composite index)
+      const knownTypes = ['clarity_check_founders_rate','nurture_1','nurture_2','nurture_3','nurture_4','nurture_5'];
+      if (!knownTypes.includes(task.type)) {
         continue;
       }
 
@@ -76,14 +84,24 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
       }
 
       try {
-        // Send the email
-        const sent = await sendClarityCheckFoundersRateEmail({
+        // Dispatch to the correct send function based on task type
+        const emailData = {
           email: task.email,
           name: task.name,
           submissionId: task.submissionId,
           identityType: task.identityType,
           totalScore: task.totalScore,
-        });
+        };
+        const senderMap: Record<string, (d: typeof emailData) => Promise<boolean>> = {
+          'clarity_check_founders_rate': sendClarityCheckFoundersRateEmail,
+          'nurture_1': sendNurtureEmail1,
+          'nurture_2': sendNurtureEmail2,
+          'nurture_3': sendNurtureEmail3,
+          'nurture_4': sendNurtureEmail4,
+          'nurture_5': sendNurtureEmail5,
+        };
+        const sender = senderMap[task.type];
+        const sent = sender ? await sender(emailData) : false;
 
         if (sent) {
           // Mark as completed
@@ -94,7 +112,7 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
           processed++;
           console.log(`[SCHEDULER] ✓ Sent to ${task.email}`);
         } else {
-          throw new Error('sendClarityCheckFoundersRateEmail returned false');
+          throw new Error('Email sender returned false');
         }
       } catch (error) {
         failed++;

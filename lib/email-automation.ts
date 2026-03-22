@@ -493,6 +493,268 @@ export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailD
   }
 }
 
+const FTC_DISCLAIMER = `<p style="margin:20px 0 0 0;padding-top:16px;border-top:1px solid #eee;font-size:11px;color:#bbb;line-height:1.6;">
+  <strong>Income &amp; Results Disclaimer:</strong> Results and experiences shared are individual examples and are not guaranteed. Your results will vary based on your background, experience, effort, and market conditions. iPurpose makes no assurance that you will achieve similar outcomes.
+</p>`;
+
+/**
+ * Send Day 2 — What your result is actually telling you
+ */
+export async function sendNurtureEmail1(data: ClarityCheckEmailData) {
+  const { email, name } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <style>
+      body{font-family:Georgia,'Times New Roman',serif;line-height:1.9;color:#2A2A2A;background:#fff;}
+      .container{max-width:580px;margin:0 auto;padding:48px 24px;}
+      p{font-size:16px;margin:0 0 16px 0;}
+      .footer{margin-top:48px;padding-top:20px;border-top:1px solid #ede8f7;font-size:12px;color:#bbb;text-align:center;}
+      .footer a{color:#9C88FF;text-decoration:none;}
+    </style>
+    </head><body><div class="container">
+      <p>Hi ${firstName},</p>
+      <p>A couple of days ago you found out your Identity Type.</p>
+      <p>You may have read it and thought &mdash; <em>yes, that&rsquo;s me.</em> Or maybe you read it and felt something shift, like something you already knew finally had a name.</p>
+      <p>Either way, I want you to sit with one thing:</p>
+      <p>Your Identity Type isn&rsquo;t a personality label. It&rsquo;s a map.</p>
+      <p>It tells you how you naturally create value, how you&rsquo;re wired to work, and &mdash; most importantly &mdash; why certain business models feel heavy no matter how hard you try to make them fit.</p>
+      <p>The Creator type, for example, doesn&rsquo;t struggle because they lack discipline or focus. They struggle when they&rsquo;re forced into structures built for a different kind of mind. When the system wasn&rsquo;t designed for how they actually think.</p>
+      <p>That&rsquo;s not a flaw. That&rsquo;s a mismatch.</p>
+      <p>iPurpose exists because of that mismatch. Because the most capable, purposeful people I know aren&rsquo;t stuck because they&rsquo;re not trying hard enough. They&rsquo;re stuck because they&rsquo;ve been handed someone else&rsquo;s map.</p>
+      <p>Over the next few days I want to share some things with you &mdash; not to sell you something, but because you took the time to understand yourself a little more deeply, and that deserves to be honored.</p>
+      <p>More soon.</p>
+      <p>With care,<br>Renita<br>Founder, iPurpose<br><a href="https://ipurposesoul.com" style="color:#9C88FF;">ipurposesoul.com</a></p>
+      <div class="footer">
+        <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
+        ${unsubscribeFooter(email)}
+      </div>
+    </div></body></html>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: 'What your Clarity Check result is really telling you', html });
+    console.log(`[Email] Nurture 1 (Day 2) sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send Nurture 1 to ${email}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Send Day 4 — The real reason strategies stop working
+ */
+export async function sendNurtureEmail2(data: ClarityCheckEmailData) {
+  const { email, name } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <style>
+      body{font-family:Georgia,'Times New Roman',serif;line-height:1.9;color:#2A2A2A;background:#fff;}
+      .container{max-width:580px;margin:0 auto;padding:48px 24px;}
+      p{font-size:16px;margin:0 0 16px 0;}
+      .footer{margin-top:48px;padding-top:20px;border-top:1px solid #ede8f7;font-size:12px;color:#bbb;text-align:center;}
+      .footer a{color:#9C88FF;text-decoration:none;}
+    </style>
+    </head><body><div class="container">
+      <p>Hi ${firstName},</p>
+      <p>Here&rsquo;s something I&rsquo;ve watched happen over and over:</p>
+      <p>Someone finds a strategy that works for someone else. They follow it faithfully. It produces some results &mdash; maybe even good ones at first. And then, slowly, it stops working. Or it works but feels completely unsustainable. Or it works financially but leaves them feeling hollow.</p>
+      <p>So they find another strategy. And the cycle continues.</p>
+      <p>What&rsquo;s rarely talked about is <em>why</em> this happens.</p>
+      <p>It&rsquo;s not the strategy. It&rsquo;s the sequence.</p>
+      <p>Most business frameworks start with the market &mdash; what&rsquo;s selling, what&rsquo;s trending, what the algorithm rewards. Then they ask you to fit yourself into that.</p>
+      <p>iPurpose reverses it.</p>
+      <p>We start with you &mdash; your values, your archetype, your energetic wiring &mdash; and build the strategy around that truth. Because a business that&rsquo;s built around who you actually are doesn&rsquo;t require you to perform a version of yourself that drains you every time you show up.</p>
+      <p>It requires you to be more of who you already are.</p>
+      <p>That&rsquo;s a very different kind of work. And it produces a very different kind of result.</p>
+      <p>Tomorrow I&rsquo;ll share something that can help you start bridging that gap &mdash; wherever you are right now.</p>
+      <p>With care,<br>Renita</p>
+      <div class="footer">
+        <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
+        ${unsubscribeFooter(email)}
+      </div>
+    </div></body></html>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: 'The real reason most strategies stop working', html });
+    console.log(`[Email] Nurture 2 (Day 4) sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send Nurture 2 to ${email}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Send Day 7 — What changes when you build from the inside out
+ */
+export async function sendNurtureEmail3(data: ClarityCheckEmailData) {
+  const { email, name } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <style>
+      body{font-family:Georgia,'Times New Roman',serif;line-height:1.9;color:#2A2A2A;background:#fff;}
+      .container{max-width:580px;margin:0 auto;padding:48px 24px;}
+      p{font-size:16px;margin:0 0 16px 0;}
+      .cta{display:inline-block;background:#9C88FF;color:#fff;padding:14px 36px;border-radius:30px;text-decoration:none;font-weight:bold;font-size:16px;margin:8px 0;}
+      .footer{margin-top:48px;padding-top:20px;border-top:1px solid #ede8f7;font-size:12px;color:#bbb;text-align:center;}
+      .footer a{color:#9C88FF;text-decoration:none;}
+    </style>
+    </head><body><div class="container">
+      <p>Hi ${firstName},</p>
+      <p>I want to tell you about something that happened with a client.</p>
+      <p>She had been building her coaching business for two years. She had a website, an offer, a social media presence. By most external measures, she was doing everything right.</p>
+      <p>But she was exhausted. And nothing was converting the way she expected.</p>
+      <p>When we started working together, the first thing we did wasn&rsquo;t touch her marketing. We looked at her archetype, her values, the way she was actually wired to lead and serve.</p>
+      <p>What we found was a significant mismatch. Her offer was designed for the kind of client she thought she <em>should</em> want to work with &mdash; not the ones who energized her, the ones she could genuinely transform.</p>
+      <p>Once that shifted, everything else shifted with it. Her copy started sounding like her. Her content attracted different people. Her offers stopped feeling like a performance.</p>
+      <p>She didn&rsquo;t work harder. She worked more like herself.</p>
+      <p>That is what building from the inside out actually looks like. Not softer. Not less strategic. Just finally aligned.</p>
+      <p>If any of this is resonating with you, I&rsquo;d love for you to see what the full iPurpose journey looks like. The Accelerator is where this work goes deep &mdash; six weeks, small cohort, live sessions, and a structure that begins exactly where we talked about.</p>
+      <p style="text-align:center;margin:32px 0;">
+        <a href="https://ipurposesoul.com/build?utm_source=email&utm_medium=nurture&utm_campaign=day7" class="cta">Learn about the Accelerator &rarr;</a>
+      </p>
+      <p>No pressure. Just wanted you to know it exists.</p>
+      <p>With care,<br>Renita</p>
+      ${FTC_DISCLAIMER}
+      <div class="footer">
+        <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
+        ${unsubscribeFooter(email)}
+      </div>
+    </div></body></html>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: 'What actually changes when you build from the inside out', html });
+    console.log(`[Email] Nurture 3 (Day 7) sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send Nurture 3 to ${email}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Send Day 10 — The week most programs skip (Money Healing)
+ */
+export async function sendNurtureEmail4(data: ClarityCheckEmailData) {
+  const { email, name } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <style>
+      body{font-family:Georgia,'Times New Roman',serif;line-height:1.9;color:#2A2A2A;background:#fff;}
+      .container{max-width:580px;margin:0 auto;padding:48px 24px;}
+      p{font-size:16px;margin:0 0 16px 0;}
+      .callout{background:rgba(156,136,255,0.06);border-left:4px solid #e6c87c;padding:20px 24px;margin:28px 0;}
+      .callout p{margin:0;font-size:15px;}
+      .cta{display:inline-block;background:#9C88FF;color:#fff;padding:14px 36px;border-radius:30px;text-decoration:none;font-weight:bold;font-size:16px;margin:8px 0;}
+      .footer{margin-top:48px;padding-top:20px;border-top:1px solid #ede8f7;font-size:12px;color:#bbb;text-align:center;}
+      .footer a{color:#9C88FF;text-decoration:none;}
+    </style>
+    </head><body><div class="container">
+      <p>Hi ${firstName},</p>
+      <p>I want to tell you about Week 2 of the iPurpose Accelerator.</p>
+      <p>Most business programs don&rsquo;t include anything like it. Some would consider it too personal, too interior, too far outside the lane of &ldquo;business strategy.&rdquo;</p>
+      <div class="callout"><p>We call it <strong>Money Healing.</strong></p></div>
+      <p>Before you build a profitable business, you need to look honestly at the beliefs, stories, and wounds that quietly block revenue. The ones that make you underprice your offers. Over-deliver until you&rsquo;re depleted. Freeze before you hit send.</p>
+      <p>These aren&rsquo;t mindset problems to be hustled through. They&rsquo;re patterns with real roots &mdash; and they show up in real business decisions every single day.</p>
+      <p>Week 2 is where we surface them. Name them. Begin to move through them.</p>
+      <p>I include this week because I lived it. Because I&rsquo;ve watched extraordinarily capable people undermine their own success not from lack of skill or strategy &mdash; but from unexamined stories about what they deserve, what&rsquo;s possible, what money means.</p>
+      <p>You deserve a program that takes all of you seriously. Not just the strategic parts.</p>
+      <p>If you&rsquo;re ready to go deeper, the Summer Cohort opens June 1st. Eight seats. Two Friday session times to choose from.</p>
+      <p style="text-align:center;margin:32px 0;">
+        <a href="https://ipurposesoul.com/build?utm_source=email&utm_medium=nurture&utm_campaign=day10" class="cta">Learn more about the Accelerator &rarr;</a>
+      </p>
+      <p>With care,<br>Renita</p>
+      ${FTC_DISCLAIMER}
+      <div class="footer">
+        <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
+        ${unsubscribeFooter(email)}
+      </div>
+    </div></body></html>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: 'The week most programs skip entirely', html });
+    console.log(`[Email] Nurture 4 (Day 10) sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send Nurture 4 to ${email}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Send Day 14 — You're invited (workshop)
+ */
+export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
+  const { email, name } = data;
+  const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <style>
+      body{font-family:Georgia,'Times New Roman',serif;line-height:1.9;color:#2A2A2A;background:#fff;}
+      .container{max-width:580px;margin:0 auto;padding:48px 24px;}
+      p{font-size:16px;margin:0 0 16px 0;}
+      .workshop-box{background:rgba(156,136,255,0.06);border:1px solid #9C88FF;border-radius:8px;padding:24px 28px;margin:28px 0;}
+      .workshop-box p{margin:4px 0;font-size:15px;}
+      .workshop-box ul{margin:12px 0;padding-left:20px;}
+      .workshop-box li{margin:6px 0;font-size:15px;}
+      .cta{display:inline-block;background:#9C88FF;color:#fff;padding:14px 36px;border-radius:30px;text-decoration:none;font-weight:bold;font-size:16px;margin:8px 0;}
+      .footer{margin-top:48px;padding-top:20px;border-top:1px solid #ede8f7;font-size:12px;color:#bbb;text-align:center;}
+      .footer a{color:#9C88FF;text-decoration:none;}
+    </style>
+    </head><body><div class="container">
+      <p>Hi ${firstName},</p>
+      <p>Before the Summer Cohort opens, I&rsquo;m hosting a free live workshop.</p>
+      <p>It&rsquo;s called <strong>Your Purpose to Income Blueprint</strong> &mdash; a 90-minute session where I&rsquo;ll walk you through the exact methodology we use inside the Accelerator, so you can see what it feels like to build from the inside out before you commit to anything.</p>
+      <p>No pitch. No pressure. Just the work, live, with me.</p>
+      <div class="workshop-box">
+        <p><strong>Here&rsquo;s what we&rsquo;ll cover:</strong></p>
+        <ul>
+          <li>How to identify your Identity Type and what it means for your business model</li>
+          <li>The three places most purpose-driven entrepreneurs lose momentum &mdash; and how to move through them</li>
+          <li>A live look at the Soul &rarr; Systems &rarr; AI&trade; sequence and how it applies to where you are right now</li>
+          <li>Time for your questions</li>
+        </ul>
+        <p style="margin-top:16px !important;"><strong>Date:</strong> [WORKSHOP DATE &mdash; TBD]</p>
+        <p><strong>Time:</strong> [TIME] ET</p>
+        <p><strong>Where:</strong> Online &mdash; free to attend</p>
+      </div>
+      <p style="text-align:center;margin:32px 0;">
+        <a href="[WORKSHOP REGISTRATION LINK]" class="cta">Reserve your spot &rarr;</a>
+      </p>
+      <p>I built iPurpose because I couldn&rsquo;t find anything that held both the inner work and the real business outcomes at the same time. This workshop is a chance to experience that for yourself.</p>
+      <p>I hope to see you there.</p>
+      <p>With care,<br>Renita<br>Founder, iPurpose<br><a href="https://ipurposesoul.com" style="color:#9C88FF;">ipurposesoul.com</a></p>
+      <p style="font-size:13px;color:#888;margin-top:24px;">P.S. If the Accelerator has been on your mind since you took the Clarity Check, the workshop is a good place to bring your questions. I&rsquo;ll stay on after for anyone who wants to talk.</p>
+      <div class="footer">
+        <p>&copy; iPurpose Soul &mdash; <a href="https://ipurposesoul.com">ipurposesoul.com</a></p>
+        ${unsubscribeFooter(email)}
+      </div>
+    </div></body></html>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: "You're invited to something free", html });
+    console.log(`[Email] Nurture 5 (Day 14) sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send Nurture 5 to ${email}:`, error);
+    return false;
+  }
+}
+
 /**
  * Schedule emails (Day 1 immediately, Day 5 after 5 days)
  */
@@ -508,25 +770,35 @@ export async function scheduleEmailSequence(data: ClarityCheckEmailData) {
     // Send Day 1 email immediately
     await sendClarityCheckThankYouEmail(data);
 
-    // Store task in Firestore to send Day 5 email
-    const emailTask = {
-      email: data.email,
-      name: data.name,
-      submissionId: data.submissionId,
-      ...(data.identityType && { identityType: data.identityType }),
-      ...(data.totalScore && { totalScore: data.totalScore }),
-      type: 'clarity_check_founders_rate',
-      scheduledFor: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
-      status: 'pending',
-      createdAt: new Date(),
-    };
+    const DAY = 24 * 60 * 60 * 1000;
+    const tasks = [
+      { type: 'nurture_1', delay: 2 * DAY },   // Day 2
+      { type: 'nurture_2', delay: 4 * DAY },   // Day 4
+      { type: 'clarity_check_founders_rate', delay: 5 * DAY }, // Day 5 — existing Starter Pack offer
+      { type: 'nurture_3', delay: 7 * DAY },   // Day 7
+      { type: 'nurture_4', delay: 10 * DAY },  // Day 10
+      { type: 'nurture_5', delay: 14 * DAY },  // Day 14
+    ];
 
-    await firebaseAdmin
-      .firestore()
-      .collection('emailTasks')
-      .add(emailTask);
+    const db = firebaseAdmin.firestore();
+    const batch = db.batch();
+    for (const task of tasks) {
+      const ref = db.collection('emailTasks').doc();
+      batch.set(ref, {
+        email: data.email,
+        name: data.name,
+        submissionId: data.submissionId,
+        ...(data.identityType && { identityType: data.identityType }),
+        ...(data.totalScore && { totalScore: data.totalScore }),
+        type: task.type,
+        scheduledFor: new Date(Date.now() + task.delay),
+        status: 'pending',
+        createdAt: new Date(),
+      });
+    }
+    await batch.commit();
 
-    console.log(`[Email] Scheduled Day 5 task for ${data.email}`);
+    console.log(`[Email] Scheduled full nurture sequence (6 tasks) for ${data.email}`);
     return true;
   } catch (error) {
     console.error('[Email] Failed to schedule email sequence:', error);
