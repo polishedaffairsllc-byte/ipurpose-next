@@ -212,12 +212,11 @@ export default async function BuildPage() {
           happened next.
         </p>
         <div
-          className="relative mx-auto rounded-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)] overflow-hidden"
-          style={{ width: '100%', maxWidth: '320px', aspectRatio: '9/16', background: '#000' }}
+          className="mx-auto rounded-sm shadow-[0_24px_60px_rgba(0,0,0,0.5)]"
+          style={{ width: 'min(85vw, 420px)', background: '#000' }}
         >
           <video
-            className="absolute inset-0 w-full h-full"
-            style={{ objectFit: 'cover' }}
+            style={{ display: 'block', width: '100%', height: 'auto', aspectRatio: '9/16' }}
             src="/videos/accelerator-founder.mp4"
             controls
             playsInline
