@@ -126,6 +126,9 @@ export async function POST(request: NextRequest) {
     const tasksQueuedForSubscriber: string[] = [];
 
     for (const step of SEQUENCE) {
+      // nurture_5 (workshop invite) held until WORKSHOP_ACTIVE=true
+      if (step.type === 'nurture_5') continue;
+
       const scheduledFor = new Date(completionTime + step.delay);
 
       // Skip if already in the past by more than 24 hours (window has closed)

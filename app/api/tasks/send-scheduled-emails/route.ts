@@ -92,6 +92,12 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
           identityType: task.identityType,
           totalScore: task.totalScore,
         };
+        // nurture_5 (workshop invite) is held until WORKSHOP_ACTIVE=true is set in env
+        if (task.type === 'nurture_5' && process.env.WORKSHOP_ACTIVE !== 'true') {
+          console.log(`[SCHEDULER] nurture_5 skipped for ${task.email} — WORKSHOP_ACTIVE not set`);
+          continue;
+        }
+
         const senderMap: Record<string, (d: typeof emailData) => Promise<boolean>> = {
           'clarity_check_founders_rate': sendClarityCheckFoundersRateEmail,
           'nurture_1': sendNurtureEmail1,
