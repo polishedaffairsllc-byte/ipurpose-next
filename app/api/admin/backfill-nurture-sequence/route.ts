@@ -5,7 +5,7 @@
  * nurture sequence at the correct point based on when they completed the check.
  *
  * Logic:
- *   - Reads all clarityCheckSubmissions (one per subscriber — uses the most recent if dupes)
+ *   - Reads all leads (source: clarity-check) — uses the most recent submission per email
  *   - Skips opted-out emails
  *   - For each subscriber, calculates which nurture emails are still in the future
  *     based on their original completion date
@@ -73,21 +73,23 @@ export async function POST(request: NextRequest) {
     if (d.email && d.type) existingKeys.add(`${d.email}::${d.type}`);
   });
 
-  // 2. Load all submissions — deduplicate by email, keep most recent
-  const submissionsSnap = await db
-    .collection('clarityCheckSubmissions')
+  // 2. Load all leads from clarity-check source — deduplicate by email, keep most recent
+  const leadsSnap = await db
+    .collection('leads')
     .orderBy('createdAt', 'asc')
     .get();
 
   const byEmail = new Map<string, { email: string; name: string; submissionId: string; identityType?: string; completedAt: Date }>();
-  submissionsSnap.forEach((doc) => {
+  leadsSnap.forEach((doc) => {
     const d = doc.data();
     if (!d.email) return;
+    // Only process clarity-check leads
+    if (d.source && d.source !== 'clarity-check') return;
     const completedAt: Date = typeof d.createdAt?.toDate === 'function'
       ? d.createdAt.toDate()
       : new Date(d.createdAt ?? now);
     // Keep most recent (later entries overwrite earlier due to asc order)
-    byEmail.set(d.email, {
+    byEmail.set(d.email.toLowerCase().trim(), {
       email: d.email,
       name: d.name ?? '',
       submissionId: doc.id,
