@@ -48,7 +48,8 @@ function getRequestContext(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as ClarityCheckRequest;
-    const { name, email, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
+    const { name, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
+    const email = body.email.trim().toLowerCase();
 
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 

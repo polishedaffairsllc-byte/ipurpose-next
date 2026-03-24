@@ -760,6 +760,9 @@ export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
  */
 export async function scheduleEmailSequence(data: ClarityCheckEmailData) {
   try {
+    // Normalize email to lowercase to prevent case-sensitivity duplicates
+    data = { ...data, email: data.email.trim().toLowerCase() };
+
     // Skip the whole sequence if the user has already opted out
     const optedOut = await isEmailOptedOut(data.email);
     if (optedOut) {
