@@ -265,6 +265,67 @@ interface ClarityCheckEmailData {
 /**
  * Send Day 1 Thank You Email
  */
+// ─────────────────────────────────────────────
+// WORKSHOP CONFIRMATION EMAIL
+// ─────────────────────────────────────────────
+
+export async function sendWorkshopConfirmationEmail({ email, name }: { email: string; name: string }): Promise<boolean> {
+  try {
+    const resend = (await import('resend')).Resend;
+    const client = new resend(process.env.RESEND_API_KEY);
+    const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';
+
+    const html = `
+<div style="max-width:580px;margin:0 auto;font-family:Georgia,serif;background:#fdfaf7;padding:40px 32px;">
+  <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#9C88FF;margin:0 0 24px;">iPurpose™ · Workshop Confirmation</p>
+
+  <h1 style="font-family:Georgia,serif;font-size:30px;color:#2e3050;font-weight:400;margin:0 0 20px;line-height:1.3;">
+    You're in, ${firstName}. ✦
+  </h1>
+
+  <p style="font-size:16px;color:#4a4a5a;margin:0 0 16px;">
+    Your spot is saved for the <strong>Build Your Purpose → Income Blueprint (Live)</strong> workshop.
+  </p>
+
+  <div style="background:#fff;border-left:4px solid #e6c87c;padding:20px 24px;margin:28px 0;border-radius:2px;">
+    <p style="margin:0 0 8px;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;color:#4B4E6D;opacity:0.7;">Event Details</p>
+    <p style="margin:0 0 6px;font-size:16px;color:#2e3050;"><strong>📅 April 24, 2026</strong></p>
+    <p style="margin:0 0 6px;font-size:16px;color:#2e3050;"><strong>⏱ 90 Minutes · Live on Zoom</strong></p>
+    <p style="margin:0;font-size:14px;color:#6b6b80;">The Zoom link will be sent closer to the date. Keep an eye on your inbox.</p>
+  </div>
+
+  <p style="font-size:16px;color:#4a4a5a;margin:0 0 16px;">
+    Here's what to expect: we'll spend 90 minutes building your Purpose → Income Blueprint live, together — your Core Identity, your Offer Direction, and your AI leverage point.
+  </p>
+
+  <p style="font-size:16px;color:#4a4a5a;margin:0 0 28px;">
+    You won't just listen. You'll build. Come with an open mind and something to write on.
+  </p>
+
+  <p style="font-size:15px;color:#4a4a5a;margin:0 0 4px;">See you there,</p>
+  <p style="font-family:Georgia,serif;font-size:20px;color:#2e3050;font-style:italic;margin:0 0 40px;">Renita</p>
+
+  <hr style="border:none;border-top:1px solid rgba(75,78,109,0.1);margin:0 0 20px;" />
+  ${unsubscribeFooter(email)}
+</div>`;
+
+    await client.emails.send({
+      from: FROM_ADDRESS,
+      to: email,
+      subject: "You're in — Build Your Purpose → Income Blueprint (Live)",
+      html,
+    });
+    return true;
+  } catch (error) {
+    console.error('[Email] Failed to send workshop confirmation:', error);
+    return false;
+  }
+}
+
+// ─────────────────────────────────────────────
+// CLARITY CHECK THANK YOU EMAIL
+// ─────────────────────────────────────────────
+
 export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData) {
   const { email, name, submissionId, identityType } = data;
   const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';

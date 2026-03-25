@@ -7,7 +7,7 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { trackServerGenerateLead } from '@/lib/ga4-server';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export type LeadSource = 'clarity-check' | 'info-session' | 'contact';
+export type LeadSource = 'clarity-check' | 'info-session' | 'contact' | 'workshop';
 
 export interface LeadData {
   source: LeadSource;
