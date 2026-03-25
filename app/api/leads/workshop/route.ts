@@ -6,6 +6,7 @@ import { sendWorkshopConfirmationEmail } from '@/lib/email-automation';
 interface WorkshopRegistrationRequest {
   firstName: string;
   email: string;
+  session?: string;
   building?: string;
   website?: string; // honeypot
 }
@@ -15,7 +16,7 @@ const workshopLimiter = rateLimit({ requests: 5, window: 60 * 1000 });
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as WorkshopRegistrationRequest;
-    const { firstName, building, website } = body;
+    const { firstName, building, website, session } = body;
     const email = (body.email || '').trim().toLowerCase();
 
     const ip =
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       referer: request.headers.get('referer'),
       pathname: '/workshop',
       building: building || null,
+      session: session || null,
     };
 
     // Save to leads collection
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send confirmation email (non-blocking)
-    sendWorkshopConfirmationEmail({ email, name: firstName }).catch((err) =>
+    sendWorkshopConfirmationEmail({ email, name: firstName, session: session || null }).catch((err) =>
       console.error('[WORKSHOP] Confirmation email failed:', err)
     );
 

@@ -104,7 +104,7 @@ export default function WorkshopPage() {
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 20, marginBottom: 48 }}>
           {[
             { icon: '📅', text: 'April 24, 2026' },
-            { icon: '⏱', text: '90 Minutes' },
+            { icon: '⏱', text: '11 AM or 7 PM ET' },
             { icon: '🎥', text: 'Live on Zoom' },
             { icon: '✦', text: 'Free to Attend' },
           ].map(({ icon, text }) => (
@@ -147,7 +147,7 @@ export default function WorkshopPage() {
             Save Your Spot
           </h2>
           <p style={{ textAlign: 'center', fontSize: 15, color: '#888', marginBottom: 32 }}>
-            Free · April 24, 2026 · Live on Zoom
+            Free · April 24, 2026 · 11 AM or 7 PM ET · Live on Zoom
           </p>
 
           <WorkshopRegisterForm buttonStyle={BTN_STYLE} />
@@ -343,7 +343,7 @@ export default function WorkshopPage() {
       {/* ── FINAL CTA ── */}
       <section style={{ background: C.deep, padding: '80px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.champagne, opacity: 0.8, marginBottom: 12 }}>
-          April 24, 2026 · Free · Live on Zoom
+          April 24, 2026 · 11 AM or 7 PM ET · Free · Live on Zoom
         </p>
         <div style={{
           display: 'inline-block',

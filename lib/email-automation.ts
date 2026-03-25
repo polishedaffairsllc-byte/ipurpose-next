@@ -269,11 +269,15 @@ interface ClarityCheckEmailData {
 // WORKSHOP CONFIRMATION EMAIL
 // ─────────────────────────────────────────────
 
-export async function sendWorkshopConfirmationEmail({ email, name }: { email: string; name: string }): Promise<boolean> {
+export async function sendWorkshopConfirmationEmail({ email, name, session }: { email: string; name: string; session?: string | null }): Promise<boolean> {
   try {
     const resend = (await import('resend')).Resend;
     const client = new resend(process.env.RESEND_API_KEY);
     const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';
+    const sessionLine = session
+      ? `<p style="margin:0 0 6px;font-size:16px;color:#2e3050;"><strong>⏱ Your session: ${session}</strong></p>`
+      : `<p style="margin:0 0 6px;font-size:16px;color:#2e3050;"><strong>⏱ Two sessions: 11:00 AM ET &nbsp;&middot;&nbsp; 7:00 PM ET</strong></p>
+         <p style="margin:0 0 6px;font-size:14px;color:#6b6b80;">Pick whichever works best for you &mdash; both sessions cover the same material.</p>`;
 
     const html = `
 <div style="max-width:580px;margin:0 auto;font-family:Georgia,serif;background:#fdfaf7;padding:40px 32px;">
@@ -290,7 +294,7 @@ export async function sendWorkshopConfirmationEmail({ email, name }: { email: st
   <div style="background:#fff;border-left:4px solid #e6c87c;padding:20px 24px;margin:28px 0;border-radius:2px;">
     <p style="margin:0 0 8px;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;color:#4B4E6D;opacity:0.7;">Event Details</p>
     <p style="margin:0 0 6px;font-size:16px;color:#2e3050;"><strong>📅 April 24, 2026</strong></p>
-    <p style="margin:0 0 6px;font-size:16px;color:#2e3050;"><strong>⏱ 90 Minutes · Live on Zoom</strong></p>
+    ${sessionLine}
     <p style="margin:0;font-size:14px;color:#6b6b80;">The Zoom link will be sent closer to the date. Keep an eye on your inbox.</p>
   </div>
 
@@ -787,12 +791,12 @@ export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
           <li>A live look at the Soul &rarr; Systems &rarr; AI&trade; sequence and how it applies to where you are right now</li>
           <li>Time for your questions</li>
         </ul>
-        <p style="margin-top:16px !important;"><strong>Date:</strong> [WORKSHOP DATE &mdash; TBD]</p>
-        <p><strong>Time:</strong> [TIME] ET</p>
+        <p style="margin-top:16px !important;"><strong>Date:</strong> April 24, 2026</p>
+        <p><strong>Sessions:</strong> 11:00 AM ET &nbsp;&middot;&nbsp; 7:00 PM ET &mdash; pick the one that works for you</p>
         <p><strong>Where:</strong> Online &mdash; free to attend</p>
       </div>
       <p style="text-align:center;margin:32px 0;">
-        <a href="[WORKSHOP REGISTRATION LINK]" class="cta">Reserve your spot &rarr;</a>
+        <a href="https://ipurposesoul.com/workshop" class="cta">Reserve your spot &rarr;</a>
       </p>
       <p>I built iPurpose because I couldn&rsquo;t find anything that held both the inner work and the real business outcomes at the same time. This workshop is a chance to experience that for yourself.</p>
       <p>I hope to see you there.</p>
@@ -807,7 +811,7 @@ export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
   try {
     const { Resend } = await import('resend');
     const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: "You're invited to something free", html });
+    await resend.emails.send({ from: FROM_ADDRESS, to: email, subject: "You're invited — free live workshop (April 24)", html });
     console.log(`[Email] Nurture 5 (Day 14) sent to ${email}`);
     return true;
   } catch (error) {

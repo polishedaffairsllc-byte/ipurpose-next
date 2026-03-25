@@ -9,6 +9,7 @@ interface Props {
 export default function WorkshopRegisterForm({ buttonStyle }: Props) {
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
+  const [session, setSession] = useState('');
   const [building, setBuilding] = useState('');
   const [website, setWebsite] = useState(''); // honeypot
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ export default function WorkshopRegisterForm({ buttonStyle }: Props) {
       const res = await fetch('/api/leads/workshop', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, email, building, website }),
+        body: JSON.stringify({ firstName, email, session, building, website }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -55,7 +56,7 @@ export default function WorkshopRegisterForm({ buttonStyle }: Props) {
         <p style={{ fontSize: 15, color: '#6b6b80', lineHeight: 1.7, marginBottom: 8 }}>
           Check your inbox — a confirmation with your Zoom link is on its way.
         </p>
-        <p style={{ fontSize: 14, color: '#9C88FF' }}>April 24, 2026 · 90 Minutes · Live on Zoom</p>
+        <p style={{ fontSize: 14, color: '#9C88FF' }}>April 24, 2026 · 11 AM or 7 PM ET · Live on Zoom</p>
       </div>
     );
   }
@@ -100,6 +101,33 @@ export default function WorkshopRegisterForm({ buttonStyle }: Props) {
           onFocus={(e) => (e.currentTarget.style.borderColor = '#9C88FF')}
           onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(75,78,109,0.2)')}
         />
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <label style={labelStyle}>Which session works for you?</label>
+        <div style={{ display: 'flex', gap: 12 }}>
+          {['11:00 AM ET', '7:00 PM ET'].map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => setSession(opt)}
+              style={{
+                flex: 1,
+                padding: '12px 8px',
+                border: `1px solid ${session === opt ? '#9C88FF' : 'rgba(75,78,109,0.2)'}`,
+                borderRadius: 2,
+                background: session === opt ? 'rgba(156,136,255,0.08)' : '#fdfaf7',
+                color: session === opt ? '#9C88FF' : '#4B4E6D',
+                fontFamily: "'Marcellus', Georgia, serif",
+                fontSize: 14,
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div style={{ marginBottom: 20 }}>
