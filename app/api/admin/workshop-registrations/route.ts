@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   }
 
   const db = firebaseAdmin.firestore();
-  const snap = await db.collection('leads').where('source', '==', 'workshop').orderBy('createdAt', 'desc').get();
+  const snap = await db.collection('leads').where('source', '==', 'workshop').get();
 
   if (snap.empty) {
     return NextResponse.json({ count: 0, registrations: [] });
