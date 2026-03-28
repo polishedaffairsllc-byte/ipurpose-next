@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminDb } from '@/lib/firebase-admin';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const db = getAdminDb();
+  const db = firebaseAdmin.firestore();
   const snap = await db.collection('leads').where('source', '==', 'workshop').orderBy('createdAt', 'desc').get();
 
   if (snap.empty) {
