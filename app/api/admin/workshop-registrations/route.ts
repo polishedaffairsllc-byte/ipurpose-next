@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
+const ADMIN_TOKEN = process.env.ADMIN_SECRET_TOKEN;
 
 export async function GET(req: NextRequest) {
   const auth = req.headers.get('authorization') ?? '';
