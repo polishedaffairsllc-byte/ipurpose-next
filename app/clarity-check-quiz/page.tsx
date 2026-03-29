@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import PublicHeader from '../components/PublicHeader';
+import Footer from '../components/Footer';
 
 const C = {
   indigo: '#4B4E6D',
@@ -461,6 +463,7 @@ export default function ClarityCheckQuizPage() {
       `}</style>
 
       <div className="cc-body">
+        <PublicHeader />
         {/* Cover */}
         <div className="cc-cover">
           <div className="cc-eyebrow">iPurpose</div>
@@ -558,6 +561,7 @@ export default function ClarityCheckQuizPage() {
             </div>
           </form>
         </div>
+        <Footer />
       </div>
     </>
   );
