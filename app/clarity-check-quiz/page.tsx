@@ -2,8 +2,83 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PublicHeader from '../components/PublicHeader';
-import Footer from '../components/Footer';
+
+const C = {
+  indigo: '#4B4E6D',
+  lavender: '#9C88FF',
+  champagne: '#e6c87c',
+  deep: '#2e3050',
+  mist: '#F5F7FA',
+  warmWhite: '#fdfaf7',
+};
+
+const questions = [
+  { id: 1, text: "I know what I'm trying to build — and why it matters to me." },
+  { id: 2, text: "My choices feel more like mine than like things I'm doing to keep up, fit in, or make others comfortable." },
+  { id: 3, text: "I'm open to getting outside perspective or structure — I don't need to figure this all out alone." },
+  { id: 4, text: "I'm ready to put real time or energy into getting unstuck — not just thinking about it." },
+  { id: 5, text: "I know something needs to change — I just can't seem to make myself do it." },
+  { id: 6, text: "I'm not stuck because I lack ideas — I'm stuck because I don't have a clear next step or path." },
+  { id: 7, text: "I know what my most meaningful next step is right now." },
+];
+
+const identityQuestions = [
+  {
+    id: 1,
+    text: "When you're facing a big decision, you usually:",
+    options: {
+      A: 'Picture the future you want and move toward it boldly',
+      B: 'Map out a plan and work through it step by step',
+      C: 'Think about who it affects and how to take care of them',
+      D: 'Gather information and optimize for the best outcome',
+      E: 'Look for an angle no one else has considered',
+    },
+  },
+  {
+    id: 2,
+    text: 'Your greatest strength at work is:',
+    options: {
+      A: "Seeing what's possible and getting others excited about it",
+      B: 'Following through and building things that actually work',
+      C: 'Reading people and making them feel seen and supported',
+      D: 'Thinking several steps ahead and solving hard problems',
+      E: 'Coming up with ideas that nobody else would think of',
+    },
+  },
+  {
+    id: 3,
+    text: "You feel most like yourself when you're:",
+    options: {
+      A: 'Leading a change or building something from scratch',
+      B: 'Making real progress on something that matters',
+      C: 'Helping someone grow or get through something hard',
+      D: 'Working out a strategy or making something run better',
+      E: "Making something new that didn't exist before",
+    },
+  },
+  {
+    id: 4,
+    text: 'When you start something new, your first instinct is to focus on:',
+    options: {
+      A: "The vision — what it's for and why it matters",
+      B: 'The plan — what to do and how to build it',
+      C: 'The people — who it serves and how to support them',
+      D: 'The strategy — what will actually work',
+      E: 'The concept — what makes it different',
+    },
+  },
+  {
+    id: 5,
+    text: "People who know you well would say you're someone who:",
+    options: {
+      A: 'Pushes people to think bigger and challenges the way things are',
+      B: 'Gets things done and builds things that last',
+      C: 'Shows up for people and makes them feel like they belong',
+      D: 'Always has a plan and knows how to make things work',
+      E: 'Sees what others miss and brings something fresh to the table',
+    },
+  },
+];
 
 export default function ClarityCheckQuizPage() {
   const [responses, setResponses] = useState<Record<number, number>>({});
@@ -13,80 +88,12 @@ export default function ClarityCheckQuizPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const identityQuestions = [
-    {
-      id: 1,
-      text: 'When facing a major decision, I typically:',
-      options: {
-        A: 'Envision the future impact and set a bold direction',
-        B: 'Create a practical plan and execute systematically',
-        C: 'Consider how it affects people and relationships',
-        D: 'Analyze data and optimize for the best outcome',
-        E: 'Explore creative possibilities and innovative solutions',
-      },
-    },
-    {
-      id: 2,
-      text: 'My greatest strength in my work is:',
-      options: {
-        A: 'Seeing possibilities others miss and inspiring change',
-        B: 'Getting things done and building reliable systems',
-        C: 'Understanding people and creating supportive environments',
-        D: 'Strategic thinking and solving complex problems',
-        E: 'Innovation and bringing new ideas to life',
-      },
-    },
-    {
-      id: 3,
-      text: "I feel most energized when I'm:",
-      options: {
-        A: 'Leading transformation and pioneering new approaches',
-        B: 'Building foundations and seeing concrete progress',
-        C: 'Nurturing growth in myself and others',
-        D: 'Developing strategy and optimizing performance',
-        E: 'Creating something original and expressing my vision',
-      },
-    },
-    {
-      id: 4,
-      text: 'When starting something new, I focus on:',
-      options: {
-        A: 'The vision and why it matters',
-        B: 'The steps and how to build it',
-        C: 'The people and how to support them',
-        D: 'The strategy and how to win',
-        E: 'The concept and how to make it unique',
-      },
-    },
-    {
-      id: 5,
-      text: 'Others would describe me as someone who:',
-      options: {
-        A: 'Inspires and challenges the status quo',
-        B: 'Delivers results and builds sustainable systems',
-        C: 'Cares deeply and creates connection',
-        D: 'Thinks strategically and solves problems',
-        E: 'Innovates and brings fresh perspectives',
-      },
-    },
-  ];
-
-  const questions = [
-    { id: 1, text: 'I can clearly articulate what I am trying to build and why it matters to me.', dimension: 'Internal Clarity' },
-    { id: 2, text: 'My decisions feel guided more by internal alignment than by external pressure.', dimension: 'Internal Clarity' },
-    { id: 3, text: 'I am open to receiving guidance or structure rather than trying to figure everything out alone.', dimension: 'Readiness for Support' },
-    { id: 4, text: 'I feel ready to invest time, attention, or resources into gaining clarity.', dimension: 'Readiness for Support' },
-    { id: 5, text: 'I often know what needs to change, but struggle to translate that insight into action.', dimension: 'Friction Between Insight and Action' },
-    { id: 6, text: 'I feel stalled not because of lack of ideas, but because I lack a clear container or process.', dimension: 'Friction Between Insight and Action' },
-    { id: 7, text: 'I know what my most meaningful next step is right now.', dimension: 'Integration & Momentum' },
-  ];
-
   const handleResponse = (questionId: number, value: number) => {
-    setResponses({ ...responses, [questionId]: value });
+    setResponses((prev) => ({ ...prev, [questionId]: value }));
   };
 
   const handleIdentityResponse = (questionId: number, value: string) => {
-    setIdentityResponses({ ...identityResponses, [questionId]: value });
+    setIdentityResponses((prev) => ({ ...prev, [questionId]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,26 +102,22 @@ export default function ClarityCheckQuizPage() {
 
     const answeredCount = Object.keys(responses).length;
     if (answeredCount !== 7) {
-      const unansweredCount = 7 - answeredCount;
-      setError(
-        `Please answer all 7 state questions. You have ${unansweredCount} unanswered question${unansweredCount > 1 ? 's' : ''}. Scroll up to see highlighted questions.`
-      );
+      const unanswered = 7 - answeredCount;
+      setError(`Please answer all 7 questions. You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}. Scroll up to find them.`);
       const firstUnanswered = questions.find((q) => !responses[q.id]);
       if (firstUnanswered) {
-        document.getElementById(`question-${firstUnanswered.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById(`q-${firstUnanswered.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return;
     }
 
     const identityAnsweredCount = Object.keys(identityResponses).length;
     if (identityAnsweredCount !== 5) {
-      const unansweredCount = 5 - identityAnsweredCount;
-      setError(
-        `Please answer all 5 identity questions. You have ${unansweredCount} unanswered identity question${unansweredCount > 1 ? 's' : ''}. Scroll up to see highlighted questions.`
-      );
+      const unanswered = 5 - identityAnsweredCount;
+      setError(`Please answer all 5 identity questions. You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}.`);
       const firstUnanswered = identityQuestions.find((q) => !identityResponses[q.id]);
       if (firstUnanswered) {
-        document.getElementById(`identity-question-${firstUnanswered.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById(`iq-${firstUnanswered.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return;
     }
@@ -139,7 +142,6 @@ export default function ClarityCheckQuizPage() {
         return;
       }
 
-      // Store results in sessionStorage for the results page to read
       sessionStorage.setItem(
         'clarityCheckResults',
         JSON.stringify({
@@ -153,11 +155,8 @@ export default function ClarityCheckQuizPage() {
         })
       );
 
-      // Mark quiz as completed in localStorage for nav visibility
       localStorage.setItem('clarityCheckCompleted', 'true');
 
-      // Navigate to the dedicated results URL — this is what Google Ads tracks as a conversion
-      // Preserve gclid and UTM params so GA4 / Google Ads attribution is not lost
       const qs = searchParams.toString();
       router.push(qs ? `/clarity-check-results?${qs}` : '/clarity-check-results');
     } catch (err) {
@@ -168,141 +167,398 @@ export default function ClarityCheckQuizPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white">
+    <>
       <style>{`
-        @keyframes pulse-yellow {
-          0%, 100% { background-color: rgb(254 249 195); border-color: rgb(250 204 21); }
-          50% { background-color: rgb(254 240 138); border-color: rgb(234 179 8); }
-        }
-        .unanswered-question { animation: pulse-yellow 2s ease-in-out infinite; }
-      `}</style>
-      <PublicHeader />
+        @import url('https://fonts.googleapis.com/css2?family=Italiana&family=Marcellus&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
 
-      <div className="container max-w-3xl mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-italiana text-warmCharcoal mb-6">Clarity Check</h1>
-          <p className="text-warmCharcoal/75 font-marcellus" style={{ fontSize: '40px' }}>
-            Where you are right now
-          </p>
-          <p className="text-warmCharcoal/65 mt-4" style={{ fontSize: '40px' }}>
-            7 state questions + 5 identity questions. Be honest—there are no wrong answers.
-          </p>
+        .cc-body {
+          font-family: 'Marcellus', Georgia, serif;
+          background-color: ${C.warmWhite};
+          color: ${C.indigo};
+          line-height: 1.75;
+          font-size: 16px;
+          min-height: 100vh;
+        }
+
+        .cc-cover {
+          background: linear-gradient(160deg, ${C.deep} 0%, ${C.indigo} 60%, #6b5b8e 100%);
+          color: ${C.warmWhite};
+          padding: 80px 24px 70px;
+          text-align: center;
+          position: relative;
+          overflow: hidden;
+        }
+        .cc-cover::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(ellipse at 70% 30%, rgba(156,136,255,0.18) 0%, transparent 60%),
+            radial-gradient(ellipse at 20% 80%, rgba(252,196,183,0.12) 0%, transparent 50%);
+          pointer-events: none;
+        }
+        .cc-eyebrow {
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: ${C.champagne};
+          margin-bottom: 20px;
+          opacity: 0.85;
+          position: relative;
+        }
+        .cc-cover-title {
+          font-family: 'Italiana', serif;
+          font-weight: 400;
+          font-size: clamp(34px, 5vw, 58px);
+          color: #fff;
+          max-width: 640px;
+          margin: 0 auto 16px;
+          line-height: 1.2;
+          position: relative;
+        }
+        .cc-cover-sub {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: clamp(16px, 2vw, 20px);
+          opacity: 0.75;
+          max-width: 480px;
+          margin: 0 auto 36px;
+          position: relative;
+        }
+        .cc-cover-meta {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 28px;
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          opacity: 0.55;
+          position: relative;
+        }
+
+        .cc-main {
+          max-width: 760px;
+          margin: 0 auto;
+          padding: 56px 24px 80px;
+        }
+
+        .cc-form-header {
+          text-align: center;
+          margin-bottom: 48px;
+          padding-bottom: 36px;
+          border-bottom: 1px solid rgba(75,78,109,0.12);
+        }
+        .cc-section-label {
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: ${C.lavender};
+          margin-bottom: 12px;
+          font-family: 'Marcellus', serif;
+        }
+        .cc-form-header h2 {
+          font-family: 'Italiana', serif;
+          font-weight: 400;
+          font-size: clamp(28px, 4vw, 42px);
+          color: ${C.deep};
+          margin-bottom: 10px;
+        }
+        .cc-form-header p {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 18px;
+          color: ${C.indigo};
+          opacity: 0.7;
+          max-width: 460px;
+          margin: 0 auto;
+        }
+
+        .cc-section-group { margin-bottom: 40px; }
+
+        .cc-q-card {
+          background: white;
+          border: 1px solid rgba(75,78,109,0.12);
+          border-radius: 4px;
+          padding: 24px 28px 20px;
+          margin-bottom: 10px;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cc-q-card:hover { border-color: rgba(156,136,255,0.35); box-shadow: 0 4px 18px rgba(75,78,109,0.08); }
+        .cc-q-card.unanswered { border-color: rgba(156,136,255,0.45); box-shadow: 0 0 0 3px rgba(156,136,255,0.12); }
+
+        .cc-q-text {
+          font-size: 16px;
+          color: ${C.deep};
+          margin-bottom: 14px;
+          line-height: 1.65;
+        }
+
+        .cc-scale-wrap { display: flex; flex-direction: column; gap: 6px; }
+        .cc-scale-dots { display: flex; gap: 8px; align-items: center; }
+        .cc-dot {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          border: 1.5px solid rgba(75,78,109,0.2);
+          background: ${C.mist};
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          color: ${C.indigo};
+          cursor: pointer;
+          transition: all 0.15s ease;
+          font-family: 'Marcellus', serif;
+          flex-shrink: 0;
+          user-select: none;
+        }
+        .cc-dot:hover { background: ${C.indigo}; border-color: ${C.indigo}; color: white; transform: scale(1.1); box-shadow: 0 4px 12px rgba(75,78,109,0.25); }
+        .cc-dot.selected { background: ${C.lavender}; border-color: ${C.lavender}; color: white; transform: scale(1.12); box-shadow: 0 4px 14px rgba(156,136,255,0.35); }
+
+        .cc-scale-endpoints {
+          display: flex;
+          justify-content: space-between;
+          font-size: 11px;
+          color: rgba(75,78,109,0.45);
+          letter-spacing: 0.04em;
+          padding: 0 2px;
+        }
+
+        .cc-section-divider {
+          text-align: center;
+          color: ${C.champagne};
+          opacity: 0.4;
+          letter-spacing: 0.4em;
+          font-size: 14px;
+          padding: 8px 0;
+          margin: 12px 0 36px;
+        }
+
+        .cc-identity-header {
+          background: linear-gradient(135deg, ${C.deep} 0%, ${C.indigo} 100%);
+          border-radius: 4px;
+          padding: 36px 32px;
+          margin-bottom: 16px;
+          position: relative;
+          overflow: hidden;
+        }
+        .cc-identity-header::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse at 80% 20%, rgba(156,136,255,0.2) 0%, transparent 60%),
+                      radial-gradient(ellipse at 10% 80%, rgba(252,196,183,0.1) 0%, transparent 50%);
+          pointer-events: none;
+        }
+        .cc-identity-header .cc-section-label { color: ${C.champagne}; opacity: 0.85; position: relative; }
+        .cc-identity-header h2 {
+          font-family: 'Italiana', serif;
+          font-weight: 400;
+          color: white;
+          font-size: clamp(24px, 3.5vw, 36px);
+          margin-bottom: 10px;
+          position: relative;
+        }
+        .cc-identity-header p {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 16px;
+          color: rgba(255,255,255,0.65);
+          max-width: 480px;
+          position: relative;
+        }
+
+        .cc-identity-q {
+          background: white;
+          border: 1px solid rgba(75,78,109,0.12);
+          border-radius: 4px;
+          padding: 24px 28px;
+          margin-bottom: 10px;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cc-identity-q:hover { border-color: rgba(156,136,255,0.35); box-shadow: 0 4px 18px rgba(75,78,109,0.07); }
+        .cc-identity-q.unanswered { border-color: rgba(156,136,255,0.45); box-shadow: 0 0 0 3px rgba(156,136,255,0.12); }
+
+        .cc-identity-q-text {
+          font-size: 16px;
+          color: ${C.deep};
+          margin-bottom: 14px;
+          line-height: 1.6;
+        }
+
+        .cc-options-list { display: flex; flex-direction: column; gap: 3px; }
+        .cc-option-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          padding: 10px 12px;
+          border-radius: 3px;
+          cursor: pointer;
+          border: 1px solid transparent;
+          transition: all 0.12s ease;
+        }
+        .cc-option-row:hover { background: rgba(156,136,255,0.06); border-color: rgba(156,136,255,0.2); }
+        .cc-option-row.selected { background: rgba(156,136,255,0.1); border-color: rgba(156,136,255,0.4); }
+
+        .cc-opt-key {
+          font-family: 'Italiana', serif;
+          font-size: 16px;
+          color: ${C.lavender};
+          min-width: 22px;
+          padding-top: 1px;
+          flex-shrink: 0;
+        }
+        .cc-opt-text { font-size: 15px; color: ${C.indigo}; line-height: 1.55; opacity: 0.85; }
+
+        .cc-submit-section {
+          text-align: center;
+          margin-top: 48px;
+          padding-top: 36px;
+          border-top: 1px solid rgba(75,78,109,0.1);
+        }
+        .cc-submit-btn {
+          display: inline-block;
+          background: ${C.deep};
+          color: ${C.warmWhite};
+          font-family: 'Marcellus', Georgia, serif;
+          font-size: 15px;
+          padding: 15px 48px;
+          border-radius: 2px;
+          border: none;
+          cursor: pointer;
+          letter-spacing: 0.08em;
+          transition: all 0.2s ease;
+        }
+        .cc-submit-btn:hover:not(:disabled) { background: ${C.indigo}; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(75,78,109,0.2); }
+        .cc-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .cc-submit-note {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 14px;
+          color: rgba(75,78,109,0.45);
+          margin-top: 12px;
+        }
+
+        .cc-error {
+          background: rgba(192,57,43,0.08);
+          border: 1px solid rgba(192,57,43,0.25);
+          color: #c0392b;
+          font-size: 14px;
+          padding: 14px 20px;
+          border-radius: 4px;
+          margin-bottom: 24px;
+          text-align: center;
+        }
+
+        @media (max-width: 520px) {
+          .cc-main { padding: 36px 16px 60px; }
+          .cc-identity-header { padding: 28px 20px; }
+          .cc-scale-dots { gap: 5px; }
+          .cc-dot { width: 32px; height: 32px; font-size: 11px; }
+        }
+      `}</style>
+
+      <div className="cc-body">
+        {/* Cover */}
+        <div className="cc-cover">
+          <div className="cc-eyebrow">iPurpose</div>
+          <h1 className="cc-cover-title">Clarity Check</h1>
+          <p className="cc-cover-sub">A few honest questions to help us understand where you are — and how you&rsquo;re wired. There are no right or wrong answers.</p>
+          <div className="cc-cover-meta">
+            <span>Free</span>
+            <span>12 Questions</span>
+            <span>Under 3 Minutes</span>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-12">
-          {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>
-          )}
+        {/* Main */}
+        <div className="cc-main">
+          <div className="cc-form-header">
+            <div className="cc-section-label">Clarity Check</div>
+            <h2>Where you are right now</h2>
+            <p>7 questions about your current situation + 5 about how you&rsquo;re wired. Be honest &mdash; there are no wrong answers.</p>
+          </div>
 
-          {/* Questions by Dimension */}
-          {['Internal Clarity', 'Readiness for Support', 'Friction Between Insight and Action', 'Integration & Momentum'].map((dimension) => (
-            <div key={dimension} className="space-y-8 pb-12 border-b border-warmCharcoal/10">
-              <h2 className="text-3xl font-italiana text-lavenderViolet text-center">{dimension}</h2>
-              {questions
-                .filter((q) => q.dimension === dimension)
-                .map((question) => (
-                  <div
-                    key={question.id}
-                    id={`question-${question.id}`}
-                    className={`space-y-4 text-center p-6 rounded-lg transition-all ${
-                      !responses[question.id]
-                        ? 'unanswered-question border-4 border-yellow-400 shadow-lg'
-                        : 'bg-white border-2 border-transparent'
-                    }`}
-                  >
-                    <p className="text-warmCharcoal/85 font-marcellus" style={{ fontSize: '40px' }}>
-                      {question.text}
-                    </p>
-                    <div className="flex w-full justify-between">
-                      {[1, 2, 3, 4, 5].map((value) => (
+          <form onSubmit={handleSubmit}>
+            {error && <div className="cc-error">{error}</div>}
+
+            {/* State Questions */}
+            <div className="cc-section-group">
+              {questions.map((q) => (
+                <div
+                  key={q.id}
+                  id={`q-${q.id}`}
+                  className={`cc-q-card${!responses[q.id] ? ' unanswered' : ''}`}
+                >
+                  <p className="cc-q-text">{q.text}</p>
+                  <div className="cc-scale-wrap">
+                    <div className="cc-scale-dots">
+                      {[1, 2, 3, 4, 5].map((v) => (
                         <button
-                          key={value}
+                          key={v}
                           type="button"
-                          onClick={() => handleResponse(question.id, value)}
-                          className={`w-12 h-12 rounded-full font-marcellus text-sm transition-all transform flex items-center justify-center ${
-                            responses[question.id] === value
-                              ? 'bg-warmCharcoal text-warmCharcoal'
-                              : 'bg-warmCharcoal/5 text-warmCharcoal/60 hover:bg-warmCharcoal/10'
-                          }`}
+                          className={`cc-dot${responses[q.id] === v ? ' selected' : ''}`}
+                          onClick={() => handleResponse(q.id, v)}
                         >
-                          {responses[question.id] === value ? '✕' : value}
+                          {v}
                         </button>
                       ))}
                     </div>
-                    <div className="flex justify-between text-xs text-warmCharcoal/50 font-marcellus">
+                    <div className="cc-scale-endpoints">
                       <span>Not true at all</span>
                       <span>Very true</span>
                     </div>
                   </div>
-                ))}
-            </div>
-          ))}
-
-          {/* Identity Questions Section */}
-          <div className="space-y-8 pb-12 pt-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-italiana text-warmCharcoal mb-4">Discover Your Identity Type</h2>
-              <p className="text-warmCharcoal/65 font-marcellus" style={{ fontSize: '35px' }}>
-                These questions help us understand your natural approach and strengths.
-              </p>
-            </div>
-
-            {identityQuestions.map((question) => (
-              <div
-                key={question.id}
-                id={`identity-question-${question.id}`}
-                className={`space-y-6 p-6 rounded-lg transition-all ${
-                  !identityResponses[question.id]
-                    ? 'unanswered-question border-4 border-yellow-400 shadow-lg'
-                    : 'bg-white border-2 border-transparent'
-                }`}
-              >
-                <p className="text-warmCharcoal font-marcellus font-semibold text-center" style={{ fontSize: '35px' }}>
-                  {question.text}
-                </p>
-                <div className="space-y-3">
-                  {Object.entries(question.options).map(([key, value]) => {
-                    const isSelected = identityResponses[question.id] === key;
-                    const hasAnswer = identityResponses[question.id];
-                    const shouldShow = !hasAnswer || isSelected;
-                    if (!shouldShow) return null;
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => handleIdentityResponse(question.id, key)}
-                        className={`w-full text-center px-6 py-4 rounded-lg font-marcellus transition-all ${
-                          isSelected
-                            ? 'bg-lavenderViolet text-white shadow-md'
-                            : 'bg-warmCharcoal/5 text-warmCharcoal hover:bg-warmCharcoal/10'
-                        }`}
-                        style={{ fontSize: '35px' }}
-                      >
-                        <span className="font-semibold mr-3">{key}.</span>
-                        {value}
-                      </button>
-                    );
-                  })}
                 </div>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="cc-section-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+            {/* Identity Questions */}
+            <div className="cc-section-group">
+              <div className="cc-identity-header">
+                <div className="cc-section-label">Identity Questions</div>
+                <h2>How you&rsquo;re naturally wired</h2>
+                <p>These five questions help us understand your strengths and how you move through the world.</p>
               </div>
-            ))}
-          </div>
 
-          {/* Submit Button */}
-          <div className="text-center pt-8">
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px' }}
-            >
-              {loading ? 'Submitting...' : 'Submit & Receive Your Results'}
-            </button>
-          </div>
-        </form>
+              {identityQuestions.map((q) => (
+                <div
+                  key={q.id}
+                  id={`iq-${q.id}`}
+                  className={`cc-identity-q${!identityResponses[q.id] ? ' unanswered' : ''}`}
+                >
+                  <p className="cc-identity-q-text">{q.text}</p>
+                  <div className="cc-options-list">
+                    {(Object.entries(q.options) as [string, string][]).map(([key, text]) => (
+                      <div
+                        key={key}
+                        className={`cc-option-row${identityResponses[q.id] === key ? ' selected' : ''}`}
+                        onClick={() => handleIdentityResponse(q.id, key)}
+                      >
+                        <span className="cc-opt-key">{key}.</span>
+                        <span className="cc-opt-text">{text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Submit */}
+            <div className="cc-submit-section">
+              <button type="submit" className="cc-submit-btn" disabled={loading}>
+                {loading ? 'Submitting\u2026' : 'Submit \u0026 Receive Your Results'}
+              </button>
+              <p className="cc-submit-note">Your results will be delivered immediately. No spam, ever.</p>
+            </div>
+          </form>
+        </div>
       </div>
-
-      <Footer />
-    </div>
+    </>
   );
 }

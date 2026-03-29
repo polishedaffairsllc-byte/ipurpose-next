@@ -52,7 +52,7 @@ export async function GET() {
   // Check Environment Variables
   const required = [
     'OPENAI_API_KEY',
-    'FIREBASE_SERVICE_ACCOUNT_KEY',
+    'FIREBASE_SERVICE_ACCOUNT',
     'NEXT_PUBLIC_FIREBASE_API_KEY',
   ];
   const missing = required.filter(key => !process.env[key]);
