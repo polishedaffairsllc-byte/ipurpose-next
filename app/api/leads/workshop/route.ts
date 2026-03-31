@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { rateLimit } from '@/lib/rate-limit-simple';
-import { sendWorkshopConfirmationEmail } from '@/lib/email-automation';
+import { sendWorkshopConfirmationEmail, sendWorkshopFounderNotification } from '@/lib/email-automation';
 
 interface WorkshopRegistrationRequest {
   firstName: string;
@@ -59,6 +59,11 @@ export async function POST(request: NextRequest) {
     // Send confirmation email (non-blocking)
     sendWorkshopConfirmationEmail({ email, name: firstName, session: session || null }).catch((err) =>
       console.error('[WORKSHOP] Confirmation email failed:', err)
+    );
+
+    // Notify founder (non-blocking)
+    sendWorkshopFounderNotification({ name: firstName, email, session: session || null, building: building || null }).catch((err) =>
+      console.error('[WORKSHOP] Founder notification failed:', err)
     );
 
     return NextResponse.json({ ok: true, id: result.id, deduped: result.deduped });

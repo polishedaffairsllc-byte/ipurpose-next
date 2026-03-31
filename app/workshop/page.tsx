@@ -60,7 +60,7 @@ export default function WorkshopPage() {
       <section style={{
         background: `linear-gradient(160deg, ${C.deep} 0%, ${C.indigo} 60%, #6b5b8e 100%)`,
         color: C.warmWhite,
-        padding: '80px 24px 70px',
+        padding: '90px 24px 80px',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
@@ -73,56 +73,92 @@ export default function WorkshopPage() {
           pointerEvents: 'none',
         }} />
 
-        <p style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: C.champagne, marginBottom: 20, opacity: 0.85 }}>
-          iPurpose™ · Free Live Workshop
-        </p>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.3em', textTransform: 'uppercase', color: C.champagne, marginBottom: 24, opacity: 0.85 }}>
+            Free Live Workshop
+          </p>
 
-        <h1 style={{
-          fontFamily: "'Italiana', Georgia, serif",
-          fontSize: 'clamp(36px, 5vw, 64px)',
-          fontWeight: 400,
-          color: '#fff',
-          maxWidth: 700,
-          margin: '0 auto 16px',
-          lineHeight: 1.2,
-        }}>
-          Build Your Purpose → Income Blueprint{' '}
-          <em style={{ fontStyle: 'italic', color: C.peach }}>(Live)</em>
-        </h1>
+          <h1 style={{
+            fontFamily: "'Italiana', Georgia, serif",
+            fontSize: 'clamp(38px, 6vw, 64px)',
+            fontWeight: 400,
+            color: '#fff',
+            maxWidth: 680,
+            margin: '0 auto 10px',
+            lineHeight: 1.15,
+          }}>
+            Something isn&rsquo;t working &mdash;<br />
+            <em style={{ fontStyle: 'italic', color: C.peach }}>and you can feel it.</em>
+          </h1>
 
-        <p style={{
-          fontFamily: "'Cormorant Garamond', Georgia, serif",
-          fontStyle: 'italic',
-          fontSize: 'clamp(17px, 2vw, 22px)',
-          opacity: 0.82,
-          maxWidth: 520,
-          margin: '0 auto 40px',
-        }}>
-          Leave with a completed Purpose → Income Blueprint you can actually build from.
-        </p>
+          <p style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic',
+            fontSize: 'clamp(17px, 2.5vw, 22px)',
+            color: 'rgba(255,255,255,0.72)',
+            maxWidth: 540,
+            margin: '0 auto 24px',
+            lineHeight: 1.65,
+          }}>
+            You&rsquo;re putting in effort but not getting the results you expected. You&rsquo;re not sure what to focus on next. This workshop is where we figure out exactly what&rsquo;s in the way &mdash; and what to do about it.
+          </p>
 
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 20, marginBottom: 48 }}>
-          {[
-            { icon: '📅', text: 'April 24, 2026' },
-            { icon: '⏱', text: '11 AM or 7 PM ET' },
-            { icon: '🎥', text: 'Live on Zoom' },
-            { icon: '✦', text: 'Free to Attend' },
-          ].map(({ icon, text }) => (
-            <div key={text} style={{
-              background: 'rgba(255,255,255,0.08)',
-              border: '1px solid rgba(255,255,255,0.15)',
+          <p style={{
+            fontFamily: "'Marcellus', Georgia, serif",
+            fontSize: 17,
+            color: 'rgba(255,255,255,0.85)',
+            maxWidth: 520,
+            margin: '0 auto 16px',
+            lineHeight: 1.7,
+          }}>
+            Walk away with clarity on what&rsquo;s not working, what to focus on next, and a clear path forward.
+          </p>
+
+          <p style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic',
+            fontSize: 16,
+            color: 'rgba(255,255,255,0.55)',
+            maxWidth: 480,
+            margin: '0 auto 36px',
+            lineHeight: 1.65,
+          }}>
+            This is the exact framework I use to help people move from confusion to clarity &mdash; and start making real progress.
+          </p>
+
+          <p style={{ fontSize: 13, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.champagne, opacity: 0.8, marginBottom: 32 }}>
+            Friday, April 24 &nbsp;&middot;&nbsp; 11:00 AM ET &nbsp;or&nbsp; 7:00 PM ET &nbsp;&middot;&nbsp; Choose one session
+          </p>
+
+          <a
+            href="#register"
+            style={{
+              display: 'inline-block',
+              background: C.peach,
+              color: C.deep,
+              fontFamily: "'Italiana', Georgia, serif",
+              fontSize: 20,
+              padding: '16px 52px',
               borderRadius: 2,
-              padding: '10px 20px',
-              fontSize: 13,
-              letterSpacing: '0.1em',
-              color: 'rgba(255,255,255,0.85)',
-            }}>
-              <strong style={{ color: C.champagne }}>{icon}</strong> {text}
-            </div>
-          ))}
-        </div>
+              textDecoration: 'none',
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              marginBottom: 20,
+            }}
+          >
+            Join the Free Workshop
+          </a>
 
-        <a href="#register" style={BTN_STYLE}>Save My Spot</a>
+          <p style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontStyle: 'italic',
+            fontSize: 14,
+            color: 'rgba(255,255,255,0.4)',
+            marginTop: 4,
+          }}>
+            Small group. No replay. Show up live.
+          </p>
+        </div>
       </section>
 
       {/* ── REGISTRATION FORM ── */}

@@ -327,6 +327,76 @@ export async function sendWorkshopConfirmationEmail({ email, name, session }: { 
 }
 
 // ─────────────────────────────────────────────
+// WORKSHOP FOUNDER NOTIFICATION
+
+/**
+ * Notify the founder when someone signs up for the workshop.
+ */
+export async function sendWorkshopFounderNotification(data: {
+  name: string;
+  email: string;
+  session?: string | null;
+  building?: string | null;
+}) {
+  const { name, email, session, building } = data;
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const founderEmail = process.env.FOUNDER_NOTIFY_EMAIL || 'renita@ipurposesoul.com';
+
+  if (!resendApiKey) {
+    console.warn('[Workshop] RESEND_API_KEY not configured — skipping founder notification.');
+    return false;
+  }
+
+  const html = `
+<div style="max-width:560px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e8e8e8;">
+  <div style="background:#2e3050;padding:20px 28px;">
+    <p style="margin:0;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#e6c87c;">iPurpose™</p>
+    <h1 style="margin:8px 0 0;font-size:20px;color:#fff;font-weight:400;">🎉 New Workshop Signup</h1>
+  </div>
+  <div style="padding:28px;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:10px 0;color:#888;width:110px;">Name</td>
+        <td style="padding:10px 0;color:#2a2a2a;font-weight:600;">${name}</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:10px 0;color:#888;">Email</td>
+        <td style="padding:10px 0;color:#2a2a2a;">${email}</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:10px 0;color:#888;">Session</td>
+        <td style="padding:10px 0;color:#2a2a2a;">${session || 'Not selected'}</td>
+      </tr>
+      ${building ? `<tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:10px 0;color:#888;">Building</td><td style="padding:10px 0;color:#2a2a2a;">${building}</td></tr>` : ''}
+      <tr>
+        <td style="padding:10px 0;color:#888;">Time</td>
+        <td style="padding:10px 0;color:#2a2a2a;">${new Date().toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'medium', timeStyle: 'short' })} ET</td>
+      </tr>
+    </table>
+  </div>
+  <div style="padding:16px 28px;background:#f9f9f9;border-top:1px solid #f0f0f0;">
+    <p style="margin:0;font-size:12px;color:#bbb;">Workshop: Build Your Purpose → Income Blueprint (Live) · April 24, 2026</p>
+  </div>
+</div>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(resendApiKey);
+    await resend.emails.send({
+      from: 'info@ipurposesoul.com',
+      to: founderEmail,
+      subject: `🎉 Workshop signup: ${name} (${session || 'session TBD'})`,
+      html,
+    });
+    console.log(`[Workshop] Founder notification sent for ${email}`);
+    return true;
+  } catch (error) {
+    console.error('[Workshop] Founder notification failed:', error);
+    return false;
+  }
+}
+
+// ─────────────────────────────────────────────
 // CLARITY CHECK THANK YOU EMAIL
 // ─────────────────────────────────────────────
 
