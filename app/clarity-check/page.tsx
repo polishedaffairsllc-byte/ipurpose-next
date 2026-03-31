@@ -29,6 +29,14 @@ export default function ClarityCheckPage() {
         <div className="absolute inset-0 bg-black/55" />
 
         <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-5 max-w-xl mx-auto">
+          {/* Continuity line — mirrors ad hook */}
+          <p
+            className="font-marcellus text-sm sm:text-base tracking-wide"
+            style={{ color: 'rgba(255,255,255,0.65)', WebkitTextFillColor: 'rgba(255,255,255,0.65)', fontStyle: 'italic' }}
+          >
+            You clicked because something resonated. You&rsquo;re in the right place.
+          </p>
+
           {/* Outcome-focused headline */}
           <h1
             className="font-italiana text-2xl sm:text-3xl md:text-4xl leading-snug tracking-tight"
@@ -58,7 +66,7 @@ export default function ClarityCheckPage() {
             className="font-marcellus text-sm sm:text-base italic max-w-sm"
             style={{ color: 'rgba(255,255,255,0.7)', WebkitTextFillColor: 'rgba(255,255,255,0.7)' }}
           >
-            If you&rsquo;ve been Googling &ldquo;what career is right for me&rdquo; &mdash; this will tell you more than any job test will.
+            If you&rsquo;ve been feeling like something needs to change but you can&rsquo;t quite name what &mdash; this will help.
           </p>
 
           {/* Primary CTA — large, unmissable, with pulse glow */}
