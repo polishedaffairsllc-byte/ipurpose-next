@@ -396,6 +396,66 @@ export async function sendWorkshopFounderNotification(data: {
   }
 }
 
+/**
+ * Send a password-setup email to a newly auto-created workshop account.
+ * Uses Firebase Admin to generate a password reset link (which also works
+ * as a first-time "set your password" link for accounts with no password).
+ */
+export async function sendWorkshopAccountEmail(data: {
+  name: string;
+  email: string;
+  session?: string | null;
+  passwordResetLink: string;
+}): Promise<boolean> {
+  const { name, email, session, passwordResetLink } = data;
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.warn('[Workshop] RESEND_API_KEY not set — skipping account email.');
+    return false;
+  }
+
+  const firstName = name.split(' ')[0];
+  const sessionLine = session ? `<p style="margin:0 0 8px;font-size:14px;color:#4B4E6D;">Your session: <strong>${session}</strong></p>` : '';
+
+  const html = `
+<div style="max-width:560px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#2e3050;">
+  <div style="background:linear-gradient(135deg,#2e3050 0%,#4B4E6D 100%);padding:32px 28px;text-align:center;">
+    <p style="margin:0 0 8px;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#e6c87c;font-family:Georgia,serif;">iPurpose™ · Live Workshop</p>
+    <h1 style="margin:0;font-size:28px;color:#fff;font-weight:400;font-family:Georgia,serif;line-height:1.3;">Your Blueprint account<br>is ready, ${firstName}.</h1>
+  </div>
+  <div style="padding:32px 28px;background:#fdfaf7;">
+    <p style="font-size:15px;color:#4B4E6D;line-height:1.7;margin:0 0 20px;">We created your iPurpose account so your Blueprint saves automatically during the workshop on April 24.</p>
+    ${sessionLine}
+    <p style="font-size:15px;color:#4B4E6D;line-height:1.7;margin:0 0 28px;">Before the workshop, click below to set your password. It takes 30 seconds — then you're all set.</p>
+    <div style="text-align:center;margin:0 0 32px;">
+      <a href="${passwordResetLink}" style="display:inline-block;background:#fcc4b7;color:#2e3050;font-family:Georgia,serif;font-size:17px;padding:14px 40px;border-radius:2px;text-decoration:none;letter-spacing:0.03em;">Set My Password →</a>
+    </div>
+    <p style="font-size:13px;color:#9b9bad;line-height:1.6;margin:0 0 8px;">On the day of the workshop, you'll receive another email with a direct link to open your Blueprint. Just sign in and start filling — your answers save automatically.</p>
+    <p style="font-size:13px;color:#9b9bad;line-height:1.6;margin:0;">Questions? Reply to this email — I read every message.</p>
+  </div>
+  <div style="padding:20px 28px;background:#f5f7fa;border-top:1px solid rgba(75,78,109,0.08);text-align:center;">
+    <p style="margin:0 0 6px;font-size:12px;color:#bbb;">iPurpose · April 24, 2026 · Free Live Workshop</p>
+    ${unsubscribeFooter(email)}
+  </div>
+</div>`;
+
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(resendApiKey);
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: email,
+      subject: `Your iPurpose account is ready — one step before April 24`,
+      html,
+    });
+    console.log(`[Workshop] Account email sent to ${email}`);
+    return true;
+  } catch (error) {
+    console.error('[Workshop] Account email failed:', error);
+    return false;
+  }
+}
+
 // ─────────────────────────────────────────────
 // CLARITY CHECK THANK YOU EMAIL
 // ─────────────────────────────────────────────

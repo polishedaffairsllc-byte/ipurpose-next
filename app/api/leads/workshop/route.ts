@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { rateLimit } from '@/lib/rate-limit-simple';
-import { sendWorkshopConfirmationEmail, sendWorkshopFounderNotification } from '@/lib/email-automation';
+import { sendWorkshopConfirmationEmail, sendWorkshopFounderNotification, sendWorkshopAccountEmail } from '@/lib/email-automation';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
 
 interface WorkshopRegistrationRequest {
   firstName: string;
@@ -65,6 +66,57 @@ export async function POST(request: NextRequest) {
     sendWorkshopFounderNotification({ name: firstName, email, session: session || null, building: building || null }).catch((err) =>
       console.error('[WORKSHOP] Founder notification failed:', err)
     );
+
+    // Auto-create Firebase account for this registrant (non-blocking pipeline)
+    ;(async () => {
+      try {
+        // Create user — if they already have an account this will throw auth/email-already-exists
+        let uid: string | null = null;
+        try {
+          const userRecord = await firebaseAdmin.auth().createUser({
+            email,
+            displayName: firstName,
+          });
+          uid = userRecord.uid;
+          console.log(`[WORKSHOP] Account created for ${email} (${uid})`);
+        } catch (createErr: any) {
+          if (createErr.code === 'auth/email-already-exists') {
+            const existing = await firebaseAdmin.auth().getUserByEmail(email);
+            uid = existing.uid;
+            console.log(`[WORKSHOP] Account already exists for ${email} (${uid})`);
+          } else {
+            throw createErr;
+          }
+        }
+
+        if (uid) {
+          // Upsert user doc with workshop role and session
+          const db = firebaseAdmin.firestore();
+          await db.collection('users').doc(uid).set(
+            {
+              email,
+              displayName: firstName,
+              role: 'workshop',
+              workshopSession: session || null,
+              source: 'workshop_free',
+              updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
+
+          // Generate a password-reset / set-password magic link and email it
+          const passwordResetLink = await firebaseAdmin.auth().generatePasswordResetLink(email);
+          await sendWorkshopAccountEmail({
+            name: firstName,
+            email,
+            session: session || null,
+            passwordResetLink,
+          });
+        }
+      } catch (accountErr) {
+        console.error('[WORKSHOP] Auto-account creation pipeline failed:', accountErr);
+      }
+    })();
 
     return NextResponse.json({ ok: true, id: result.id, deduped: result.deduped });
   } catch (error) {
