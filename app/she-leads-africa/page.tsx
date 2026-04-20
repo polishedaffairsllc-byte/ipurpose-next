@@ -20,13 +20,13 @@ export default function SheLeadsAfricaPage() {
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section
-        className="relative w-full px-6 py-24 text-center"
+        className="relative w-full px-6 py-16 text-center"
         style={{
           background: 'linear-gradient(160deg, #4b4e6d 0%, #2e3050 100%)',
         }}
       >
         {/* Pilot badge */}
-        <div className="inline-flex items-center gap-2 mb-8 px-5 py-2 rounded-full border border-white/20 text-xs font-semibold tracking-widest uppercase"
+        <div className="inline-flex items-center gap-2 mb-6 px-5 py-2 rounded-full border border-white/20 text-xs font-semibold tracking-widest uppercase"
           style={{ color: '#d4af37', backgroundColor: 'rgba(212,175,55,0.08)' }}>
           ✦ Pilot Collaboration · Private
         </div>
@@ -39,7 +39,7 @@ export default function SheLeadsAfricaPage() {
         </p>
 
         <h1
-          className="font-marcellus text-4xl sm:text-5xl md:text-6xl leading-tight mb-6 max-w-4xl mx-auto"
+          className="font-marcellus text-4xl sm:text-5xl md:text-6xl leading-tight mb-4 max-w-4xl mx-auto"
           style={{ color: '#ffffff' }}
         >
           Build Your Purpose<br />
@@ -47,13 +47,13 @@ export default function SheLeadsAfricaPage() {
         </h1>
 
         <p
-          className="text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg sm:text-xl max-w-2xl mx-auto mb-8 leading-relaxed"
           style={{ color: 'rgba(255,255,255,0.75)' }}
         >
           Clarity &amp; Direction for Women Founders
         </p>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-12 text-sm font-medium"
+        <div className="flex flex-wrap justify-center gap-3 mb-8 text-sm font-medium"
           style={{ color: 'rgba(255,255,255,0.70)' }}>
           <span className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/15">⏱ 90 MINUTES · LIVE</span>
           <span className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/15">🌍 VIRTUAL · INTERNATIONAL</span>
@@ -70,42 +70,42 @@ export default function SheLeadsAfricaPage() {
       </section>
 
       {/* ── WHY THIS EXISTS ──────────────────────────────────── */}
-      <section className="px-6 py-20 max-w-3xl mx-auto">
+      <section className="px-6 py-14 max-w-3xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-widest uppercase mb-4"
+          className="text-xs font-semibold tracking-widest uppercase mb-3"
           style={{ color: '#9c88ff' }}
         >
           Why This Workshop Exists
         </p>
         <h2
-          className="font-marcellus text-3xl sm:text-4xl mb-6 leading-snug"
+          className="font-marcellus text-3xl sm:text-4xl mb-5 leading-snug"
           style={{ color: '#4b4e6d' }}
         >
           Many founders are not lacking ambition —<br />
           <span style={{ color: '#9c88ff' }}>they are lacking a clear framework.</span>
         </h2>
-        <p className="text-lg leading-relaxed mb-6" style={{ color: '#4b4e6d', opacity: 0.8 }}>
+        <p className="text-base leading-7 mb-4" style={{ color: '#4b4e6d', opacity: 0.8 }}>
           They have the drive, skills, and community, but need clarity and direction for turning who they are into something that works.
         </p>
-        <p className="text-lg leading-relaxed" style={{ color: '#4b4e6d', opacity: 0.8 }}>
+        <p className="text-base leading-7" style={{ color: '#4b4e6d', opacity: 0.8 }}>
           This session closes that gap. In 90 minutes, participants move from scattered and stuck to grounded and directed — leaving with a concrete blueprint they can act on <strong>the same day.</strong>
         </p>
       </section>
 
       {/* ── FRAMEWORK ────────────────────────────────────────── */}
       <section
-        className="px-6 py-20"
+        className="px-6 py-14"
         style={{ backgroundColor: '#4b4e6d' }}
       >
         <div className="max-w-4xl mx-auto text-center">
           <p
-            className="text-xs font-semibold tracking-widest uppercase mb-4"
+            className="text-xs font-semibold tracking-widest uppercase mb-3"
             style={{ color: '#9c88ff' }}
           >
             The Framework
           </p>
           <h2
-            className="font-marcellus text-3xl sm:text-4xl mb-16"
+            className="font-marcellus text-3xl sm:text-4xl mb-10"
             style={{ color: '#ffffff' }}
           >
             Soul → Systems → AI
@@ -152,7 +152,7 @@ export default function SheLeadsAfricaPage() {
                 >
                   {step.sub}
                 </h3>
-                <p style={{ color: 'rgba(255,255,255,0.65)', lineHeight: '1.7' }}>
+                <p style={{ color: 'rgba(255,255,255,0.65)', lineHeight: '1.65' }}>
                   {step.body}
                 </p>
               </div>
@@ -162,21 +162,21 @@ export default function SheLeadsAfricaPage() {
       </section>
 
       {/* ── SESSION AGENDA ───────────────────────────────────── */}
-      <section className="px-6 py-20 max-w-3xl mx-auto">
+      <section className="px-6 py-14 max-w-3xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-widest uppercase mb-4"
+          className="text-xs font-semibold tracking-widest uppercase mb-3"
           style={{ color: '#9c88ff' }}
         >
           Session Agenda
         </p>
         <h2
-          className="font-marcellus text-3xl sm:text-4xl mb-12"
+          className="font-marcellus text-3xl sm:text-4xl mb-8"
           style={{ color: '#4b4e6d' }}
         >
           90 Minutes, Structured to Deliver
         </h2>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           {[
             { time: '0–15 min', title: 'The Clarity Gap', desc: 'Why founders stall. Framing the problem this session solves.' },
             { time: '15–40 min', title: 'Soul — Who You Are', desc: 'Guided identity exercise. Participants write their Core Identity statement.' },
@@ -186,7 +186,7 @@ export default function SheLeadsAfricaPage() {
           ].map((item, i) => (
             <div
               key={i}
-              className="flex gap-6 p-6 rounded-xl"
+              className="flex gap-5 p-5 rounded-xl"
               style={{ backgroundColor: 'rgba(75,78,109,0.05)', borderLeft: '3px solid #9c88ff' }}
             >
               <div
@@ -199,7 +199,7 @@ export default function SheLeadsAfricaPage() {
                 <div className="font-semibold mb-1" style={{ color: '#4b4e6d' }}>
                   {item.title}
                 </div>
-                <div style={{ color: '#4b4e6d', opacity: 0.7, lineHeight: '1.6' }}>
+                <div style={{ color: '#4b4e6d', opacity: 0.7, lineHeight: '1.55' }}>
                   {item.desc}
                 </div>
               </div>
@@ -210,18 +210,18 @@ export default function SheLeadsAfricaPage() {
 
       {/* ── PARTICIPANTS LEAVE WITH ───────────────────────────── */}
       <section
-        className="px-6 py-20"
+        className="px-6 py-14"
         style={{ background: 'linear-gradient(135deg, rgba(156,136,255,0.08) 0%, rgba(252,196,183,0.12) 100%)' }}
       >
         <div className="max-w-3xl mx-auto">
           <p
-            className="text-xs font-semibold tracking-widest uppercase mb-4"
+            className="text-xs font-semibold tracking-widest uppercase mb-3"
             style={{ color: '#9c88ff' }}
           >
             Participants Leave With
           </p>
           <h2
-            className="font-marcellus text-3xl sm:text-4xl mb-12"
+            className="font-marcellus text-3xl sm:text-4xl mb-8"
             style={{ color: '#4b4e6d' }}
           >
             Tangible Outcomes — Same Day
@@ -241,7 +241,7 @@ export default function SheLeadsAfricaPage() {
                 style={{ border: '1px solid rgba(75,78,109,0.10)' }}
               >
                 <span style={{ color: '#88b04b', fontSize: '1.1rem', marginTop: '1px' }}>✓</span>
-                <span style={{ color: '#4b4e6d', lineHeight: '1.6' }}>{item}</span>
+                <span style={{ color: '#4b4e6d', lineHeight: '1.55' }}>{item}</span>
               </div>
             ))}
           </div>
@@ -249,15 +249,15 @@ export default function SheLeadsAfricaPage() {
       </section>
 
       {/* ── SESSION FORMAT ───────────────────────────────────── */}
-      <section className="px-6 py-20 max-w-3xl mx-auto">
+      <section className="px-6 py-14 max-w-3xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-widest uppercase mb-4"
+          className="text-xs font-semibold tracking-widest uppercase mb-3"
           style={{ color: '#9c88ff' }}
         >
           Session Format
         </p>
         <h2
-          className="font-marcellus text-3xl sm:text-4xl mb-10"
+          className="font-marcellus text-3xl sm:text-4xl mb-7"
           style={{ color: '#4b4e6d' }}
         >
           Facilitated — Not a Lecture
@@ -282,12 +282,12 @@ export default function SheLeadsAfricaPage() {
 
       {/* ── FACILITATOR ─────────────────────────────────────── */}
       <section
-        className="px-6 py-20"
+        className="px-6 py-14"
         style={{ backgroundColor: '#4b4e6d' }}
       >
         <div className="max-w-3xl mx-auto">
           <p
-            className="text-xs font-semibold tracking-widest uppercase mb-10"
+            className="text-xs font-semibold tracking-widest uppercase mb-8"
             style={{ color: '#9c88ff' }}
           >
             About the Facilitator
@@ -313,8 +313,8 @@ export default function SheLeadsAfricaPage() {
                 Leadership Strategist · Purpose &amp; Mindset Architect · Founder, iPurpose
               </p>
               <p
-                className="text-base leading-relaxed mb-6"
-                style={{ color: 'rgba(255,255,255,0.70)' }}
+                className="text-base mb-5"
+                style={{ color: 'rgba(255,255,255,0.70)', lineHeight: '1.65' }}
               >
                 Renita is the founder of iPurpose, a soul-led, AI-supported business accelerator built on a single belief: the most sustainable businesses are built on who you actually are. She has guided founders, creators, and career pivoters through the process of turning identity into income with clarity, calm, and a framework that holds.
               </p>
@@ -334,21 +334,21 @@ export default function SheLeadsAfricaPage() {
       </section>
 
       {/* ── NEXT STEPS ───────────────────────────────────────── */}
-      <section className="px-6 py-20 max-w-3xl mx-auto">
+      <section className="px-6 py-14 max-w-3xl mx-auto">
         <p
-          className="text-xs font-semibold tracking-widest uppercase mb-4"
+          className="text-xs font-semibold tracking-widest uppercase mb-3"
           style={{ color: '#9c88ff' }}
         >
           Next Steps
         </p>
         <h2
-          className="font-marcellus text-3xl sm:text-4xl mb-12"
+          className="font-marcellus text-3xl sm:text-4xl mb-8"
           style={{ color: '#4b4e6d' }}
         >
           Ready to Move Forward?
         </h2>
 
-        <div className="space-y-5 mb-14">
+        <div className="space-y-4 mb-10">
           {[
             {
               num: '01',
@@ -384,7 +384,7 @@ export default function SheLeadsAfricaPage() {
                 <div className="font-semibold mb-1" style={{ color: '#4b4e6d' }}>
                   {step.title}
                 </div>
-                <div style={{ color: '#4b4e6d', opacity: 0.7, lineHeight: '1.6' }}>
+                <div style={{ color: '#4b4e6d', opacity: 0.7, lineHeight: '1.55' }}>
                   {step.desc}
                 </div>
               </div>
