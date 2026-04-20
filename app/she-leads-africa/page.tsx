@@ -359,8 +359,8 @@ export default function SheLeadsAfricaPage() {
           {[
             {
               num: '01',
-              title: 'Confirm Platform & Audience Size',
-              desc: 'Share how your community hosts live sessions and an approximate headcount.',
+              title: 'Works Within Your Telegram Community',
+              desc: 'The session is designed to run inside your existing community space — no new platform or tech setup required for your members. Just share an approximate headcount so we can tailor the format.',
             },
             {
               num: '02',
