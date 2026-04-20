@@ -61,7 +61,7 @@ export default function SheLeadsAfricaPage() {
             className="inline-flex items-center gap-2 mb-6 px-5 py-2 rounded-full border border-white/20 text-xs font-semibold tracking-widest uppercase"
             style={{ color: '#d4af37', backgroundColor: 'rgba(212,175,55,0.08)' }}
           >
-            ✦ Pilot Collaboration · Private
+            ✦ Pilot Collaboration
           </div>
 
           <p className="text-base sm:text-lg font-semibold tracking-widest uppercase mb-4" style={{ color: '#9c88ff' }}>
@@ -144,11 +144,11 @@ export default function SheLeadsAfricaPage() {
             { time: '65–80 min', title: 'AI — How You Scale',       desc: 'Identify one leverage point — what grows beyond their time and energy.' },
             { time: '80–90 min', title: 'Q&A + Next Steps',         desc: 'Open floor. Participants leave with a completed Blueprint and clear direction.' },
           ].map((item, i) => (
-            <div key={i} className="flex gap-5 p-5 rounded-xl" style={{ backgroundColor: 'rgba(75,78,109,0.05)', borderLeft: '3px solid #9c88ff' }}>
-              <div className="text-xs font-semibold tracking-widest shrink-0 pt-1" style={{ color: '#9c88ff', minWidth: '4.5rem' }}>{item.time}</div>
-              <div>
-                <div className="font-semibold mb-1" style={{ color: '#4b4e6d' }}>{item.title}</div>
-                <div style={{ color: '#4b4e6d', opacity: 0.7, lineHeight: '1.55' }}>{item.desc}</div>
+            <div key={i} className="flex p-5 rounded-xl" style={{ backgroundColor: 'rgba(75,78,109,0.05)', borderLeft: '3px solid #9c88ff', gap: '2rem' }}>
+              <div className="text-xs font-semibold tracking-widest shrink-0 pt-1" style={{ color: '#9c88ff', minWidth: '6rem' }}>{item.time}</div>
+              <div style={{ paddingLeft: '0.5rem', borderLeft: '1px solid rgba(75,78,109,0.12)' }}>
+                <div className="font-semibold mb-2" style={{ color: '#4b4e6d' }}>{item.title}</div>
+                <div style={{ color: '#4b4e6d', opacity: 0.65, lineHeight: '1.6', paddingLeft: '0.75rem' }}>{item.desc}</div>
               </div>
             </div>
           ))}
@@ -255,8 +255,11 @@ export default function SheLeadsAfricaPage() {
       </Section>
 
       {/* FOOTER BADGE */}
-      <div className="text-center py-10 px-10 text-xs font-semibold tracking-widest uppercase" style={{ color: '#4b4e6d', opacity: 0.4, borderTop: '1px solid rgba(75,78,109,0.10)' }}>
-        A Pilot Collaboration · iPurpose × She Leads Africa · Soul → Systems → AI
+      <div className="text-center py-10 px-10 text-xs tracking-wide" style={{ color: '#4b4e6d', opacity: 0.45, borderTop: '1px solid rgba(75,78,109,0.10)', lineHeight: '2' }}>
+        <p>Renita Hamilton retains full ownership of the framework and all materials.</p>
+        <p>Collaborators may share the session link but may not reproduce or repurpose the content.</p>
+        <p>No exclusivity — iPurpose may run this with other organizations.</p>
+        <p className="mt-3" style={{ opacity: 0.6 }}>© 2026 iPurpose. All rights reserved.</p>
       </div>
 
       <Footer />
