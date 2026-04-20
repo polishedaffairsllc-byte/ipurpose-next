@@ -23,7 +23,7 @@ function Section({
 }) {
   return (
     <section className="w-full py-16" style={bg}>
-      <div className={`mx-auto px-10 sm:px-16 ${wide ? 'max-w-4xl' : 'max-w-2xl'}`}>
+      <div className={`mx-auto ${wide ? 'max-w-4xl' : 'max-w-xl'}`} style={{ paddingLeft: '10%', paddingRight: '10%' }}>
         {children}
       </div>
     </section>
@@ -52,8 +52,8 @@ export default function SheLeadsAfricaPage() {
 
       {/* HERO */}
       <section
-        className="w-full px-10 sm:px-16 py-20 text-center"
-        style={{ background: 'linear-gradient(160deg, #4b4e6d 0%, #2e3050 100%)' }}
+        className="w-full py-20 text-center"
+        style={{ background: 'linear-gradient(160deg, #4b4e6d 0%, #2e3050 100%)', paddingLeft: '10%', paddingRight: '10%' }}
       >
         <div className="max-w-2xl mx-auto">
           <div
