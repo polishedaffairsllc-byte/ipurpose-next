@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
@@ -294,10 +295,16 @@ export default function SheLeadsAfricaPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-10 items-start">
             <div
-              className="w-20 h-20 rounded-full shrink-0 flex items-center justify-center font-marcellus text-2xl"
-              style={{ backgroundColor: 'rgba(212,175,55,0.15)', color: '#d4af37', border: '2px solid rgba(212,175,55,0.3)' }}
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full shrink-0 overflow-hidden"
+              style={{ border: '2px solid rgba(212,175,55,0.4)' }}
             >
-              RH
+              <Image
+                src="/images/renita-hamilton.jpg"
+                alt="Renita Hamilton"
+                width={112}
+                height={112}
+                className="w-full h-full object-cover object-top"
+              />
             </div>
             <div>
               <h3
