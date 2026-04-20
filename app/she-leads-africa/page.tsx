@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import Footer from '../components/Footer';
 
 export const metadata: Metadata = {
@@ -63,16 +64,16 @@ export default function SheLeadsAfricaPage() {
             ✦ Pilot Collaboration · Private
           </div>
 
-          <p className="text-sm font-semibold tracking-widest uppercase mb-4" style={{ color: '#9c88ff' }}>
+          <p className="text-base sm:text-lg font-semibold tracking-widest uppercase mb-4" style={{ color: '#9c88ff' }}>
             iPurpose × She Leads Africa
           </p>
 
-          <h1 className="font-marcellus text-4xl sm:text-5xl md:text-6xl leading-tight mb-4" style={{ color: '#ffffff' }}>
+          <h1 className="font-marcellus text-5xl sm:text-6xl md:text-7xl leading-tight mb-6" style={{ color: '#ffffff' }}>
             Build Your Purpose<br />
             <span style={{ color: '#fcc4b7' }}>→ Income Blueprint</span>
           </h1>
 
-          <p className="text-lg sm:text-xl mb-10 leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          <p className="text-xl sm:text-2xl mb-10 leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
             Clarity &amp; Direction for Women Founders
           </p>
 
@@ -239,15 +240,16 @@ export default function SheLeadsAfricaPage() {
         </div>
 
         <div className="text-center">
-          <a
-            href="mailto:renita@ipurposesoul.com?subject=She%20Leads%20Africa%20×%20iPurpose%20Pilot%20Collaboration"
-            className="inline-block px-10 py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90"
-            style={{ background: 'linear-gradient(to right, #4b4e6d, #9c88ff)' }}
+          <Link
+            href="/workshop"
+            className="inline-block px-10 py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 mb-4"
+            style={{ background: 'linear-gradient(to right, #9c88ff, #4b4e6d)' }}
           >
-            Start the Conversation →
-          </a>
-          <p className="mt-4 text-sm" style={{ color: '#4b4e6d', opacity: 0.55 }}>
-            Reply directly to <span style={{ color: '#9c88ff' }}>renita@ipurposesoul.com</span>
+            Register for the Workshop →
+          </Link>
+          <p className="mt-3 text-sm" style={{ color: '#4b4e6d', opacity: 0.55 }}>
+            Questions? Reach out directly at{' '}
+            <a href="mailto:renita@ipurposesoul.com?subject=She%20Leads%20Africa%20×%20iPurpose%20Pilot%20Collaboration" style={{ color: '#9c88ff' }}>renita@ipurposesoul.com</a>
           </p>
         </div>
       </Section>

@@ -7,11 +7,11 @@ import WorkshopRegisterForm from './WorkshopRegisterForm';
 export const metadata: Metadata = {
   title: 'Build Your Purpose → Income Blueprint (Live) — Free Workshop | iPurpose',
   description:
-    'Leave with a completed Purpose → Income Blueprint you can actually build from. Free 90-minute live workshop on April 24, 2026.',
+    'Leave with a completed Purpose → Income Blueprint you can actually build from. Free 90-minute live workshop.',
   openGraph: {
     title: 'Build Your Purpose → Income Blueprint (Live) — Free Workshop | iPurpose',
     description:
-      'Not a webinar. A live working session. 90 minutes. A completed Blueprint. April 24, 2026.',
+      'Not a webinar. A live working session. 90 minutes. A completed Blueprint.',
     type: 'website',
   },
   robots: 'index, follow',
@@ -127,7 +127,7 @@ export default function WorkshopPage() {
           </p>
 
           <p style={{ fontSize: 13, letterSpacing: '0.18em', textTransform: 'uppercase', color: C.champagne, opacity: 0.8, marginBottom: 32 }}>
-            Friday, April 24 &nbsp;&middot;&nbsp; 11:00 AM ET &nbsp;or&nbsp; 7:00 PM ET &nbsp;&middot;&nbsp; Choose one session
+            11:00 AM ET &nbsp;or&nbsp; 7:00 PM ET &nbsp;&middot;&nbsp; Choose one session
           </p>
 
           <a
@@ -183,7 +183,7 @@ export default function WorkshopPage() {
             Save Your Spot
           </h2>
           <p style={{ textAlign: 'center', fontSize: 15, color: '#888', marginBottom: 32 }}>
-            Free · April 24, 2026 · 11 AM or 7 PM ET · Live on Zoom
+            Free · 11 AM or 7 PM ET · Live on Zoom
           </p>
 
           <WorkshopRegisterForm buttonStyle={BTN_STYLE} />
@@ -379,7 +379,7 @@ export default function WorkshopPage() {
       {/* ── FINAL CTA ── */}
       <section style={{ background: C.deep, padding: '80px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.champagne, opacity: 0.8, marginBottom: 12 }}>
-          April 24, 2026 · 11 AM or 7 PM ET · Free · Live on Zoom
+          11 AM or 7 PM ET · Free · Live on Zoom
         </p>
         <div style={{
           display: 'inline-block',
