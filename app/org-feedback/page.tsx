@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 // ── Brand ─────────────────────────────────────────────────────────────────
 const C = {
@@ -233,6 +234,17 @@ export default function SLAOrgFeedbackPage() {
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
+
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <Image
+            src="/images/my-logo.png"
+            alt="iPurpose Logo"
+            width={120}
+            height={120}
+            style={{ margin: '0 auto', display: 'block' }}
+          />
+        </div>
 
         {/* Header */}
         <div style={{ marginBottom: 40, borderBottom: `2px solid ${C.peach}`, paddingBottom: 32 }}>

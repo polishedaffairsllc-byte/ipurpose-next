@@ -12,7 +12,7 @@ const C = {
   cream:     '#fff3da',
   green:     '#88b04b',
   white:     '#ffffff',
-  mist:      '#f5f4f0',
+  mist:      '#fff3da',
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────
@@ -67,11 +67,11 @@ function FieldBlock({ label, children, required }: { label: string; children: Re
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '12px 14px',
-  border: `1.5px solid #ddd`,
+  border: '1.5px solid #ddd',
   borderRadius: 8,
   fontSize: 14,
   color: C.indigo,
-  fontFamily: "'Inter', sans-serif",
+  fontFamily: "'Montserrat', sans-serif",
   outline: 'none',
   background: C.white,
   boxSizing: 'border-box',
@@ -154,7 +154,7 @@ function RadioGroup({
             cursor: 'pointer',
             fontSize: 14,
             color: C.indigo,
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
           }}>
             <input
               type="radio"
@@ -173,24 +173,24 @@ function RadioGroup({
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────
-export default function SLAFeedbackPage() {
+export default function FeedbackPage() {
   // Section 1
-  const [overallRating, setOverallRating]   = useState(0);
-  const [clarityBefore, setClarityBefore]   = useState(0);
-  const [clarityAfter, setClarityAfter]     = useState(0);
+  const [overallRating, setOverallRating]     = useState(0);
+  const [clarityBefore, setClarityBefore]     = useState(0);
+  const [clarityAfter, setClarityAfter]       = useState(0);
 
   // Section 2
-  const [mostUseful, setMostUseful]         = useState('');
+  const [mostUseful, setMostUseful]           = useState('');
   const [resonatedPillar, setResonatedPillar] = useState('');
-  const [unclearOrMore, setUnclearOrMore]   = useState('');
+  const [unclearOrMore, setUnclearOrMore]     = useState('');
 
   // Section 3
-  const [businessStage, setBusinessStage]   = useState('');
-  const [biggestChallenge, setBiggestChallenge] = useState('');
+  const [businessStage, setBusinessStage]         = useState('');
+  const [biggestChallenge, setBiggestChallenge]   = useState('');
 
   // Section 4
-  const [willingToTestimonial, setWillingToTestimonial] = useState('');
-  const [testimonialQuote, setTestimonialQuote]         = useState('');
+  const [willingToTestimonial, setWillingToTestimonial]   = useState('');
+  const [testimonialQuote, setTestimonialQuote]           = useState('');
   const [testimonialPermission, setTestimonialPermission] = useState('');
 
   // Meta
@@ -260,7 +260,8 @@ export default function SLAFeedbackPage() {
     background: C.white,
     borderRadius: 16,
     padding: '48px 48px',
-    boxShadow: '0 4px 32px rgba(75,78,109,0.08)',
+    boxShadow: '0 8px 40px rgba(75,78,109,0.12)',
+    border: '1px solid rgba(156,136,255,0.12)',
   };
 
   if (submitted) {
@@ -281,7 +282,7 @@ export default function SLAFeedbackPage() {
             fontSize: 15,
             color: '#666',
             lineHeight: 1.7,
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             maxWidth: 440,
             margin: '0 auto',
           }}>
@@ -310,20 +311,27 @@ export default function SLAFeedbackPage() {
 
         {/* Header */}
         <div style={{ marginBottom: 40, borderBottom: `2px solid ${C.peach}`, paddingBottom: 32 }}>
-          <Label>She Leads Africa × iPurpose™ · Workshop Reflection</Label>
           <h1 style={{
-            fontSize: 30,
+            fontSize: 34,
             fontFamily: "'Marcellus', Georgia, serif",
             color: C.indigo,
-            margin: '12px 0 10px',
-            lineHeight: 1.3,
+            margin: '0 0 10px',
+            lineHeight: 1.25,
+          }}>
+            iPurpose™ · Session Reflection
+          </h1>
+          <p style={{
+            fontSize: 18,
+            fontFamily: "'Marcellus', Georgia, serif",
+            color: C.lavender,
+            margin: '0 0 12px',
           }}>
             How did today's session land?
-          </h1>
+          </p>
           <p style={{
             fontSize: 14,
             color: '#777',
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
             lineHeight: 1.6,
           }}>
             This takes about 5 minutes. Your honesty helps us make each session better —
@@ -340,12 +348,12 @@ export default function SLAFeedbackPage() {
             padding: '20px 24px',
             marginBottom: 36,
           }}>
-            <p style={{ fontSize: 12, color: '#888', fontFamily: "'Inter', sans-serif", marginBottom: 16 }}>
+            <p style={{ fontSize: 12, color: '#888', fontFamily: "'Montserrat', sans-serif", marginBottom: 14 }}>
               Optional — helps us follow up if you're interested in continuing.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
-                <label style={{ fontSize: 12, color: C.indigo, display: 'block', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
+                <label style={{ fontSize: 12, color: C.indigo, display: 'block', marginBottom: 6, fontFamily: "'Montserrat', sans-serif" }}>
                   Your name
                 </label>
                 <input
@@ -357,7 +365,7 @@ export default function SLAFeedbackPage() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: 12, color: C.indigo, display: 'block', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
+                <label style={{ fontSize: 12, color: C.indigo, display: 'block', marginBottom: 6, fontFamily: "'Montserrat', sans-serif" }}>
                   Email address
                 </label>
                 <input
@@ -436,7 +444,7 @@ export default function SLAFeedbackPage() {
               value={businessStage}
               onChange={setBusinessStage}
               options={[
-                { value: 'idea', label: 'Just an idea — haven\'t started yet' },
+                { value: 'idea', label: "Just an idea — haven't started yet" },
                 { value: 'early', label: 'Early stage — testing or building' },
                 { value: 'launched', label: 'Launched — have some clients or revenue' },
                 { value: 'growing', label: 'Growing — scaling or refining' },
@@ -469,14 +477,14 @@ export default function SLAFeedbackPage() {
               value={willingToTestimonial}
               onChange={setWillingToTestimonial}
               options={[
-                { value: 'yes', label: 'Yes, I\'d be happy to' },
+                { value: 'yes', label: "Yes, I'd be happy to" },
                 { value: 'no', label: 'Not right now' },
               ]}
             />
 
             {willingToTestimonial === 'yes' && (
               <>
-                <FieldBlock label="In 2–3 sentences, how would you describe this session to another woman founder?">
+                <FieldBlock label="In 2–3 sentences, how would you describe this session to another founder?">
                   <textarea
                     value={testimonialQuote}
                     onChange={(e) => setTestimonialQuote(e.target.value)}
@@ -538,7 +546,7 @@ export default function SLAFeedbackPage() {
             color: '#aaa',
             textAlign: 'center',
             marginTop: 16,
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Montserrat', sans-serif",
           }}>
             Your responses are private and stored securely. They will never be sold or shared with third parties.
           </p>
