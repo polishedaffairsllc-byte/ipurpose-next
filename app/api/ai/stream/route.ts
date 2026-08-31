@@ -1,12 +1,25 @@
 import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
+import {
+  getCompanionModelConfig,
+  resolveCompanionModel,
+} from "@/lib/ai/companionModelConfig";
 
 export async function POST(request: Request) {
   try {
     const entitlement = await requireBasicPaid();
     if (entitlement.error) return entitlement.error;
 
-    const { prompt, model } = await request.json();
-    if (!prompt) return new Response("Missing prompt", { status: 400 });
+    const { prompt, model: requestedModel } = await request.json();
+    const config = getCompanionModelConfig();
+    if (typeof prompt !== "string" || !prompt.trim()) {
+      return new Response("Missing prompt", { status: 400 });
+    }
+    if (prompt.length > config.maxInputCharacters) {
+      return new Response(`Prompt must be ${config.maxInputCharacters} characters or fewer`, { status: 400 });
+    }
+    const model = resolveCompanionModel(
+      typeof requestedModel === "string" ? requestedModel : undefined
+    );
 
     // FREE FALLBACK: If no OpenAI key, use mock responses
     if (!process.env.OPENAI_API_KEY) {
@@ -37,10 +50,11 @@ export async function POST(request: Request) {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: model || "gpt-4o-mini",
+        model,
         messages: [{ role: "user", content: prompt }],
         stream: true,
         temperature: 0.9,
+        max_tokens: config.maxOutputTokens,
       }),
     });
 

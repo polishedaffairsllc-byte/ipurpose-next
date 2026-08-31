@@ -1,96 +1,135 @@
 /**
- * /api/ai/chat endpoint
- * Handles iPurpose Mentor chat with response mode routing and lens inference
+ * Authenticated iPurpose Mentor endpoint with persistent Companion memory.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import {
   getSystemPrompt,
   inferLensFromMessage,
-  ResponseMode,
+  type ResponseMode,
 } from "@/lib/ai/prompts/ipurposeMentorPrompts";
 import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
+import { getOpenAI } from "@/app/api/gpt/utils/openai-client";
+import { checkRateLimit, recordRequest } from "@/app/api/gpt/utils/rate-limiter";
+import {
+  CompanionConversationError,
+  getCompanionHistory,
+  saveCompanionTurn,
+} from "@/lib/ai/companionConversations";
+import { getCompanionContext } from "@/lib/ai/companionContext";
+import { formatCompanionContext } from "@/lib/ai/companionContextFormatter";
+import {
+  getCompanionModelConfig,
+  resolveCompanionModel,
+} from "@/lib/ai/companionModelConfig";
 
-// Force this route to be dynamic (no build-time prerendering)
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-function getOpenAI() {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error('Missing OPENAI_API_KEY environment variable');
-  }
-  return new OpenAI({ apiKey });
-}
+const RESPONSE_MODES = new Set<ResponseMode>(["balanced", "reflect", "build", "expand"]);
 
 interface ChatRequest {
-  message: string;
-  responseMode: "balanced" | "reflect" | "build" | "expand";
-  model?: string;
-  userId?: string;
-  conversationHistory?: Array<{ role: "user" | "assistant"; content: string }>;
+  message?: unknown;
+  responseMode?: unknown;
+  model?: unknown;
+  conversationId?: unknown;
 }
-
 export async function POST(request: NextRequest) {
   try {
     const entitlement = await requireBasicPaid();
     if (entitlement.error) return entitlement.error;
+    const uid = entitlement.uid;
 
-    const body = (await request.json()) as ChatRequest;
-    const { message, responseMode, model = "gpt-4o-mini", conversationHistory = [] } = body;
+    const body = (await request.json().catch(() => null)) as ChatRequest | null;
+    if (!body) {
+      return NextResponse.json({ error: "Invalid JSON request" }, { status: 400 });
+    }
 
-    if (!message || !message.trim()) {
+    const message = typeof body.message === "string" ? body.message.trim() : "";
+    const mode = typeof body.responseMode === "string"
+      ? body.responseMode as ResponseMode
+      : "balanced";
+    const conversationId = typeof body.conversationId === "string"
+      ? body.conversationId
+      : undefined;
+    const requestedModel = typeof body.model === "string" ? body.model : undefined;
+    const modelConfig = getCompanionModelConfig();
+
+    if (!message) {
+      return NextResponse.json({ error: "Message is required" }, { status: 400 });
+    }
+    if (message.length > modelConfig.maxInputCharacters) {
       return NextResponse.json(
-        { error: "Message is required" },
+        { error: `Message must be ${modelConfig.maxInputCharacters} characters or fewer` },
         { status: 400 }
       );
     }
-
-    const openai = getOpenAI();
-
-    // Get the system prompt for the selected response mode
-    const systemPrompt = getSystemPrompt(responseMode as ResponseMode);
-
-    // Infer lens if in balanced mode
-    let inferredLens: "soul" | "systems" | "ai" | undefined;
-    if (responseMode === "balanced") {
-      inferredLens = inferLensFromMessage(message);
+    if (!RESPONSE_MODES.has(mode)) {
+      return NextResponse.json({ error: "Invalid response mode" }, { status: 400 });
     }
 
-    // Build messages array with system prompt as first message
-    const messages = [
-      { role: "system" as const, content: systemPrompt },
+    const rateLimit = await checkRateLimit(uid);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: rateLimit.reason || "Too many Mentor requests" },
+        { status: 429 }
+      );
+    }
+
+    const [journeyContext, conversationHistory] = await Promise.all([
+      getCompanionContext(uid),
+      getCompanionHistory(uid, conversationId),
+    ]);
+
+    const inferredLens = mode === "balanced" ? inferLensFromMessage(message) : undefined;
+    const model = resolveCompanionModel(requestedModel);
+    const messages: ChatCompletionMessageParam[] = [
+      { role: "system", content: getSystemPrompt(mode, inferredLens) },
+      { role: "system", content: formatCompanionContext(journeyContext) },
       ...conversationHistory,
-      { role: "user" as const, content: message },
+      { role: "user", content: message },
     ];
 
-    // Call OpenAI API
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model,
-      messages: messages.map((m) => ({
-        role: m.role,
-        content: m.content,
-      })),
+      messages,
       temperature: 0.8,
-      max_tokens: 1024,
+      max_tokens: modelConfig.maxOutputTokens,
     });
 
     const assistantMessage =
-      response.choices[0]?.message?.content || "I'm unable to respond right now.";
+      response.choices[0]?.message?.content?.trim() ||
+      "I'm unable to respond right now.";
+
+    const savedConversationId = await saveCompanionTurn({
+      uid,
+      conversationId,
+      responseMode: mode,
+      userMessage: message,
+      assistantMessage,
+      model: response.model || model,
+      inferredLens,
+    });
+
+    recordRequest(uid, response.usage?.total_tokens || 0).catch((error) => {
+      console.warn("Unable to record Mentor token usage:", error);
+    });
 
     return NextResponse.json({
       response: assistantMessage,
+      conversationId: savedConversationId,
       inferredLens,
-      responseMode,
-      model,
+      responseMode: mode,
+      model: response.model || model,
     });
   } catch (error) {
-    console.error("Chat API error:", error);
+    if (error instanceof CompanionConversationError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
 
-    const errorMessage =
-      error instanceof Error ? error.message : "An error occurred";
+    console.error("Mentor API error:", error);
     return NextResponse.json(
-      { error: errorMessage },
+      { error: "The iPurpose Mentor is unavailable right now. Please try again." },
       { status: 500 }
     );
   }
