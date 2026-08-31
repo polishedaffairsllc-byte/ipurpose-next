@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+firebase-debug.log*
 
 # next.js
 /.next/
@@ -41,5 +44,4 @@ serviceAccountKey.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-package-lock.json
 service-account-key.json

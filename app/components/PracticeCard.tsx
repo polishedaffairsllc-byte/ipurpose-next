@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Card from './Card';
 import Button from './Button';
 
@@ -24,11 +24,13 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
   const [step, setStep] = useState<'instructions' | 'reflection' | 'confirmation'>('instructions');
   const [reflection, setReflection] = useState('');
   const [loading, setLoading] = useState(false);
-  const [startTime] = useState(Date.now());
+  const startTimeRef = useRef<number | null>(null);
 
   const handleComplete = async () => {
     setLoading(true);
-    const durationMinutes = Math.round((Date.now() - startTime) / 60000);
+    const durationMinutes = startTimeRef.current
+      ? Math.round((Date.now() - startTimeRef.current) / 60000)
+      : 0;
 
     try {
       const response = await fetch('/api/soul/practice', {
@@ -73,6 +75,7 @@ export default function PracticeCard({ practice, defaultOpen = false, suggested 
             setIsOpen((prev) => {
               const next = !prev;
               if (next) {
+                startTimeRef.current = Date.now();
                 setStep('instructions');
                 setReflection('');
               }

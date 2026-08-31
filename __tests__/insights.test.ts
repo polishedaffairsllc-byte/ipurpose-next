@@ -10,7 +10,29 @@
 
 import { test, expect } from "@playwright/test";
 
+const BASE_URL = process.env.E2E_BASE_URL ?? "http://127.0.0.1:3000";
+const INSIGHTS_SESSION_COOKIE =
+  process.env.INSIGHTS_SESSION_COOKIE ?? process.env.FOUNDER_SESSION_COOKIE;
+
 test.describe("Insights Page - Read-Only Verification", () => {
+  test.skip(
+    !INSIGHTS_SESSION_COOKIE,
+    "INSIGHTS_SESSION_COOKIE or FOUNDER_SESSION_COOKIE is required for Insights tests"
+  );
+
+  test.beforeEach(async ({ page }) => {
+    const target = new URL(BASE_URL);
+    await page.context().addCookies([{
+      name: "FirebaseSession",
+      value: INSIGHTS_SESSION_COOKIE!,
+      domain: target.hostname,
+      path: "/",
+      httpOnly: true,
+      secure: target.protocol === "https:",
+      sameSite: "Lax",
+    }]);
+  });
+
   test("should render Insights page for authenticated user", async ({ page }) => {
     // This test assumes you have auth setup or mock auth in your test environment
     // Skip if running against live environment without credentials
@@ -78,8 +100,9 @@ test.describe("Insights Page - Read-Only Verification", () => {
       const method = request.method();
       const url = request.url();
 
-      // Flag any POST, PATCH, or DELETE requests
-      if (["POST", "PATCH", "DELETE"].includes(method)) {
+      // Flag writes to this application, not third-party analytics beacons.
+      if (new URL(url).origin === new URL(BASE_URL).origin &&
+          ["POST", "PATCH", "DELETE"].includes(method)) {
         // Exclude auth and health check endpoints
         if (!url.includes("/auth") && !url.includes("/health")) {
           writeRequests.push(`${method} ${url}`);
