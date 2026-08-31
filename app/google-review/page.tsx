@@ -12,7 +12,7 @@ export default function GoogleReviewPage() {
       <header className={styles.hero}>
         <div className={styles.heroInner}>
           <div>
-            <img alt="iPurpose logo" src="/logo192.png" className={styles.logo} />
+            <img alt="iPurpose logo" src="/images/my-logo.png" className={styles.logo} />
           </div>
           <div className={styles.headline}>
             <h1>iPurpose — AI-driven purpose & systems (Prototype)</h1>
