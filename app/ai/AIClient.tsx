@@ -11,11 +11,22 @@ interface ChatMessage {
   inferredLens?: "soul" | "systems" | "ai";
 }
 
+interface ConversationSummary {
+  id: string;
+  title: string;
+  responseMode: ResponseMode;
+  messageCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function AIClient({ initialName, userId }: { initialName?: string; userId?: string }) {
   const [responseMode, setResponseModeState] = useState<ResponseMode>("balanced");
-  const [model] = useState("gpt-4o-mini");
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const controllerRef = useRef<AbortController | null>(null);
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -24,6 +35,47 @@ export default function AIClient({ initialName, userId }: { initialName?: string
   useEffect(() => {
     const savedMode = getLocalResponseMode();
     setResponseModeState(savedMode);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadInitialConversation() {
+      try {
+        const listResponse = await fetch("/api/ai/conversations", { cache: "no-store" });
+        if (!listResponse.ok) throw new Error("Unable to load conversations");
+        const listData = await listResponse.json();
+        const available = (listData.conversations || []) as ConversationSummary[];
+        if (cancelled) return;
+        setConversations(available);
+
+        const latest = available[0];
+        if (!latest) return;
+        const messageResponse = await fetch(`/api/ai/conversations/${latest.id}`, {
+          cache: "no-store",
+        });
+        if (!messageResponse.ok) throw new Error("Unable to load conversation");
+        const messageData = await messageResponse.json();
+        if (cancelled) return;
+
+        setConversationId(latest.id);
+        setResponseModeState(latest.responseMode);
+        setLocalResponseMode(latest.responseMode);
+        setMessages((messageData.messages || []).map((message: ChatMessage & { createdAt: string }) => ({
+          ...message,
+          timestamp: new Date(message.createdAt),
+        })));
+      } catch (error) {
+        console.warn("Could not restore Mentor conversation:", error);
+      } finally {
+        if (!cancelled) setIsHistoryLoading(false);
+      }
+    }
+
+    loadInitialConversation();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Auto-scroll to latest message
@@ -38,6 +90,43 @@ export default function AIClient({ initialName, userId }: { initialName?: string
       saveUserResponseMode(userId, mode).catch(console.error);
     }
   };
+
+  async function selectConversation(id: string) {
+    controllerRef.current?.abort();
+    if (!id) {
+      setConversationId(null);
+      setMessages([]);
+      return;
+    }
+
+    setIsHistoryLoading(true);
+    try {
+      const response = await fetch(`/api/ai/conversations/${id}`, { cache: "no-store" });
+      if (!response.ok) throw new Error("Unable to load conversation");
+      const data = await response.json();
+      const selected = conversations.find((conversation) => conversation.id === id);
+      setConversationId(id);
+      if (selected) {
+        setResponseModeState(selected.responseMode);
+        setLocalResponseMode(selected.responseMode);
+      }
+      setMessages((data.messages || []).map((message: ChatMessage & { createdAt: string }) => ({
+        ...message,
+        timestamp: new Date(message.createdAt),
+      })));
+    } catch (error) {
+      console.warn("Could not load Mentor conversation:", error);
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  }
+
+  function startNewConversation() {
+    controllerRef.current?.abort();
+    setConversationId(null);
+    setMessages([]);
+    setPrompt("");
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -67,22 +156,30 @@ export default function AIClient({ initialName, userId }: { initialName?: string
         body: JSON.stringify({
           message: prompt,
           responseMode,
-          model,
-          userId,
-          conversationHistory: messages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          conversationId,
         }),
         signal: controller.signal,
       });
 
       if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || "Failed to get response");
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.error || "Failed to get response");
       }
 
       const data = await res.json();
+
+      if (data.conversationId) {
+        setConversationId(data.conversationId);
+        try {
+          const listResponse = await fetch("/api/ai/conversations", { cache: "no-store" });
+          if (listResponse.ok) {
+            const listData = await listResponse.json();
+            setConversations(listData.conversations || []);
+          }
+        } catch (error) {
+          console.warn("Could not refresh Mentor conversation list:", error);
+        }
+      }
 
       const assistantMessage: ChatMessage = {
         id: `msg_${Date.now()}`,
@@ -149,9 +246,36 @@ export default function AIClient({ initialName, userId }: { initialName?: string
         </p>
       </div>
 
+      <div className="ai-panel mb-4 p-4" style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+        <label htmlFor="mentor-conversation" style={{ fontWeight: 600, fontSize: 14 }}>
+          Conversation:
+        </label>
+        <select
+          id="mentor-conversation"
+          value={conversationId || ""}
+          onChange={(event) => selectConversation(event.target.value)}
+          disabled={loading || isHistoryLoading}
+          style={{ flex: "1 1 240px", minWidth: 0 }}
+        >
+          <option value="">New conversation</option>
+          {conversations.map((conversation) => (
+            <option key={conversation.id} value={conversation.id}>
+              {conversation.title}
+            </option>
+          ))}
+        </select>
+        <button type="button" onClick={startNewConversation} disabled={loading || isHistoryLoading}>
+          New
+        </button>
+      </div>
+
       {/* Chat Messages */}
       <div className="ai-panel mb-6" style={{ maxHeight: 400, overflowY: "auto", padding: 12 }}>
-        {messages.length === 0 ? (
+        {isHistoryLoading ? (
+          <p style={{ color: "#999", fontStyle: "italic", textAlign: "center" }}>
+            Loading your Mentor conversation...
+          </p>
+        ) : messages.length === 0 ? (
           <p style={{ color: "#999", fontStyle: "italic", textAlign: "center" }}>
             Start a conversation with your iPurpose Mentor...
           </p>
@@ -188,13 +312,14 @@ export default function AIClient({ initialName, userId }: { initialName?: string
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           rows={3}
+          maxLength={4000}
           style={{ width: "100%", marginBottom: 12, fontFamily: "inherit" }}
           placeholder={`Hi ${initialName || "there"} — share what you're thinking through, and the Mentor will help you reflect and organize your next steps.`}
-          disabled={loading}
+          disabled={loading || isHistoryLoading}
         />
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button type="submit" disabled={loading || !prompt.trim()}>
+          <button type="submit" disabled={loading || isHistoryLoading || !prompt.trim()}>
             {loading ? "Thinking..." : "Ask Mentor"}
           </button>
           <button type="button" onClick={() => controllerRef.current?.abort()} disabled={!loading}>

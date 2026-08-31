@@ -22,8 +22,9 @@ interface UseAIChatWithModesProps {
   conversationId?: string;
 }
 
-export function useAIChatWithModes({ userId, conversationId = "default" }: UseAIChatWithModesProps) {
+export function useAIChatWithModes({ userId, conversationId }: UseAIChatWithModesProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | undefined>(conversationId);
   const [responseMode, setResponseModeState] = useState<ResponseMode>("balanced");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,19 +73,14 @@ export function useAIChatWithModes({ userId, conversationId = "default" }: UseAI
       setError(null);
 
       try {
-        // Call chat API with responseMode and userId
+        // The server derives identity from the verified Firebase session.
         const response = await fetch("/api/ai", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message: userMessage,
             responseMode,
-            conversationId,
-            userId,
-            conversationHistory: messages.map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
+            conversationId: activeConversationId,
           }),
         });
 
@@ -93,6 +89,7 @@ export function useAIChatWithModes({ userId, conversationId = "default" }: UseAI
         }
 
         const data = await response.json();
+        if (data.conversationId) setActiveConversationId(data.conversationId);
 
         const assistantMessage: ChatMessage = {
           id: `msg_${Date.now()}`,
@@ -111,7 +108,7 @@ export function useAIChatWithModes({ userId, conversationId = "default" }: UseAI
         setIsLoading(false);
       }
     },
-    [responseMode, conversationId, userId, messages]
+    [responseMode, activeConversationId]
   );
 
   return {
@@ -122,6 +119,6 @@ export function useAIChatWithModes({ userId, conversationId = "default" }: UseAI
     isLoading,
     error,
     isInitialized,
-    conversationId,
+    conversationId: activeConversationId,
   };
 }
