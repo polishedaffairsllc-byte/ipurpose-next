@@ -75,7 +75,7 @@ function calculateStreak(checkInDates: Date[]): number {
   if (diffDays > 1) return 1; // Only today's check-in counts
 
   let streak = 0;
-  let currentDate = new Date(startDate);
+  const currentDate = new Date(startDate);
 
   for (const checkInDate of sorted) {
     const checkIn = normalize(checkInDate);

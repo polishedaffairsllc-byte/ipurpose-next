@@ -27,14 +27,6 @@ export function getOpenAI(): OpenAI {
 }
 
 /**
- * Deprecated: Use getOpenAI() instead. Kept for backward compatibility.
- * @deprecated Use getOpenAI() instead
- */
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
-
-/**
  * OpenAI Configuration Constants
  */
 export const OPENAI_CONFIG = {
@@ -95,7 +87,7 @@ export async function checkOpenAIHealth(): Promise<boolean> {
   
   try {
     // Simple test call to verify API key
-    await openai.models.list();
+    await getOpenAI().models.list();
     return true;
   } catch (error) {
     console.error('OpenAI health check failed:', error);

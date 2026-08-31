@@ -21,13 +21,13 @@ export default function MetaPixelInitializer() {
     // Initialize fbq if not already done
     if (typeof window !== 'undefined' && !window.fbq) {
       // Create fbq function before script loads
-      window.fbq = function () {
+      window.fbq = function (...args) {
         // @ts-ignore
         window.fbq.callMethod
           ? // @ts-ignore
-            window.fbq.callMethod.apply(window.fbq, arguments)
+            window.fbq.callMethod(...args)
           : // @ts-ignore
-            window.fbq.queue.push(arguments);
+            window.fbq.queue.push(args);
       };
 
       // @ts-ignore
