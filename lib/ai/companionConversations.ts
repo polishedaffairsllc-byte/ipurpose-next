@@ -38,6 +38,12 @@ function responseMode(value: unknown): ResponseMode {
   return RESPONSE_MODES.has(value as ResponseMode) ? (value as ResponseMode) : "balanced";
 }
 
+function inferredLens(value: unknown): "soul" | "systems" | "ai" | undefined {
+  return value === "soul" || value === "systems" || value === "ai"
+    ? value
+    : undefined;
+}
+
 function titleFromMessage(message: string): string {
   const normalized = message.replace(/\s+/g, " ").trim();
   return normalized.length > 64 ? `${normalized.slice(0, 63)}…` : normalized;
@@ -112,9 +118,7 @@ export async function getCompanionMessages(
         responseMode: responseMode(data.responseMode),
         sequence: typeof data.sequence === "number" ? data.sequence : 0,
         createdAt: toIso(data.createdAt),
-        inferredLens: data.inferredLens === "soul" || data.inferredLens === "systems" || data.inferredLens === "ai"
-          ? data.inferredLens
-          : undefined,
+        inferredLens: inferredLens(data.inferredLens),
       };
     })
     .reverse();
