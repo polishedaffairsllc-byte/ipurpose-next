@@ -12,7 +12,9 @@ import {
   generateEntryId,
 } from "@/lib/journal/dateUtils";
 
-const db = admin.firestore();
+function getDb() {
+  return admin.firestore();
+}
 
 /**
  * Get or create user profile
@@ -22,6 +24,7 @@ export async function getOrCreateUserProfile(
   uid: string,
   email?: string
 ): Promise<UserProfile> {
+  const db = getDb();
   const userRef = db.collection("users").doc(uid);
 
   // Use a transaction to make this atomic
@@ -52,6 +55,7 @@ export async function getOrCreateUserProfile(
 export async function getOrCreateSession(
   uid: string
 ): Promise<Session & { id: string }> {
+  const db = getDb();
   const dateKey = getDateKey();
   const sessionsRef = db.collection("users").doc(uid).collection("sessions");
 
@@ -115,6 +119,7 @@ export async function getOrCreateDraftEntry(
   promptText?: string,
   promptId?: string
 ): Promise<JournalEntry & { id: string }> {
+  const db = getDb();
   const dateKey = getDateKey();
   const entriesRef = db
     .collection("users")
@@ -189,6 +194,7 @@ export async function autosaveEntry(
   entryId: string,
   updates: Partial<JournalEntry>
 ): Promise<void> {
+  const db = getDb();
   const entryRef = db
     .collection("users")
     .doc(uid)
@@ -210,6 +216,7 @@ export async function finalizeSession(
   uid: string,
   sessionId: string
 ): Promise<void> {
+  const db = getDb();
   const entriesRef = db
     .collection("users")
     .doc(uid)
@@ -256,6 +263,7 @@ async function generateSessionSummary(
   uid: string,
   sessionId: string
 ): Promise<SessionSummary> {
+  const db = getDb();
   const entriesRef = db
     .collection("users")
     .doc(uid)
@@ -284,6 +292,7 @@ export async function getSessionEntries(
   uid: string,
   sessionId: string
 ): Promise<(JournalEntry & { id: string })[]> {
+  const db = getDb();
   const entriesRef = db
     .collection("users")
     .doc(uid)
@@ -303,6 +312,7 @@ export async function getEntry(
   uid: string,
   entryId: string
 ): Promise<(JournalEntry & { id: string }) | null> {
+  const db = getDb();
   const entryRef = db
     .collection("users")
     .doc(uid)
@@ -325,6 +335,7 @@ export async function getSession(
   uid: string,
   sessionId: string
 ): Promise<(Session & { id: string }) | null> {
+  const db = getDb();
   const sessionRef = db
     .collection("users")
     .doc(uid)

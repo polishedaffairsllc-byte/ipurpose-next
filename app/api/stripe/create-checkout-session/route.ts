@@ -150,8 +150,8 @@ export async function POST(request: NextRequest) {
     // Get success and cancel URLs
     // Note: {CHECKOUT_SESSION_ID} is a Stripe template variable that Stripe replaces
     // with the actual session ID when redirecting the customer after payment.
-    let successUrlPath = PRODUCT_SUCCESS_URL_MAP[product] || '/';
-    let cancelUrlPath = PRODUCT_CANCEL_URL_MAP[product] || '/';
+    const successUrlPath = PRODUCT_SUCCESS_URL_MAP[product] || '/';
+    const cancelUrlPath = PRODUCT_CANCEL_URL_MAP[product] || '/';
 
     const successUrl = `${baseUrl}${successUrlPath}`;
     const cancelUrl = `${baseUrl}${cancelUrlPath}`;
