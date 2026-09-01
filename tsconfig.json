@@ -17,7 +17,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".", // ⭐️ CRITICAL FIX: Enables the "@/ path alias"
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -36,6 +36,7 @@
     "**/*.mts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "mobile/**/*"
   ]
 }
