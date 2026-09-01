@@ -8,7 +8,7 @@ export function MessageBubble({ message }: { message: CompanionMessage }) {
   return (
     <View style={[styles.row, isUser ? styles.userRow : styles.mentorRow]}>
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.mentorBubble]}>
-        <Text style={[styles.label, isUser ? styles.userText : styles.mentorText]}>
+        <Text style={[styles.label, isUser ? styles.userText : styles.mentorLabel]}>
           {isUser ? 'You' : 'iPurpose Mentor'}
         </Text>
         <Text style={[styles.content, isUser ? styles.userText : styles.mentorText]}>
@@ -20,44 +20,38 @@ export function MessageBubble({ message }: { message: CompanionMessage }) {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    width: '100%',
-    marginBottom: 12,
-  },
-  userRow: {
-    alignItems: 'flex-end',
-  },
-  mentorRow: {
-    alignItems: 'flex-start',
-  },
+  row: { width: '100%', marginBottom: 14 },
+  userRow: { alignItems: 'flex-end' },
+  mentorRow: { alignItems: 'flex-start' },
   bubble: {
     maxWidth: '88%',
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 18,
+    paddingHorizontal: 15,
+    paddingVertical: 13,
+    borderRadius: 20,
   },
   userBubble: {
-    backgroundColor: theme.colors.plum,
-    borderBottomRightRadius: 6,
+    backgroundColor: theme.colors.deepIndigo,
+    borderBottomRightRadius: 7,
   },
   mentorBubble: {
-    backgroundColor: theme.colors.blush,
-    borderBottomLeftRadius: 6,
+    backgroundColor: theme.colors.lightMistGray,
+    borderWidth: 1,
+    borderColor: theme.colors.line,
+    borderBottomLeftRadius: 7,
   },
   label: {
-    fontSize: 11,
-    fontWeight: '700',
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    letterSpacing: 0.5,
     marginBottom: 5,
-    opacity: 0.76,
+    textTransform: 'uppercase',
   },
   content: {
-    fontSize: 16,
-    lineHeight: 23,
+    fontFamily: theme.fonts.body,
+    fontSize: 15,
+    lineHeight: 22,
   },
-  userText: {
-    color: theme.colors.white,
-  },
-  mentorText: {
-    color: theme.colors.ink,
-  },
+  userText: { color: theme.colors.white },
+  mentorLabel: { color: theme.colors.lavenderPurple },
+  mentorText: { color: theme.colors.deepIndigo },
 });

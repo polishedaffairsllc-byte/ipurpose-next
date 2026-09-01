@@ -6,7 +6,7 @@ import type {
   ResponseMode,
 } from '../types/companion';
 
-const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || 'https://www.ipurposesoul.com').replace(/\/$/, '');
+const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ipurposesoul.com').replace(/\/$/, '');
 
 async function authorizedFetch(
   path: string,

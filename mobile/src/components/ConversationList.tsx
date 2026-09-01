@@ -8,19 +8,36 @@ interface Props {
   disabled?: boolean;
   onSelect: (id: string) => void;
   onNew: () => void;
+  hideNew?: boolean;
 }
 
-export function ConversationList({ conversations, selectedId, disabled, onSelect, onNew }: Props) {
+export function ConversationList({
+  conversations,
+  selectedId,
+  disabled,
+  onSelect,
+  onNew,
+  hideNew = false,
+}: Props) {
+  if (!conversations.length && hideNew) return null;
+
   return (
     <View style={styles.wrap}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <Pressable
-          disabled={disabled}
-          onPress={onNew}
-          style={[styles.chip, !selectedId && styles.selectedChip]}
-        >
-          <Text style={[styles.chipText, !selectedId && styles.selectedText]}>+ New</Text>
-        </Pressable>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
+        {!hideNew ? (
+          <Pressable
+            disabled={disabled}
+            onPress={onNew}
+            style={[styles.chip, !selectedId && styles.selectedChip]}
+          >
+            <Text style={[styles.chipText, !selectedId && styles.selectedText]}>+ New</Text>
+          </Pressable>
+        ) : null}
+
         {conversations.map((conversation) => {
           const selected = conversation.id === selectedId;
           return (
@@ -42,32 +59,25 @@ export function ConversationList({ conversations, selectedId, disabled, onSelect
 }
 
 const styles = StyleSheet.create({
-  wrap: {
-    marginHorizontal: -18,
-  },
-  content: {
-    paddingHorizontal: 18,
-    gap: 8,
-  },
+  wrap: { marginHorizontal: -18 },
+  content: { paddingHorizontal: 18, gap: 8 },
   chip: {
-    maxWidth: 210,
+    maxWidth: 220,
     borderWidth: 1,
     borderColor: theme.colors.line,
     backgroundColor: theme.colors.white,
     borderRadius: 999,
     paddingHorizontal: 13,
-    paddingVertical: 9,
+    paddingVertical: 8,
   },
   selectedChip: {
-    backgroundColor: theme.colors.plum,
-    borderColor: theme.colors.plum,
+    backgroundColor: theme.colors.deepIndigo,
+    borderColor: theme.colors.deepIndigo,
   },
   chipText: {
-    color: theme.colors.ink,
-    fontSize: 13,
-    fontWeight: '600',
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
   },
-  selectedText: {
-    color: theme.colors.white,
-  },
+  selectedText: { color: theme.colors.white },
 });
