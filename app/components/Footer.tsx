@@ -1,63 +1,10 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import FooterAuthCta from './FooterAuthCta';
 
 export default function Footer() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setMounted(true);
-    // Check if user is authenticated by looking for Firebase session cookie
-    setIsAuthenticated(document.cookie.includes('ipurpose_logged_in'));
-  }, []);
-
-  if (!mounted) return null;
-
-  const isDeepenRoute = pathname === '/deepen' || pathname.startsWith('/deepen/');
-  const isAcceleratorRoute = pathname === '/accelerator' || pathname.startsWith('/accelerator/');
-  const isPremiumRoute = isDeepenRoute || isAcceleratorRoute || pathname === '/systems' || pathname.startsWith('/systems/') || pathname === '/insights' || pathname.startsWith('/insights/') || pathname === '/community' || pathname.startsWith('/community/');
-  const isPublicRoute = pathname === '/' || pathname === '/about' || pathname === '/soul' || pathname === '/signup' || pathname === '/login' || pathname === '/orientation' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/starter-pack' || pathname === '/ai-blueprint' || pathname === '/ipurpose-6-week' || pathname === '/labs';
-
   return (
     <>
-      {/* CTA — above footer */}
-      {isAuthenticated && isAcceleratorRoute && (
-        <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
-          <Link
-            href="/deepen"
-            className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px', color: '#FFFFFF' }}
-          >
-            ✦ Deepen Your Purpose
-          </Link>
-        </div>
-      )}
-      {isAuthenticated && isPremiumRoute && !isAcceleratorRoute && (
-        <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
-          <Link
-            href="/accelerator"
-            className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', fontSize: '35px', color: '#FFFFFF' }}
-          >
-            ✦ Ready to Accelerate
-          </Link>
-        </div>
-      )}
-      {isAuthenticated && !isPremiumRoute && !isPublicRoute && (
-        <div className="w-full flex justify-center py-10" style={{ backgroundColor: '#4B4E6D' }}>
-          <Link
-            href="/deepen"
-            className="px-6 sm:px-8 py-3 sm:py-4 rounded-full font-marcellus text-white text-center hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', fontSize: '35px', color: '#FFFFFF' }}
-          >
-            ✦ Deepen Your Experience
-          </Link>
-        </div>
-      )}
+      <FooterAuthCta />
 
       <footer className="relative border-t border-white/10" style={{ zIndex: 10, backgroundColor: '#4b4e6d' }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
@@ -85,37 +32,37 @@ export default function Footer() {
           </div>
 
           {/* Navigation Links - Horizontal */}
-          <div className="flex flex-wrap justify-center items-center" style={{ gap: '1.5rem' }}>
+          <nav className="flex flex-wrap justify-center items-center" style={{ gap: '1.5rem' }} aria-label="Footer navigation">
             <Link
               href="/"
               className="hover:opacity-80 transition-colors"
               style={{ fontSize: '28px', color: '#FFFFFF' }}
             >
-              Orientation
+              Home
             </Link>
             <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
             <Link
-              href="/soul"
+              href="/discover"
               className="hover:opacity-80 transition-colors"
               style={{ fontSize: '28px', color: '#FFFFFF' }}
             >
-              Soul
+              Discover
             </Link>
             <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
             <Link
-              href="/systems"
+              href="/about"
               className="hover:opacity-80 transition-colors"
               style={{ fontSize: '28px', color: '#FFFFFF' }}
             >
-              Systems
+              About
             </Link>
             <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
             <Link
-              href="/compass"
+              href="/clarity-check"
               className="hover:opacity-80 transition-colors"
               style={{ fontSize: '28px', color: '#FFFFFF' }}
             >
-              Compass
+              Clarity Check
             </Link>
             <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
             <Link
@@ -169,7 +116,7 @@ export default function Footer() {
             >
               Contact Us
             </a>
-          </div>
+          </nav>
         </div>
 
         {/* Divider */}

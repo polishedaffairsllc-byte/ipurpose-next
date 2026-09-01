@@ -1,56 +1,70 @@
 import type { Metadata } from "next";
-import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import VideoBackground from './components/VideoBackground';
 import SplashVideoModal from './components/SplashVideoModal';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
 
+const title = "iPurpose™ | Clarity, Business Systems & Practical AI";
+const description =
+  "iPurpose helps thoughtful creators and entrepreneurs turn uncertainty into clear decisions, simple systems, and practical AI-supported action through the Soul → Systems → AI™ framework.";
+const canonicalUrl = "https://ipurposesoul.com/";
+const socialImageUrl = "https://ipurposesoul.com/images/my-logo.png";
+
 export const metadata: Metadata = {
-  title: "iPurpose™ | Clarity, Connection, and Purpose",
-  description:
-    "Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters.",
+  title,
+  description,
   alternates: {
-    canonical: "https://www.ipurposesoul.com/",
+    canonical: canonicalUrl,
   },
   openGraph: {
-    title: "iPurpose™ | Clarity, Connection, and Purpose",
-    description:
-      "Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters.",
-    url: "https://www.ipurposesoul.com/",
+    title,
+    description,
+    url: canonicalUrl,
     type: "website",
-    images: ["https://www.ipurposesoul.com/images/og-image.jpg"],
+    images: [socialImageUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "iPurpose™ | Clarity, Connection, and Purpose",
-    description:
-      "Discover your core values and purpose with iPurpose. Start your clarity journey, explore our AI Blueprint, and reconnect to what matters.",
-    images: ["https://www.ipurposesoul.com/images/og-image.jpg"],
+    title,
+    description,
+    images: [socialImageUrl],
   },
 };
 
-export default async function Home() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get('FirebaseSession')?.value ?? null;
-  let isLoggedIn = false;
-  if (session && firebaseAdmin.apps.length > 0) {
-    try {
-      const verifyPromise = firebaseAdmin.auth().verifySessionCookie(session, true);
-      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000));
-      try {
-        await Promise.race([verifyPromise, timeoutPromise]);
-        isLoggedIn = true;
-      } catch (e) {
-        isLoggedIn = false;
-      }
-    } catch (e) {
-      isLoggedIn = false;
-    }
-  }
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${canonicalUrl}#organization`,
+      name: 'iPurpose',
+      url: canonicalUrl,
+      logo: socialImageUrl,
+      description,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${canonicalUrl}#website`,
+      name: 'iPurpose',
+      url: canonicalUrl,
+      description,
+      publisher: {
+        '@id': `${canonicalUrl}#organization`,
+      },
+    },
+  ],
+};
+
+export default function Home() {
   return (
     <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
+      }}
+    />
     <SplashVideoModal />
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />

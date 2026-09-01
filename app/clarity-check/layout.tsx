@@ -1,14 +1,25 @@
 import { Metadata } from 'next';
 
+const title = 'Business Clarity Check | Find Your Next Best Step — iPurpose';
+const description = 'Use the free iPurpose Clarity Check to identify what is blocking progress and whether you need clearer direction, better systems, or more intentional use of AI.';
+const canonical = 'https://ipurposesoul.com/clarity-check';
+
 export const metadata: Metadata = {
-  title: 'Find Out Where You\'re Stuck — Free Clarity Check in Under 3 Minutes',
-  description: 'Answer 12 quick questions to discover exactly where you\'re stuck and what your next aligned step should be. No sign-up required.',
+  title,
+  description,
+  alternates: { canonical },
   openGraph: {
-    title: 'Find Out Where You\'re Stuck — Free Clarity Check in Under 3 Minutes',
-    description: 'Answer 12 quick questions to discover exactly where you\'re stuck and what your next aligned step should be. No sign-up required.',
+    title,
+    description,
+    url: canonical,
     type: 'website',
   },
-  robots: 'index, follow',
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function ClarityCheckLayout({

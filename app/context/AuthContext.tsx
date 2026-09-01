@@ -51,7 +51,13 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const maxPollAttempts = 5;
   const pollIntervalSec = 3;
   const pathname = usePathname();
-  const isPublicRoute = pathname?.startsWith("/orientation") || pathname?.startsWith("/ethics");
+  const isPublicRoute = pathname === "/"
+    || pathname === "/discover"
+    || pathname === "/about"
+    || pathname === "/clarity-check"
+    || pathname === "/program"
+    || pathname?.startsWith("/orientation")
+    || pathname?.startsWith("/ethics");
 
   // Logout Function
   const logout = async () => {

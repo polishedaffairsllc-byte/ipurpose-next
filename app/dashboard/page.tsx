@@ -15,6 +15,7 @@ import DashboardOrientationStatus from "../components/DashboardOrientationStatus
 export const metadata: Metadata = {
   title: "Orientation — iPurpose",
   description: "Your personal orientation dashboard with affirmation, progress tracking, and guided labs.",
+  robots: { index: false, follow: false },
 };
 
 export default async function DashboardPage() {

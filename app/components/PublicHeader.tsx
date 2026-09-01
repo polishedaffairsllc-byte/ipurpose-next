@@ -1,243 +1,89 @@
-'use client';
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import Link from 'next/link';
+import PublicHeaderAuthControls from './PublicHeaderAuthControls';
+
+const publicLinks = [
+  { href: '/discover', label: 'Discover', color: '#9C88FF' },
+  { href: '/about', label: 'About', color: '#4B4E6D' },
+  { href: '/clarity-check', label: 'Clarity Check', color: '#9C88FF' },
+  { href: '/program', label: 'iPurpose Accelerator™', color: '#FCC4B7' },
+];
 
 export default function PublicHeader() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(true);
-  const [clarityCheckDone, setClarityCheckDone] = useState(false);
-
-  useEffect(() => {
-    // Check if user has session cookie
-    const hasCookie = document.cookie.includes('FirebaseSession');
-    setIsLoggedIn(!!hasCookie);
-    
-    // Check if clarity check has been completed
-    const quizDone = localStorage.getItem('clarityCheckCompleted') === 'true';
-    setClarityCheckDone(quizDone);
-    
-    // Check screen size
-    setIsLargeScreen(window.innerWidth >= 1024);
-    
-    const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    setMounted(true);
-    
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  if (!mounted) {
-    // Show a skeleton header instead of nothing — prevents blank page flash
-    return (
-      <header className="relative z-20 w-full border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>
-        <div className="flex items-center justify-between gap-2 p-4 sm:p-6">
-          <div className="h-10 w-24 rounded-full bg-white/10 animate-pulse" />
-          <div className="h-10 w-32 rounded-full bg-white/10 animate-pulse" />
-        </div>
-      </header>
-    );
-  }
-
   return (
-    <header className="relative z-20 w-full border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>
+    <header
+      className="relative z-20 w-full border-b border-white/20 backdrop-blur-md"
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
+    >
       <div className="flex items-center justify-between gap-2 p-4 sm:p-6">
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.3))', color: '#FFFFFF', fontSize: '40px' }}
+          style={{
+            background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0.3))',
+            color: '#FFFFFF',
+            fontSize: '40px',
+          }}
           aria-label="Home"
         >
           Home
         </Link>
 
-        {/* Desktop Navigation - Show only on large screens */}
-        {isLargeScreen && (
-          <>
-            <Link 
-              href="/discover" 
-              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', color: '#FFFFFF', fontSize: '40px' }}
-            >
-              Discover
-            </Link>
-
-            <Link 
-              href="/about" 
-              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', color: '#FFFFFF', fontSize: '40px' }}
-            >
-              About
-            </Link>
-
-            {clarityCheckDone && (
-              <Link 
-                href="/program" 
-                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
-              >
-                iPurpose Accelerator™
-              </Link>
-            )}
-
+        <nav className="hidden lg:flex items-center justify-end gap-2" aria-label="Public navigation">
+          {publicLinks.map((link) => (
             <Link
-              href="/clarity-check"
+              key={link.href}
+              href={link.href}
               className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-              style={{ background: 'linear-gradient(to right, #9C88FF, rgba(156, 136, 255, 0))', color: '#FFFFFF', fontSize: '40px' }}
+              style={{
+                background: `linear-gradient(to right, ${link.color}, transparent)`,
+                color: '#FFFFFF',
+                fontSize: '40px',
+              }}
             >
-              Clarity Check
+              {link.label}
             </Link>
+          ))}
+          <PublicHeaderAuthControls />
+        </nav>
 
-            {clarityCheckDone && (
-              <Link 
-                href="/starter-pack" 
-                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-                style={{ background: 'linear-gradient(to right, #E6C87C, rgba(230, 200, 124, 0))', color: '#FFFFFF', fontSize: '40px' }}
-              >
-                Starter Pack
-              </Link>
-            )}
-
-            {/* Desktop Auth - Show only on large screens */}
-            {isLoggedIn ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-                  style={{ background: 'linear-gradient(to right, #4B4E6D, rgba(75, 78, 109, 0))', color: '#FFFFFF', fontSize: '40px' }}
-                >
-                  Dashboard
-                </Link>
-                <form action="/api/auth/logout" method="post">
-                  <button 
-                    type="submit" 
-                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana hover:opacity-90 transition-opacity whitespace-nowrap"
-                    style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
-                  >
-                    Logout
-                  </button>
-                </form>
-              </>
-            ) : (
-              <Link
-                href="/login"
-                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
-                style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
-              >
-                Login
-              </Link>
-            )}
-          </>
-        )}
-
-        {/* Mobile Menu Button - Only visible on small screens */}
-        {!isLargeScreen && (
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 ml-2 text-white hover:opacity-75"
-            style={{ color: '#FFFFFF' }}
+        <details className="relative lg:hidden text-white">
+          <summary
+            className="cursor-pointer list-none p-2 hover:opacity-75 [&::-webkit-details-marker]:hidden"
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        )}
-      </div>
-
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && !isLargeScreen && (
-        <nav className="lg:hidden border-t border-white/20 bg-black/95 backdrop-blur-md">
-          <div className="flex flex-col p-4">
-            <Link 
-              href="/discover" 
-              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-              style={{ color: '#FFFFFF' }}
-              onClick={() => setMobileMenuOpen(false)}
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              aria-hidden="true"
             >
-              Discover
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </summary>
+          <nav
+            className="absolute right-0 top-full mt-2 min-w-56 border border-white/20 bg-black/95 p-4 shadow-xl"
+            aria-label="Mobile public navigation"
+          >
+            <Link href="/" className="block px-4 py-2 text-sm hover:bg-white/10 rounded">
+              Home
             </Link>
-            <Link 
-              href="/about" 
-              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-              style={{ color: '#FFFFFF' }}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            {clarityCheckDone && (
-              <Link 
-                href="/program" 
-                className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-                style={{ color: '#FFFFFF' }}
-                onClick={() => setMobileMenuOpen(false)}
+            {publicLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block px-4 py-2 text-sm hover:bg-white/10 rounded"
               >
-                Accelerator™
+                {link.label}
               </Link>
-            )}
-            <Link
-              href="/clarity-check"
-              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-              style={{ color: '#FFFFFF' }}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Clarity Check
-            </Link>
-            {clarityCheckDone && (
-              <Link 
-                href="/starter-pack" 
-                className="px-4 py-2 text-sm hover:bg-white/10 rounded"
-                style={{ color: '#FFFFFF' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Starter Pack
-              </Link>
-            )}
+            ))}
             <div className="border-t border-white/20 mt-2 pt-2">
-              {isLoggedIn ? (
-                <>
-                  <Link 
-                    href="/dashboard" 
-                    className="block px-4 py-2 text-sm hover:bg-white/10 rounded"
-                    style={{ color: '#FFFFFF' }}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <form action="/api/auth/logout" method="post" className="w-full">
-                    <button 
-                      type="submit" 
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-white/10 rounded"
-                      style={{ color: '#FFFFFF' }}
-                    >
-                      Logout
-                    </button>
-                  </form>
-                </>
-              ) : (
-                <Link 
-                  href="/login" 
-                  className="block px-4 py-2 text-sm hover:bg-white/10 rounded"
-                  style={{ color: '#FFFFFF' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-              )}
+              <PublicHeaderAuthControls mobile />
             </div>
-          </div>
-        </nav>
-      )}
+          </nav>
+        </details>
+      </div>
     </header>
   );
 }

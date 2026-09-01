@@ -1,13 +1,24 @@
-'use client';
-
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 
-export default function ClarityCheckPage() {
-  const searchParams = useSearchParams();
-  const qs = searchParams.toString();
+type ClarityCheckPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function ClarityCheckPage({ searchParams }: ClarityCheckPageProps) {
+  const params = await searchParams;
+  const query = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => query.append(key, item));
+    } else if (value !== undefined) {
+      query.set(key, value);
+    }
+  }
+
+  const qs = query.toString();
   const ctaHref = qs ? `/clarity-check-quiz?${qs}` : '/clarity-check-quiz';
   return (
     <div className="relative min-h-screen bg-white">

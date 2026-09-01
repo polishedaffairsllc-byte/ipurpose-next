@@ -5,7 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: '/api/',
     },
-    sitemap: 'https://www.ipurposesoul.com/sitemap.xml',
+    sitemap: 'https://ipurposesoul.com/sitemap.xml',
+    host: 'https://ipurposesoul.com',
   };
 }

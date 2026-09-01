@@ -1,18 +1,6 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
-
-export const metadata: Metadata = {
-  title: 'Discover iPurpose™ — Soul, Systems, and Thoughtful AI',
-  description: 'Explore the iPurpose™ approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
-  openGraph: {
-    title: 'Discover iPurpose™ — Soul, Systems, and Thoughtful AI',
-    description: 'Explore the iPurpose™ approach: aligning inner clarity with practical systems and supportive AI to help creators build what truly matters.',
-    type: 'website',
-  },
-  robots: 'index, follow',
-};
 
 export default function DiscoverPage() {
   return (

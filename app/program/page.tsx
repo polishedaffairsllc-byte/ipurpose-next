@@ -43,6 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'iPurpose Accelerator™ — From Insight to Action',
     description: 'A guided cohort-based experience helping creators remove internal blocks and turn clarity into simple, structured steps using alignment, systems, and AI support.',
+    url: 'https://ipurposesoul.com/program',
     type: 'website',
   },
   robots: 'index, follow',

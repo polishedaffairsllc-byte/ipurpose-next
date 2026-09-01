@@ -7,10 +7,12 @@ import Footer from "../components/Footer";
 export const metadata: Metadata = {
   title: "About iPurpose — Built for Clarity, Structure, and Sustainable Progress",
   description: "Learn why iPurpose was created and how it helps creators translate insight into clear decisions, ordered steps, and meaningful work.",
+  alternates: { canonical: 'https://ipurposesoul.com/about' },
   robots: "index, follow",
   openGraph: {
     title: "About iPurpose — Built for Clarity, Structure, and Sustainable Progress",
     description: "Learn why iPurpose was created and how it helps creators translate insight into clear decisions, ordered steps, and meaningful work.",
+    url: 'https://ipurposesoul.com/about',
     type: "website",
   },
 };
