@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 import { theme } from '../../../theme';
 
@@ -6,24 +7,63 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.plum,
+        tabBarActiveTintColor: theme.colors.lavenderPurple,
         tabBarInactiveTintColor: theme.colors.muted,
         tabBarStyle: {
           backgroundColor: theme.colors.white,
           borderTopColor: theme.colors.line,
-          height: 64,
-          paddingTop: 7,
+          borderTopWidth: 1,
+          height: 72,
+          paddingTop: 8,
           paddingBottom: 8,
         },
         tabBarLabelStyle: {
+          fontFamily: theme.fonts.body,
           fontSize: 12,
-          fontWeight: '700',
         },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="mentor" options={{ title: 'Mentor' }} />
-      <Tabs.Screen name="account" options={{ title: 'Account' }} />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="mentor"
+        options={{
+          title: 'Mentor',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'}
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Account',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
