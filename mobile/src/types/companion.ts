@@ -1,5 +1,15 @@
 export type ResponseMode = 'balanced' | 'reflect' | 'build' | 'expand';
 
+export interface CompanionProfile {
+  displayName?: string;
+  timezone?: string;
+  archetypePrimary?: string;
+  archetypeSecondary?: string;
+  identityAnchor?: string;
+  purposeStatement?: string;
+  focusAreas: string[];
+}
+
 export interface ConversationSummary {
   id: string;
   title: string;

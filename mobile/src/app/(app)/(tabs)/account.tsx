@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   ActivityIndicator,
@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { useAuth } from '../../../context/AuthContext';
+import { getCompanionProfile } from '../../../lib/api';
 import { theme } from '../../../theme';
+import type { CompanionProfile } from '../../../types/companion';
+
+const PROFILE_ERROR_MESSAGE =
+  'Your Compass could not be loaded right now. Your account details are still available.';
 
 function getDisplayName(displayName?: string | null, email?: string | null) {
   if (displayName?.trim()) return displayName.trim();
@@ -38,15 +43,64 @@ function getProviderLabel(providerId?: string) {
   return 'Firebase account';
 }
 
+function hasPersonalProfile(profile: CompanionProfile | null) {
+  return Boolean(
+    profile?.archetypePrimary
+      || profile?.archetypeSecondary
+      || profile?.identityAnchor
+      || profile?.purposeStatement
+      || profile?.focusAreas.length
+  );
+}
+
 export default function AccountScreen() {
   const { user, signOut } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [companionProfile, setCompanionProfile] = useState<CompanionProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   const email = user?.email || 'No email available';
   const displayName = getDisplayName(user?.displayName, user?.email);
   const initials = getInitials(displayName);
   const provider = getProviderLabel(user?.providerData[0]?.providerId);
+  const hasCompass = hasPersonalProfile(companionProfile);
+
+  useEffect(() => {
+    let active = true;
+
+    getCompanionProfile()
+      .then((profile) => {
+        if (!active) return;
+        setCompanionProfile(profile);
+        setProfileError(null);
+      })
+      .catch(() => {
+        if (!active) return;
+        setProfileError(PROFILE_ERROR_MESSAGE);
+      })
+      .finally(() => {
+        if (active) setProfileLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function handleProfileRetry() {
+    setProfileLoading(true);
+    setProfileError(null);
+
+    try {
+      setCompanionProfile(await getCompanionProfile());
+    } catch {
+      setProfileError(PROFILE_ERROR_MESSAGE);
+    } finally {
+      setProfileLoading(false);
+    }
+  }
 
   async function handleSignOut() {
     if (signingOut) return;
@@ -158,6 +212,128 @@ export default function AccountScreen() {
               </View>
             </View>
           </View>
+        </View>
+
+        <View style={styles.compassSection}>
+          <Text style={styles.sectionLabel}>PERSONAL PROFILE</Text>
+          <Text style={styles.compassTitle}>Your iPurpose Compass</Text>
+          <Text style={styles.compassIntro}>
+            A living reflection of the identity, purpose, and priorities shaping
+            your path.
+          </Text>
+
+          {profileLoading ? (
+            <View style={styles.compassStatusCard}>
+              <ActivityIndicator color={theme.colors.lavenderPurple} />
+              <Text style={styles.compassStatusText}>Reading your Compass…</Text>
+            </View>
+          ) : profileError ? (
+            <View style={styles.compassErrorCard}>
+              <View style={styles.compassStatusIcon}>
+                <Ionicons
+                  name="cloud-offline-outline"
+                  size={21}
+                  color={theme.colors.deepIndigo}
+                />
+              </View>
+              <Text style={styles.compassErrorText}>{profileError}</Text>
+              <Pressable
+                onPress={handleProfileRetry}
+                accessibilityRole="button"
+                accessibilityLabel="Retry loading your iPurpose Compass"
+                style={({ pressed }) => [
+                  styles.retryButton,
+                  pressed && styles.retryButtonPressed,
+                ]}
+              >
+                <Text style={styles.retryButtonText}>Try again</Text>
+              </Pressable>
+            </View>
+          ) : hasCompass ? (
+            <View style={styles.compassCard}>
+              {companionProfile?.archetypePrimary ? (
+                <View style={styles.compassRow}>
+                  <View style={[styles.compassRowIcon, styles.primaryArchetypeIcon]}>
+                    <Ionicons
+                      name="compass-outline"
+                      size={19}
+                      color={theme.colors.deepIndigo}
+                    />
+                  </View>
+                  <View style={styles.compassRowCopy}>
+                    <Text style={styles.compassRowLabel}>Primary archetype</Text>
+                    <Text style={styles.compassRowValue}>
+                      {companionProfile.archetypePrimary}
+                    </Text>
+                  </View>
+                </View>
+              ) : null}
+
+              {companionProfile?.archetypeSecondary ? (
+                <View style={styles.compassRow}>
+                  <View style={[styles.compassRowIcon, styles.secondaryArchetypeIcon]}>
+                    <Ionicons
+                      name="layers-outline"
+                      size={19}
+                      color={theme.colors.deepIndigo}
+                    />
+                  </View>
+                  <View style={styles.compassRowCopy}>
+                    <Text style={styles.compassRowLabel}>Secondary archetype</Text>
+                    <Text style={styles.compassRowValue}>
+                      {companionProfile.archetypeSecondary}
+                    </Text>
+                  </View>
+                </View>
+              ) : null}
+
+              {companionProfile?.identityAnchor ? (
+                <View style={[styles.compassStatement, styles.identityStatement]}>
+                  <Text style={styles.compassStatementLabel}>IDENTITY ANCHOR</Text>
+                  <Text style={styles.compassStatementText}>
+                    {companionProfile.identityAnchor}
+                  </Text>
+                </View>
+              ) : null}
+
+              {companionProfile?.purposeStatement ? (
+                <View style={[styles.compassStatement, styles.purposeStatement]}>
+                  <Text style={styles.compassStatementLabel}>PURPOSE STATEMENT</Text>
+                  <Text style={styles.compassStatementText}>
+                    {companionProfile.purposeStatement}
+                  </Text>
+                </View>
+              ) : null}
+
+              {companionProfile?.focusAreas.length ? (
+                <View style={styles.focusAreaSection}>
+                  <Text style={styles.compassStatementLabel}>FOCUS AREAS</Text>
+                  <View style={styles.focusAreas}>
+                    {companionProfile.focusAreas.map((focusArea) => (
+                      <View key={focusArea} style={styles.focusAreaChip}>
+                        <Text style={styles.focusAreaText}>{focusArea}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+            </View>
+          ) : (
+            <View style={styles.compassEmptyCard}>
+              <View style={styles.compassEmptyIcon}>
+                <Ionicons
+                  name="compass-outline"
+                  size={25}
+                  color={theme.colors.deepIndigo}
+                />
+              </View>
+              <Text style={styles.compassEmptyTitle}>Your Compass is taking shape.</Text>
+              <Text style={styles.compassEmptyBody}>
+                Your personal profile will deepen as you continue your iPurpose
+                journey and clarify what matters most.
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.methodCard}>
@@ -377,6 +553,200 @@ const styles = StyleSheet.create({
     color: theme.colors.sageGreen,
     fontFamily: theme.fonts.body,
     fontSize: 11,
+  },
+  compassSection: {
+    marginTop: 32,
+  },
+  compassTitle: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.heading,
+    fontSize: 25,
+    lineHeight: 31,
+  },
+  compassIntro: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 7,
+  },
+  compassStatusCard: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.line,
+    borderRadius: 20,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 16,
+    minHeight: 76,
+    paddingHorizontal: 18,
+  },
+  compassStatusText: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+  },
+  compassErrorCard: {
+    alignItems: 'flex-start',
+    backgroundColor: theme.colors.blush,
+    borderRadius: 22,
+    marginTop: 16,
+    padding: 18,
+  },
+  compassStatusIcon: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
+    borderRadius: 14,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  compassErrorText: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 12,
+  },
+  retryButton: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: theme.colors.deepIndigo,
+    borderRadius: 14,
+    marginTop: 14,
+    minHeight: 42,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  retryButtonPressed: {
+    opacity: 0.8,
+  },
+  retryButtonText: {
+    color: theme.colors.white,
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+  },
+  compassCard: {
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.line,
+    borderRadius: 24,
+    borderWidth: 1,
+    gap: 12,
+    marginTop: 16,
+    padding: 18,
+  },
+  compassRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  compassRowIcon: {
+    alignItems: 'center',
+    borderRadius: 14,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  primaryArchetypeIcon: {
+    backgroundColor: theme.colors.soulTint,
+  },
+  secondaryArchetypeIcon: {
+    backgroundColor: theme.colors.systemsTint,
+  },
+  compassRowCopy: {
+    flex: 1,
+  },
+  compassRowLabel: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 11,
+  },
+  compassRowValue: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.heading,
+    fontSize: 19,
+    lineHeight: 24,
+    marginTop: 2,
+  },
+  compassStatement: {
+    borderRadius: 18,
+    padding: 16,
+  },
+  identityStatement: {
+    backgroundColor: theme.colors.soulTint,
+  },
+  purposeStatement: {
+    backgroundColor: theme.colors.aiTint,
+  },
+  compassStatementLabel: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 1.1,
+  },
+  compassStatementText: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 7,
+  },
+  focusAreaSection: {
+    paddingTop: 4,
+  },
+  focusAreas: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 10,
+  },
+  focusAreaChip: {
+    backgroundColor: theme.colors.systemsTint,
+    borderColor: theme.colors.sageGreen,
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+  focusAreaText: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+  },
+  compassEmptyCard: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.line,
+    borderRadius: 24,
+    borderWidth: 1,
+    marginTop: 16,
+    padding: 22,
+  },
+  compassEmptyIcon: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.soulTint,
+    borderRadius: 20,
+    height: 52,
+    justifyContent: 'center',
+    width: 52,
+  },
+  compassEmptyTitle: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.heading,
+    fontSize: 20,
+    lineHeight: 25,
+    marginTop: 14,
+    textAlign: 'center',
+  },
+  compassEmptyBody: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 8,
+    textAlign: 'center',
   },
   methodCard: {
     backgroundColor: theme.colors.aiTint,
