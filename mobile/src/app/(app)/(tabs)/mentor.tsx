@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   ActivityIndicator,
   FlatList,
@@ -17,6 +18,12 @@ import { MessageBubble } from '../../../components/MessageBubble';
 import { getConversation, getConversations, sendMentorMessage } from '../../../lib/api';
 import type { CompanionMessage, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
+
+const STARTERS = [
+  { label: 'Soul', prompt: 'Help me clarify what is true about what I am facing right now.' },
+  { label: 'Systems', prompt: 'Help me turn what I am thinking about into a clear next step.' },
+  { label: 'AI', prompt: 'Help me decide where AI can actually support me here.' },
+];
 
 export default function MentorScreen() {
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
@@ -44,7 +51,6 @@ export default function MentorScreen() {
 
   useEffect(() => {
     let cancelled = false;
-
     async function boot() {
       setLoadingHistory(true);
       setError(null);
@@ -52,7 +58,6 @@ export default function MentorScreen() {
         const available = await getConversations();
         if (cancelled) return;
         setConversations(available);
-
         if (available[0]) {
           const loaded = await getConversation(available[0].id);
           if (cancelled) return;
@@ -67,7 +72,6 @@ export default function MentorScreen() {
         if (!cancelled) setLoadingHistory(false);
       }
     }
-
     boot();
     return () => {
       cancelled = true;
@@ -119,7 +123,10 @@ export default function MentorScreen() {
       setConversationId(result.conversationId);
       setMessages((current) => [...current, localAssistantMessage]);
       setConversations(await getConversations());
-      requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
+
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'The Mentor could not respond. Please try again.');
     } finally {
@@ -135,7 +142,23 @@ export default function MentorScreen() {
         keyboardVerticalOffset={8}
       >
         <View style={styles.container}>
-          <BrandHeader subtitle="Your persistent AI Companion" />
+          <BrandHeader subtitle="Your space for aligned reflection and action" />
+
+          <View style={styles.introRow}>
+            <View style={styles.introCopy}>
+              <Text style={styles.kicker}>MENTOR</Text>
+              <Text style={styles.screenTitle}>Think it through here.</Text>
+            </View>
+
+            <Pressable
+              onPress={startNewConversation}
+              disabled={sending || loadingHistory}
+              style={styles.newButton}
+            >
+              <Ionicons name="add" size={18} color={theme.colors.deepIndigo} />
+              <Text style={styles.newButtonText}>New</Text>
+            </Pressable>
+          </View>
 
           <View style={styles.conversations}>
             <ConversationList
@@ -144,21 +167,52 @@ export default function MentorScreen() {
               disabled={sending || loadingHistory}
               onNew={startNewConversation}
               onSelect={loadConversation}
+              hideNew
             />
           </View>
 
           <View style={styles.chat}>
             {loadingHistory ? (
               <View style={styles.center}>
-                <ActivityIndicator color={theme.colors.plum} />
+                <ActivityIndicator color={theme.colors.lavenderPurple} />
                 <Text style={styles.muted}>Loading your conversation…</Text>
               </View>
             ) : messages.length === 0 ? (
               <View style={styles.empty}>
+                <View style={styles.emptyMark}>
+                  <Ionicons name="sparkles-outline" size={22} color={theme.colors.deepIndigo} />
+                </View>
+
                 <Text style={styles.emptyTitle}>What are you thinking through?</Text>
+
                 <Text style={styles.emptyBody}>
-                  Your Mentor can reflect with you, organize what matters, and help shape the next aligned step.
+                  Start with the part that feels unclear, important, unfinished, or ready to move.
                 </Text>
+
+                <View style={styles.starters}>
+                  {STARTERS.map((starter, index) => (
+                    <Pressable
+                      key={starter.label}
+                      onPress={() => setInput(starter.prompt)}
+                      style={[
+                        styles.starter,
+                        index === 0 && styles.soulStarter,
+                        index === 1 && styles.systemsStarter,
+                        index === 2 && styles.aiStarter,
+                      ]}
+                    >
+                      <Text style={styles.starterLabel}>{starter.label}</Text>
+                      <Text style={styles.starterPrompt}>
+                        {index === 0
+                          ? 'Clarify what is true'
+                          : index === 1
+                            ? 'Structure the next step'
+                            : 'Decide where AI can help'}
+                      </Text>
+                      <Ionicons name="arrow-forward" size={17} color={theme.colors.deepIndigo} />
+                    </Pressable>
+                  ))}
+                </View>
               </View>
             ) : (
               <FlatList
@@ -167,27 +221,35 @@ export default function MentorScreen() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => <MessageBubble message={item} />}
                 contentContainerStyle={styles.messageList}
+                keyboardShouldPersistTaps="handled"
                 onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
               />
             )}
           </View>
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+          {error ? (
+            <View style={styles.errorCard}>
+              <Ionicons name="information-circle-outline" size={17} color={theme.colors.deepIndigo} />
+              <Text style={styles.error}>{error}</Text>
+            </View>
+          ) : null}
 
           <View style={styles.composer}>
             <TextInput
               value={input}
               onChangeText={setInput}
               placeholder="Share what you're thinking through…"
-              placeholderTextColor="#9B919B"
+              placeholderTextColor={theme.colors.muted}
               multiline
               maxLength={4000}
               editable={!sending && !loadingHistory}
               style={styles.input}
             />
+
             <Pressable
               onPress={send}
               disabled={sending || loadingHistory || !input.trim()}
+              accessibilityLabel="Send message"
               style={[
                 styles.send,
                 (sending || loadingHistory || !input.trim()) && styles.sendDisabled,
@@ -196,7 +258,7 @@ export default function MentorScreen() {
               {sending ? (
                 <ActivityIndicator color={theme.colors.white} />
               ) : (
-                <Text style={styles.sendText}>Send</Text>
+                <Ionicons name="arrow-up" size={21} color={theme.colors.white} />
               )}
             </Pressable>
           </View>
@@ -209,19 +271,166 @@ export default function MentorScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   safe: { flex: 1, backgroundColor: theme.colors.cream },
-  container: { flex: 1, paddingTop: 10, paddingHorizontal: 18 },
-  conversations: { marginTop: 16, marginBottom: 12 },
-  chat: { flex: 1, backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.line, borderRadius: 22, overflow: 'hidden' },
-  messageList: { padding: 14, paddingBottom: 20 },
+  container: { flex: 1, paddingTop: 8, paddingHorizontal: 18 },
+  introRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginTop: 20,
+  },
+  introCopy: { flex: 1 },
+  kicker: {
+    color: theme.colors.lavenderPurple,
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    letterSpacing: 1.4,
+  },
+  screenTitle: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.heading,
+    fontSize: 24,
+    lineHeight: 30,
+    marginTop: 2,
+  },
+  newButton: {
+    minHeight: 38,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderWidth: 1,
+    borderColor: theme.colors.line,
+    borderRadius: 999,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: 13,
+    paddingVertical: 8,
+  },
+  newButtonText: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+  },
+  conversations: { marginTop: 12, marginBottom: 12 },
+  chat: {
+    flex: 1,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.line,
+    borderRadius: 24,
+    overflow: 'hidden',
+  },
+  messageList: { paddingHorizontal: 14, paddingTop: 18, paddingBottom: 22 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
-  muted: { color: theme.colors.muted, fontSize: 14 },
-  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 28 },
-  emptyTitle: { color: theme.colors.ink, fontSize: 23, fontWeight: '700', textAlign: 'center' },
-  emptyBody: { color: theme.colors.muted, fontSize: 15, lineHeight: 22, textAlign: 'center', marginTop: 9 },
-  error: { color: theme.colors.danger, fontSize: 12, lineHeight: 17, marginTop: 8 },
-  composer: { flexDirection: 'row', alignItems: 'flex-end', gap: 8, paddingVertical: 10 },
-  input: { flex: 1, minHeight: 48, maxHeight: 112, borderWidth: 1, borderColor: theme.colors.line, borderRadius: 18, paddingHorizontal: 14, paddingTop: 12, paddingBottom: 12, color: theme.colors.ink, backgroundColor: theme.colors.white, fontSize: 15 },
-  send: { minWidth: 70, height: 48, borderRadius: 16, backgroundColor: theme.colors.plum, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
-  sendDisabled: { opacity: 0.45 },
-  sendText: { color: theme.colors.white, fontWeight: '800', fontSize: 14 },
+  muted: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+  },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 22,
+    paddingVertical: 24,
+  },
+  emptyMark: {
+    width: 44,
+    height: 44,
+    borderRadius: 16,
+    backgroundColor: theme.colors.aiTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginBottom: 14,
+  },
+  emptyTitle: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.heading,
+    fontSize: 25,
+    lineHeight: 31,
+    textAlign: 'center',
+  },
+  emptyBody: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  starters: { gap: 9, marginTop: 22 },
+  starter: {
+    minHeight: 58,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+  },
+  soulStarter: { backgroundColor: theme.colors.soulTint },
+  systemsStarter: { backgroundColor: theme.colors.systemsTint },
+  aiStarter: { backgroundColor: theme.colors.aiTint },
+  starterLabel: {
+    minWidth: 52,
+    color: theme.colors.lavenderPurple,
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  starterPrompt: {
+    flex: 1,
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  errorCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 7,
+    backgroundColor: theme.colors.aiTint,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    marginTop: 8,
+  },
+  error: {
+    flex: 1,
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  composer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 8,
+    paddingVertical: 10,
+  },
+  input: {
+    flex: 1,
+    minHeight: 50,
+    maxHeight: 118,
+    borderWidth: 1,
+    borderColor: theme.colors.line,
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingTop: 13,
+    paddingBottom: 12,
+    color: theme.colors.deepIndigo,
+    backgroundColor: theme.colors.white,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  send: {
+    width: 50,
+    height: 50,
+    borderRadius: 18,
+    backgroundColor: theme.colors.lavenderPurple,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sendDisabled: { opacity: 0.36 },
 });
