@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "iPurpose",
+    "slug": "ipurpose-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "ipurpose",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ipurpose.mobile"
+    },
+    "android": {
+      "package": "com.ipurpose.mobile"
+    }
+  }
+}
