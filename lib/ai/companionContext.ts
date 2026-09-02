@@ -81,6 +81,36 @@ function getProfileContext(data: UnknownRecord): CompanionProfileContext {
   };
 }
 
+interface CompanionProfileReadResult {
+  profile: CompanionProfileContext;
+  email?: string;
+}
+
+async function readCompanionProfile(uid: string): Promise<CompanionProfileReadResult> {
+  const [userDocument, authUser] = await Promise.all([
+    firebaseAdmin.firestore().collection("users").doc(uid).get(),
+    safeRead("authenticated profile", () => firebaseAdmin.auth().getUser(uid), null),
+  ]);
+  const userData = userDocument.exists ? asRecord(userDocument.data()) : {};
+  const profile = getProfileContext(userData);
+  if (!profile.displayName) profile.displayName = authUser?.displayName || undefined;
+
+  return {
+    profile,
+    email: authUser?.email || undefined,
+  };
+}
+
+/**
+ * Return the bounded companion profile for a verified Firebase UID.
+ * Authentication and entitlement checks remain the responsibility of the API
+ * route so callers can never select another user's profile.
+ */
+export async function getCompanionProfile(uid: string): Promise<CompanionProfileContext> {
+  const { profile } = await readCompanionProfile(uid);
+  return profile;
+}
+
 async function readClarityCheck(email: string | undefined): Promise<CompanionClarityContext | undefined> {
   if (!email) return undefined;
 
@@ -261,16 +291,9 @@ async function readLabs(uid: string): Promise<CompanionLabContext[]> {
  * existing Clarity Check schema). Individual source failures degrade gracefully.
  */
 export async function getCompanionContext(uid: string): Promise<CompanionContext> {
-  const [userDocument, authUser] = await Promise.all([
-    firebaseAdmin.firestore().collection("users").doc(uid).get(),
-    safeRead("authenticated profile", () => firebaseAdmin.auth().getUser(uid), null),
-  ]);
-  const userData = userDocument.exists ? asRecord(userDocument.data()) : {};
-  const profile = getProfileContext(userData);
-  if (!profile.displayName) profile.displayName = authUser?.displayName || undefined;
+  const { profile, email } = await readCompanionProfile(uid);
   // The Clarity Check's legacy schema is email-linked. Use the email owned by
   // the authenticated Firebase account, never an arbitrary client value.
-  const email = authUser?.email || undefined;
 
   const [clarityCheck, recentCheckIns, dailySessions, recentLabs, journalReflections] =
     await Promise.all([

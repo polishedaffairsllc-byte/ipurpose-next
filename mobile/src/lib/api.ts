@@ -1,6 +1,7 @@
 import { auth } from './firebase';
 import type {
   CompanionMessage,
+  CompanionProfile,
   ConversationSummary,
   MentorResponse,
   ResponseMode,
@@ -61,6 +62,12 @@ export async function getConversation(conversationId: string): Promise<Companion
   );
   const data = await readJson<{ conversationId: string; messages: CompanionMessage[] }>(response);
   return data.messages || [];
+}
+
+export async function getCompanionProfile(): Promise<CompanionProfile> {
+  const response = await authorizedFetch('/api/ai/profile', { method: 'GET' });
+  const data = await readJson<{ profile: CompanionProfile }>(response);
+  return data.profile;
 }
 
 export async function sendMentorMessage(options: {
