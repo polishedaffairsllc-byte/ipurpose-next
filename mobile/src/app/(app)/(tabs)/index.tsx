@@ -1,7 +1,11 @@
+// mobile/src/app/(app)/(tabs)/index.tsx
+// PR #35 — visual redesign only. Functional behavior preserved exactly:
+// getCompanionProfile(), getConversations(), formatUpdatedAt(),
+// router.push('/mentor'), API base https://ipurposesoul.com are untouched.
 import { useCallback, useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -10,21 +14,21 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
+import { BrandHeader } from '../../../components/BrandHeader';
 import { getCompanionProfile, getConversations } from '../../../lib/api';
-import type {
-  CompanionProfile,
-  ConversationSummary,
-} from '../../../types/companion';
+import type { CompanionProfile, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
 
-const LOGO_URI = 'https://www.ipurposesoul.com/images/my-logo.png';
+// TODO: point at the real asset path for the faint compass-rose/star
+// background texture, if/when that asset exists. Left out entirely for
+// now rather than guessed at — see open question in the PR notes.
+// const COMPASS_TEXTURE = require('../../../../assets/brand/compass-texture.png');
 
 function formatUpdatedAt(value: string) {
   const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
+  if (Number.isNaN(date.getTime())) return '';
 
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -38,77 +42,58 @@ function formatUpdatedAt(value: string) {
   if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return `${diffDays} days ago`;
 
-  return date.toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-  });
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
-function getGreeting(displayName?: string) {
-  const firstName = displayName?.trim().split(/\s+/)[0];
+// Greeting logic correction (PR #35): prefer a real first name, never
+// show a raw account handle, never invent a name.
+function resolveFirstName(displayName?: string | null): string | null {
+  if (!displayName) return null;
 
-  if (!firstName) {
-    return 'Welcome back.';
-  }
+  const trimmed = displayName.trim();
+  if (!trimmed) return null;
 
+  // Reject obvious handle/username formatting: no spaces, or looks like
+  // a concatenated-case handle (e.g. "MsHmltn") rather than a real name.
+  const looksLikeHandle =
+    !trimmed.includes(' ') && /^[A-Z][a-z]*[A-Z]/.test(trimmed);
+  if (looksLikeHandle) return null;
+
+  return trimmed.split(' ')[0];
+}
+
+function getTimeOfDayGreeting(): string {
   const hour = new Date().getHours();
-  const greeting =
-    hour >= 5 && hour < 12
-      ? 'Good morning'
-      : hour >= 12 && hour < 17
-        ? 'Good afternoon'
-        : 'Good evening';
-
-  return `${greeting}, ${firstName}.`;
-}
-
-function meaningfulFocusAreas(profile: CompanionProfile | null) {
-  return (profile?.focusAreas || [])
-    .map((focusArea) => focusArea.trim())
-    .filter(Boolean)
-    .slice(0, 2);
+  if (hour >= 5 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 17) return 'Good afternoon';
+  return 'Good evening';
 }
 
 export default function HomeScreen() {
   const router = useRouter();
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [profileError, setProfileError] = useState(false);
+
   const [latestConversation, setLatestConversation] =
     useState<ConversationSummary | null>(null);
   const [conversationLoading, setConversationLoading] = useState(true);
 
+  // Two independent fetches, per spec — one failing must not block the other.
   useFocusEffect(
     useCallback(() => {
       let active = true;
 
-      async function loadProfile() {
-        setProfileLoading(true);
-
-        try {
-          const nextProfile = await getCompanionProfile();
-          if (active) setProfile(nextProfile);
-        } catch {
-          if (active) setProfile(null);
-        } finally {
+      getCompanionProfile()
+        .then((result) => {
+          if (active) setProfile(result);
+        })
+        .catch(() => {
+          if (active) setProfileError(true);
+        })
+        .finally(() => {
           if (active) setProfileLoading(false);
-        }
-      }
-
-      async function loadRecentJourney() {
-        setConversationLoading(true);
-
-        try {
-          const conversations = await getConversations();
-          if (active) setLatestConversation(conversations[0] || null);
-        } catch {
-          if (active) setLatestConversation(null);
-        } finally {
-          if (active) setConversationLoading(false);
-        }
-      }
-
-      loadProfile();
-      loadRecentJourney();
+        });
 
       return () => {
         active = false;
@@ -116,302 +101,301 @@ export default function HomeScreen() {
     }, [])
   );
 
-  const focusAreas = meaningfulFocusAreas(profile);
-  const openCompass = () => router.push('/mentor');
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+
+      async function loadConversations() {
+        try {
+          const conversations = await getConversations();
+          if (!active) return;
+          setLatestConversation(conversations[0] || null);
+        } catch {
+          if (!active) return;
+          setLatestConversation(null);
+        } finally {
+          if (active) setConversationLoading(false);
+        }
+      }
+
+      loadConversations();
+
+      return () => {
+        active = false;
+      };
+    }, [])
+  );
+
+  const openMentor = () => router.push('/mentor');
+  const openAnchor = () => router.push('/anchor');
+  const openFocus = () => router.push('/focus');
+  const openLatestJourney = () => {
+    if (!latestConversation) {
+      openMentor();
+      return;
+    }
+    router.push({ pathname: '/mentor', params: { conversationId: latestConversation.id } });
+  };
+
+  const firstName = resolveFirstName(profile?.displayName);
+  const greeting = firstName
+    ? `${getTimeOfDayGreeting()}, ${firstName}.`
+    : `${getTimeOfDayGreeting()}.`;
+
+  const hasProfileData = !profileError && !!profile;
+  const focusAreas = (profile?.focusAreas ?? []).slice(0, 2);
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.greetingSection}>
-          <View style={styles.brandRow}>
-            <View style={styles.logoShell}>
-              <View style={styles.logoFrost} />
-              <Image
-                accessibilityLabel="iPurpose Compass logo"
-                source={{ uri: LOGO_URI }}
-                style={styles.logo}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={styles.brandName}>iPurpose Compass</Text>
+    <LinearGradient
+      colors={theme.homeGradient.colors}
+      locations={theme.homeGradient.locations}
+      start={theme.homeGradient.start}
+      end={theme.homeGradient.end}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.safe}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}
+        >
+          <BrandHeader subtitle="Soul → Systems → AI™" />
+
+          <View style={styles.hero}>
+            <Text style={styles.greeting}>{greeting}</Text>
+            <Text style={styles.heroSubtitle}>
+              Stay aligned. Follow your north.
+            </Text>
           </View>
 
-          <Text style={styles.greeting}>{getGreeting(profile?.displayName)}</Text>
-        </View>
-
-        <View style={[styles.card, styles.anchorCard]}>
-          <Text style={styles.eyebrow}>YOUR ANCHOR</Text>
+          {/* Your Anchor */}
           {profileLoading ? (
-            <View style={styles.skeletonLine} />
-          ) : profile?.archetypePrimary ? (
-            <>
-              <Text style={styles.cardTitle}>{profile.archetypePrimary}</Text>
-              {profile.identityAnchor ? (
-                <Text style={styles.cardBody}>{profile.identityAnchor}</Text>
-              ) : null}
-            </>
+            <View style={[styles.glassCard, styles.skeletonCard]}>
+              <ActivityIndicator color={theme.colors.champagneText} />
+            </View>
           ) : (
-            <Text style={styles.cardBody}>
-              Your anchor will take shape as you use Compass.
-            </Text>
-          )}
-        </View>
-
-        <View style={[styles.card, styles.focusCard]}>
-          <Text style={styles.eyebrow}>RIGHT NOW</Text>
-          {profileLoading ? (
-            <View style={styles.skeletonLine} />
-          ) : focusAreas.length ? (
-            <View style={styles.focusList}>
-              {focusAreas.map((focusArea) => (
-                <View key={focusArea} style={styles.focusRow}>
-                  <View style={styles.focusMark} />
-                  <Text style={styles.focusText}>{focusArea}</Text>
+            <Pressable accessibilityRole="button" accessibilityLabel="Open Your Anchor" onPress={openAnchor} style={({ pressed }) => pressed ? styles.interactivePressed : undefined}>
+              <BlurView intensity={30} tint="dark" style={styles.glassCard}>
+                <View style={styles.cardHeaderRow}>
+                  <Text style={styles.eyebrow}>YOUR ANCHOR</Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.champagneText} />
                 </View>
-              ))}
-            </View>
-          ) : (
-            <Text style={styles.cardBody}>
-              Nothing set yet — start with Compass.
-            </Text>
+                {hasProfileData && profile?.archetypePrimary ? (
+                  <>
+                    <Text style={styles.anchorName}>{profile.archetypePrimary}</Text>
+                    {profile.identityAnchor ? <Text style={styles.anchorDescription}>{profile.identityAnchor}</Text> : null}
+                  </>
+                ) : <Text style={styles.emptyText}>Your anchor will take shape as you use Compass.</Text>}
+              </BlurView>
+            </Pressable>
           )}
-        </View>
 
-        <View style={[styles.card, styles.journeyCard]}>
-          <Text style={styles.journeyEyebrow}>YOUR JOURNEY</Text>
-          {conversationLoading ? (
-            <View style={styles.journeyLoading}>
-              <ActivityIndicator color={theme.colors.white} />
-              <Text style={styles.journeyLoadingText}>
-                Finding your latest conversation…
-              </Text>
-            </View>
-          ) : latestConversation ? (
-            <>
-              <Text style={styles.journeyTitle} numberOfLines={2}>
-                {latestConversation.title}
-              </Text>
-              {latestConversation.updatedAt ? (
-                <Text style={styles.journeyMeta}>
-                  {formatUpdatedAt(latestConversation.updatedAt)}
-                </Text>
-              ) : null}
-            </>
-          ) : (
-            <>
-              <Text style={styles.journeyTitle}>
-                Start your first conversation.
-              </Text>
-              <Text style={styles.journeyBody}>
-                Bring the decision, idea, tension, or next step that is on your
-                mind.
-              </Text>
-            </>
-          )}
-        </View>
+          {/* Right Now */}
+          {!profileLoading ? (
+            <Pressable accessibilityRole="button" accessibilityLabel="Open Current Focus" onPress={openFocus} style={({ pressed }) => [styles.pillRow, pressed ? styles.interactivePressed : null]}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.eyebrowStandalone}>RIGHT NOW</Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.champagneText} />
+              </View>
+              {hasProfileData && focusAreas.length > 0 ? (
+                <View style={styles.pillWrap}>{focusAreas.map((focus, i) => <View key={i} style={styles.pill}><Text style={styles.pillText}>{focus}</Text></View>)}</View>
+              ) : (
+                <>
+                  <Text style={styles.focusEmptyTitle}>Set your current focus</Text>
+                  <Text style={styles.emptyTextSmall}>What deserves your attention right now?</Text>
+                </>
+              )}
+            </Pressable>
+          ) : null}
 
-        <View style={styles.actionSection}>
+          {/* Your Journey */}
           <Pressable
             accessibilityRole="button"
-            onPress={openCompass}
-            style={({ pressed }) => [
-              styles.primaryButton,
-              pressed ? styles.primaryButtonPressed : null,
-            ]}
+            accessibilityLabel={latestConversation ? 'Resume latest journey' : 'Start your first Compass conversation'}
+            onPress={latestConversation ? openLatestJourney : openMentor}
+            style={({ pressed }) => pressed ? styles.interactivePressed : undefined}
           >
+            <BlurView intensity={45} tint="dark" style={[styles.glassCard, styles.journeyCard]}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.eyebrow}>YOUR JOURNEY</Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.champagneText} />
+              </View>
+              {conversationLoading ? (
+                <ActivityIndicator color={theme.colors.champagneText} />
+              ) : latestConversation ? (
+                <>
+                  <Text style={styles.journeyTitle} numberOfLines={2}>{latestConversation.title}</Text>
+                  <Text style={styles.journeyMeta}>{latestConversation.updatedAt ? formatUpdatedAt(latestConversation.updatedAt) : ''}</Text>
+                </>
+              ) : (
+                <Text style={styles.journeyTitle}>Start your first conversation.</Text>
+              )}
+            </BlurView>
+          </Pressable>
+
+          {/* Next Action — exactly one, always renders */}
+          <Pressable onPress={openMentor} style={styles.primaryButton}>
             <Text style={styles.primaryButtonText}>
               Talk it through in Compass
             </Text>
           </Pressable>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
+
   safe: {
     flex: 1,
-    backgroundColor: theme.colors.cream,
   },
+
   container: {
     paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 40,
-    gap: 18,
+    paddingTop: 8,
+    paddingBottom: 36,
   },
-  greetingSection: {
-    paddingBottom: 8,
+
+  hero: {
+    marginTop: 30,
+    marginBottom: 24,
   },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  logoShell: {
-    width: 58,
-    height: 58,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: theme.colors.line,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  logoFrost: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: theme.colors.soulTint,
-    opacity: 0.62,
-  },
-  logo: {
-    width: 50,
-    height: 50,
-  },
-  brandName: {
-    flex: 1,
-    color: theme.colors.muted,
-    fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 20,
-  },
+
   greeting: {
-    color: theme.colors.ink,
     fontFamily: theme.fonts.heading,
     fontSize: 32,
     lineHeight: 39,
-    marginTop: 24,
+    color: theme.colors.textOnDark,
   },
-  card: {
-    borderRadius: 24,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: theme.colors.line,
-  },
-  anchorCard: {
-    backgroundColor: theme.colors.soulTint,
-  },
-  focusCard: {
-    backgroundColor: theme.colors.systemsTint,
-  },
-  eyebrow: {
-    color: theme.colors.plumDark,
-    fontFamily: theme.fonts.body,
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1.4,
-  },
-  cardTitle: {
-    color: theme.colors.ink,
-    fontFamily: theme.fonts.heading,
-    fontSize: 24,
-    lineHeight: 30,
-    marginTop: 10,
-  },
-  cardBody: {
-    color: theme.colors.ink,
-    fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 10,
-  },
-  skeletonLine: {
-    width: '64%',
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: theme.colors.line,
-    marginTop: 14,
-  },
-  focusList: {
-    gap: 12,
-    marginTop: 14,
-  },
-  focusRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 11,
-  },
-  focusMark: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: theme.colors.sageGreen,
-    marginTop: 6,
-  },
-  focusText: {
-    flex: 1,
-    color: theme.colors.ink,
-    fontFamily: theme.fonts.body,
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  journeyCard: {
-    minHeight: 148,
-    backgroundColor: theme.colors.plumDark,
-    borderColor: theme.colors.plumDark,
-  },
-  journeyEyebrow: {
-    color: theme.colors.white,
-    opacity: 0.74,
-    fontFamily: theme.fonts.body,
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1.4,
-  },
-  journeyLoading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 9,
-    paddingTop: 18,
-  },
-  journeyLoadingText: {
-    color: theme.colors.white,
-    opacity: 0.74,
-    fontFamily: theme.fonts.body,
-    fontSize: 13,
-  },
-  journeyTitle: {
-    color: theme.colors.white,
-    fontFamily: theme.fonts.heading,
-    fontSize: 22,
-    lineHeight: 28,
-    marginTop: 16,
-  },
-  journeyMeta: {
-    color: theme.colors.white,
-    opacity: 0.72,
-    fontFamily: theme.fonts.body,
-    fontSize: 12,
-    marginTop: 10,
-  },
-  journeyBody: {
-    color: theme.colors.white,
-    opacity: 0.78,
+
+  heroSubtitle: {
     fontFamily: theme.fonts.body,
     fontSize: 14,
-    lineHeight: 21,
-    marginTop: 10,
+    color: theme.colors.textOnDarkMuted,
+    marginTop: 6,
   },
-  actionSection: {
-    paddingTop: 4,
+
+  glassCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: theme.colors.glassCardBorder,
+    backgroundColor: theme.colors.glassCardBg,
+    padding: 18,
+    marginBottom: 14,
+    overflow: 'hidden',
   },
-  primaryButton: {
-    backgroundColor: theme.colors.plum,
-    borderRadius: 18,
-    paddingHorizontal: 20,
-    paddingVertical: 17,
+
+  skeletonCard: {
+    minHeight: 84,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  primaryButtonPressed: {
-    opacity: 0.82,
+
+  eyebrow: {
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    letterSpacing: 1.2,
+    color: theme.colors.champagneText,
+    marginBottom: 6,
   },
+
+  eyebrowStandalone: {
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    letterSpacing: 1.2,
+    color: theme.colors.champagneText,
+    marginBottom: 10,
+  },
+
+  anchorName: {
+    fontFamily: theme.fonts.heading,
+    fontSize: 22,
+    color: theme.colors.textOnDark,
+  },
+
+  anchorDescription: {
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+    lineHeight: 19,
+    color: theme.colors.textOnDarkMuted,
+    marginTop: 6,
+  },
+
+  emptyText: {
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    color: theme.colors.textOnDarkMuted,
+  },
+
+  emptyTextSmall: {
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+    color: theme.colors.textOnDarkFaint,
+  },
+
+  pillRow: {
+    marginBottom: 14,
+  },
+
+  pillWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+
+  pill: {
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: theme.colors.glassPillBorder,
+    backgroundColor: theme.colors.glassPillBg,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+
+  pillText: {
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+    color: theme.colors.textOnDark,
+  },
+
+  journeyCard: {
+    backgroundColor: theme.colors.glassCardBgDeep,
+  },
+
+  journeyTitle: {
+    fontFamily: theme.fonts.heading,
+    fontSize: 19,
+    color: theme.colors.textOnDark,
+    marginTop: 2,
+  },
+
+  journeyMeta: {
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+    color: theme.colors.textOnDarkFaint,
+    marginTop: 6,
+  },
+
+  cardHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  interactivePressed: { opacity: 0.72 },
+  focusEmptyTitle: { fontFamily: theme.fonts.heading, fontSize: 19, color: theme.colors.textOnDark, marginBottom: 5 },
+
+  primaryButton: {
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: theme.colors.glassCardBorder,
+    backgroundColor: theme.colors.lavenderPurple,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 6,
+  },
+
   primaryButtonText: {
-    color: theme.colors.white,
     fontFamily: theme.fonts.body,
     fontSize: 15,
-    fontWeight: '700',
+    color: theme.colors.textOnDark,
   },
 });

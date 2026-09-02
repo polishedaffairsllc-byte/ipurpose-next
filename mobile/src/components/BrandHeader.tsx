@@ -1,21 +1,20 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { theme } from '../theme';
 
-const LOGO_URI = 'https://www.ipurposesoul.com/images/my-logo.png';
+const COMPASS_LOGO_URI = 'https://www.ipurposesoul.com/images/my-logo.png';
 
-export function BrandHeader({ subtitle }: { subtitle?: string }) {
+type BrandHeaderProps = { subtitle?: string };
+
+export function BrandHeader({ subtitle }: BrandHeaderProps) {
   return (
-    <View style={styles.wrap}>
-      <View style={styles.logoShell}>
-        <Image
-          source={{ uri: LOGO_URI }}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
-
-      <View style={styles.copy}>
-        <Text style={styles.brand}>iPurpose</Text>
+    <View style={styles.row}>
+      <BlurView intensity={40} tint="light" style={styles.markContainer}>
+        <View style={styles.markInnerGlow} />
+        <Image accessibilityLabel="iPurpose Compass logo" source={{ uri: COMPASS_LOGO_URI }} style={styles.markImage} resizeMode="contain" />
+      </BlurView>
+      <View style={styles.wordmark}>
+        <Text style={styles.title}>iPurpose Compass</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
     </View>
@@ -23,38 +22,11 @@ export function BrandHeader({ subtitle }: { subtitle?: string }) {
 }
 
 const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  logoShell: {
-    width: 58,
-    height: 58,
-    borderRadius: 18,
-    backgroundColor: theme.colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 52,
-    height: 52,
-  },
-  copy: {
-    flex: 1,
-  },
-  brand: {
-    color: theme.colors.deepIndigo,
-    fontFamily: theme.fonts.heading,
-    fontSize: 31,
-    lineHeight: 34,
-    letterSpacing: 0.2,
-  },
-  subtitle: {
-    marginTop: 3,
-    color: theme.colors.muted,
-    fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 19,
-  },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  markContainer: { width: 44, height: 44, borderRadius: 22, overflow: 'hidden', borderWidth: 1, borderColor: theme.colors.glassCardBorder, alignItems: 'center', justifyContent: 'center' },
+  markInnerGlow: { position: 'absolute', width: 44, height: 44, borderRadius: 22, backgroundColor: theme.colors.champagneGlow, opacity: 0.25 },
+  markImage: { width: 34, height: 34 },
+  wordmark: { flexShrink: 1 },
+  title: { fontFamily: theme.fonts.heading, fontSize: 17, color: theme.colors.textOnDark },
+  subtitle: { fontFamily: theme.fonts.body, fontSize: 11, letterSpacing: 0.6, color: theme.colors.textOnDarkMuted, marginTop: 1 },
 });

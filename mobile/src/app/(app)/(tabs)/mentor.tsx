@@ -12,6 +12,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
@@ -26,6 +27,10 @@ const STARTERS = [
 ];
 
 export default function MentorScreen() {
+  const params = useLocalSearchParams<{ conversationId?: string | string[] }>();
+  const requestedConversationId = Array.isArray(params.conversationId)
+    ? params.conversationId[0]
+    : params.conversationId;
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<CompanionMessage[]>([]);
@@ -58,10 +63,11 @@ export default function MentorScreen() {
         const available = await getConversations();
         if (cancelled) return;
         setConversations(available);
-        if (available[0]) {
-          const loaded = await getConversation(available[0].id);
+        const initialConversationId = requestedConversationId || available[0]?.id;
+        if (initialConversationId) {
+          const loaded = await getConversation(initialConversationId);
           if (cancelled) return;
-          setConversationId(available[0].id);
+          setConversationId(initialConversationId);
           setMessages(loaded);
         }
       } catch (caught) {
@@ -76,7 +82,7 @@ export default function MentorScreen() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [requestedConversationId]);
 
   function startNewConversation() {
     setConversationId(null);
