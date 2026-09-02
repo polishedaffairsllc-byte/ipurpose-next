@@ -29,7 +29,7 @@ export default function AnchorScreen() {
             <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={styles.backButton}>
               <Ionicons name="chevron-back" size={20} color={theme.colors.textOnDark} />
             </Pressable>
-            <BrandHeader subtitle="Your iPurpose identity" />
+            <BrandHeader subtitle="Your iPurpose identity" variant="dark-background" />
           </View>
           <View style={styles.hero}>
             <Text style={styles.kicker}>YOUR ANCHOR</Text>

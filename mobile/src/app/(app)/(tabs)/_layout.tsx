@@ -40,7 +40,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="mentor"
         options={{
-          title: 'Mentor',
+          title: 'Compass',
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'}

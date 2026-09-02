@@ -72,7 +72,7 @@ export default function MentorScreen() {
         }
       } catch (caught) {
         if (!cancelled) {
-          setError(caught instanceof Error ? caught.message : 'Unable to load your Mentor.');
+          setError(caught instanceof Error ? caught.message : 'Unable to load your Compass.');
         }
       } finally {
         if (!cancelled) setLoadingHistory(false);
@@ -134,7 +134,7 @@ export default function MentorScreen() {
         listRef.current?.scrollToEnd({ animated: true });
       });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'The Mentor could not respond. Please try again.');
+      setError(caught instanceof Error ? caught.message : 'Compass could not respond. Please try again.');
     } finally {
       setSending(false);
     }
@@ -148,11 +148,14 @@ export default function MentorScreen() {
         keyboardVerticalOffset={8}
       >
         <View style={styles.container}>
-          <BrandHeader subtitle="Your space for aligned reflection and action" />
+          <BrandHeader
+            subtitle="Your space for aligned reflection and action"
+            variant="light-background"
+          />
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
-              <Text style={styles.kicker}>MENTOR</Text>
+              <Text style={styles.kicker}>COMPASS</Text>
               <Text style={styles.screenTitle}>Think it through here.</Text>
             </View>
 

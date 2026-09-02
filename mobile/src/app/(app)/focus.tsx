@@ -27,7 +27,7 @@ export default function FocusScreen() {
 
   return <LinearGradient colors={theme.homeGradient.colors} locations={theme.homeGradient.locations} start={theme.homeGradient.start} end={theme.homeGradient.end} style={styles.gradient}>
     <SafeAreaView style={styles.safe}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
-      <View style={styles.topRow}><Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={styles.backButton}><Ionicons name="chevron-back" size={20} color={theme.colors.textOnDark} /></Pressable><BrandHeader subtitle="What matters now" /></View>
+      <View style={styles.topRow}><Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={styles.backButton}><Ionicons name="chevron-back" size={20} color={theme.colors.textOnDark} /></Pressable><BrandHeader subtitle="What matters now" variant="dark-background" /></View>
       <View style={styles.hero}><Text style={styles.kicker}>CURRENT FOCUS</Text><Text style={styles.title}>What deserves your attention right now?</Text><Text style={styles.subtitle}>Keep this to one or two priorities. Compass will use them to orient your Home experience.</Text></View>
       {loading ? <ActivityIndicator color={theme.colors.champagneText} /> : <BlurView intensity={30} tint="dark" style={styles.card}>
         <Text style={styles.label}>PRIMARY FOCUS</Text><TextInput value={first} onChangeText={(v) => { setFirst(v); setSaved(false); }} maxLength={MAX_FOCUS_LENGTH} placeholder="What matters most right now?" placeholderTextColor={theme.colors.textOnDarkFaint} style={styles.input} />

@@ -122,13 +122,13 @@ export default function AccountScreen() {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <BrandHeader subtitle="Your profile and account" />
+        <BrandHeader subtitle="Your profile and account" variant="light-background" />
 
         <View style={styles.intro}>
           <Text style={styles.eyebrow}>ACCOUNT &amp; PROFILE</Text>
           <Text style={styles.title}>Your iPurpose identity.</Text>
           <Text style={styles.introBody}>
-            The account details connected to your private reflection and Mentor
+            The account details connected to your private reflection and Compass
             experience.
           </Text>
         </View>
@@ -341,7 +341,7 @@ export default function AccountScreen() {
           <Text style={styles.methodTitle}>One identity across your journey.</Text>
           <Text style={styles.methodBody}>
             Your mobile profile uses the same Firebase identity that protects
-            your iPurpose account and keeps your Mentor experience connected.
+            your iPurpose account and keeps your Compass experience connected.
           </Text>
         </View>
 

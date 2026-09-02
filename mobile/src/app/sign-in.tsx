@@ -50,13 +50,16 @@ export default function SignInScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.container}>
-          <BrandHeader subtitle="Your Soul → Systems → AI companion" />
+          <BrandHeader
+            subtitle="Your Soul → Systems → AI companion"
+            variant="light-background"
+          />
 
           <View style={styles.hero}>
             <Text style={styles.eyebrow}>WELCOME BACK</Text>
             <Text style={styles.title}>Continue where you left off.</Text>
             <Text style={styles.body}>
-              Sign in with your iPurpose account to bring your Mentor conversations with you.
+              Sign in with your iPurpose account to bring your Compass conversations with you.
             </Text>
           </View>
 
