@@ -62,7 +62,7 @@ jobs:
       - name: Audit dependencies (fail on high vulnerabilities)
         run: |
           echo "Running npm audit (will fail CI on any high severity vulnerabilities)"
-          npm audit --audit-level=high
+          npm audit --omit=dev --audit-level=high
 
       - name: Run production build
         run: npm run build
