@@ -1,8 +1,7 @@
-// mobile/src/app/(app)/(tabs)/index.tsx
-// Restyled to the iPurpose Style Bible v5 (see ../../../theme.ts)
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -11,10 +10,14 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { BrandHeader } from '../../../components/BrandHeader';
-import { getConversations } from '../../../lib/api';
-import type { ConversationSummary } from '../../../types/companion';
+import { getCompanionProfile, getConversations } from '../../../lib/api';
+import type {
+  CompanionProfile,
+  ConversationSummary,
+} from '../../../types/companion';
 import { theme } from '../../../theme';
+
+const LOGO_URI = 'https://www.ipurposesoul.com/images/my-logo.png';
 
 function formatUpdatedAt(value: string) {
   const date = new Date(value);
@@ -41,36 +44,71 @@ function formatUpdatedAt(value: string) {
   });
 }
 
+function getGreeting(displayName?: string) {
+  const firstName = displayName?.trim().split(/\s+/)[0];
+
+  if (!firstName) {
+    return 'Welcome back.';
+  }
+
+  const hour = new Date().getHours();
+  const greeting =
+    hour >= 5 && hour < 12
+      ? 'Good morning'
+      : hour >= 12 && hour < 17
+        ? 'Good afternoon'
+        : 'Good evening';
+
+  return `${greeting}, ${firstName}.`;
+}
+
+function meaningfulFocusAreas(profile: CompanionProfile | null) {
+  return (profile?.focusAreas || [])
+    .map((focusArea) => focusArea.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+}
+
 export default function HomeScreen() {
   const router = useRouter();
+  const [profile, setProfile] = useState<CompanionProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
   const [latestConversation, setLatestConversation] =
     useState<ConversationSummary | null>(null);
-  const [conversationCount, setConversationCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [conversationLoading, setConversationLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       let active = true;
 
-      async function loadHome() {
+      async function loadProfile() {
+        setProfileLoading(true);
+
         try {
-          const conversations = await getConversations();
-
-          if (!active) return;
-
-          setConversationCount(conversations.length);
-          setLatestConversation(conversations[0] || null);
+          const nextProfile = await getCompanionProfile();
+          if (active) setProfile(nextProfile);
         } catch {
-          if (!active) return;
-
-          setConversationCount(0);
-          setLatestConversation(null);
+          if (active) setProfile(null);
         } finally {
-          if (active) setLoading(false);
+          if (active) setProfileLoading(false);
         }
       }
 
-      loadHome();
+      async function loadRecentJourney() {
+        setConversationLoading(true);
+
+        try {
+          const conversations = await getConversations();
+          if (active) setLatestConversation(conversations[0] || null);
+        } catch {
+          if (active) setLatestConversation(null);
+        } finally {
+          if (active) setConversationLoading(false);
+        }
+      }
+
+      loadProfile();
+      loadRecentJourney();
 
       return () => {
         active = false;
@@ -78,7 +116,8 @@ export default function HomeScreen() {
     }, [])
   );
 
-  const openMentor = () => router.push('/mentor');
+  const focusAreas = meaningfulFocusAreas(profile);
+  const openCompass = () => router.push('/mentor');
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -86,135 +125,107 @@ export default function HomeScreen() {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <BrandHeader subtitle="Soul → Systems → AI™" />
+        <View style={styles.greetingSection}>
+          <View style={styles.brandRow}>
+            <View style={styles.logoShell}>
+              <View style={styles.logoFrost} />
+              <Image
+                accessibilityLabel="iPurpose Compass logo"
+                source={{ uri: LOGO_URI }}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+            </View>
+            <Text style={styles.brandName}>iPurpose Compass</Text>
+          </View>
 
-        <View style={styles.hero}>
-          <Text style={styles.kicker}>YOUR ALIGNMENT SPACE</Text>
-
-          <Text style={styles.title}>
-            What needs your attention today?
-          </Text>
-
-          <Text style={styles.body}>
-            Start with what is true, shape the next aligned step, then use AI
-            where it actually helps.
-          </Text>
-
-          <Pressable onPress={openMentor} style={styles.primaryButton}>
-            <Text style={styles.primaryButtonText}>
-              Talk it through with Mentor
-            </Text>
-          </Pressable>
+          <Text style={styles.greeting}>{getGreeting(profile?.displayName)}</Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>CONTINUE</Text>
-          <Text style={styles.sectionTitle}>Pick up where you left off.</Text>
+        <View style={[styles.card, styles.anchorCard]}>
+          <Text style={styles.eyebrow}>YOUR ANCHOR</Text>
+          {profileLoading ? (
+            <View style={styles.skeletonLine} />
+          ) : profile?.archetypePrimary ? (
+            <>
+              <Text style={styles.cardTitle}>{profile.archetypePrimary}</Text>
+              {profile.identityAnchor ? (
+                <Text style={styles.cardBody}>{profile.identityAnchor}</Text>
+              ) : null}
+            </>
+          ) : (
+            <Text style={styles.cardBody}>
+              Your anchor will take shape as you use Compass.
+            </Text>
+          )}
+        </View>
 
-          {loading ? (
-            <View style={styles.loadingCard}>
-              <ActivityIndicator color={theme.colors.plum} />
-              <Text style={styles.loadingText}>
+        <View style={[styles.card, styles.focusCard]}>
+          <Text style={styles.eyebrow}>RIGHT NOW</Text>
+          {profileLoading ? (
+            <View style={styles.skeletonLine} />
+          ) : focusAreas.length ? (
+            <View style={styles.focusList}>
+              {focusAreas.map((focusArea) => (
+                <View key={focusArea} style={styles.focusRow}>
+                  <View style={styles.focusMark} />
+                  <Text style={styles.focusText}>{focusArea}</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.cardBody}>
+              Nothing set yet — start with Compass.
+            </Text>
+          )}
+        </View>
+
+        <View style={[styles.card, styles.journeyCard]}>
+          <Text style={styles.journeyEyebrow}>YOUR JOURNEY</Text>
+          {conversationLoading ? (
+            <View style={styles.journeyLoading}>
+              <ActivityIndicator color={theme.colors.white} />
+              <Text style={styles.journeyLoadingText}>
                 Finding your latest conversation…
               </Text>
             </View>
           ) : latestConversation ? (
-            <Pressable onPress={openMentor} style={styles.continueCard}>
-              <View style={styles.continueTopRow}>
-                <View style={styles.continueIcon}>
-                  <Text style={styles.continueIconText}>→</Text>
-                </View>
-
-                <Text style={styles.continueAction}>Continue</Text>
-              </View>
-
-              <Text style={styles.continueTitle} numberOfLines={2}>
+            <>
+              <Text style={styles.journeyTitle} numberOfLines={2}>
                 {latestConversation.title}
               </Text>
-
-              <Text style={styles.continueMeta}>
-                {latestConversation.messageCount}{' '}
-                {latestConversation.messageCount === 1
-                  ? 'message'
-                  : 'messages'}
-                {latestConversation.updatedAt
-                  ? `  •  ${formatUpdatedAt(latestConversation.updatedAt)}`
-                  : ''}
-              </Text>
-            </Pressable>
+              {latestConversation.updatedAt ? (
+                <Text style={styles.journeyMeta}>
+                  {formatUpdatedAt(latestConversation.updatedAt)}
+                </Text>
+              ) : null}
+            </>
           ) : (
-            <Pressable onPress={openMentor} style={styles.emptyCard}>
-              <Text style={styles.emptyTitle}>
+            <>
+              <Text style={styles.journeyTitle}>
                 Start your first conversation.
               </Text>
-              <Text style={styles.emptyBody}>
+              <Text style={styles.journeyBody}>
                 Bring the decision, idea, tension, or next step that is on your
                 mind.
               </Text>
-              <Text style={styles.emptyAction}>Open Mentor →</Text>
-            </Pressable>
+            </>
           )}
+        </View>
 
-          {conversationCount > 0 ? (
-            <Text style={styles.historyNote}>
-              Your Mentor remembers {conversationCount}{' '}
-              {conversationCount === 1 ? 'conversation' : 'conversations'}.
+        <View style={styles.actionSection}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={openCompass}
+            style={({ pressed }) => [
+              styles.primaryButton,
+              pressed ? styles.primaryButtonPressed : null,
+            ]}
+          >
+            <Text style={styles.primaryButtonText}>
+              Talk it through in Compass
             </Text>
-          ) : null}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>CHOOSE YOUR LENS</Text>
-          <Text style={styles.sectionTitle}>
-            Begin where the work actually is.
-          </Text>
-
-          <Pressable onPress={openMentor} style={styles.lensCard}>
-            <View style={[styles.lensMark, styles.soulMark]}>
-              <Text style={styles.lensMarkText}>S</Text>
-            </View>
-            <View style={styles.lensCopy}>
-              <Text style={styles.lensName}>Soul</Text>
-              <Text style={styles.lensQuestion}>What is true?</Text>
-              <Text style={styles.lensDescription}>
-                Clarify what matters before you decide what to do.
-              </Text>
-            </View>
           </Pressable>
-
-          <Pressable onPress={openMentor} style={styles.lensCard}>
-            <View style={[styles.lensMark, styles.systemsMark]}>
-              <Text style={styles.lensMarkText}>S</Text>
-            </View>
-            <View style={styles.lensCopy}>
-              <Text style={styles.lensName}>Systems</Text>
-              <Text style={styles.lensQuestion}>What needs structure?</Text>
-              <Text style={styles.lensDescription}>
-                Turn insight into a clear, workable next step.
-              </Text>
-            </View>
-          </Pressable>
-
-          <Pressable onPress={openMentor} style={styles.lensCard}>
-            <View style={[styles.lensMark, styles.aiMark]}>
-              <Text style={styles.lensMarkText}>AI</Text>
-            </View>
-            <View style={styles.lensCopy}>
-              <Text style={styles.lensName}>AI</Text>
-              <Text style={styles.lensQuestion}>What can be amplified?</Text>
-              <Text style={styles.lensDescription}>
-                Use AI after the direction is clear — not instead of clarity.
-              </Text>
-            </View>
-          </Pressable>
-        </View>
-
-        <View style={styles.footerCard}>
-          <Text style={styles.footerLabel}>THE iPURPOSE METHOD</Text>
-          <Text style={styles.footerText}>
-            Alignment before action. Structure before scale. Automation after
-            clarity.
-          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -226,272 +237,181 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.cream,
   },
-
   container: {
     paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 36,
+    paddingTop: 12,
+    paddingBottom: 40,
+    gap: 18,
   },
-
-  hero: {
-    marginTop: 34,
+  greetingSection: {
+    paddingBottom: 8,
   },
-
-  kicker: {
-    color: theme.colors.plum,
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  logoShell: {
+    width: 58,
+    height: 58,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: theme.colors.line,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  logoFrost: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: theme.colors.soulTint,
+    opacity: 0.62,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  brandName: {
+    flex: 1,
+    color: theme.colors.muted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1.4,
+    fontSize: 14,
+    lineHeight: 20,
   },
-
-  title: {
+  greeting: {
     color: theme.colors.ink,
     fontFamily: theme.fonts.heading,
     fontSize: 32,
     lineHeight: 39,
-    marginTop: 10,
-    letterSpacing: 0.2,
+    marginTop: 24,
   },
-
-  body: {
-    color: theme.colors.muted,
-    fontFamily: theme.fonts.body,
-    fontSize: 16,
-    lineHeight: 24,
-    marginTop: 12,
+  card: {
+    borderRadius: 24,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: theme.colors.line,
   },
-
-  primaryButton: {
-    backgroundColor: theme.colors.plum,
-    borderRadius: 18,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    marginTop: 22,
-    alignItems: 'center',
+  anchorCard: {
+    backgroundColor: theme.colors.soulTint,
   },
-
-  primaryButtonText: {
-    color: theme.colors.white,
-    fontFamily: theme.fonts.body,
-    fontSize: 15,
-    fontWeight: '700',
+  focusCard: {
+    backgroundColor: theme.colors.systemsTint,
   },
-
-  section: {
-    marginTop: 36,
-  },
-
-  sectionLabel: {
-    color: theme.colors.plum,
+  eyebrow: {
+    color: theme.colors.plumDark,
     fontFamily: theme.fonts.body,
     fontSize: 10,
     fontWeight: '700',
     letterSpacing: 1.4,
   },
-
-  sectionTitle: {
+  cardTitle: {
     color: theme.colors.ink,
     fontFamily: theme.fonts.heading,
-    fontSize: 22,
-    lineHeight: 28,
-    marginTop: 6,
-    marginBottom: 14,
+    fontSize: 24,
+    lineHeight: 30,
+    marginTop: 10,
   },
-
-  loadingCard: {
-    minHeight: 118,
-    borderWidth: 1,
-    borderColor: theme.colors.line,
-    backgroundColor: theme.colors.white,
-    borderRadius: 24,
+  cardBody: {
+    color: theme.colors.ink,
+    fontFamily: theme.fonts.body,
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: 10,
+  },
+  skeletonLine: {
+    width: '64%',
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: theme.colors.line,
+    marginTop: 14,
+  },
+  focusList: {
+    gap: 12,
+    marginTop: 14,
+  },
+  focusRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 11,
+  },
+  focusMark: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme.colors.sageGreen,
+    marginTop: 6,
+  },
+  focusText: {
+    flex: 1,
+    color: theme.colors.ink,
+    fontFamily: theme.fonts.body,
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  journeyCard: {
+    minHeight: 148,
+    backgroundColor: theme.colors.plumDark,
+    borderColor: theme.colors.plumDark,
+  },
+  journeyEyebrow: {
+    color: theme.colors.white,
+    opacity: 0.74,
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1.4,
+  },
+  journeyLoading: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
-    padding: 20,
+    gap: 9,
+    paddingTop: 18,
   },
-
-  loadingText: {
-    color: theme.colors.muted,
+  journeyLoadingText: {
+    color: theme.colors.white,
+    opacity: 0.74,
     fontFamily: theme.fonts.body,
     fontSize: 13,
   },
-
-  continueCard: {
-    backgroundColor: theme.colors.plumDark,
-    borderRadius: 24,
-    padding: 20,
-  },
-
-  continueTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  continueIcon: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: 'rgba(255,255,255,0.16)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  continueIconText: {
-    color: theme.colors.white,
-    fontSize: 18,
-    fontWeight: '700',
-  },
-
-  continueAction: {
-    color: theme.colors.white,
-    opacity: 0.85,
-    fontFamily: theme.fonts.body,
-    fontSize: 12,
-    fontWeight: '700',
-  },
-
-  continueTitle: {
+  journeyTitle: {
     color: theme.colors.white,
     fontFamily: theme.fonts.heading,
-    fontSize: 21,
-    lineHeight: 27,
-    marginTop: 18,
+    fontSize: 22,
+    lineHeight: 28,
+    marginTop: 16,
   },
-
-  continueMeta: {
+  journeyMeta: {
     color: theme.colors.white,
     opacity: 0.72,
     fontFamily: theme.fonts.body,
     fontSize: 12,
     marginTop: 10,
   },
-
-  historyNote: {
-    color: theme.colors.muted,
-    fontFamily: theme.fonts.body,
-    fontSize: 12,
-    marginTop: 10,
-    marginLeft: 4,
-  },
-
-  emptyCard: {
-    borderWidth: 1,
-    borderColor: theme.colors.line,
-    backgroundColor: theme.colors.white,
-    borderRadius: 24,
-    padding: 20,
-  },
-
-  emptyTitle: {
-    color: theme.colors.ink,
-    fontFamily: theme.fonts.heading,
-    fontSize: 18,
-  },
-
-  emptyBody: {
-    color: theme.colors.muted,
+  journeyBody: {
+    color: theme.colors.white,
+    opacity: 0.78,
     fontFamily: theme.fonts.body,
     fontSize: 14,
     lineHeight: 21,
-    marginTop: 7,
+    marginTop: 10,
   },
-
-  emptyAction: {
-    color: theme.colors.plum,
-    fontFamily: theme.fonts.body,
-    fontSize: 13,
-    fontWeight: '700',
-    marginTop: 16,
+  actionSection: {
+    paddingTop: 4,
   },
-
-  lensCard: {
-    flexDirection: 'row',
-    gap: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.line,
-    backgroundColor: theme.colors.white,
-    borderRadius: 22,
-    padding: 16,
-    marginBottom: 11,
-  },
-
-  lensMark: {
-    width: 42,
-    height: 42,
-    borderRadius: 15,
+  primaryButton: {
+    backgroundColor: theme.colors.plum,
+    borderRadius: 18,
+    paddingHorizontal: 20,
+    paddingVertical: 17,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-
-  soulMark: {
-    backgroundColor: theme.colors.soulTint,
+  primaryButtonPressed: {
+    opacity: 0.82,
   },
-
-  systemsMark: {
-    backgroundColor: theme.colors.systemsTint,
-  },
-
-  aiMark: {
-    backgroundColor: theme.colors.aiTint,
-  },
-
-  lensMarkText: {
-    color: theme.colors.plumDark,
+  primaryButtonText: {
+    color: theme.colors.white,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-
-  lensCopy: {
-    flex: 1,
-  },
-
-  lensName: {
-    color: theme.colors.plum,
-    fontFamily: theme.fonts.body,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-  },
-
-  lensQuestion: {
-    color: theme.colors.ink,
-    fontFamily: theme.fonts.heading,
-    fontSize: 16,
-    marginTop: 2,
-  },
-
-  lensDescription: {
-    color: theme.colors.muted,
-    fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 19,
-    marginTop: 4,
-  },
-
-  footerCard: {
-    backgroundColor: theme.colors.blush,
-    borderRadius: 22,
-    padding: 18,
-    marginTop: 26,
-  },
-
-  footerLabel: {
-    color: theme.colors.plumDark,
-    fontFamily: theme.fonts.body,
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1.2,
-  },
-
-  footerText: {
-    color: theme.colors.plumDark,
-    fontFamily: theme.fonts.heading,
     fontSize: 15,
-    lineHeight: 22,
-    marginTop: 6,
+    fontWeight: '700',
   },
 });
