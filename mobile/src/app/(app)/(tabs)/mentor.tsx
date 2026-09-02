@@ -165,7 +165,18 @@ export default function MentorScreen() {
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
-              <Text style={[styles.kicker, { color: tokens.accentStrong }]}>COMPASS</Text>
+              <Text
+                style={[
+                  styles.kicker,
+                  {
+                    backgroundColor: tokens.buttonBackground,
+                    borderColor: tokens.accentStrong,
+                    color: tokens.buttonText,
+                  },
+                ]}
+              >
+                COMPASS
+              </Text>
               <Text style={styles.screenTitle}>Think it through here.</Text>
             </View>
 
@@ -190,7 +201,7 @@ export default function MentorScreen() {
             />
           </View>
 
-          <View style={[styles.chat, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
+          <View style={[styles.chat, { backgroundColor: tokens.surfaceTint, borderColor: tokens.surfaceBorder }]}>
             {loadingHistory ? (
               <View style={styles.center}>
                 <ActivityIndicator color={tokens.accentStrong} />
@@ -198,8 +209,8 @@ export default function MentorScreen() {
               </View>
             ) : messages.length === 0 ? (
               <View style={styles.empty}>
-                <View style={styles.emptyMark}>
-                  <Ionicons name="sparkles-outline" size={22} color={theme.colors.deepIndigo} />
+                <View style={[styles.emptyMark, { backgroundColor: tokens.accentSoft }]}>
+                  <Ionicons name="sparkles-outline" size={22} color={tokens.accentStrong} />
                 </View>
 
                 <Text style={styles.emptyTitle}>What are you thinking through?</Text>
@@ -262,7 +273,10 @@ export default function MentorScreen() {
               multiline
               maxLength={4000}
               editable={!sending && !loadingHistory}
-              style={styles.input}
+              style={[
+                styles.input,
+                { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
+              ]}
             />
 
             <Pressable
@@ -271,7 +285,10 @@ export default function MentorScreen() {
               accessibilityLabel="Send message"
               style={[
                 styles.send,
-                { backgroundColor: tokens.buttonBackground },
+                {
+                  backgroundColor: tokens.buttonBackground,
+                  borderColor: tokens.accentStrong,
+                },
                 (sending || loadingHistory || !input.trim()) && styles.sendDisabled,
               ]}
             >
@@ -303,10 +320,16 @@ const styles = StyleSheet.create({
   },
   introCopy: { flex: 1 },
   kicker: {
+    alignSelf: 'flex-start',
+    borderRadius: 999,
+    borderWidth: 1,
     color: theme.colors.lavenderPurple,
     fontFamily: theme.fonts.body,
     fontSize: 10,
     letterSpacing: 1.4,
+    overflow: 'hidden',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
   },
   screenTitle: {
     color: theme.colors.deepIndigo,
@@ -450,6 +473,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 18,
+    borderWidth: 1,
     backgroundColor: theme.colors.lavenderPurple,
     alignItems: 'center',
     justifyContent: 'center',

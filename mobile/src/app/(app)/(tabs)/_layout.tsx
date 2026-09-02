@@ -44,6 +44,7 @@ export default function TabsLayout() {
         name="mentor"
         options={{
           title: 'Compass',
+          tabBarActiveTintColor: tokens.accentStrong,
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'}

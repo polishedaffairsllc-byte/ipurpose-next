@@ -41,10 +41,20 @@ export function ConversationList({
             style={[
               styles.chip,
               { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
-              !selectedId && [styles.selectedChip, { backgroundColor: tokens.profileCardBackground, borderColor: tokens.profileCardBackground }],
+              !selectedId && {
+                backgroundColor: tokens.buttonBackground,
+                borderColor: tokens.accentStrong,
+              },
             ]}
           >
-            <Text style={[styles.chipText, !selectedId && styles.selectedText]}>+ New</Text>
+            <Text
+              style={[
+                styles.chipText,
+                !selectedId && { color: tokens.buttonText },
+              ]}
+            >
+              + New
+            </Text>
           </Pressable>
         ) : null}
 
@@ -62,15 +72,29 @@ export function ConversationList({
               style={[
                 styles.chip,
                 { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
-                selected && [styles.selectedChip, { backgroundColor: tokens.profileCardBackground, borderColor: tokens.profileCardBackground }],
+                selected && {
+                  backgroundColor: tokens.buttonBackground,
+                  borderColor: tokens.accentStrong,
+                },
               ]}
             >
               {dateLabel ? (
-                <Text style={[styles.dateText, { color: tokens.accentStrong }, selected && styles.selectedDateText]}>
+                <Text
+                  style={[
+                    styles.dateText,
+                    { color: selected ? tokens.buttonText : tokens.accentStrong },
+                  ]}
+                >
                   {dateLabel}
                 </Text>
               ) : null}
-              <Text numberOfLines={1} style={[styles.chipText, selected && styles.selectedText]}>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.chipText,
+                  selected && { color: tokens.buttonText },
+                ]}
+              >
                 {conversation.title}
               </Text>
             </Pressable>
@@ -94,10 +118,6 @@ const styles = StyleSheet.create({
     minWidth: 116,
     paddingVertical: 10,
   },
-  selectedChip: {
-    backgroundColor: theme.colors.deepIndigo,
-    borderColor: theme.colors.deepIndigo,
-  },
   chipText: {
     color: theme.colors.deepIndigo,
     fontFamily: theme.fonts.body,
@@ -110,6 +130,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.35,
     marginBottom: 4,
   },
-  selectedText: { color: theme.colors.white },
-  selectedDateText: { color: theme.colors.textOnDarkMuted },
 });
