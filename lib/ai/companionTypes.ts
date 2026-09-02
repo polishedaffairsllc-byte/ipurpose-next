@@ -1,4 +1,5 @@
 import type { ResponseMode } from "@/lib/ai/prompts/ipurposeMentorPrompts";
+import type { VisualEnvironmentPreference } from "@/lib/ai/visualEnvironmentPreference";
 
 export type CompanionMessageRole = "user" | "assistant";
 
@@ -29,6 +30,7 @@ export interface CompanionProfileContext {
   identityAnchor?: string;
   purposeStatement?: string;
   focusAreas: string[];
+  visualEnvironmentPreference?: VisualEnvironmentPreference;
 }
 
 export interface CompanionClarityContext {

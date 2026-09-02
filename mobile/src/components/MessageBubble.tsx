@@ -1,13 +1,22 @@
 import { StyleSheet, Text, View } from 'react-native';
 import type { CompanionMessage } from '../types/companion';
+import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
 export function MessageBubble({ message }: { message: CompanionMessage }) {
   const isUser = message.role === 'user';
+  const { tokens } = useVisualEnvironment();
 
   return (
     <View style={[styles.row, isUser ? styles.userRow : styles.mentorRow]}>
-      <View style={[styles.bubble, isUser ? styles.userBubble : styles.mentorBubble]}>
+      <View
+        style={[
+          styles.bubble,
+          isUser
+            ? [styles.userBubble, { backgroundColor: tokens.profileCardBackground }]
+            : [styles.mentorBubble, { backgroundColor: tokens.surfaceTint, borderColor: tokens.surfaceBorder }],
+        ]}
+      >
         <Text style={[styles.label, isUser ? styles.userText : styles.mentorLabel]}>
           {isUser ? 'You' : 'iPurpose Compass'}
         </Text>
@@ -52,6 +61,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   userText: { color: theme.colors.white },
-  mentorLabel: { color: theme.colors.lavenderPurple },
+  mentorLabel: { color: theme.colors.deepIndigo },
   mentorText: { color: theme.colors.deepIndigo },
 });

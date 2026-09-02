@@ -1,3 +1,5 @@
+import type { VisualEnvironmentPreference } from '../lib/visualEnvironment';
+
 export type ResponseMode = 'balanced' | 'reflect' | 'build' | 'expand';
 
 export interface CompanionProfile {
@@ -8,6 +10,7 @@ export interface CompanionProfile {
   identityAnchor?: string;
   purposeStatement?: string;
   focusAreas: string[];
+  visualEnvironmentPreference: VisualEnvironmentPreference;
 }
 
 export interface ConversationSummary {

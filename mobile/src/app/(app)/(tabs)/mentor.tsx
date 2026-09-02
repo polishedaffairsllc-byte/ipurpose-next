@@ -13,9 +13,11 @@ import {
   View,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { getConversation, getConversations, sendMentorMessage } from '../../../lib/api';
 import type { CompanionMessage, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
@@ -27,6 +29,7 @@ const STARTERS = [
 ];
 
 export default function MentorScreen() {
+  const { tokens } = useVisualEnvironment();
   const params = useLocalSearchParams<{ conversationId?: string | string[] }>();
   const requestedConversationId = Array.isArray(params.conversationId)
     ? params.conversationId[0]
@@ -141,6 +144,13 @@ export default function MentorScreen() {
   }
 
   return (
+    <LinearGradient
+      colors={tokens.screenGradient.colors}
+      locations={tokens.screenGradient.locations}
+      start={tokens.screenGradient.start}
+      end={tokens.screenGradient.end}
+      style={styles.gradient}
+    >
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         style={styles.flex}
@@ -155,14 +165,14 @@ export default function MentorScreen() {
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
-              <Text style={styles.kicker}>COMPASS</Text>
+              <Text style={[styles.kicker, { color: tokens.accentStrong }]}>COMPASS</Text>
               <Text style={styles.screenTitle}>Think it through here.</Text>
             </View>
 
             <Pressable
               onPress={startNewConversation}
               disabled={sending || loadingHistory}
-              style={styles.newButton}
+              style={[styles.newButton, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}
             >
               <Ionicons name="add" size={18} color={theme.colors.deepIndigo} />
               <Text style={styles.newButtonText}>New</Text>
@@ -180,10 +190,10 @@ export default function MentorScreen() {
             />
           </View>
 
-          <View style={styles.chat}>
+          <View style={[styles.chat, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
             {loadingHistory ? (
               <View style={styles.center}>
-                <ActivityIndicator color={theme.colors.lavenderPurple} />
+                <ActivityIndicator color={tokens.accentStrong} />
                 <Text style={styles.muted}>Loading your conversation…</Text>
               </View>
             ) : messages.length === 0 ? (
@@ -243,7 +253,7 @@ export default function MentorScreen() {
             </View>
           ) : null}
 
-          <View style={styles.composer}>
+          <View style={[styles.composer, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
             <TextInput
               value={input}
               onChangeText={setInput}
@@ -261,25 +271,28 @@ export default function MentorScreen() {
               accessibilityLabel="Send message"
               style={[
                 styles.send,
+                { backgroundColor: tokens.buttonBackground },
                 (sending || loadingHistory || !input.trim()) && styles.sendDisabled,
               ]}
             >
               {sending ? (
-                <ActivityIndicator color={theme.colors.white} />
+                <ActivityIndicator color={tokens.buttonText} />
               ) : (
-                <Ionicons name="arrow-up" size={21} color={theme.colors.white} />
+                <Ionicons name="arrow-up" size={21} color={tokens.buttonText} />
               )}
             </Pressable>
           </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: { flex: 1 },
   flex: { flex: 1 },
-  safe: { flex: 1, backgroundColor: theme.colors.cream },
+  safe: { flex: 1, backgroundColor: 'transparent' },
   container: { flex: 1, paddingTop: 8, paddingHorizontal: 18 },
   introRow: {
     flexDirection: 'row',

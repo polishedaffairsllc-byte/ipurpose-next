@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
 const COMPASS_LOGO_URI = 'https://www.ipurposesoul.com/images/my-logo.png';
@@ -16,6 +17,7 @@ export function BrandHeader({
   variant = 'light-background',
 }: BrandHeaderProps) {
   const onDarkBackground = variant === 'dark-background';
+  const { tokens } = useVisualEnvironment();
 
   return (
     <View style={styles.row}>
@@ -36,7 +38,7 @@ export function BrandHeader({
           <Text
             style={[
               styles.subtitle,
-              onDarkBackground ? styles.subtitleOnDark : styles.subtitleOnLight,
+            onDarkBackground ? { color: tokens.accent } : styles.subtitleOnLight,
             ]}
           >
             {subtitle}
@@ -57,6 +59,5 @@ const styles = StyleSheet.create({
   titleOnDark: { color: theme.colors.textOnDark },
   titleOnLight: { color: theme.colors.deepIndigo },
   subtitle: { fontFamily: theme.fonts.body, fontSize: 11, letterSpacing: 0.6, marginTop: 1 },
-  subtitleOnDark: { color: theme.colors.champagneText },
   subtitleOnLight: { color: theme.colors.deepIndigo },
 });

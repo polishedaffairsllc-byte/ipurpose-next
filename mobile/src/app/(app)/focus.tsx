@@ -5,12 +5,14 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { BrandHeader } from '../../components/BrandHeader';
+import { useVisualEnvironment } from '../../context/VisualEnvironmentContext';
 import { getCompanionProfile, updateCompanionFocusAreas } from '../../lib/api';
 import { theme } from '../../theme';
 
 const MAX_FOCUS_LENGTH = 160;
 export default function FocusScreen() {
   const router = useRouter();
+  const { tokens } = useVisualEnvironment();
   const [first, setFirst] = useState(''); const [second, setSecond] = useState('');
   const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false); const [saved, setSaved] = useState(false); const [error, setError] = useState<string | null>(null);
 
@@ -21,19 +23,19 @@ export default function FocusScreen() {
     const focusAreas = [first, second].map((v) => v.trim()).filter(Boolean).slice(0, 2);
     setSaving(true); setSaved(false); setError(null);
     try { await updateCompanionFocusAreas(focusAreas); setFirst(focusAreas[0] || ''); setSecond(focusAreas[1] || ''); setSaved(true); }
-    catch { setError('Compass could not save your focus. Please try again.'); }
+    catch (caught) { setError(caught instanceof Error ? caught.message : 'Compass could not save your focus. Please try again.'); }
     finally { setSaving(false); }
   }
 
-  return <LinearGradient colors={theme.homeGradient.colors} locations={theme.homeGradient.locations} start={theme.homeGradient.start} end={theme.homeGradient.end} style={styles.gradient}>
+  return <LinearGradient colors={tokens.atmosphereGradient.colors} locations={tokens.atmosphereGradient.locations} start={tokens.atmosphereGradient.start} end={tokens.atmosphereGradient.end} style={styles.gradient}>
     <SafeAreaView style={styles.safe}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
-      <View style={styles.topRow}><Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={styles.backButton}><Ionicons name="chevron-back" size={20} color={theme.colors.textOnDark} /></Pressable><BrandHeader subtitle="What matters now" variant="dark-background" /></View>
-      <View style={styles.hero}><Text style={styles.kicker}>CURRENT FOCUS</Text><Text style={styles.title}>What deserves your attention right now?</Text><Text style={styles.subtitle}>Keep this to one or two priorities. Compass will use them to orient your Home experience.</Text></View>
-      {loading ? <ActivityIndicator color={theme.colors.champagneText} /> : <BlurView intensity={30} tint="dark" style={styles.card}>
-        <Text style={styles.label}>PRIMARY FOCUS</Text><TextInput value={first} onChangeText={(v) => { setFirst(v); setSaved(false); }} maxLength={MAX_FOCUS_LENGTH} placeholder="What matters most right now?" placeholderTextColor={theme.colors.textOnDarkFaint} style={styles.input} />
-        <Text style={[styles.label, styles.secondLabel]}>SECOND FOCUS · OPTIONAL</Text><TextInput value={second} onChangeText={(v) => { setSecond(v); setSaved(false); }} maxLength={MAX_FOCUS_LENGTH} placeholder="Add another focus if it helps" placeholderTextColor={theme.colors.textOnDarkFaint} style={styles.input} />
+      <View style={styles.topRow}><Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={[styles.backButton, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }]}><Ionicons name="chevron-back" size={20} color={tokens.atmosphereText} /></Pressable><BrandHeader subtitle="What matters now" variant="dark-background" /></View>
+      <View style={styles.hero}><Text style={[styles.kicker, { color: tokens.accent }]}>CURRENT FOCUS</Text><Text style={[styles.title, { color: tokens.atmosphereText }]}>What deserves your attention right now?</Text><Text style={[styles.subtitle, { color: tokens.atmosphereTextMuted }]}>Keep this to one or two priorities. Compass will use them to orient your Home experience.</Text></View>
+      {loading ? <ActivityIndicator color={tokens.accent} /> : <BlurView intensity={30} tint="dark" style={[styles.card, { backgroundColor: tokens.glassCardBackground, borderColor: tokens.glassCardBorder }]}>
+        <Text style={[styles.label, { color: tokens.accent }]}>PRIMARY FOCUS</Text><TextInput value={first} onChangeText={(v) => { setFirst(v); setSaved(false); }} maxLength={MAX_FOCUS_LENGTH} placeholder="What matters most right now?" placeholderTextColor={tokens.atmosphereTextFaint} style={[styles.input, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder, color: tokens.atmosphereText }]} />
+        <Text style={[styles.label, styles.secondLabel, { color: tokens.accent }]}>SECOND FOCUS · OPTIONAL</Text><TextInput value={second} onChangeText={(v) => { setSecond(v); setSaved(false); }} maxLength={MAX_FOCUS_LENGTH} placeholder="Add another focus if it helps" placeholderTextColor={tokens.atmosphereTextFaint} style={[styles.input, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder, color: tokens.atmosphereText }]} />
         {error ? <Text style={styles.error}>{error}</Text> : null}{saved ? <Text style={styles.saved}>Your current focus is saved.</Text> : null}
-        <Pressable accessibilityRole="button" accessibilityLabel="Save current focus" onPress={save} disabled={saving} style={({pressed}) => [styles.button, (pressed || saving) && styles.buttonPressed]}>{saving ? <ActivityIndicator color={theme.colors.textOnDark} /> : <Text style={styles.buttonText}>Save Focus</Text>}</Pressable>
+        <Pressable accessibilityRole="button" accessibilityLabel="Save current focus" onPress={save} disabled={saving} style={({pressed}) => [styles.button, { backgroundColor: tokens.buttonBackground }, (pressed || saving) && styles.buttonPressed]}>{saving ? <ActivityIndicator color={tokens.buttonText} /> : <Text style={[styles.buttonText, { color: tokens.buttonText }]}>Save Focus</Text>}</Pressable>
       </BlurView>}
     </ScrollView></SafeAreaView>
   </LinearGradient>;

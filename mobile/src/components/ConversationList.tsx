@@ -1,5 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { ConversationSummary } from '../types/companion';
+import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
+import { formatConversationDate } from '../lib/conversationDate';
 import { theme } from '../theme';
 
 interface Props {
@@ -11,30 +13,6 @@ interface Props {
   hideNew?: boolean;
 }
 
-function isSameCalendarDay(left: Date, right: Date) {
-  return left.getFullYear() === right.getFullYear()
-    && left.getMonth() === right.getMonth()
-    && left.getDate() === right.getDate();
-}
-
-function formatConversationDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
-
-  const today = new Date();
-  if (isSameCalendarDay(date, today)) return 'Today';
-
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  if (isSameCalendarDay(date, yesterday)) return 'Yesterday';
-
-  return date.toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    ...(date.getFullYear() === today.getFullYear() ? {} : { year: 'numeric' }),
-  });
-}
-
 export function ConversationList({
   conversations,
   selectedId,
@@ -43,6 +21,8 @@ export function ConversationList({
   onNew,
   hideNew = false,
 }: Props) {
+  const { tokens } = useVisualEnvironment();
+
   if (!conversations.length && hideNew) return null;
 
   return (
@@ -58,7 +38,11 @@ export function ConversationList({
             onPress={onNew}
             accessibilityRole="button"
             accessibilityLabel="Start a new conversation"
-            style={[styles.chip, !selectedId && styles.selectedChip]}
+            style={[
+              styles.chip,
+              { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
+              !selectedId && [styles.selectedChip, { backgroundColor: tokens.profileCardBackground, borderColor: tokens.profileCardBackground }],
+            ]}
           >
             <Text style={[styles.chipText, !selectedId && styles.selectedText]}>+ New</Text>
           </Pressable>
@@ -75,16 +59,20 @@ export function ConversationList({
               onPress={() => onSelect(conversation.id)}
               accessibilityRole="button"
               accessibilityLabel={[conversation.title, dateLabel].filter(Boolean).join(', ')}
-              style={[styles.chip, selected && styles.selectedChip]}
+              style={[
+                styles.chip,
+                { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
+                selected && [styles.selectedChip, { backgroundColor: tokens.profileCardBackground, borderColor: tokens.profileCardBackground }],
+              ]}
             >
-              <Text numberOfLines={1} style={[styles.chipText, selected && styles.selectedText]}>
-                {conversation.title}
-              </Text>
               {dateLabel ? (
-                <Text style={[styles.dateText, selected && styles.selectedDateText]}>
+                <Text style={[styles.dateText, { color: tokens.accentStrong }, selected && styles.selectedDateText]}>
                   {dateLabel}
                 </Text>
               ) : null}
+              <Text numberOfLines={1} style={[styles.chipText, selected && styles.selectedText]}>
+                {conversation.title}
+              </Text>
             </Pressable>
           );
         })}
@@ -103,7 +91,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 999,
     paddingHorizontal: 13,
-    paddingVertical: 8,
+    minWidth: 116,
+    paddingVertical: 10,
   },
   selectedChip: {
     backgroundColor: theme.colors.deepIndigo,
@@ -115,10 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   dateText: {
-    color: theme.colors.muted,
+    color: theme.colors.lavenderPurple,
     fontFamily: theme.fonts.body,
-    fontSize: 10,
-    marginTop: 2,
+    fontSize: 12,
+    letterSpacing: 0.35,
+    marginBottom: 4,
   },
   selectedText: { color: theme.colors.white },
   selectedDateText: { color: theme.colors.textOnDarkMuted },

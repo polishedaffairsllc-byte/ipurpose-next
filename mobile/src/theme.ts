@@ -85,6 +85,156 @@ export const theme = {
   },
 } as const;
 
+export interface VisualEnvironmentTokens {
+  label: 'Depth' | 'Renewal' | 'Warmth';
+  atmosphereGradient: {
+    colors: readonly [string, string, ...string[]];
+    locations: readonly [number, number, ...number[]];
+    start: { x: number; y: number };
+    end: { x: number; y: number };
+  };
+  screenGradient: {
+    colors: readonly [string, string, ...string[]];
+    locations: readonly [number, number, ...number[]];
+    start: { x: number; y: number };
+    end: { x: number; y: number };
+  };
+  accent: string;
+  accentStrong: string;
+  accentSoft: string;
+  atmosphereText: string;
+  atmosphereTextMuted: string;
+  atmosphereTextFaint: string;
+  glassCardBackground: string;
+  glassCardDeepBackground: string;
+  glassCardBorder: string;
+  glassPillBackground: string;
+  glassPillBorder: string;
+  buttonBackground: string;
+  buttonText: string;
+  screenBackground: string;
+  surface: string;
+  surfaceBorder: string;
+  surfaceTint: string;
+  profileCardBackground: string;
+  tabBarBackground: string;
+  tabBarBorder: string;
+  tabBarActive: string;
+  tabBarInactive: string;
+}
+
+export const visualEnvironments: Record<
+  'depth' | 'renewal' | 'warmth',
+  VisualEnvironmentTokens
+> = {
+  depth: {
+    label: 'Depth',
+    atmosphereGradient: theme.homeGradient,
+    screenGradient: {
+      colors: ['#F5F7FA', '#F5F7FA', '#F5F7FA'],
+      locations: [0, 0.55, 1],
+      start: { x: 0.1, y: 0 },
+      end: { x: 0.9, y: 1 },
+    },
+    accent: theme.colors.champagneText,
+    accentStrong: theme.colors.lavenderPurple,
+    accentSoft: theme.colors.aiTint,
+    atmosphereText: theme.colors.textOnDark,
+    atmosphereTextMuted: theme.colors.textOnDarkMuted,
+    atmosphereTextFaint: theme.colors.textOnDarkFaint,
+    glassCardBackground: theme.colors.glassCardBg,
+    glassCardDeepBackground: theme.colors.glassCardBgDeep,
+    glassCardBorder: theme.colors.glassCardBorder,
+    glassPillBackground: theme.colors.glassPillBg,
+    glassPillBorder: theme.colors.glassPillBorder,
+    buttonBackground: theme.colors.lavenderPurple,
+    buttonText: theme.colors.white,
+    screenBackground: theme.colors.cream,
+    surface: theme.colors.white,
+    surfaceBorder: theme.colors.line,
+    surfaceTint: theme.colors.soulTint,
+    profileCardBackground: theme.colors.deepIndigo,
+    tabBarBackground: theme.colors.white,
+    tabBarBorder: theme.colors.line,
+    tabBarActive: theme.colors.lavenderPurple,
+    tabBarInactive: theme.colors.muted,
+  },
+  renewal: {
+    label: 'Renewal',
+    atmosphereGradient: {
+      colors: ['#1F2C24', '#35513F', '#5F7A58', '#8FA97C'],
+      locations: [0, 0.35, 0.72, 1],
+      start: { x: 0.15, y: 0 },
+      end: { x: 0.85, y: 1 },
+    },
+    screenGradient: {
+      colors: ['#F5F8F2', '#E8F0E2', '#F5F7FA'],
+      locations: [0, 0.58, 1],
+      start: { x: 0.1, y: 0 },
+      end: { x: 0.9, y: 1 },
+    },
+    accent: '#E5EDCF',
+    accentStrong: '#52704A',
+    accentSoft: '#E7F0DE',
+    atmosphereText: '#FFFFFF',
+    atmosphereTextMuted: 'rgba(255, 255, 255, 0.78)',
+    atmosphereTextFaint: 'rgba(255, 255, 255, 0.60)',
+    glassCardBackground: 'rgba(53, 81, 63, 0.46)',
+    glassCardDeepBackground: 'rgba(31, 44, 36, 0.62)',
+    glassCardBorder: 'rgba(229, 237, 207, 0.32)',
+    glassPillBackground: 'rgba(255, 255, 255, 0.12)',
+    glassPillBorder: 'rgba(255, 255, 255, 0.22)',
+    buttonBackground: '#B8D48B',
+    buttonText: '#1F2C24',
+    screenBackground: '#F5F8F2',
+    surface: 'rgba(255, 255, 255, 0.94)',
+    surfaceBorder: '#CAD8C2',
+    surfaceTint: '#E7F0DE',
+    profileCardBackground: '#35513F',
+    tabBarBackground: '#F5F8F2',
+    tabBarBorder: '#CAD8C2',
+    tabBarActive: '#35513F',
+    tabBarInactive: '#6B7C70',
+  },
+  warmth: {
+    label: 'Warmth',
+    atmosphereGradient: {
+      colors: ['#3A222B', '#6A3940', '#A75E5B', '#D98B78'],
+      locations: [0, 0.34, 0.72, 1],
+      start: { x: 0.15, y: 0 },
+      end: { x: 0.85, y: 1 },
+    },
+    screenGradient: {
+      colors: ['#FFF8F5', '#FCEAE4', '#F5F7FA'],
+      locations: [0, 0.58, 1],
+      start: { x: 0.1, y: 0 },
+      end: { x: 0.9, y: 1 },
+    },
+    accent: '#FFD9B8',
+    accentStrong: '#A75E5B',
+    accentSoft: '#FBE0D8',
+    atmosphereText: '#FFFFFF',
+    atmosphereTextMuted: 'rgba(255, 255, 255, 0.80)',
+    atmosphereTextFaint: 'rgba(255, 255, 255, 0.62)',
+    glassCardBackground: 'rgba(106, 57, 64, 0.48)',
+    glassCardDeepBackground: 'rgba(58, 34, 43, 0.64)',
+    glassCardBorder: 'rgba(255, 217, 184, 0.34)',
+    glassPillBackground: 'rgba(255, 255, 255, 0.13)',
+    glassPillBorder: 'rgba(255, 255, 255, 0.23)',
+    buttonBackground: '#FCC4B7',
+    buttonText: '#3A222B',
+    screenBackground: '#FFF8F5',
+    surface: 'rgba(255, 255, 255, 0.94)',
+    surfaceBorder: '#E9CFC8',
+    surfaceTint: '#FBE0D8',
+    profileCardBackground: '#6A3940',
+    tabBarBackground: '#FFF8F5',
+    tabBarBorder: '#E9CFC8',
+    tabBarActive: '#8E4E50',
+    tabBarInactive: '#8A6D70',
+  },
+};
+
 /*
 LOADING THE FONTS
 

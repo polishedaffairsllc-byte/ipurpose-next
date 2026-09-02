@@ -1,17 +1,20 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { theme } from '../../../theme';
 
 export default function TabsLayout() {
+  const { tokens } = useVisualEnvironment();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.lavenderPurple,
-        tabBarInactiveTintColor: theme.colors.muted,
+        tabBarActiveTintColor: tokens.tabBarActive,
+        tabBarInactiveTintColor: tokens.tabBarInactive,
         tabBarStyle: {
-          backgroundColor: theme.colors.white,
-          borderTopColor: theme.colors.line,
+          backgroundColor: tokens.tabBarBackground,
+          borderTopColor: tokens.tabBarBorder,
           borderTopWidth: 1,
           height: 72,
           paddingTop: 8,
