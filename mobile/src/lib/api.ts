@@ -1,5 +1,6 @@
 import { auth } from './firebase';
 import type { CompanionMessage, CompanionProfile, ConversationSummary, MentorResponse, ResponseMode } from '../types/companion';
+import type { VisualEnvironmentPreference } from './visualEnvironment';
 
 const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ipurposesoul.com').replace(/\/$/, '');
 
@@ -16,8 +17,19 @@ async function authorizedFetch(path: string, init: RequestInit = {}, forceRefres
 }
 
 async function readJson<T>(response: Response): Promise<T> {
-  const data = await response.json().catch(() => null) as (T & { error?: string }) | null;
-  if (!response.ok) throw new Error(data?.error || `Request failed (${response.status})`);
+  const data = await response.json().catch(() => null) as (T & {
+    error?: string | { message?: unknown };
+  }) | null;
+  if (!response.ok) {
+    const serverError = typeof data?.error === 'string'
+      ? data.error
+      : typeof data?.error?.message === 'string'
+        ? data.error.message
+        : null;
+    throw new Error(serverError
+      ? `${serverError} (${response.status})`
+      : `Request failed (${response.status})`);
+  }
   if (!data) throw new Error('The server returned an empty response.');
   return data;
 }
@@ -39,6 +51,16 @@ export async function getCompanionProfile(): Promise<CompanionProfile> {
 }
 export async function updateCompanionFocusAreas(focusAreas: string[]): Promise<CompanionProfile> {
   const response = await authorizedFetch('/api/ai/profile', { method: 'PATCH', body: JSON.stringify({ focusAreas }) });
+  const data = await readJson<{ profile: CompanionProfile }>(response);
+  return data.profile;
+}
+export async function updateVisualEnvironmentPreference(
+  visualEnvironmentPreference: VisualEnvironmentPreference
+): Promise<CompanionProfile> {
+  const response = await authorizedFetch('/api/ai/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({ visualEnvironmentPreference }),
+  });
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }

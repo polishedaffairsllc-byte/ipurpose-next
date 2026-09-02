@@ -17,7 +17,10 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { BrandHeader } from '../../../components/BrandHeader';
+import { useAuth } from '../../../context/AuthContext';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { getCompanionProfile, getConversations } from '../../../lib/api';
+import { getGreetingName } from '../../../lib/profileIdentity';
 import type { CompanionProfile, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
 
@@ -45,23 +48,6 @@ function formatUpdatedAt(value: string) {
   return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
-// Greeting logic correction (PR #35): prefer a real first name, never
-// show a raw account handle, never invent a name.
-function resolveFirstName(displayName?: string | null): string | null {
-  if (!displayName) return null;
-
-  const trimmed = displayName.trim();
-  if (!trimmed) return null;
-
-  // Reject obvious handle/username formatting: no spaces, or looks like
-  // a concatenated-case handle (e.g. "MsHmltn") rather than a real name.
-  const looksLikeHandle =
-    !trimmed.includes(' ') && /^[A-Z][a-z]*[A-Z]/.test(trimmed);
-  if (looksLikeHandle) return null;
-
-  return trimmed.split(' ')[0];
-}
-
 function getTimeOfDayGreeting(): string {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 12) return 'Good morning';
@@ -71,6 +57,8 @@ function getTimeOfDayGreeting(): string {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+  const { tokens } = useVisualEnvironment();
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState(false);
@@ -137,7 +125,11 @@ export default function HomeScreen() {
     router.push({ pathname: '/mentor', params: { conversationId: latestConversation.id } });
   };
 
-  const firstName = resolveFirstName(profile?.displayName);
+  const firstName = getGreetingName(
+    profile?.displayName,
+    user?.displayName,
+    user?.email
+  );
   const greeting = firstName
     ? `${getTimeOfDayGreeting()}, ${firstName}.`
     : `${getTimeOfDayGreeting()}.`;
@@ -147,10 +139,10 @@ export default function HomeScreen() {
 
   return (
     <LinearGradient
-      colors={theme.homeGradient.colors}
-      locations={theme.homeGradient.locations}
-      start={theme.homeGradient.start}
-      end={theme.homeGradient.end}
+      colors={tokens.atmosphereGradient.colors}
+      locations={tokens.atmosphereGradient.locations}
+      start={tokens.atmosphereGradient.start}
+      end={tokens.atmosphereGradient.end}
       style={styles.gradient}
     >
       <SafeAreaView style={styles.safe}>
@@ -161,23 +153,23 @@ export default function HomeScreen() {
           <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
 
           <View style={styles.hero}>
-            <Text style={styles.greeting}>{greeting}</Text>
-            <Text style={styles.heroSubtitle}>
+            <Text style={[styles.greeting, { color: tokens.atmosphereText }]}>{greeting}</Text>
+            <Text style={[styles.heroSubtitle, { color: tokens.atmosphereTextMuted }]}>
               Stay aligned. Follow your north.
             </Text>
           </View>
 
           {/* Your Anchor */}
           {profileLoading ? (
-            <View style={[styles.glassCard, styles.skeletonCard]}>
-              <ActivityIndicator color={theme.colors.champagneText} />
+            <View style={[styles.glassCard, styles.skeletonCard, { backgroundColor: tokens.glassCardBackground, borderColor: tokens.glassCardBorder }]}>
+              <ActivityIndicator color={tokens.accent} />
             </View>
           ) : (
             <Pressable accessibilityRole="button" accessibilityLabel="Open Your Anchor" onPress={openAnchor} style={({ pressed }) => pressed ? styles.interactivePressed : undefined}>
-              <BlurView intensity={30} tint="dark" style={styles.glassCard}>
+              <BlurView intensity={30} tint="dark" style={[styles.glassCard, { backgroundColor: tokens.glassCardBackground, borderColor: tokens.glassCardBorder }]}>
                 <View style={styles.cardHeaderRow}>
-                  <Text style={styles.eyebrow}>YOUR ANCHOR</Text>
-                  <Ionicons name="chevron-forward" size={18} color={theme.colors.champagneText} />
+                  <Text style={[styles.eyebrow, { color: tokens.accent }]}>YOUR ANCHOR</Text>
+                  <Ionicons name="chevron-forward" size={18} color={tokens.accent} />
                 </View>
                 {hasProfileData && profile?.archetypePrimary ? (
                   <>
@@ -191,13 +183,13 @@ export default function HomeScreen() {
 
           {/* Right Now */}
           {!profileLoading ? (
-            <Pressable accessibilityRole="button" accessibilityLabel="Open Current Focus" onPress={openFocus} style={({ pressed }) => [styles.pillRow, pressed ? styles.interactivePressed : null]}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Open Current Focus" onPress={openFocus} style={({ pressed }) => [styles.pillRow, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }, pressed ? styles.interactivePressed : null]}>
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.eyebrowStandalone}>RIGHT NOW</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.champagneText} />
+                <Text style={[styles.eyebrowStandalone, { color: tokens.accent }]}>RIGHT NOW</Text>
+                <Ionicons name="chevron-forward" size={18} color={tokens.accent} />
               </View>
               {hasProfileData && focusAreas.length > 0 ? (
-                <View style={styles.pillWrap}>{focusAreas.map((focus, i) => <View key={i} style={styles.pill}><Text style={styles.pillText}>{focus}</Text></View>)}</View>
+                <View style={styles.pillWrap}>{focusAreas.map((focus) => <View key={focus} style={[styles.pill, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }]}><Text style={styles.pillText}>{focus}</Text></View>)}</View>
               ) : (
                 <>
                   <Text style={styles.focusEmptyTitle}>Set your current focus</Text>
@@ -214,13 +206,13 @@ export default function HomeScreen() {
             onPress={latestConversation ? openLatestJourney : openMentor}
             style={({ pressed }) => pressed ? styles.interactivePressed : undefined}
           >
-            <BlurView intensity={45} tint="dark" style={[styles.glassCard, styles.journeyCard]}>
+            <BlurView intensity={45} tint="dark" style={[styles.glassCard, styles.journeyCard, { backgroundColor: tokens.glassCardDeepBackground, borderColor: tokens.glassCardBorder }]}>
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.eyebrow}>YOUR JOURNEY</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.champagneText} />
+                <Text style={[styles.eyebrow, { color: tokens.accent }]}>YOUR JOURNEY</Text>
+                <Ionicons name="chevron-forward" size={18} color={tokens.accent} />
               </View>
               {conversationLoading ? (
-                <ActivityIndicator color={theme.colors.champagneText} />
+                <ActivityIndicator color={tokens.accent} />
               ) : latestConversation ? (
                 <>
                   <Text style={styles.journeyTitle} numberOfLines={2}>{latestConversation.title}</Text>
@@ -233,8 +225,8 @@ export default function HomeScreen() {
           </Pressable>
 
           {/* Next Action — exactly one, always renders */}
-          <Pressable onPress={openMentor} style={styles.primaryButton}>
-            <Text style={styles.primaryButtonText}>
+          <Pressable onPress={openMentor} style={[styles.primaryButton, { backgroundColor: tokens.buttonBackground }]}>
+            <Text style={[styles.primaryButtonText, { color: tokens.buttonText }]}>
               Talk it through in Compass
             </Text>
           </Pressable>
@@ -266,8 +258,8 @@ const styles = StyleSheet.create({
 
   greeting: {
     fontFamily: theme.fonts.heading,
-    fontSize: 32,
-    lineHeight: 39,
+    fontSize: 40,
+    lineHeight: 48,
     color: theme.colors.textOnDark,
   },
 

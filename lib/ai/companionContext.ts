@@ -8,6 +8,10 @@ import type {
   CompanionProfileContext,
   CompanionReflectionContext,
 } from "@/lib/ai/companionTypes";
+import {
+  getVisualEnvironmentPreference,
+  type VisualEnvironmentPreference,
+} from "@/lib/ai/visualEnvironmentPreference";
 
 const LAB_IDS = ["identity", "meaning", "agency"] as const;
 const RECENT_CHECK_IN_LIMIT = 5;
@@ -78,6 +82,9 @@ function getProfileContext(data: UnknownRecord): CompanionProfileContext {
     identityAnchor: asString(data.identityAnchor),
     purposeStatement: asString(data.purposeStatement),
     focusAreas: [...new Set(focusAreas)].slice(0, 5),
+    visualEnvironmentPreference: getVisualEnvironmentPreference(
+      data.visualEnvironmentPreference
+    ),
   };
 }
 
@@ -124,6 +131,22 @@ export async function updateCompanionFocusAreas(
   await firebaseAdmin.firestore().collection("users").doc(uid).set(
     {
       focusAreas: normalized,
+      updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  return getCompanionProfile(uid);
+}
+
+/** Update only the authenticated user's visual-environment preference. */
+export async function updateCompanionVisualEnvironment(
+  uid: string,
+  visualEnvironmentPreference: VisualEnvironmentPreference
+): Promise<CompanionProfileContext> {
+  await firebaseAdmin.firestore().collection("users").doc(uid).set(
+    {
+      visualEnvironmentPreference,
       updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
     },
     { merge: true }

@@ -1,14 +1,28 @@
 import { StyleSheet, Text, View } from 'react-native';
 import type { CompanionMessage } from '../types/companion';
+import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
 export function MessageBubble({ message }: { message: CompanionMessage }) {
   const isUser = message.role === 'user';
+  const { tokens } = useVisualEnvironment();
 
   return (
     <View style={[styles.row, isUser ? styles.userRow : styles.mentorRow]}>
-      <View style={[styles.bubble, isUser ? styles.userBubble : styles.mentorBubble]}>
-        <Text style={[styles.label, isUser ? styles.userText : styles.mentorLabel]}>
+      <View
+        style={[
+          styles.bubble,
+          isUser
+            ? [styles.userBubble, { backgroundColor: tokens.profileCardBackground }]
+            : [styles.mentorBubble, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }],
+        ]}
+      >
+        <Text
+          style={[
+            styles.label,
+            isUser ? styles.userText : { color: tokens.accentStrong },
+          ]}
+        >
           {isUser ? 'You' : 'iPurpose Compass'}
         </Text>
         <Text style={[styles.content, isUser ? styles.userText : styles.mentorText]}>
@@ -24,14 +38,15 @@ const styles = StyleSheet.create({
   userRow: { alignItems: 'flex-end' },
   mentorRow: { alignItems: 'flex-start' },
   bubble: {
-    maxWidth: '88%',
-    paddingHorizontal: 15,
-    paddingVertical: 13,
+    maxWidth: '94%',
+    paddingHorizontal: 17,
+    paddingVertical: 15,
     borderRadius: 20,
   },
   userBubble: {
     backgroundColor: theme.colors.deepIndigo,
     borderBottomRightRadius: 7,
+    maxWidth: '88%',
   },
   mentorBubble: {
     backgroundColor: theme.colors.lightMistGray,
@@ -52,6 +67,5 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   userText: { color: theme.colors.white },
-  mentorLabel: { color: theme.colors.lavenderPurple },
   mentorText: { color: theme.colors.deepIndigo },
 });

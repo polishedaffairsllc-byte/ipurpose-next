@@ -5,12 +5,14 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { BrandHeader } from '../../components/BrandHeader';
+import { useVisualEnvironment } from '../../context/VisualEnvironmentContext';
 import { getCompanionProfile } from '../../lib/api';
 import type { CompanionProfile } from '../../types/companion';
 import { theme } from '../../theme';
 
 export default function AnchorScreen() {
   const router = useRouter();
+  const { tokens } = useVisualEnvironment();
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,27 +24,27 @@ export default function AnchorScreen() {
   }, []));
 
   return (
-    <LinearGradient colors={theme.homeGradient.colors} locations={theme.homeGradient.locations} start={theme.homeGradient.start} end={theme.homeGradient.end} style={styles.gradient}>
+    <LinearGradient colors={tokens.atmosphereGradient.colors} locations={tokens.atmosphereGradient.locations} start={tokens.atmosphereGradient.start} end={tokens.atmosphereGradient.end} style={styles.gradient}>
       <SafeAreaView style={styles.safe}>
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
           <View style={styles.topRow}>
-            <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={styles.backButton}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={[styles.backButton, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }]}>
               <Ionicons name="chevron-back" size={20} color={theme.colors.textOnDark} />
             </Pressable>
             <BrandHeader subtitle="Your iPurpose identity" variant="dark-background" />
           </View>
           <View style={styles.hero}>
-            <Text style={styles.kicker}>YOUR ANCHOR</Text>
+            <Text style={[styles.kicker, { color: tokens.accent }]}>YOUR ANCHOR</Text>
             <Text style={styles.title}>A reminder of the pattern Compass sees in you.</Text>
           </View>
-          {loading ? <ActivityIndicator color={theme.colors.champagneText} /> : (
+          {loading ? <ActivityIndicator color={tokens.accent} /> : (
             <>
               <GlassSection label="PRIMARY ARCHETYPE" value={profile?.archetypePrimary || 'Not set yet'} prominent />
               {profile?.identityAnchor ? <GlassSection label="YOUR IDENTITY ANCHOR" value={profile.identityAnchor} /> : null}
               {profile?.purposeStatement ? <GlassSection label="YOUR PURPOSE" value={profile.purposeStatement} /> : null}
               {profile?.archetypeSecondary ? <GlassSection label="SECONDARY ARCHETYPE" value={profile.archetypeSecondary} /> : null}
               {!profile?.identityAnchor && !profile?.purposeStatement && !profile?.archetypeSecondary ? (
-                <BlurView intensity={30} tint="dark" style={styles.card}>
+                <BlurView intensity={30} tint="dark" style={[styles.card, { backgroundColor: tokens.glassCardBackground, borderColor: tokens.glassCardBorder }]}>
                   <Text style={styles.body}>Your Anchor reflects the pattern Compass currently recognizes in how you move through purpose, decisions, and action.</Text>
                 </BlurView>
               ) : null}
@@ -55,7 +57,8 @@ export default function AnchorScreen() {
 }
 
 function GlassSection({ label, value, prominent = false }: { label: string; value: string; prominent?: boolean }) {
-  return <BlurView intensity={30} tint="dark" style={styles.card}><Text style={styles.kicker}>{label}</Text><Text style={prominent ? styles.prominent : styles.body}>{value}</Text></BlurView>;
+  const { tokens } = useVisualEnvironment();
+  return <BlurView intensity={30} tint="dark" style={[styles.card, { backgroundColor: tokens.glassCardBackground, borderColor: tokens.glassCardBorder }]}><Text style={[styles.kicker, { color: tokens.accent }]}>{label}</Text><Text style={prominent ? styles.prominent : styles.body}>{value}</Text></BlurView>;
 }
 
 const styles = StyleSheet.create({

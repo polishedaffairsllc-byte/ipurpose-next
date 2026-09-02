@@ -9,23 +9,18 @@ import {
   Text,
   View,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { BrandHeader } from '../../../components/BrandHeader';
+import { VisualEnvironmentPicker } from '../../../components/VisualEnvironmentPicker';
 import { useAuth } from '../../../context/AuthContext';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { getCompanionProfile } from '../../../lib/api';
+import { getDisplayName } from '../../../lib/profileIdentity';
 import { theme } from '../../../theme';
 import type { CompanionProfile } from '../../../types/companion';
 
 const PROFILE_ERROR_MESSAGE =
   'Your Compass could not be loaded right now. Your account details are still available.';
-
-function getDisplayName(displayName?: string | null, email?: string | null) {
-  if (displayName?.trim()) return displayName.trim();
-
-  const emailName = email?.split('@')[0]?.replace(/[._-]+/g, ' ').trim();
-  if (!emailName) return 'iPurpose member';
-
-  return emailName.replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
 
 function getInitials(name: string) {
   const parts = name.split(/\s+/).filter(Boolean);
@@ -55,6 +50,7 @@ function hasPersonalProfile(profile: CompanionProfile | null) {
 
 export default function AccountScreen() {
   const { user, signOut } = useAuth();
+  const { tokens } = useVisualEnvironment();
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [companionProfile, setCompanionProfile] = useState<CompanionProfile | null>(null);
@@ -117,7 +113,14 @@ export default function AccountScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <LinearGradient
+      colors={tokens.screenGradient.colors}
+      locations={tokens.screenGradient.locations}
+      start={tokens.screenGradient.start}
+      end={tokens.screenGradient.end}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.safe}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -125,7 +128,7 @@ export default function AccountScreen() {
         <BrandHeader subtitle="Your profile and account" variant="light-background" />
 
         <View style={styles.intro}>
-          <Text style={styles.eyebrow}>ACCOUNT &amp; PROFILE</Text>
+          <Text style={[styles.eyebrow, { color: tokens.accentStrong }]}>ACCOUNT &amp; PROFILE</Text>
           <Text style={styles.title}>Your iPurpose identity.</Text>
           <Text style={styles.introBody}>
             The account details connected to your private reflection and Compass
@@ -133,8 +136,8 @@ export default function AccountScreen() {
           </Text>
         </View>
 
-        <View style={styles.profileCard}>
-          <View style={styles.avatar} accessibilityLabel={`${displayName} initials`}>
+        <View style={[styles.profileCard, { backgroundColor: tokens.profileCardBackground }]}>
+          <View style={[styles.avatar, { backgroundColor: tokens.accentSoft }]} accessibilityLabel={`${displayName} initials`}>
             <Text style={styles.avatarText}>{initials}</Text>
           </View>
 
@@ -142,7 +145,7 @@ export default function AccountScreen() {
             <Text style={styles.profileName}>{displayName}</Text>
             <Text style={styles.profileEmail}>{email}</Text>
 
-            <View style={styles.memberBadge}>
+            <View style={[styles.memberBadge, { backgroundColor: tokens.accent }]}>
               <Ionicons
                 name="sparkles-outline"
                 size={14}
@@ -154,8 +157,8 @@ export default function AccountScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>PROFILE DETAILS</Text>
-          <View style={styles.detailsCard}>
+          <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>PROFILE DETAILS</Text>
+          <View style={[styles.detailsCard, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
             <View style={styles.detailRow}>
               <View style={[styles.detailIcon, styles.identityIcon]}>
                 <Ionicons
@@ -214,8 +217,13 @@ export default function AccountScreen() {
           </View>
         </View>
 
+        <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>PREFERENCES</Text>
+          <VisualEnvironmentPicker />
+        </View>
+
         <View style={styles.compassSection}>
-          <Text style={styles.sectionLabel}>PERSONAL PROFILE</Text>
+          <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>PERSONAL PROFILE</Text>
           <Text style={styles.compassTitle}>Your iPurpose Compass</Text>
           <Text style={styles.compassIntro}>
             A living reflection of the identity, purpose, and priorities shaping
@@ -223,8 +231,8 @@ export default function AccountScreen() {
           </Text>
 
           {profileLoading ? (
-            <View style={styles.compassStatusCard}>
-              <ActivityIndicator color={theme.colors.lavenderPurple} />
+            <View style={[styles.compassStatusCard, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
+              <ActivityIndicator color={tokens.accentStrong} />
               <Text style={styles.compassStatusText}>Reading your Compass…</Text>
             </View>
           ) : profileError ? (
@@ -250,7 +258,7 @@ export default function AccountScreen() {
               </Pressable>
             </View>
           ) : hasCompass ? (
-            <View style={styles.compassCard}>
+            <View style={[styles.compassCard, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
               {companionProfile?.archetypePrimary ? (
                 <View style={styles.compassRow}>
                   <View style={[styles.compassRowIcon, styles.primaryArchetypeIcon]}>
@@ -310,7 +318,7 @@ export default function AccountScreen() {
                   <Text style={styles.compassStatementLabel}>FOCUS AREAS</Text>
                   <View style={styles.focusAreas}>
                     {companionProfile.focusAreas.map((focusArea) => (
-                      <View key={focusArea} style={styles.focusAreaChip}>
+                      <View key={focusArea} style={[styles.focusAreaChip, { backgroundColor: tokens.surfaceTint, borderColor: tokens.accentStrong }]}>
                         <Text style={styles.focusAreaText}>{focusArea}</Text>
                       </View>
                     ))}
@@ -319,7 +327,7 @@ export default function AccountScreen() {
               ) : null}
             </View>
           ) : (
-            <View style={styles.compassEmptyCard}>
+            <View style={[styles.compassEmptyCard, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
               <View style={styles.compassEmptyIcon}>
                 <Ionicons
                   name="compass-outline"
@@ -336,7 +344,7 @@ export default function AccountScreen() {
           )}
         </View>
 
-        <View style={styles.methodCard}>
+        <View style={[styles.methodCard, { backgroundColor: tokens.surfaceTint, borderColor: tokens.accentStrong }]}>
           <Text style={styles.methodLabel}>SOUL → SYSTEMS → AI™</Text>
           <Text style={styles.methodTitle}>One identity across your journey.</Text>
           <Text style={styles.methodBody}>
@@ -346,7 +354,7 @@ export default function AccountScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>ACCOUNT ACTIONS</Text>
+          <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>ACCOUNT ACTIONS</Text>
 
           {error ? (
             <View style={styles.errorCard}>
@@ -366,6 +374,7 @@ export default function AccountScreen() {
             accessibilityLabel="Sign out of iPurpose"
             style={({ pressed }) => [
               styles.signOutButton,
+              { backgroundColor: tokens.surface, borderColor: tokens.profileCardBackground },
               signingOut && styles.signOutButtonDisabled,
               pressed && styles.signOutButtonPressed,
             ]}
@@ -390,14 +399,16 @@ export default function AccountScreen() {
           iPurpose experience.
         </Text>
       </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: { flex: 1 },
   safe: {
     flex: 1,
-    backgroundColor: theme.colors.cream,
+    backgroundColor: 'transparent',
   },
   container: {
     paddingHorizontal: 20,
