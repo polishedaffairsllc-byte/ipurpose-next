@@ -12,6 +12,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
@@ -26,6 +27,10 @@ const STARTERS = [
 ];
 
 export default function MentorScreen() {
+  const params = useLocalSearchParams<{ conversationId?: string | string[] }>();
+  const requestedConversationId = Array.isArray(params.conversationId)
+    ? params.conversationId[0]
+    : params.conversationId;
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<CompanionMessage[]>([]);
@@ -58,15 +63,16 @@ export default function MentorScreen() {
         const available = await getConversations();
         if (cancelled) return;
         setConversations(available);
-        if (available[0]) {
-          const loaded = await getConversation(available[0].id);
+        const initialConversationId = requestedConversationId || available[0]?.id;
+        if (initialConversationId) {
+          const loaded = await getConversation(initialConversationId);
           if (cancelled) return;
-          setConversationId(available[0].id);
+          setConversationId(initialConversationId);
           setMessages(loaded);
         }
       } catch (caught) {
         if (!cancelled) {
-          setError(caught instanceof Error ? caught.message : 'Unable to load your Mentor.');
+          setError(caught instanceof Error ? caught.message : 'Unable to load your Compass.');
         }
       } finally {
         if (!cancelled) setLoadingHistory(false);
@@ -76,7 +82,7 @@ export default function MentorScreen() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [requestedConversationId]);
 
   function startNewConversation() {
     setConversationId(null);
@@ -128,7 +134,7 @@ export default function MentorScreen() {
         listRef.current?.scrollToEnd({ animated: true });
       });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'The Mentor could not respond. Please try again.');
+      setError(caught instanceof Error ? caught.message : 'Compass could not respond. Please try again.');
     } finally {
       setSending(false);
     }
@@ -142,11 +148,14 @@ export default function MentorScreen() {
         keyboardVerticalOffset={8}
       >
         <View style={styles.container}>
-          <BrandHeader subtitle="Your space for aligned reflection and action" />
+          <BrandHeader
+            subtitle="Your space for aligned reflection and action"
+            variant="light-background"
+          />
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
-              <Text style={styles.kicker}>MENTOR</Text>
+              <Text style={styles.kicker}>COMPASS</Text>
               <Text style={styles.screenTitle}>Think it through here.</Text>
             </View>
 

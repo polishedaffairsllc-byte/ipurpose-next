@@ -11,6 +11,30 @@ interface Props {
   hideNew?: boolean;
 }
 
+function isSameCalendarDay(left: Date, right: Date) {
+  return left.getFullYear() === right.getFullYear()
+    && left.getMonth() === right.getMonth()
+    && left.getDate() === right.getDate();
+}
+
+function formatConversationDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+
+  const today = new Date();
+  if (isSameCalendarDay(date, today)) return 'Today';
+
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (isSameCalendarDay(date, yesterday)) return 'Yesterday';
+
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    ...(date.getFullYear() === today.getFullYear() ? {} : { year: 'numeric' }),
+  });
+}
+
 export function ConversationList({
   conversations,
   selectedId,
@@ -32,6 +56,8 @@ export function ConversationList({
           <Pressable
             disabled={disabled}
             onPress={onNew}
+            accessibilityRole="button"
+            accessibilityLabel="Start a new conversation"
             style={[styles.chip, !selectedId && styles.selectedChip]}
           >
             <Text style={[styles.chipText, !selectedId && styles.selectedText]}>+ New</Text>
@@ -40,16 +66,25 @@ export function ConversationList({
 
         {conversations.map((conversation) => {
           const selected = conversation.id === selectedId;
+          const dateLabel = formatConversationDate(conversation.updatedAt);
+
           return (
             <Pressable
               key={conversation.id}
               disabled={disabled}
               onPress={() => onSelect(conversation.id)}
+              accessibilityRole="button"
+              accessibilityLabel={[conversation.title, dateLabel].filter(Boolean).join(', ')}
               style={[styles.chip, selected && styles.selectedChip]}
             >
               <Text numberOfLines={1} style={[styles.chipText, selected && styles.selectedText]}>
                 {conversation.title}
               </Text>
+              {dateLabel ? (
+                <Text style={[styles.dateText, selected && styles.selectedDateText]}>
+                  {dateLabel}
+                </Text>
+              ) : null}
             </Pressable>
           );
         })}
@@ -79,5 +114,12 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.body,
     fontSize: 12,
   },
+  dateText: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    marginTop: 2,
+  },
   selectedText: { color: theme.colors.white },
+  selectedDateText: { color: theme.colors.textOnDarkMuted },
 });

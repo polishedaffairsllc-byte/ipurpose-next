@@ -111,6 +111,27 @@ export async function getCompanionProfile(uid: string): Promise<CompanionProfile
   return profile;
 }
 
+/** Update only the authenticated user's current Compass focus areas. */
+export async function updateCompanionFocusAreas(
+  uid: string,
+  focusAreas: string[]
+): Promise<CompanionProfileContext> {
+  const normalized = focusAreas
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+
+  await firebaseAdmin.firestore().collection("users").doc(uid).set(
+    {
+      focusAreas: normalized,
+      updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  return getCompanionProfile(uid);
+}
+
 async function readClarityCheck(email: string | undefined): Promise<CompanionClarityContext | undefined> {
   if (!email) return undefined;
 

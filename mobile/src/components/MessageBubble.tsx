@@ -9,7 +9,7 @@ export function MessageBubble({ message }: { message: CompanionMessage }) {
     <View style={[styles.row, isUser ? styles.userRow : styles.mentorRow]}>
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.mentorBubble]}>
         <Text style={[styles.label, isUser ? styles.userText : styles.mentorLabel]}>
-          {isUser ? 'You' : 'iPurpose Mentor'}
+          {isUser ? 'You' : 'iPurpose Compass'}
         </Text>
         <Text style={[styles.content, isUser ? styles.userText : styles.mentorText]}>
           {message.content}
