@@ -19,7 +19,7 @@ export default function AuthenticatedLayout() {
   }
 
   if (!user) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href="/welcome" />;
   }
 
   if (error || !onboarding) {

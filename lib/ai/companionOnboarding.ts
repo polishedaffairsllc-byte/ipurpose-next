@@ -83,6 +83,7 @@ export function normalizeOnboardingDraft(value: unknown): CompanionOnboardingDra
         .slice(0, 5)
     : [];
   const requestedStep = asNumber(draft.currentStep) ?? 0;
+  const claritySubmissionId = asString(draft.claritySubmissionId);
 
   return {
     currentStep: Math.max(0, Math.min(14, Math.trunc(requestedStep))),
@@ -90,7 +91,7 @@ export function normalizeOnboardingDraft(value: unknown): CompanionOnboardingDra
     identityResponses,
     focusAreasDraft: normalizeFocusAreas(draft.focusAreasDraft)
       .filter((focusArea) => focusArea.length <= 160),
-    claritySubmissionId: asString(draft.claritySubmissionId),
+    ...(claritySubmissionId ? { claritySubmissionId } : {}),
   };
 }
 

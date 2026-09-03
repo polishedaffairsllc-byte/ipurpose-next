@@ -39,7 +39,23 @@ export default function RootLayout() {
                 headerShown: false,
                 contentStyle: { backgroundColor: theme.colors.cream },
               }}
-            />
+            >
+              <Stack.Screen
+                name="welcome"
+                options={{
+                  animation: 'fade',
+                  contentStyle: { backgroundColor: theme.colors.midnightIndigo },
+                }}
+              />
+              <Stack.Screen
+                name="sign-in"
+                options={{ contentStyle: { backgroundColor: theme.colors.midnightIndigo } }}
+              />
+              <Stack.Screen
+                name="create-account"
+                options={{ contentStyle: { backgroundColor: theme.colors.midnightIndigo } }}
+              />
+            </Stack>
           </VisualEnvironmentProvider>
         </OnboardingProvider>
       </AuthProvider>
