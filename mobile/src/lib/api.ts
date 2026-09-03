@@ -64,6 +64,14 @@ export async function updateVisualEnvironmentPreference(
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }
+export async function updateCompanionTimezone(timezone: string): Promise<CompanionProfile> {
+  const response = await authorizedFetch('/api/ai/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({ timezone }),
+  });
+  const data = await readJson<{ profile: CompanionProfile }>(response);
+  return data.profile;
+}
 export async function sendMentorMessage(options: { message: string; conversationId?: string; responseMode?: ResponseMode }): Promise<MentorResponse> {
   const response = await authorizedFetch('/api/ai', { method: 'POST', body: JSON.stringify({ message: options.message, responseMode: options.responseMode || 'balanced', ...(options.conversationId ? { conversationId: options.conversationId } : {}) }) });
   return readJson<MentorResponse>(response);

@@ -155,6 +155,22 @@ export async function updateCompanionVisualEnvironment(
   return getCompanionProfile(uid);
 }
 
+/** Update only the authenticated user's preferred IANA timezone. */
+export async function updateCompanionTimezone(
+  uid: string,
+  timezone: string
+): Promise<CompanionProfileContext> {
+  await firebaseAdmin.firestore().collection("users").doc(uid).set(
+    {
+      timezone,
+      updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+
+  return getCompanionProfile(uid);
+}
+
 async function readClarityCheck(email: string | undefined): Promise<CompanionClarityContext | undefined> {
   if (!email) return undefined;
 

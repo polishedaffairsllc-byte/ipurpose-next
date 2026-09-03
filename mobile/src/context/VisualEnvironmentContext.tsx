@@ -8,7 +8,12 @@ import {
   type ReactNode,
 } from 'react';
 import { AppState } from 'react-native';
-import { getCompanionProfile, updateVisualEnvironmentPreference } from '../lib/api';
+import {
+  getCompanionProfile,
+  updateCompanionTimezone,
+  updateVisualEnvironmentPreference,
+} from '../lib/api';
+import { getDeviceTimezone, normalizeIanaTimezone } from '../lib/timezone';
 import {
   DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE,
   normalizeVisualEnvironmentPreference,
@@ -25,10 +30,14 @@ interface VisualEnvironmentContextValue {
   resolvedEnvironment: VisualEnvironmentName;
   autoResolvedEnvironment: VisualEnvironmentName;
   tokens: VisualEnvironmentTokens;
+  savedTimezone?: string;
+  deviceTimezone: string;
+  effectiveTimezone: string;
   loading: boolean;
   previewPreference: (preference: VisualEnvironmentPreference) => void;
   cancelPreview: () => void;
   confirmPreference: (preference: VisualEnvironmentPreference) => Promise<void>;
+  confirmTimezone: (timezone: string) => Promise<void>;
 }
 
 const VisualEnvironmentContext = createContext<VisualEnvironmentContextValue | undefined>(
@@ -43,13 +52,17 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
   );
   const [previewedPreference, setPreviewedPreference] =
     useState<VisualEnvironmentPreference | null>(null);
-  const [timezone, setTimezone] = useState<string | undefined>();
+  const [savedTimezone, setSavedTimezone] = useState<string | undefined>();
+  const [deviceTimezone, setDeviceTimezone] = useState(getDeviceTimezone);
   const [clock, setClock] = useState(() => new Date());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') setClock(new Date());
+      if (state === 'active') {
+        setClock(new Date());
+        setDeviceTimezone(getDeviceTimezone());
+      }
     });
     return () => subscription.remove();
   }, []);
@@ -59,7 +72,7 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
     if (!userId) {
       setSavedPreference(DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE);
       setPreviewedPreference(null);
-      setTimezone(undefined);
+      setSavedTimezone(undefined);
       setLoading(false);
       return;
     }
@@ -67,7 +80,7 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
     let active = true;
     setSavedPreference(DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE);
     setPreviewedPreference(null);
-    setTimezone(undefined);
+    setSavedTimezone(undefined);
     setLoading(true);
     getCompanionProfile()
       .then((profile) => {
@@ -75,12 +88,12 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
         setSavedPreference(
           normalizeVisualEnvironmentPreference(profile.visualEnvironmentPreference)
         );
-        setTimezone(profile.timezone);
+        setSavedTimezone(normalizeIanaTimezone(profile.timezone) ?? undefined);
       })
       .catch(() => {
         if (!active) return;
         setSavedPreference(DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE);
-        setTimezone(undefined);
+        setSavedTimezone(undefined);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -108,23 +121,33 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
       setSavedPreference(
         normalizeVisualEnvironmentPreference(profile.visualEnvironmentPreference)
       );
-      setTimezone(profile.timezone);
+      setSavedTimezone(normalizeIanaTimezone(profile.timezone) ?? undefined);
       setPreviewedPreference(null);
       setClock(new Date());
     },
     []
   );
 
+  const confirmTimezone = useCallback(async (timezone: string) => {
+    const normalized = normalizeIanaTimezone(timezone);
+    if (!normalized) throw new Error('Enter a valid IANA timezone.');
+
+    const profile = await updateCompanionTimezone(normalized);
+    setSavedTimezone(normalizeIanaTimezone(profile.timezone) ?? normalized);
+    setClock(new Date());
+  }, []);
+
   const activePreference = previewedPreference ?? savedPreference;
+  const effectiveTimezone = savedTimezone ?? deviceTimezone;
   const resolvedEnvironment = resolveVisualEnvironment(
     activePreference,
     clock,
-    timezone
+    effectiveTimezone
   );
   const autoResolvedEnvironment = resolveVisualEnvironment(
     { mode: 'auto', manualTheme: savedPreference.manualTheme },
     clock,
-    timezone
+    effectiveTimezone
   );
 
   const value = useMemo<VisualEnvironmentContextValue>(
@@ -134,20 +157,28 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
       resolvedEnvironment,
       autoResolvedEnvironment,
       tokens: visualEnvironments[resolvedEnvironment],
+      savedTimezone,
+      deviceTimezone,
+      effectiveTimezone,
       loading,
       previewPreference,
       cancelPreview,
       confirmPreference,
+      confirmTimezone,
     }),
     [
       activePreference,
       autoResolvedEnvironment,
       cancelPreview,
       confirmPreference,
+      confirmTimezone,
+      deviceTimezone,
+      effectiveTimezone,
       loading,
       previewPreference,
       resolvedEnvironment,
       savedPreference,
+      savedTimezone,
     ]
   );
 

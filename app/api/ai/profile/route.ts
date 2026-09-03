@@ -3,8 +3,10 @@ import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
 import {
   getCompanionProfile,
   updateCompanionFocusAreas,
+  updateCompanionTimezone,
   updateCompanionVisualEnvironment,
 } from "@/lib/ai/companionContext";
+import { normalizeIanaTimezone } from "@/lib/ai/timezone";
 import { parseVisualEnvironmentPreference } from "@/lib/ai/visualEnvironmentPreference";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +30,7 @@ export async function PATCH(request: NextRequest) {
 
     const body = await request.json().catch(() => null) as {
       focusAreas?: unknown;
+      timezone?: unknown;
       visualEnvironmentPreference?: unknown;
     } | null;
     if (!body || typeof body !== "object") {
@@ -37,7 +40,7 @@ export async function PATCH(request: NextRequest) {
     const requestedFields = Object.keys(body);
     if (
       requestedFields.length !== 1
-      || !["focusAreas", "visualEnvironmentPreference"].includes(requestedFields[0])
+      || !["focusAreas", "timezone", "visualEnvironmentPreference"].includes(requestedFields[0])
     ) {
       return NextResponse.json(
         { error: "Update exactly one supported profile field" },
@@ -68,7 +71,7 @@ export async function PATCH(request: NextRequest) {
       }
 
       profile = await updateCompanionFocusAreas(entitlement.uid, focusAreas);
-    } else {
+    } else if (requestedFields[0] === "visualEnvironmentPreference") {
       const visualEnvironmentPreference = parseVisualEnvironmentPreference(
         body.visualEnvironmentPreference
       );
@@ -82,6 +85,15 @@ export async function PATCH(request: NextRequest) {
         entitlement.uid,
         visualEnvironmentPreference
       );
+    } else {
+      const timezone = normalizeIanaTimezone(body.timezone);
+      if (!timezone) {
+        return NextResponse.json(
+          { error: "Timezone must be a valid IANA timezone" },
+          { status: 400 }
+        );
+      }
+      profile = await updateCompanionTimezone(entitlement.uid, timezone);
     }
 
     return NextResponse.json({ profile }, { headers: { "Cache-Control": "private, no-store" } });
