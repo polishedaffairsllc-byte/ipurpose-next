@@ -15,6 +15,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { BrandHeader } from './BrandHeader';
+import { useAuth } from '../context/AuthContext';
 import { useOnboarding } from '../context/OnboardingContext';
 import {
   completeOnboarding,
@@ -53,6 +54,7 @@ function makeDraft(
 
 export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   const router = useRouter();
+  const { signOut } = useAuth();
   const { onboarding, refresh } = useOnboarding();
   const [hydrated, setHydrated] = useState(mode === 'retake');
   const [step, setStep] = useState(0);
@@ -62,6 +64,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   const [secondFocus, setSecondFocus] = useState('');
   const [result, setResult] = useState<ClarityCheckResult | null>(null);
   const [saving, setSaving] = useState(false);
+  const [switchingAccount, setSwitchingAccount] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -211,6 +214,19 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     }
   }
 
+  async function returnToSignIn() {
+    if (saving || switchingAccount) return;
+    setSwitchingAccount(true);
+    setError(null);
+    try {
+      await signOut();
+      router.replace('/sign-in');
+    } catch {
+      setError('We could not sign out of this account. Please try again.');
+      setSwitchingAccount(false);
+    }
+  }
+
   if (!hydrated) {
     return (
       <View style={styles.loadingScreen}>
@@ -298,6 +314,24 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
                 <Text style={styles.errorText}>{error}</Text>
                 <Text style={styles.errorHint}>Your previous answers are still here. Try this step again.</Text>
               </View>
+            ) : null}
+
+            {mode === 'onboarding' ? (
+              <Pressable
+                accessibilityRole="button"
+                disabled={saving || switchingAccount}
+                onPress={() => void returnToSignIn()}
+                style={({ pressed }) => [
+                  styles.accountSwitchButton,
+                  (pressed || saving || switchingAccount) && styles.accountSwitchButtonPressed,
+                ]}
+              >
+                {switchingAccount ? (
+                  <ActivityIndicator color={theme.colors.champagne} />
+                ) : (
+                  <Text style={styles.accountSwitchText}>Returning user? Sign in with a different account</Text>
+                )}
+              </Pressable>
             ) : null}
           </ScrollView>
         </KeyboardAvoidingView>
@@ -677,6 +711,22 @@ const styles = StyleSheet.create({
   },
   primaryButtonPressed: { opacity: 0.62 },
   primaryButtonText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 16 },
+  accountSwitchButton: {
+    alignItems: 'center',
+    minHeight: 44,
+    justifyContent: 'center',
+    marginTop: 18,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  accountSwitchButtonPressed: { opacity: 0.62 },
+  accountSwitchText: {
+    color: theme.colors.textOnDark,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+  },
   errorCard: {
     backgroundColor: 'rgba(252, 196, 183, 0.16)',
     borderColor: theme.colors.salmonPeach,

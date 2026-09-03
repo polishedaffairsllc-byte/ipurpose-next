@@ -150,6 +150,18 @@ test('signed-out mobile users enter through the permanent welcome screen', async
   assert.doesNotMatch(scaffoldSource, /useVisualEnvironment/);
 });
 
+test('forced onboarding lets a returning user switch to sign in', async () => {
+  const source = await readFile(
+    new URL('../mobile/src/components/ClarityCheckFlow.tsx', import.meta.url),
+    'utf8'
+  );
+
+  assert.match(source, /Returning user\? Sign in with a different account/);
+  assert.match(source, /await signOut\(\)/);
+  assert.match(source, /router\.replace\('\/sign-in'\)/);
+  assert.match(source, /mode === 'onboarding'/);
+});
+
 test('mobile tab order keeps Clarity Check permanently visible', async () => {
   const [layoutSource, clarityTabSource] = await Promise.all([
     readFile(new URL('../mobile/src/app/(app)/(tabs)/_layout.tsx', import.meta.url), 'utf8'),
