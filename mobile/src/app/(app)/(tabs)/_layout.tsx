@@ -22,7 +22,7 @@ export default function TabsLayout() {
         },
         tabBarLabelStyle: {
           fontFamily: theme.fonts.body,
-          fontSize: 12,
+          fontSize: 10,
         },
       }}
     >
@@ -33,6 +33,20 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="clarity-check"
+        options={{
+          title: 'Clarity Check',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'navigate-circle' : 'navigate-circle-outline'}
               color={color}
               size={size}
             />

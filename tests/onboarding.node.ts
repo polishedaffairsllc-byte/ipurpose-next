@@ -105,3 +105,65 @@ test('failed completion cannot navigate Home before server confirmation', async 
   assert.ok(confirmationCheck > completionCall);
   assert.ok(homeNavigation > confirmationCheck);
 });
+
+test('mobile offers Firebase account creation from sign in', async () => {
+  const [authSource, signInSource, createAccountSource] = await Promise.all([
+    readFile(new URL('../mobile/src/context/AuthContext.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../mobile/src/app/sign-in.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../mobile/src/app/create-account.tsx', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(authSource, /createUserWithEmailAndPassword/);
+  assert.match(signInSource, /router\.push\('\/create-account'\)/);
+  assert.match(createAccountSource, /await createAccount\(normalizedEmail, password\)/);
+  assert.match(createAccountSource, /<Redirect href="\/" \/>/);
+});
+
+test('mobile tab order keeps Clarity Check permanently visible', async () => {
+  const [layoutSource, clarityTabSource] = await Promise.all([
+    readFile(new URL('../mobile/src/app/(app)/(tabs)/_layout.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../mobile/src/app/(app)/(tabs)/clarity-check.tsx', import.meta.url), 'utf8'),
+  ]);
+  const home = layoutSource.indexOf('name="index"');
+  const clarity = layoutSource.indexOf('name="clarity-check"');
+  const compass = layoutSource.indexOf('name="mentor"');
+  const account = layoutSource.indexOf('name="account"');
+
+  assert.ok(home >= 0 && clarity > home && compass > clarity && account > compass);
+  assert.match(clarityTabSource, /<ClarityCheckFlow mode="retake" \/>/);
+});
+
+test('formatted Current Focus reaches the final Compass model messages', async () => {
+  const [routeSource, formatterSource] = await Promise.all([
+    readFile(new URL('../app/api/ai/route.ts', import.meta.url), 'utf8'),
+    readFile(new URL('../lib/ai/companionContextFormatter.ts', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(
+    routeSource,
+    /role: "system", content: formatCompanionContext\(journeyContext\)/
+  );
+  assert.match(formatterSource, /Current Focus/);
+  assert.match(formatterSource, /Do not mechanically repeat/);
+  assert.match(formatterSource, /ask for confirmation before any profile update/);
+});
+
+test('retakes return to Account before any onboarding focus or completion write', async () => {
+  const source = await readFile(
+    new URL('../mobile/src/components/ClarityCheckFlow.tsx', import.meta.url),
+    'utf8'
+  );
+  const finish = source.slice(
+    source.indexOf('async function finish()'),
+    source.indexOf('async function goBack()')
+  );
+  const retakeGuard = finish.indexOf("if (mode === 'retake')");
+  const accountNavigation = finish.indexOf("router.replace('/account')");
+  const earlyReturn = finish.indexOf('return;', accountNavigation);
+  const focusWrite = finish.indexOf('await initializeCompanionFocusAreas(focusAreas)');
+
+  assert.ok(retakeGuard >= 0);
+  assert.ok(accountNavigation > retakeGuard);
+  assert.ok(earlyReturn > accountNavigation);
+  assert.ok(focusWrite > earlyReturn);
+});
