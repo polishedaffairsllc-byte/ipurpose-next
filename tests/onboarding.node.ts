@@ -36,8 +36,23 @@ test('partial answers and the safe resume step are normalized', () => {
     clarityResponses: { 1: 5, 2: 3 },
     identityResponses: ['A', 'C'],
     focusAreasDraft: ['Launch the offer', 'ignored third'],
-    claritySubmissionId: undefined,
   });
+});
+
+test('brand-new onboarding drafts omit undefined values rejected by Firestore', () => {
+  const draft = normalizeOnboardingDraft({
+    currentStep: 1,
+    clarityResponses: {},
+    identityResponses: [],
+    focusAreasDraft: [],
+  });
+
+  assert.equal(Object.hasOwn(draft, 'claritySubmissionId'), false);
+  assert.equal(Object.values(draft).includes(undefined), false);
+  assert.equal(
+    normalizeOnboardingDraft({ claritySubmissionId: 'submission-123' }).claritySubmissionId,
+    'submission-123'
+  );
 });
 
 test('oversized focus drafts are not persisted', () => {
@@ -117,6 +132,22 @@ test('mobile offers Firebase account creation from sign in', async () => {
   assert.match(signInSource, /router\.push\('\/create-account'\)/);
   assert.match(createAccountSource, /await createAccount\(normalizedEmail, password\)/);
   assert.match(createAccountSource, /<Redirect href="\/" \/>/);
+});
+
+test('signed-out mobile users enter through the permanent welcome screen', async () => {
+  const [layoutSource, welcomeSource, scaffoldSource] = await Promise.all([
+    readFile(new URL('../mobile/src/app/(app)/_layout.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../mobile/src/app/welcome.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../mobile/src/components/AuthScaffold.tsx', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(layoutSource, /<Redirect href="\/welcome" \/>/);
+  assert.match(welcomeSource, />Sign In<\/Text>/);
+  assert.match(welcomeSource, />Create Account<\/Text>/);
+  assert.match(welcomeSource, /router\.push\('\/sign-in'\)/);
+  assert.match(welcomeSource, /router\.push\('\/create-account'\)/);
+  assert.match(scaffoldSource, /welcome-atmosphere\.jpg/);
+  assert.doesNotMatch(scaffoldSource, /useVisualEnvironment/);
 });
 
 test('mobile tab order keeps Clarity Check permanently visible', async () => {

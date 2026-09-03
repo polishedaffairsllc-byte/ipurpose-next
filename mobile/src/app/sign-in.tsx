@@ -1,18 +1,7 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Redirect, useRouter } from 'expo-router';
-import { BrandHeader } from '../components/BrandHeader';
+import { AuthPanel, AuthScaffold, authStyles } from '../components/AuthScaffold';
 import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
 
@@ -25,148 +14,99 @@ export default function SignInScreen() {
   const [error, setError] = useState<string | null>(null);
 
   if (loading) {
-    return <View style={styles.center}><ActivityIndicator color={theme.colors.plum} /></View>;
+    return <View style={styles.loading}><ActivityIndicator color={theme.colors.champagne} /></View>;
   }
-
-  if (user) {
-    return <Redirect href="/" />;
-  }
+  if (user) return <Redirect href="/" />;
 
   async function handleSignIn() {
-    if (!email.trim() || !password) return;
+    if (!email.trim() || !password || submitting) return;
     setSubmitting(true);
     setError(null);
     try {
       await signIn(email, password);
     } catch {
       setError('We could not sign you in. Check your email and password and try again.');
-    } finally {
       setSubmitting(false);
     }
   }
 
+  const disabled = submitting || !email.trim() || !password;
+
   return (
-    <SafeAreaView style={styles.safe}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+    <AuthScaffold
+      body="Return to your saved Clarity Check, Current Focus, and Compass conversations."
+      eyebrow="WELCOME BACK"
+      title="Continue where you left off."
+    >
+      <AuthPanel>
+        <Text style={authStyles.label}>EMAIL</Text>
+        <TextInput
+          accessibilityLabel="Email"
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="email-address"
+          onChangeText={setEmail}
+          placeholder="you@example.com"
+          placeholderTextColor="#767A94"
+          style={authStyles.input}
+          textContentType="emailAddress"
+          value={email}
+        />
+        <Text style={authStyles.label}>PASSWORD</Text>
+        <TextInput
+          accessibilityLabel="Password"
+          onChangeText={setPassword}
+          onSubmitEditing={() => void handleSignIn()}
+          placeholder="Your password"
+          placeholderTextColor="#767A94"
+          secureTextEntry
+          style={authStyles.input}
+          textContentType="password"
+          value={password}
+        />
+        {error ? <Text accessibilityRole="alert" style={authStyles.error}>{error}</Text> : null}
+        <Pressable
+          accessibilityRole="button"
+          disabled={disabled}
+          onPress={() => void handleSignIn()}
+          style={({ pressed }) => [
+            authStyles.primaryButton,
+            disabled && authStyles.buttonDisabled,
+            pressed && authStyles.buttonPressed,
+          ]}
         >
-          <BrandHeader
-            subtitle="Your Soul → Systems → AI companion"
-            variant="light-background"
-          />
-
-          <View style={styles.hero}>
-            <Text style={styles.eyebrow}>WELCOME BACK</Text>
-            <Text style={styles.title}>Continue where you left off.</Text>
-            <Text style={styles.body}>
-              Sign in with your iPurpose account to bring your Compass conversations with you.
-            </Text>
-          </View>
-
-          <View style={styles.card}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              placeholder="you@example.com"
-              placeholderTextColor="#9B919B"
-              style={styles.input}
-            />
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              textContentType="password"
-              placeholder="Your password"
-              placeholderTextColor="#9B919B"
-              style={styles.input}
-              onSubmitEditing={handleSignIn}
-            />
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            <Pressable
-              accessibilityRole="button"
-              onPress={handleSignIn}
-              disabled={submitting || !email.trim() || !password}
-              style={({ pressed }) => [
-                styles.button,
-                (submitting || !email.trim() || !password) && styles.buttonDisabled,
-                pressed && styles.buttonPressed,
-              ]}
-            >
-              {submitting ? (
-                <ActivityIndicator color={theme.colors.white} />
-              ) : (
-                <Text style={styles.buttonText}>Sign in to iPurpose</Text>
-              )}
-            </Pressable>
-
-            <View style={styles.newAccountSection}>
-              <Text style={styles.newAccountPrompt}>New to iPurpose?</Text>
-              <Pressable
-                accessibilityLabel="Create a new iPurpose account"
-                accessibilityRole="button"
-                disabled={submitting}
-                onPress={() => router.push('/create-account')}
-                style={({ pressed }) => [
-                  styles.createAccountButton,
-                  pressed && styles.buttonPressed,
-                ]}
-              >
-                <Text style={styles.createAccountButtonText}>Create Account</Text>
-              </Pressable>
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          {submitting ? (
+            <ActivityIndicator color={theme.colors.midnightIndigo} />
+          ) : (
+            <Text style={authStyles.primaryButtonText}>Sign In</Text>
+          )}
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          disabled={submitting}
+          onPress={() => router.push('/create-account')}
+          style={({ pressed }) => [authStyles.secondaryButton, pressed && authStyles.buttonPressed]}
+        >
+          <Text style={authStyles.secondaryButtonText}>New to iPurpose? Create Account</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          disabled={submitting}
+          onPress={() => router.replace('/welcome')}
+          style={({ pressed }) => [authStyles.textLink, pressed && authStyles.buttonPressed]}
+        >
+          <Text style={authStyles.textLinkText}>Back to welcome</Text>
+        </Pressable>
+      </AuthPanel>
+    </AuthScaffold>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  safe: { flex: 1, backgroundColor: theme.colors.cream },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.cream },
-  container: { flexGrow: 1, paddingHorizontal: 24, paddingVertical: 20, justifyContent: 'center' },
-  hero: { marginTop: 42, marginBottom: 26 },
-  eyebrow: { color: theme.colors.plum, fontWeight: '800', letterSpacing: 1.5, fontSize: 12 },
-  title: { color: theme.colors.ink, fontSize: 34, lineHeight: 40, fontWeight: '700', marginTop: 8 },
-  body: { color: theme.colors.muted, fontSize: 16, lineHeight: 24, marginTop: 10 },
-  card: { backgroundColor: theme.colors.white, borderRadius: 24, padding: 20, borderWidth: 1, borderColor: theme.colors.line },
-  label: { color: theme.colors.ink, fontSize: 13, fontWeight: '700', marginBottom: 7, marginTop: 5 },
-  input: { borderWidth: 1, borderColor: theme.colors.line, backgroundColor: theme.colors.cream, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 13, fontSize: 16, color: theme.colors.ink, marginBottom: 13 },
-  error: { color: theme.colors.danger, fontSize: 13, lineHeight: 18, marginBottom: 10 },
-  button: { marginTop: 6, minHeight: 50, borderRadius: 15, backgroundColor: theme.colors.plum, alignItems: 'center', justifyContent: 'center' },
-  buttonDisabled: { opacity: 0.5 },
-  buttonPressed: { opacity: 0.82 },
-  buttonText: { color: theme.colors.white, fontSize: 16, fontWeight: '700' },
-  newAccountSection: {
+  loading: {
     alignItems: 'center',
-    borderTopColor: theme.colors.line,
-    borderTopWidth: 1,
-    marginTop: 22,
-    paddingTop: 20,
-  },
-  newAccountPrompt: { color: theme.colors.muted, fontSize: 14 },
-  createAccountButton: {
-    alignItems: 'center',
-    borderColor: theme.colors.plum,
-    borderRadius: 15,
-    borderWidth: 1,
+    backgroundColor: theme.colors.midnightIndigo,
+    flex: 1,
     justifyContent: 'center',
-    marginTop: 10,
-    minHeight: 50,
-    width: '100%',
   },
-  createAccountButtonText: { color: theme.colors.plum, fontSize: 16, fontWeight: '700' },
 });
