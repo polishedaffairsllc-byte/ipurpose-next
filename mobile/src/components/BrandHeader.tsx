@@ -3,7 +3,7 @@ import { BlurView } from 'expo-blur';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
-const COMPASS_LOGO_URI = 'https://www.ipurposesoul.com/images/my-logo.png';
+const COMPASS_LOGO = require('../../assets/brand/compass-logo.png');
 
 type BrandHeaderVariant = 'dark-background' | 'light-background';
 
@@ -23,7 +23,7 @@ export function BrandHeader({
     <View style={styles.row}>
       <BlurView intensity={40} tint="light" style={styles.markContainer}>
         <View style={styles.markInnerGlow} />
-        <Image accessibilityLabel="iPurpose Compass logo" source={{ uri: COMPASS_LOGO_URI }} style={styles.markImage} resizeMode="contain" />
+        <Image accessibilityLabel="iPurpose Compass logo" source={COMPASS_LOGO} style={styles.markImage} resizeMode="contain" />
       </BlurView>
       <View style={styles.wordmark}>
         <Text
