@@ -176,7 +176,7 @@ export default function HomeScreen() {
                     <Text style={styles.anchorName}>{profile.archetypePrimary}</Text>
                     {profile.identityAnchor ? <Text style={styles.anchorDescription}>{profile.identityAnchor}</Text> : null}
                   </>
-                ) : <Text style={styles.emptyText}>Your anchor will take shape as you use Compass.</Text>}
+                ) : <Text style={styles.emptyText}>Take your Clarity Check to find your anchor.</Text>}
               </BlurView>
             </Pressable>
           )}

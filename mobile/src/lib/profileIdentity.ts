@@ -15,13 +15,24 @@ export function getGreetingName(
   authDisplayName?: string | null,
   email?: string | null
 ): string | null {
-  const namedCandidate = [profileDisplayName, authDisplayName]
-    .map((value) => value?.trim())
-    .find(Boolean);
+  const getReliableFirstName = (value?: string | null) => {
+    const trimmedValue = value?.trim();
+    if (!trimmedValue) return null;
 
-  if (namedCandidate) return namedCandidate.split(/\s+/)[0];
+    const isHandleLike =
+      !/\s/.test(trimmedValue) && /[a-z][A-Z]/.test(trimmedValue);
+    if (isHandleLike) return null;
+
+    return trimmedValue.split(/\s+/)[0];
+  };
+
+  const namedCandidate = [profileDisplayName, authDisplayName]
+    .map(getReliableFirstName)
+    .find((value) => value !== null);
+
+  if (namedCandidate) return namedCandidate;
 
   const derivedDisplayName = getDisplayName(undefined, email);
   if (derivedDisplayName === 'iPurpose member') return null;
-  return derivedDisplayName.split(/\s+/)[0];
+  return getReliableFirstName(derivedDisplayName);
 }
