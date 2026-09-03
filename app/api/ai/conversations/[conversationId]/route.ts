@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
+import { requireAuthenticated } from "@/lib/apiEntitlementHelper";
 import {
   CompanionConversationError,
   getCompanionMessages,
@@ -12,11 +12,11 @@ interface RouteContext {
 }
 export async function GET(_request: Request, context: RouteContext) {
   try {
-    const entitlement = await requireBasicPaid();
-    if (entitlement.error) return entitlement.error;
+    const authentication = await requireAuthenticated();
+    if (authentication.error) return authentication.error;
 
     const { conversationId } = await context.params;
-    const messages = await getCompanionMessages(entitlement.uid, conversationId);
+    const messages = await getCompanionMessages(authentication.uid, conversationId);
     return NextResponse.json({ conversationId, messages });
   } catch (error) {
     if (error instanceof CompanionConversationError) {

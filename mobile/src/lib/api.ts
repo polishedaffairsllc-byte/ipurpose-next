@@ -1,6 +1,11 @@
 import { auth } from './firebase';
 import type { CompanionMessage, CompanionProfile, ConversationSummary, MentorResponse, ResponseMode } from '../types/companion';
 import type { VisualEnvironmentPreference } from './visualEnvironment';
+import type {
+  ClarityCheckSubmission,
+  OnboardingDraft,
+  OnboardingState,
+} from '../types/onboarding';
 
 const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ipurposesoul.com').replace(/\/$/, '');
 
@@ -49,8 +54,48 @@ export async function getCompanionProfile(): Promise<CompanionProfile> {
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }
+export async function getOnboardingState(): Promise<OnboardingState> {
+  const response = await authorizedFetch('/api/ai/onboarding', { method: 'GET' });
+  const data = await readJson<{ onboarding: OnboardingState }>(response);
+  return data.onboarding;
+}
+export async function saveOnboardingDraft(draft: OnboardingDraft): Promise<OnboardingState> {
+  const response = await authorizedFetch('/api/ai/onboarding', {
+    method: 'PATCH',
+    body: JSON.stringify(draft),
+  });
+  const data = await readJson<{ onboarding: OnboardingState }>(response);
+  return data.onboarding;
+}
+export async function completeOnboarding(): Promise<OnboardingState> {
+  const response = await authorizedFetch('/api/ai/onboarding', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  });
+  const data = await readJson<{ onboarding: OnboardingState }>(response);
+  return data.onboarding;
+}
+export async function submitClarityCheck(options: {
+  responses: Record<string, number>;
+  identityResponses: string[];
+  onboarding?: boolean;
+}): Promise<ClarityCheckSubmission> {
+  const response = await authorizedFetch('/api/clarity-check/submit', {
+    method: 'POST',
+    body: JSON.stringify(options),
+  });
+  return readJson<ClarityCheckSubmission>(response);
+}
 export async function updateCompanionFocusAreas(focusAreas: string[]): Promise<CompanionProfile> {
   const response = await authorizedFetch('/api/ai/profile', { method: 'PATCH', body: JSON.stringify({ focusAreas }) });
+  const data = await readJson<{ profile: CompanionProfile }>(response);
+  return data.profile;
+}
+export async function initializeCompanionFocusAreas(focusAreas: string[]): Promise<CompanionProfile> {
+  const response = await authorizedFetch('/api/ai/profile', {
+    method: 'PATCH',
+    body: JSON.stringify({ initializeFocusAreas: focusAreas }),
+  });
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }

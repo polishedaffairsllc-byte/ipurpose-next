@@ -9,7 +9,7 @@ import {
   inferLensFromMessage,
   type ResponseMode,
 } from "@/lib/ai/prompts/ipurposeMentorPrompts";
-import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
+import { requireAuthenticated } from "@/lib/apiEntitlementHelper";
 import { getOpenAI } from "@/app/api/gpt/utils/openai-client";
 import { checkRateLimit, recordRequest } from "@/app/api/gpt/utils/rate-limiter";
 import {
@@ -36,9 +36,9 @@ interface ChatRequest {
 }
 export async function POST(request: NextRequest) {
   try {
-    const entitlement = await requireBasicPaid();
-    if (entitlement.error) return entitlement.error;
-    const uid = entitlement.uid;
+    const authentication = await requireAuthenticated();
+    if (authentication.error) return authentication.error;
+    const uid = authentication.uid;
 
     const body = (await request.json().catch(() => null)) as ChatRequest | null;
     if (!body) {

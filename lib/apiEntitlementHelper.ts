@@ -64,6 +64,23 @@ export async function requirePaidTier() {
 }
 
 /**
+ * Verify the caller without imposing a product entitlement. This preserves the
+ * same native bearer-token and website session-cookie authentication boundary
+ * used by the paid helpers while allowing free Compass access.
+ */
+export async function requireAuthenticated() {
+  const { uid } = await checkEntitlement();
+
+  if (!uid) {
+    return {
+      error: NextResponse.json(fail('Unauthorized', 'No valid session found'), { status: 401 }),
+    };
+  }
+
+  return { uid };
+}
+
+/**
  * Check Deepening tier specifically
  * @returns { uid, tier } if Deepening, or error
  */
