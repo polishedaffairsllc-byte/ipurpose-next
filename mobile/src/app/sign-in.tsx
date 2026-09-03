@@ -5,17 +5,19 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
-import { Redirect } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { BrandHeader } from '../components/BrandHeader';
 import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
 
 export default function SignInScreen() {
+  const router = useRouter();
   const { user, loading, signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +51,11 @@ export default function SignInScreen() {
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <View style={styles.container}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           <BrandHeader
             subtitle="Your Soul → Systems → AI companion"
             variant="light-background"
@@ -89,6 +95,7 @@ export default function SignInScreen() {
             />
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <Pressable
+              accessibilityRole="button"
               onPress={handleSignIn}
               disabled={submitting || !email.trim() || !password}
               style={({ pressed }) => [
@@ -103,8 +110,24 @@ export default function SignInScreen() {
                 <Text style={styles.buttonText}>Sign in to iPurpose</Text>
               )}
             </Pressable>
+
+            <View style={styles.newAccountSection}>
+              <Text style={styles.newAccountPrompt}>New to iPurpose?</Text>
+              <Pressable
+                accessibilityLabel="Create a new iPurpose account"
+                accessibilityRole="button"
+                disabled={submitting}
+                onPress={() => router.push('/create-account')}
+                style={({ pressed }) => [
+                  styles.createAccountButton,
+                  pressed && styles.buttonPressed,
+                ]}
+              >
+                <Text style={styles.createAccountButtonText}>Create Account</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -114,7 +137,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   safe: { flex: 1, backgroundColor: theme.colors.cream },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.cream },
-  container: { flex: 1, paddingHorizontal: 24, paddingTop: 20, justifyContent: 'center' },
+  container: { flexGrow: 1, paddingHorizontal: 24, paddingVertical: 20, justifyContent: 'center' },
   hero: { marginTop: 42, marginBottom: 26 },
   eyebrow: { color: theme.colors.plum, fontWeight: '800', letterSpacing: 1.5, fontSize: 12 },
   title: { color: theme.colors.ink, fontSize: 34, lineHeight: 40, fontWeight: '700', marginTop: 8 },
@@ -127,4 +150,23 @@ const styles = StyleSheet.create({
   buttonDisabled: { opacity: 0.5 },
   buttonPressed: { opacity: 0.82 },
   buttonText: { color: theme.colors.white, fontSize: 16, fontWeight: '700' },
+  newAccountSection: {
+    alignItems: 'center',
+    borderTopColor: theme.colors.line,
+    borderTopWidth: 1,
+    marginTop: 22,
+    paddingTop: 20,
+  },
+  newAccountPrompt: { color: theme.colors.muted, fontSize: 14 },
+  createAccountButton: {
+    alignItems: 'center',
+    borderColor: theme.colors.plum,
+    borderRadius: 15,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: 10,
+    minHeight: 50,
+    width: '100%',
+  },
+  createAccountButtonText: { color: theme.colors.plum, fontSize: 16, fontWeight: '700' },
 });
