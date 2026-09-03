@@ -340,6 +340,29 @@ export default function AccountScreen() {
                     <Ionicons color={tokens.buttonText} name="arrow-forward" size={16} />
                   </Pressable>
                 </View>
+                <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
+                <View style={styles.clarityCheckBlock}>
+                  <Text style={styles.compassFieldLabel}>Clarity Check</Text>
+                  <Text style={styles.clarityCheckCopy}>
+                    Check in again when your direction or season changes.
+                  </Text>
+                  <Pressable
+                    accessibilityLabel="Retake Clarity Check"
+                    accessibilityRole="button"
+                    onPress={() => router.push('/clarity-check')}
+                    style={({ pressed }) => [
+                      styles.inlineAction,
+                      {
+                        backgroundColor: tokens.buttonBackground,
+                        borderColor: tokens.accentStrong,
+                      },
+                      pressed && styles.pressed,
+                    ]}
+                  >
+                    <Text style={[styles.inlineActionText, { color: tokens.buttonText }]}>Retake Clarity Check</Text>
+                    <Ionicons color={tokens.buttonText} name="refresh" size={16} />
+                  </Pressable>
+                </View>
               </View>
             )}
           </View>
@@ -588,6 +611,14 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   focusBlock: { paddingBottom: 18, paddingTop: 17 },
+  clarityCheckBlock: { paddingTop: 17 },
+  clarityCheckCopy: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 7,
+  },
   focusAreas: { gap: 8, marginTop: 10 },
   focusChip: {
     alignSelf: 'flex-start',

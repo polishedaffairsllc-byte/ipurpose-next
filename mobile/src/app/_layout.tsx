@@ -6,6 +6,7 @@ import { useFonts, Italiana_400Regular } from '@expo-google-fonts/italiana';
 import { Marcellus_400Regular } from '@expo-google-fonts/marcellus';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider } from '../context/AuthContext';
+import { OnboardingProvider } from '../context/OnboardingContext';
 import { VisualEnvironmentProvider } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
@@ -30,15 +31,17 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <VisualEnvironmentProvider>
-          <StatusBar style="dark" />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: theme.colors.cream },
-            }}
-          />
-        </VisualEnvironmentProvider>
+        <OnboardingProvider>
+          <VisualEnvironmentProvider>
+            <StatusBar style="dark" />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: theme.colors.cream },
+              }}
+            />
+          </VisualEnvironmentProvider>
+        </OnboardingProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

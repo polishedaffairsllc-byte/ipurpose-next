@@ -54,8 +54,8 @@ export const API_GATING_CONFIG = {
   // Community APIs - DEEPENING tier only
   '/api/community': 'DEEPENING',
 
-  // AI APIs - BASIC_PAID and above
-  '/api/ai': 'BASIC_PAID',
+  // Legacy streaming remains paid; authenticated Compass chat/profile routes
+  // enforce authentication in their route handlers and are free.
   '/api/ai/stream': 'BASIC_PAID',
 
   // Integration APIs - BASIC_PAID and above

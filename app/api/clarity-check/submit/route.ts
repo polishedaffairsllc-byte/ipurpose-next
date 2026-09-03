@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { sendFounderNotification, ClarityCheckScores } from '@/lib/email-automation';
+import { getRequestBearerAuth } from '@/lib/firebase/requestAuth';
 
 export const dynamic = 'force-dynamic';
 
 interface ClarityCheckRequest {
   email?: string;
-  responses: Record<number, number>;
+  responses: Record<string, number>;
   identityResponses?: string[];
+  onboarding?: boolean;
 }
 
-function calculateDimensionScores(responses: Record<number, number>) {
+function calculateDimensionScores(responses: Record<string, number>) {
   const internalClarity = (responses[1] || 0) + (responses[2] || 0);
   const readinessForSupport = (responses[3] || 0) + (responses[4] || 0);
   const frictionBetweenInsightAndAction = (responses[5] || 0) + (responses[6] || 0);
@@ -101,11 +103,28 @@ export async function POST(request: NextRequest) {
   try {
     const body: ClarityCheckRequest = await request.json();
     const { email, responses, identityResponses } = body;
+    const bearerAuth = await getRequestBearerAuth();
+    if (bearerAuth.attempted && !bearerAuth.uid) {
+      return NextResponse.json(
+        { error: bearerAuth.error || 'Invalid or expired bearer token' },
+        { status: 401 }
+      );
+    }
+
+    const authenticatedUser = bearerAuth.uid
+      ? await firebaseAdmin.auth().getUser(bearerAuth.uid)
+      : null;
 
     const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
-    const userEmail = normalizedEmail.length > 0 ? normalizedEmail : null;
+    const authenticatedEmail = authenticatedUser?.email?.trim().toLowerCase() || '';
+    const userEmail = authenticatedEmail || (normalizedEmail.length > 0 ? normalizedEmail : null);
 
-    if (!responses || Object.keys(responses).length !== 7) {
+    const responseKeys = responses ? Object.keys(responses).sort() : [];
+    if (
+      !responses
+      || responseKeys.length !== 7
+      || responseKeys.some((key, index) => key !== String(index + 1))
+    ) {
       return NextResponse.json(
         { error: 'All 7 state questions must be answered' },
         { status: 400 }
@@ -113,7 +132,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate all responses are between 1-5
-    for (const [key, value] of Object.entries(responses)) {
+    for (const value of Object.values(responses)) {
       if (typeof value !== 'number' || value < 1 || value > 5) {
         return NextResponse.json(
           { error: 'All responses must be a number between 1 and 5' },
@@ -126,6 +145,12 @@ export async function POST(request: NextRequest) {
     if (identityResponses && identityResponses.length !== 5) {
       return NextResponse.json(
         { error: 'All 5 identity questions must be answered' },
+        { status: 400 }
+      );
+    }
+    if (identityResponses?.some((answer) => !['A', 'B', 'C', 'D', 'E'].includes(answer))) {
+      return NextResponse.json(
+        { error: 'Identity responses must use the supported answer choices' },
         { status: 400 }
       );
     }
@@ -146,7 +171,7 @@ export async function POST(request: NextRequest) {
     // Store in clarityCheckSubmissions collection for founder intake
     let submissionDocId = '';
     try {
-      const submissionData: any = {
+      const submissionData: Record<string, unknown> = {
         email: userEmail,
         responses,
         scores,
@@ -158,6 +183,8 @@ export async function POST(request: NextRequest) {
         createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
       };
 
+      if (bearerAuth.uid) submissionData.uid = bearerAuth.uid;
+
       // Add identity fields if available
       if (identityType) {
         submissionData.identityType = identityType;
@@ -165,16 +192,54 @@ export async function POST(request: NextRequest) {
         submissionData.identityResponses = identityResponses;
       }
 
-      const docRef = await firebaseAdmin
-        .firestore()
-        .collection('clarityCheckSubmissions')
-        .add(submissionData);
+      const db = firebaseAdmin.firestore();
+      const docRef = db.collection('clarityCheckSubmissions').doc();
+
+      if (bearerAuth.uid && identityType) {
+        const userRef = db.collection('users').doc(bearerAuth.uid);
+        await db.runTransaction(async (transaction) => {
+          const userDocument = await transaction.get(userRef);
+          const userData = userDocument.data() || {};
+          const onboarding = userData.compassOnboarding
+            && typeof userData.compassOnboarding === 'object'
+            ? userData.compassOnboarding as Record<string, unknown>
+            : {};
+          const shouldKeepOnboardingPartial = body.onboarding === true
+            && onboarding.status !== 'complete'
+            && (onboarding.status === 'in_progress' || !userData.archetypePrimary);
+
+          transaction.set(docRef, submissionData);
+          transaction.set(
+            userRef,
+            {
+              archetypePrimary: identityType,
+              archetypeSecondary: null,
+              archetypeSource: 'clarity_check',
+              archetypeUpdatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+              ...(shouldKeepOnboardingPartial ? {
+                compassOnboarding: {
+                  ...onboarding,
+                  status: 'in_progress',
+                  currentStep: 14,
+                  claritySubmissionId: docRef.id,
+                  updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+                },
+              } : {}),
+              updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
+        });
+      } else {
+        await docRef.set(submissionData);
+      }
       submissionDocId = docRef.id;
       console.log('Clarity check submission stored:', { id: submissionDocId, email: userEmail ?? 'not_provided', identityType });
 
-      // SYNC TO USER PROFILE: Save identityType to users.archetypePrimary
-      // This makes it accessible across all pages without querying clarityCheckSubmissions
-      if (identityType && userEmail) {
+      // Preserve the legacy public-web sync as fill-if-empty. Authenticated
+      // native submissions use the verified UID transaction above and may
+      // intentionally update the archetype on a fresh retake.
+      if (!bearerAuth.uid && identityType && userEmail) {
         try {
           // Find user by email
           const usersSnapshot = await firebaseAdmin
@@ -207,7 +272,15 @@ export async function POST(request: NextRequest) {
       }
     } catch (firestoreError) {
       console.error('Firestore error storing submission:', firestoreError);
-      // Continue anyway—we'll still return results
+      // The public website historically returns the calculated result when
+      // intake storage is unavailable. Native onboarding cannot do that: its
+      // verified profile/archetype write is part of the completion contract.
+      if (bearerAuth.uid) {
+        return NextResponse.json(
+          { error: 'Failed to save Clarity Check' },
+          { status: 500 }
+        );
+      }
     }
 
     // Always notify founder on every quiz completion (step 1)

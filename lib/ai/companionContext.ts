@@ -12,6 +12,7 @@ import {
   getVisualEnvironmentPreference,
   type VisualEnvironmentPreference,
 } from "@/lib/ai/visualEnvironmentPreference";
+import { hasExistingFocus } from "@/lib/ai/profileFocus";
 
 const LAB_IDS = ["identity", "meaning", "agency"] as const;
 const RECENT_CHECK_IN_LIMIT = 5;
@@ -135,6 +136,35 @@ export async function updateCompanionFocusAreas(
     },
     { merge: true }
   );
+
+  return getCompanionProfile(uid);
+}
+
+/** Initialize focus without replacing any current or legacy focus source. */
+export async function initializeCompanionFocusAreas(
+  uid: string,
+  focusAreas: string[]
+): Promise<CompanionProfileContext> {
+  const normalized = focusAreas
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+  const userRef = firebaseAdmin.firestore().collection("users").doc(uid);
+
+  await firebaseAdmin.firestore().runTransaction(async (transaction) => {
+    const userDocument = await transaction.get(userRef);
+    const data = userDocument.exists ? asRecord(userDocument.data()) : {};
+    if (hasExistingFocus(data)) return;
+
+    transaction.set(
+      userRef,
+      {
+        focusAreas: normalized,
+        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  });
 
   return getCompanionProfile(uid);
 }
