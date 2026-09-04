@@ -7,6 +7,10 @@ import {
 } from '../lib/ai/companionOnboarding';
 import { hasExistingFocus } from '../lib/ai/profileFocus';
 import { getOnboardingRedirect } from '../mobile/src/lib/onboarding';
+import {
+  getTimezoneDisplayName,
+  searchTimezoneOptions,
+} from '../mobile/src/lib/timezoneOptions';
 import { getRequiredTierForAPI } from '../app/lib/auth/entitlements';
 
 test('brand-new users are detected without client-only state', () => {
@@ -209,4 +213,12 @@ test('retakes return to Account before any onboarding focus or completion write'
   assert.ok(accountNavigation > retakeGuard);
   assert.ok(earlyReturn > accountNavigation);
   assert.ok(focusWrite > earlyReturn);
+});
+
+test('timezone search resolves city and country names to canonical values', () => {
+  assert.equal(searchTimezoneOptions('Venezuela')[0]?.timezone, 'America/Caracas');
+  assert.equal(searchTimezoneOptions('Caracas')[0]?.timezone, 'America/Caracas');
+  assert.equal(searchTimezoneOptions('London')[0]?.timezone, 'Europe/London');
+  assert.equal(searchTimezoneOptions('Chicago')[0]?.timezone, 'America/Chicago');
+  assert.equal(getTimezoneDisplayName('America/Caracas'), 'Caracas, Venezuela');
 });

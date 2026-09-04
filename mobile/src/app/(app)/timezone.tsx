@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -17,6 +17,10 @@ import { useRouter } from 'expo-router';
 import { BrandHeader } from '../../components/BrandHeader';
 import { useVisualEnvironment } from '../../context/VisualEnvironmentContext';
 import { normalizeIanaTimezone } from '../../lib/timezone';
+import {
+  getTimezoneDisplayName,
+  searchTimezoneOptions,
+} from '../../lib/timezoneOptions';
 import { theme } from '../../theme';
 
 export default function TimezoneScreen() {
@@ -30,6 +34,7 @@ export default function TimezoneScreen() {
     confirmTimezone,
   } = useVisualEnvironment();
   const [timezone, setTimezone] = useState(effectiveTimezone);
+  const [search, setSearch] = useState('');
   const [edited, setEdited] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,9 +47,11 @@ export default function TimezoneScreen() {
   const unchanged = Boolean(
     savedTimezone && normalizedTimezone === savedTimezone
   );
+  const timezoneOptions = useMemo(() => searchTimezoneOptions(search), [search]);
 
   function chooseDeviceTimezone() {
     setTimezone(deviceTimezone);
+    setSearch('');
     setEdited(true);
     setError(null);
   }
@@ -52,7 +59,7 @@ export default function TimezoneScreen() {
   async function saveTimezone() {
     if (saving) return;
     if (!normalizedTimezone) {
-      setError('Enter a valid IANA timezone, such as America/New_York.');
+      setError('Choose a valid city or country from the list.');
       return;
     }
 
@@ -131,20 +138,18 @@ export default function TimezoneScreen() {
                 },
               ]}
             >
-              <Text style={styles.label}>IANA TIMEZONE</Text>
+              <Text style={styles.label}>SEARCH CITY OR COUNTRY</Text>
               <TextInput
-                accessibilityLabel="Timezone"
-                autoCapitalize="none"
+                accessibilityLabel="Search for a city or country"
                 autoCorrect={false}
                 editable={!loading && !saving}
                 onChangeText={(value) => {
-                  setTimezone(value);
-                  setEdited(true);
+                  setSearch(value);
                   setError(null);
                 }}
-                placeholder="America/New_York"
+                placeholder="Try Caracas, Venezuela, or London"
                 placeholderTextColor={theme.colors.muted}
-                returnKeyType="done"
+                returnKeyType="search"
                 style={[
                   styles.input,
                   {
@@ -152,11 +157,53 @@ export default function TimezoneScreen() {
                     borderColor: error ? theme.colors.salmonPeach : tokens.surfaceBorder,
                   },
                 ]}
-                value={timezone}
+                value={search}
               />
               <Text style={styles.hint}>
-                Use a region and city, such as America/Chicago or Europe/London.
+                Choose the closest city. Compass will save the correct timezone automatically.
               </Text>
+
+              <View style={[styles.results, { borderColor: tokens.surfaceBorder }]}>
+                {timezoneOptions.length ? timezoneOptions.map((option) => {
+                  const selected = normalizedTimezone === option.timezone
+                    || (normalizedTimezone
+                      ? option.equivalentTimezones.includes(normalizedTimezone)
+                      : false);
+                  return (
+                    <Pressable
+                      accessibilityLabel={`Use ${option.city}, ${option.country}`}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      disabled={loading || saving}
+                      key={`${option.city}-${option.timezone}`}
+                      onPress={() => {
+                        setTimezone(option.timezone);
+                        setSearch('');
+                        setEdited(true);
+                        setError(null);
+                      }}
+                      style={({ pressed }) => [
+                        styles.resultChoice,
+                        { borderBottomColor: tokens.surfaceBorder },
+                        (pressed || selected) && { backgroundColor: tokens.accentSoft },
+                      ]}
+                    >
+                      <View style={styles.resultCopy}>
+                        <Text style={styles.resultCity}>{option.city}</Text>
+                        <Text style={styles.resultCountry}>{option.country}</Text>
+                      </View>
+                      {selected ? (
+                        <Ionicons color={tokens.accentStrong} name="checkmark-circle" size={20} />
+                      ) : null}
+                    </Pressable>
+                  );
+                }) : (
+                  <Text style={styles.noResults}>No matching location. Try a nearby major city.</Text>
+                )}
+              </View>
+
+              <Text style={[styles.selectionLabel, { color: tokens.accentStrong }]}>SELECTED TIMEZONE</Text>
+              <Text style={styles.selectionValue}>{getTimezoneDisplayName(timezone)}</Text>
 
               <Pressable
                 accessibilityLabel={`Use device timezone ${deviceTimezone}`}
@@ -177,7 +224,7 @@ export default function TimezoneScreen() {
                 </View>
                 <View style={styles.deviceCopy}>
                   <Text style={styles.deviceLabel}>Use device timezone</Text>
-                  <Text style={styles.deviceValue}>{deviceTimezone}</Text>
+                  <Text style={styles.deviceValue}>{getTimezoneDisplayName(deviceTimezone)}</Text>
                 </View>
                 <Ionicons
                   color={tokens.accentStrong}
@@ -188,7 +235,7 @@ export default function TimezoneScreen() {
 
               {savedTimezone ? (
                 <Text style={[styles.savedNote, { color: tokens.accentStrong }]}>
-                  Currently saved · {savedTimezone}
+                  Currently saved · {getTimezoneDisplayName(savedTimezone)}
                 </Text>
               ) : (
                 <Text style={styles.fallbackNote}>
@@ -293,6 +340,52 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 17,
     marginTop: 7,
+  },
+  results: {
+    borderRadius: 16,
+    borderWidth: 1,
+    marginTop: 12,
+    overflow: 'hidden',
+  },
+  resultChoice: {
+    alignItems: 'center',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    minHeight: 54,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+  },
+  resultCopy: { flex: 1 },
+  resultCity: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+  },
+  resultCountry: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 11,
+    marginTop: 2,
+  },
+  noResults: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+    lineHeight: 18,
+    padding: 14,
+  },
+  selectionLabel: {
+    fontFamily: theme.fonts.body,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1.1,
+    marginTop: 18,
+  },
+  selectionValue: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 15,
+    marginTop: 5,
   },
   deviceChoice: {
     alignItems: 'center',
