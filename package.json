@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@vvo/tzdb": "^6.198.0",
     "canvg": "^4.0.3",
     "clsx": "^2.1.1",
     "firebase": "^10.14.1",

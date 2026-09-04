@@ -130,7 +130,7 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
 
   const confirmTimezone = useCallback(async (timezone: string) => {
     const normalized = normalizeIanaTimezone(timezone);
-    if (!normalized) throw new Error('Enter a valid IANA timezone.');
+    if (!normalized) throw new Error('Choose a valid timezone.');
 
     const profile = await updateCompanionTimezone(normalized);
     setSavedTimezone(normalizeIanaTimezone(profile.timezone) ?? normalized);
