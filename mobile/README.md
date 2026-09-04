@@ -41,16 +41,19 @@ signed builds use the committed build number and version code exactly.
 
 Before the first cloud build, the app owner must:
 
-1. Provide an approved opaque 1024×1024 PNG app icon plus approved Android
-   adaptive-icon foreground/background assets.
-2. Provide an approved 1024×1024 transparent PNG splash icon and confirm its
-   solid background color.
-3. Log in to the intended Expo owner account and link this directory to the
+1. Log in to the intended Expo owner account and link this directory to the
    intended existing EAS project.
-4. Add every variable in `.env.example` as project-scoped plaintext values in
+2. Add every variable in `.env.example` as project-scoped plaintext values in
    both the EAS `preview` and `production` environments.
-5. Configure EAS-managed Apple distribution credentials and an EAS-managed
+3. Configure EAS-managed Apple distribution credentials and an EAS-managed
    Android release keystore. Do not commit credentials or keystores.
+
+Approved release artwork is stored in `assets/release/`. Expo uses the opaque
+`app-icon.png`, the transparent `adaptive-icon-foreground.png`, the solid deep
+indigo `adaptive-icon-background.png`, and the transparent `splash-mark.png`.
+The splash background and adaptive-icon fallback are the approved deep indigo
+token, `#4B4E6D`. `play-store-icon.png` is the 512×512 Google Play listing asset
+and is intentionally not referenced by runtime app configuration.
 
 The production API base must remain `https://ipurposesoul.com` without `www`. The Firebase values are public client configuration and are embedded in the app bundle; no Firebase Admin credential belongs in this mobile project.
 

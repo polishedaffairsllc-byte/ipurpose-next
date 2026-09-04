@@ -4,12 +4,22 @@
     "slug": "ipurpose-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/release/app-icon.png",
     "scheme": "ipurpose",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#4B4E6D",
+          "image": "./assets/release/splash-mark.png",
+          "imageWidth": 260,
+          "resizeMode": "contain"
+        }
+      ]
     ],
     "ios": {
       "supportsTablet": false,
@@ -19,6 +29,11 @@
     "android": {
       "package": "com.ipurpose.mobile",
       "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/release/adaptive-icon-foreground.png",
+        "backgroundImage": "./assets/release/adaptive-icon-background.png",
+        "backgroundColor": "#4B4E6D"
+      },
       "blockedPermissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW",
