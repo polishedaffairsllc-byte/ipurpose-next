@@ -39,6 +39,11 @@ async function readJson<T>(response: Response): Promise<T> {
   return data;
 }
 
+export async function deleteIPurposeAccount(): Promise<void> {
+  const response = await authorizedFetch('/api/account', { method: 'DELETE' }, true);
+  await readJson<{ success: true }>(response);
+}
+
 export async function getConversations(): Promise<ConversationSummary[]> {
   const response = await authorizedFetch('/api/ai/conversations', { method: 'GET' });
   const data = await readJson<{ conversations: ConversationSummary[] }>(response);

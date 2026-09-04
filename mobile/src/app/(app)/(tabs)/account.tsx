@@ -2,11 +2,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -85,10 +89,14 @@ function CompassField({
 
 export default function AccountScreen() {
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, deleteAccount, signOut } = useAuth();
   const { tokens, savedTimezone, effectiveTimezone } = useVisualEnvironment();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -139,6 +147,47 @@ export default function AccountScreen() {
     } catch {
       setSignOutError('We could not sign you out. Please try again.');
       setSigningOut(false);
+    }
+  }
+
+  function openDeleteConfirmation() {
+    setDeletePassword('');
+    setDeleteError(null);
+    setDeleteModalVisible(true);
+  }
+
+  function closeDeleteConfirmation() {
+    if (deletingAccount) return;
+    setDeleteModalVisible(false);
+    setDeletePassword('');
+    setDeleteError(null);
+  }
+
+  async function handleDeleteAccount() {
+    if (deletingAccount || !deletePassword) return;
+    setDeletingAccount(true);
+    setDeleteError(null);
+
+    try {
+      await deleteAccount(deletePassword);
+    } catch (error) {
+      const code = typeof error === 'object' && error && 'code' in error
+        ? String(error.code)
+        : '';
+      if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        setDeleteError('That password did not match this account. Please try again.');
+      } else if (code === 'auth/too-many-requests') {
+        setDeleteError('Too many attempts. Please wait a little while and try again.');
+      } else if (code === 'auth/requires-recent-login') {
+        setDeleteError('For your security, sign in again and then retry account deletion.');
+      } else {
+        setDeleteError(
+          error instanceof Error
+            ? error.message
+            : 'We could not delete your account. Nothing was converted into a sign-out.'
+        );
+      }
+      setDeletingAccount(false);
     }
   }
 
@@ -429,12 +478,98 @@ export default function AccountScreen() {
                 </>
               )}
             </Pressable>
+
+            <View style={[styles.accountDivider, { backgroundColor: tokens.surfaceBorder }]} />
+            <Text style={styles.deleteAccountIntro}>
+              Permanently remove your iPurpose profile, Clarity Check results,
+              Compass history, and Firebase sign-in.
+            </Text>
+            <Pressable
+              accessibilityLabel="Delete iPurpose account"
+              accessibilityRole="button"
+              disabled={signingOut || deletingAccount}
+              onPress={openDeleteConfirmation}
+              style={({ pressed }) => [
+                styles.deleteAccountButton,
+                { backgroundColor: tokens.surface, borderColor: theme.colors.salmonPeach },
+                (pressed || signingOut || deletingAccount) && styles.pressed,
+              ]}
+            >
+              <Ionicons color={theme.colors.deepIndigo} name="trash-outline" size={20} />
+              <Text style={styles.deleteAccountText}>Delete account</Text>
+            </Pressable>
           </View>
 
           <Text style={styles.privacyNote}>
             Your information is used only to provide your authenticated iPurpose experience.
           </Text>
         </ScrollView>
+
+        <Modal
+          animationType="fade"
+          onRequestClose={closeDeleteConfirmation}
+          presentationStyle="overFullScreen"
+          transparent
+          visible={deleteModalVisible}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={styles.modalBackdrop}
+          >
+            <View
+              accessibilityViewIsModal
+              style={[styles.deleteModal, { backgroundColor: tokens.surface }]}
+            >
+              <View style={[styles.deleteModalIcon, { backgroundColor: tokens.surfaceTint }]}>
+                <Ionicons color={theme.colors.deepIndigo} name="warning-outline" size={25} />
+              </View>
+              <Text style={styles.deleteModalTitle}>Delete your account?</Text>
+              <Text style={styles.deleteModalBody}>
+                This permanently deletes your account and iPurpose data. This action cannot be undone.
+              </Text>
+              <Text style={styles.deletePasswordLabel}>Confirm with your password</Text>
+              <TextInput
+                accessibilityLabel="Password to confirm account deletion"
+                autoCapitalize="none"
+                autoComplete="current-password"
+                editable={!deletingAccount}
+                onChangeText={setDeletePassword}
+                placeholder="Password"
+                placeholderTextColor={theme.colors.muted}
+                secureTextEntry
+                style={[styles.deletePasswordInput, { borderColor: tokens.surfaceBorder }]}
+                value={deletePassword}
+              />
+              {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
+              <Pressable
+                accessibilityLabel="Permanently delete account"
+                accessibilityRole="button"
+                disabled={deletingAccount || !deletePassword}
+                onPress={handleDeleteAccount}
+                style={({ pressed }) => [
+                  styles.confirmDeleteButton,
+                  { backgroundColor: theme.colors.deepIndigo },
+                  (pressed || deletingAccount || !deletePassword) && styles.confirmDeleteDisabled,
+                ]}
+              >
+                {deletingAccount ? (
+                  <ActivityIndicator color={theme.colors.white} />
+                ) : (
+                  <Text style={styles.confirmDeleteText}>Permanently delete account</Text>
+                )}
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Cancel account deletion"
+                accessibilityRole="button"
+                disabled={deletingAccount}
+                onPress={closeDeleteConfirmation}
+                style={({ pressed }) => [styles.cancelDeleteButton, pressed && styles.pressed]}
+              >
+                <Text style={styles.cancelDeleteText}>Cancel</Text>
+              </Pressable>
+            </View>
+          </KeyboardAvoidingView>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -706,6 +841,111 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   signOutText: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+  },
+  accountDivider: { height: StyleSheet.hairlineWidth, marginTop: 22 },
+  deleteAccountIntro: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 18,
+  },
+  deleteAccountButton: {
+    alignItems: 'center',
+    borderRadius: 18,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 9,
+    justifyContent: 'center',
+    marginTop: 12,
+    minHeight: 54,
+    paddingHorizontal: 18,
+  },
+  deleteAccountText: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+  },
+  modalBackdrop: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(27, 29, 51, 0.64)',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  deleteModal: {
+    borderRadius: 26,
+    maxWidth: 420,
+    padding: 24,
+    width: '100%',
+  },
+  deleteModalIcon: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 25,
+    height: 50,
+    justifyContent: 'center',
+    width: 50,
+  },
+  deleteModalTitle: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.heading,
+    fontSize: 25,
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  deleteModalBody: {
+    color: theme.colors.muted,
+    fontFamily: theme.fonts.body,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  deletePasswordLabel: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 11,
+    letterSpacing: 0.5,
+    marginTop: 22,
+    textTransform: 'uppercase',
+  },
+  deletePasswordInput: {
+    borderRadius: 16,
+    borderWidth: 1,
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 15,
+    marginTop: 8,
+    minHeight: 52,
+    paddingHorizontal: 14,
+  },
+  deleteError: {
+    color: theme.colors.deepIndigo,
+    fontFamily: theme.fonts.body,
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 10,
+  },
+  confirmDeleteButton: {
+    alignItems: 'center',
+    borderRadius: 18,
+    justifyContent: 'center',
+    marginTop: 18,
+    minHeight: 54,
+    paddingHorizontal: 18,
+  },
+  confirmDeleteDisabled: { opacity: 0.48 },
+  confirmDeleteText: {
+    color: theme.colors.white,
+    fontFamily: theme.fonts.body,
+    fontSize: 14,
+  },
+  cancelDeleteButton: { alignItems: 'center', marginTop: 10, padding: 12 },
+  cancelDeleteText: {
     color: theme.colors.deepIndigo,
     fontFamily: theme.fonts.body,
     fontSize: 14,
