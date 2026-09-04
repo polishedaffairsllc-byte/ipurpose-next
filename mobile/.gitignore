@@ -6,3 +6,8 @@ web-build/
 .env
 .env.local
 .DS_Store
+credentials.json
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
