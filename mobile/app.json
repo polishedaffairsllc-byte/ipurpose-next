@@ -40,6 +40,13 @@
         "android.permission.VIBRATE",
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fae9cc3c-4a0b-461a-b661-a9a5c6616ce3"
+      }
+    },
+    "owner": "ipurpose"
   }
 }
