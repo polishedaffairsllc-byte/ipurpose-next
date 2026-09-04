@@ -1,17 +1,21 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
   onAuthStateChanged,
+  reauthenticateWithCredential,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   type User,
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { deleteIPurposeAccount } from '../lib/api';
 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
   createAccount: (email: string, password: string) => Promise<void>;
+  deleteAccount: (password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -34,6 +38,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     createAccount: async (email, password) => {
       await createUserWithEmailAndPassword(auth, email.trim(), password);
+    },
+    deleteAccount: async (password) => {
+      const currentUser = auth.currentUser;
+      if (!currentUser?.email) throw new Error('Please sign in again before deleting your account.');
+
+      const credential = EmailAuthProvider.credential(currentUser.email, password);
+      await reauthenticateWithCredential(currentUser, credential);
+      await deleteIPurposeAccount();
+      await firebaseSignOut(auth);
     },
     signIn: async (email, password) => {
       await signInWithEmailAndPassword(auth, email.trim(), password);

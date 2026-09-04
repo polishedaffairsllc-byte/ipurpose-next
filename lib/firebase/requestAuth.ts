@@ -4,6 +4,7 @@ import { firebaseAdmin } from "@/lib/firebaseAdmin";
 export interface RequestBearerAuth {
   attempted: boolean;
   uid: string | null;
+  authTime?: number;
   error?: string;
 }
 
@@ -31,7 +32,11 @@ export async function getRequestBearerAuth(): Promise<RequestBearerAuth> {
 
   try {
     const decoded = await firebaseAdmin.auth().verifyIdToken(parts[1], true);
-    return { attempted: true, uid: decoded.uid };
+    return {
+      attempted: true,
+      uid: decoded.uid,
+      authTime: typeof decoded.auth_time === "number" ? decoded.auth_time : undefined,
+    };
   } catch {
     return {
       attempted: true,

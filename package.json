@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:onboarding": "node --import tsx --test tests/onboarding.node.ts",
+    "test:account-deletion": "node --import tsx --test tests/account-deletion.node.ts",
     "crawl": "node scripts/crawl-routes.mjs",
     "crawl:vercel": "BASE_URL=https://ipurpose-fix-api-params-and-public-routes.vercel.app node scripts/crawl-routes.mjs",
     "crawl:local": "BASE_URL=http://localhost:3000 node scripts/crawl-routes.mjs",
