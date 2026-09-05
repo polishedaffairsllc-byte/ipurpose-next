@@ -9,7 +9,7 @@ export default async function NavBar() {
   const pathname = headersList.get("x-pathname") || "";
   
   // Only show on protected/internal routes
-  const publicRoutes = ["/login", "/signup", "/", "/clarity-check", "/discover", "/about", "/program", "/contact", "/privacy", "/terms", "/google-review", "/info-session"];
+  const publicRoutes = ["/login", "/signup", "/", "/clarity-check", "/discover", "/about", "/program", "/contact", "/privacy", "/delete-account", "/terms", "/google-review", "/info-session"];
   const isPublic = publicRoutes.includes(pathname) || pathname.startsWith("/api");
   
   if (isPublic) {

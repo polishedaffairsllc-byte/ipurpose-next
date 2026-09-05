@@ -84,6 +84,14 @@ export default function Footer() {
             </Link>
             <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
             <Link
+              href="/delete-account"
+              className="hover:opacity-80 transition-colors"
+              style={{ fontSize: '28px', color: '#FFFFFF' }}
+            >
+              Delete Account
+            </Link>
+            <span style={{ fontSize: '28px', color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.5rem' }}>|</span>
+            <Link
               href="/terms"
               className="hover:opacity-80 transition-colors"
               style={{ fontSize: '28px', color: '#FFFFFF' }}
