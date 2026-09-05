@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Delete Your Account | iPurpose",
   description:
     "Learn how to delete your iPurpose account and associated user data from the mobile app or request help from iPurpose support.",
+  alternates: {
+    canonical: "https://ipurposesoul.com/delete-account",
+  },
   robots: "index, follow",
   openGraph: {
     title: "Delete Your Account | iPurpose",
