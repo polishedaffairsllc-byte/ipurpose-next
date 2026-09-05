@@ -21,6 +21,7 @@ const PUBLIC_ROUTES: string[] = [
   '/info-session',
   '/contact',
   '/privacy',
+  '/delete-account',
   '/terms',
   '/google-review',
   '/starter-pack',
@@ -81,4 +82,3 @@ export async function onProxy(request: NextRequest) {
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|videos).*)'],
 };
-

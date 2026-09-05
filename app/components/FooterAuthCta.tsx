@@ -12,6 +12,7 @@ const publicRoutes = new Set([
   '/discover',
   '/program',
   '/clarity-check',
+  '/delete-account',
   '/signup',
   '/login',
   '/orientation',

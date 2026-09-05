@@ -85,6 +85,7 @@ export default function SupportPage() {
               <p className="text-body text-white/75">Your data and safety are important to us.</p>
               <div className="space-y-2">
                 <Link href="/privacy" className="block text-body-small text-white/80 hover:text-white">Privacy Policy</Link>
+                <Link href="/delete-account" className="block text-body-small text-white/80 hover:text-white">Delete your account</Link>
                 <Link href="/terms" className="block text-body-small text-white/80 hover:text-white">Terms of Service</Link>
                 <Link href="/contact" className="block text-body-small text-white/80 hover:text-white">Report a concern</Link>
               </div>
