@@ -48,6 +48,13 @@ export function middleware(request: NextRequest) {
       status: 301,
     });
   }
+
+  // Permanently consolidate the legacy ad URL without dropping tracking parameters.
+  if (pathname === '/clarity-check-numeric') {
+    const destination = request.nextUrl.clone();
+    destination.pathname = '/clarity-check-quiz';
+    return NextResponse.redirect(destination, { status: 301 });
+  }
   
   // Allow request to continue if on canonical domain or unrecognized host
   return NextResponse.next();
