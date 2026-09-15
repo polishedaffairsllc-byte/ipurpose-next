@@ -35,13 +35,13 @@ export default function DeleteAccountPage() {
 
         <main className="mx-auto max-w-4xl space-y-8 px-6 py-12 sm:px-10 sm:py-16 lg:px-12 lg:py-20">
           <header className="mx-auto max-w-3xl space-y-4 text-center">
-            <p className="text-caption uppercase tracking-[0.2em] text-white/60">
+            <p className="text-caption uppercase tracking-[0.2em] text-[#D7D8E3]">
               Account &amp; privacy
             </p>
             <h1 className="font-italiana text-4xl text-white sm:text-5xl">
               Delete your iPurpose account
             </h1>
-            <p className="text-body mx-auto max-w-2xl text-white/80">
+            <p className="text-body mx-auto max-w-2xl text-[#ECECF3]">
               You can permanently delete your account and associated iPurpose user data from
               inside the mobile app. This action cannot be undone.
             </p>
@@ -52,7 +52,7 @@ export default function DeleteAccountPage() {
               Delete in the mobile app
             </p>
             <h2 className="mt-2 font-marcellus text-2xl text-white">The fastest option</h2>
-            <ol className="mt-5 space-y-3 text-body text-white/80">
+            <ol className="mt-5 space-y-3 text-body text-[#ECECF3]">
               <li><strong className="text-white">1.</strong> Sign in to the iPurpose mobile app.</li>
               <li><strong className="text-white">2.</strong> Open the <strong>Account</strong> tab and scroll to <strong>Delete account</strong>.</li>
               <li><strong className="text-white">3.</strong> Read the warning and enter your password to confirm your identity.</li>
@@ -62,7 +62,7 @@ export default function DeleteAccountPage() {
 
           <section className="rounded-3xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
             <h2 className="font-marcellus text-2xl text-white">If you cannot access the app</h2>
-            <p className="mt-3 text-body text-white/80">
+            <p className="mt-3 text-body text-[#ECECF3]">
               Email us from the address associated with your iPurpose account and ask us to
               delete your account and associated user data. We may need to verify that you own
               the account before completing the request.
@@ -73,7 +73,7 @@ export default function DeleteAccountPage() {
             >
               Email {supportEmail}
             </a>
-            <p className="mt-4 text-body-small text-white/60">
+            <p className="mt-4 text-body-small text-[#D7D8E3]">
               Include the email address used for the account. Do not email your password,
               payment-card details, or identity documents.
             </p>
@@ -82,7 +82,7 @@ export default function DeleteAccountPage() {
           <div className="grid gap-6 md:grid-cols-2">
             <section className="rounded-3xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
               <h2 className="font-marcellus text-2xl text-white">What is deleted</h2>
-              <p className="mt-3 text-body text-white/75">
+              <p className="mt-3 text-body text-[#E2E3EB]">
                 Account deletion removes your sign-in account and user data associated with it,
                 including your profile and preferences, Clarity Check and onboarding data,
                 Current Focus, Compass conversations, and saved progress or responses.
@@ -91,7 +91,7 @@ export default function DeleteAccountPage() {
 
             <section className="rounded-3xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
               <h2 className="font-marcellus text-2xl text-white">Limited data retention</h2>
-              <p className="mt-3 text-body text-white/75">
+              <p className="mt-3 text-body text-[#E2E3EB]">
                 We may retain limited records only when required or permitted for legal,
                 accounting, fraud-prevention, dispute-resolution, or security obligations, and
                 only for as long as those obligations reasonably require.
@@ -101,7 +101,7 @@ export default function DeleteAccountPage() {
 
           <section className="rounded-3xl border border-[#E6C87C]/30 bg-[#E6C87C]/10 p-6 sm:p-8">
             <h2 className="font-marcellus text-2xl text-white">Purchases and shared spaces</h2>
-            <div className="mt-3 space-y-3 text-body text-white/80">
+            <div className="mt-3 space-y-3 text-body text-[#ECECF3]">
               <p>
                 Purchase records may be retained for legal, accounting, fraud-prevention, or
                 security obligations. When retained, they are disconnected from the deleted
@@ -115,7 +115,7 @@ export default function DeleteAccountPage() {
             </div>
           </section>
 
-          <section className="text-center text-body text-white/75">
+          <section className="text-center text-body text-[#E2E3EB]">
             <p>
               Questions about account deletion? Contact{" "}
               <a className="text-[#E6C87C] underline underline-offset-4" href={supportHref}>
