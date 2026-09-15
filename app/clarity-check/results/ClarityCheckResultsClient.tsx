@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import PrintButton from './PrintButton';
-import { trackClarityCheckCompleted } from '@/lib/analytics';
+import { trackConfirmedEmailSignup } from '@/lib/launch-metrics/events';
 import { useUTMParams } from '@/lib/hooks/useUTMParams';
 
 interface SubmissionData {
@@ -48,14 +48,13 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
   const [captureError, setCaptureError] = useState('');
   const utmParams = useUTMParams();
 
-  // Track clarity check completion when results are viewed
+  // Saved-result revisits are not new completions.
   useEffect(() => {
-    trackClarityCheckCompleted(submission.email);
     // Mark quiz as completed in localStorage for nav visibility
     if (typeof window !== 'undefined') {
       localStorage.setItem('clarityCheckCompleted', 'true');
     }
-  }, [submission.email]);
+  }, []);
 
   const handleEmailCapture = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +75,7 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
       }
 
       if (data.ok) {
+        trackConfirmedEmailSignup(data);
         setCaptureSubmitted(true);
         // Fire Google Ads conversion tag on successful lead capture
         if (typeof window !== 'undefined' && window.gtag) {

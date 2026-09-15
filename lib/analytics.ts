@@ -3,6 +3,9 @@
  * Handles event tracking for conversions, user interactions, and funnel metrics
  */
 
+import { emitLaunchEvent } from './launch-metrics/events';
+import { LAUNCH_MEASUREMENT_ID } from './launch-metrics/config';
+
 // Ensure gtag is available globally
 declare global {
   interface Window {
@@ -42,9 +45,11 @@ export const trackPageView = (pagePath: string, pageTitle?: string) => {
 
 // User creates account
 export const trackSignUp = (method?: string) => {
-  trackEvent('sign_up', {
-    method: method || 'email',
-  });
+  const legacy = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  if (legacy && legacy !== LAUNCH_MEASUREMENT_ID) {
+    try { trackEvent('sign_up', { method: method || 'email', send_to: legacy }); } catch { /* optional */ }
+  }
+  emitLaunchEvent('sign_up');
 };
 
 // User completes purchase
@@ -296,9 +301,4 @@ export const trackAcceleratorPurchase = ({
 };
 
 // Track Clarity Check completion (when user views their results)
-export const trackClarityCheckCompleted = (email?: string) => {
-  trackEvent('clarity_check_completed', {
-    lead_type: 'clarity_check',
-    email: email,
-  });
-};
+// Completion tracking lives on the fresh results screen and carries no email.

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
-import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { trackSignUp } from '@/lib/analytics';
 import Link from 'next/link';
 
 interface VerificationData {
@@ -76,6 +76,7 @@ export default function CreateAccountPage() {
       // Create Firebase account
       const auth = getFirebaseAuth();
       const credential = await createUserWithEmailAndPassword(auth, email, password);
+      trackSignUp('email');
       const user = credential.user;
 
       // Create session cookie

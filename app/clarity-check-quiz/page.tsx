@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { emitLaunchEvent } from '@/lib/launch-metrics/events';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
@@ -89,6 +90,12 @@ export default function ClarityCheckQuizPage() {
   const [error, setError] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
+  const analyticsAttempt = useRef<string | null>(null);
+
+  useEffect(() => {
+    analyticsAttempt.current ??= crypto.randomUUID();
+    emitLaunchEvent('clarity_check_start', analyticsAttempt.current);
+  }, []);
 
   const handleResponse = (questionId: number, value: number) => {
     setResponses((prev) => ({ ...prev, [questionId]: value }));
@@ -147,6 +154,7 @@ export default function ClarityCheckQuizPage() {
       sessionStorage.setItem(
         'clarityCheckResults',
         JSON.stringify({
+          analyticsAttemptId: analyticsAttempt.current,
           scores: data.scores,
           resultSummary: data.resultSummary,
           resultDetail: data.resultDetail,

@@ -1,0 +1,53 @@
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+  color: #34364e;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.dashboard > * + * { margin-top: 24px; }
+.dashboard h1 { font-size: 44px; margin: 8px 0 0; }
+.dashboard h2 { font-size: 24px; margin: 0 0 12px; }
+.dashboard p { margin: 8px 0; }
+.dashboard a { text-decoration: underline; }
+.dashboard > header p { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+.dashboard section, .dashboard article, .controls {
+  background: #ffffffed;
+  border: 1px solid #dedce6;
+  border-radius: 14px;
+  padding: 24px;
+  min-width: 0;
+}
+.dashboard section[aria-label="Summary"] {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.dashboard dl { margin: 12px 0 0; }
+.dashboard article dl > div { display: flex; justify-content: space-between; gap: 12px; margin: 6px 0; }
+.dashboard dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.dashboard button, .dashboard input { font: inherit; border: 1px solid #aaa8b6; border-radius: 6px; padding: 8px 14px; background: white; color: inherit; }
+.dashboard input { display: block; margin-top: 4px; max-width: 100%; }
+.dashboard button { cursor: pointer; }
+.controls button:first-of-type { background: #4b4e6d; color: white; }
+.dashboard button:disabled { opacity: .5; cursor: not-allowed; }
+.dashboard :focus-visible { outline: 3px solid #7755c9; outline-offset: 3px; }
+.dashboard label { font-size: 14px; }
+.dashboard svg { display: block; width: 100%; }
+.dashboard ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; gap: 8px 20px; font-size: 14px; }
+.dashboard section:has(table) { overflow-x: auto; }
+.dashboard table { width: 100%; text-align: left; border-collapse: collapse; font-size: 14px; }
+.dashboard th, .dashboard td { padding: 12px 8px; border-bottom: 1px solid #e3e2e9; }
+.dashboard caption { text-align: left; margin-bottom: 8px; }
+.dashboard [role="alert"] { border-left: 4px solid #a04755; padding: 12px 20px; background: white; }
+@media (max-width: 760px) {
+  .dashboard { padding: 24px 16px 48px; }
+  .dashboard section[aria-label="Summary"] { grid-template-columns: 1fr; }
+  .dashboard h1 { font-size: 36px; }
+  .dashboard section, .dashboard article, .controls { padding: 18px; }
+}

@@ -1,0 +1,6 @@
+// Merge into the EXISTING deployed rules under /databases/{database}/documents.
+// Check overlapping wildcard rules: Firestore grants access if ANY match allows it.
+match /analytics_weekly/{weekEnding} {
+  allow read: if request.auth != null && request.auth.token.admin == true;
+  allow write: if false;
+}
