@@ -1,6 +1,15 @@
 'use client';
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import NextLink from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useEffect, useId, useRef, useState } from "react";
+import styles from './PublicHeader.module.css';
+
+function Link(props: React.ComponentProps<typeof NextLink>) {
+  const pathname = usePathname();
+  const href = typeof props.href === 'string' ? props.href : props.href.pathname;
+  const current = pathname === href || (href && href !== '/' && pathname.startsWith(`${href}/`));
+  return <NextLink {...props} aria-current={current ? 'page' : undefined} />;
+}
 
 export default function PublicHeader() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -8,6 +17,13 @@ export default function PublicHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(true);
   const [clarityCheckDone, setClarityCheckDone] = useState(false);
+  const menuId = useId();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Preserve 40px where it fits; scale only the longer historical link sets.
+  const desktopFontSize = clarityCheckDone
+    ? isLoggedIn ? 'clamp(20px, 2.1vw, 40px)' : 'clamp(22px, 2.5vw, 40px)'
+    : isLoggedIn ? 'clamp(28px, 3.4vw, 40px)' : '40px';
 
   useEffect(() => {
     // Check if user has session cookie
@@ -44,8 +60,20 @@ export default function PublicHeader() {
   }
 
   return (
-    <header className="relative z-20 w-full border-b border-white/20 backdrop-blur-md" style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}>
-      <div className="flex items-center justify-between gap-2 p-4 sm:p-6">
+    <header
+      className={`${styles.header} relative z-20 w-full border-b border-white/20 backdrop-blur-md`}
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape' && mobileMenuOpen) {
+          setMobileMenuOpen(false);
+          menuButtonRef.current?.focus();
+        }
+      }}
+    >
+      <div
+        className={styles.row}
+        style={{ '--nav-font-size': isLargeScreen ? desktopFontSize : '40px' } as React.CSSProperties}
+      >
         <Link 
           href="/" 
           className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
@@ -137,17 +165,21 @@ export default function PublicHeader() {
         {/* Mobile Menu Button - Only visible on small screens */}
         {!isLargeScreen && (
           <button
+            ref={menuButtonRef}
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 ml-2 text-white hover:opacity-75"
+            className={styles.menuButton}
             style={{ color: '#FFFFFF' }}
             aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls={menuId}
           >
             {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <svg width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+              <svg width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             )}
@@ -157,8 +189,8 @@ export default function PublicHeader() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && !isLargeScreen && (
-        <nav className="lg:hidden border-t border-white/20 bg-black/95 backdrop-blur-md">
-          <div className="flex flex-col p-4">
+        <nav id={menuId} className={styles.mobileMenu} aria-label="Public navigation">
+          <div className={styles.mobileLinks}>
             <Link 
               href="/discover" 
               className="px-4 py-2 text-sm hover:bg-white/10 rounded"
