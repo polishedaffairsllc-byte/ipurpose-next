@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as ClarityCheckRequest;
     const { name, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
-    const email = body.email.trim().toLowerCase();
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
 
     // Get IP for rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
@@ -104,9 +104,10 @@ export async function POST(request: NextRequest) {
 
     console.log('[CLARITY CHECK] Success:', { id: result.id, deduped: result.deduped });
 
-    // Schedule email sequence (Day 1 thank-you + Day 5 founder's rate)
+    // A stored lead alone is not a confirmed nurture enrollment.
+    let enrollment: 'enrolled' | 'opted_out' | 'failed' | 'duplicate' = 'failed';
     try {
-      await scheduleEmailSequence({
+      enrollment = await scheduleEmailSequence({
         email,
         name,
         submissionId: result.id || clientSubmissionId || '',
@@ -153,6 +154,7 @@ export async function POST(request: NextRequest) {
       ok: true,
       id: result.id,
       deduped: result.deduped,
+      enrollment,
     });
   } catch (error) {
     console.error('[CLARITY CHECK] Unexpected error:', error);
@@ -162,4 +164,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

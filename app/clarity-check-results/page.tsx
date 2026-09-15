@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
 import { useUTMParams } from '@/lib/hooks/useUTMParams';
+import { trackConfirmedEmailSignup, trackNewClarityResult } from '@/lib/launch-metrics/events';
 
 interface ResultsData {
+  analyticsAttemptId?: string;
   scores: {
     internalClarity: number;
     readinessForSupport: number;
@@ -52,6 +54,10 @@ export default function ClarityCheckResultsPage() {
     }
   }, [router]);
 
+  useEffect(() => {
+    if (results) trackNewClarityResult(results);
+  }, [results]);
+
   const handleEmailCapture = async (e: React.FormEvent) => {
     e.preventDefault();
     setCaptureError('');
@@ -87,6 +93,7 @@ export default function ClarityCheckResultsPage() {
       }
 
       if (data.ok) {
+        trackConfirmedEmailSignup(data);
         setCaptureSubmitted(true);
         setModalOpen(false);
         localStorage.setItem('clarityCheckCompleted', 'true');

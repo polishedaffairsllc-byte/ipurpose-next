@@ -9,10 +9,12 @@ import { AuthProvider } from '../context/AuthContext';
 import { OnboardingProvider } from '../context/OnboardingContext';
 import { VisualEnvironmentProvider } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
+import { initializeLaunchAnalytics } from '../lib/analyticsEvents';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useEffect(() => { initializeLaunchAnalytics(); }, []);
   const [fontsLoaded] = useFonts({
     Italiana_400Regular,
     Marcellus_400Regular,

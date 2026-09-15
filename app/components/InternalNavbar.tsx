@@ -16,6 +16,9 @@ export default function InternalNavbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // This admin screen supplies its own compact navigation and access gate.
+  if (pathname === '/admin/launch-metrics') return null;
+
   // Hide on public pages
   const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/signup' || pathname === '/about' || pathname === '/contact' || pathname === '/privacy' || pathname === '/delete-account' || pathname === '/terms' || pathname === '/discover' || pathname === '/clarity-check' || pathname === '/clarity-check-numeric' || pathname === '/clarity-check-quiz' || pathname === '/clarity-check-results' || pathname === '/program' || pathname === '/google-review' || pathname === '/info-session' || pathname === '/ipurpose-6-week' || pathname === '/starter-pack' || pathname === '/ai-blueprint' || pathname === '/build' || pathname === '/workshop' || pathname === '/she-leads-africa' || pathname === '/she-leads-africa/feedback' || pathname === '/she-leads-africa/org-feedback' || pathname === '/feedback' || pathname === '/org-feedback';
   const isOrientationRoute = pathname === '/orientation' || pathname.startsWith('/orientation/');

@@ -1,5 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createClarityAttempt } from '../lib/analyticsCore';
+import { logLaunchEvent } from '../lib/analyticsEvents';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -66,9 +68,12 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   const [saving, setSaving] = useState(false);
   const [switchingAccount, setSwitchingAccount] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const analyticsAttempt = useRef(createClarityAttempt(logLaunchEvent));
+  const freshResult = useRef(false);
 
   useEffect(() => {
     if (mode !== 'onboarding' || hydrated || !onboarding) return;
+    analyticsAttempt.current.resume(onboarding.currentStep);
     setStep(onboarding.currentStep === RESULT_STEP && !onboarding.result
       ? FOCUS_STEP
       : onboarding.currentStep);
@@ -79,6 +84,11 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     setResult(onboarding.result || null);
     setHydrated(true);
   }, [hydrated, mode, onboarding]);
+
+  useEffect(() => {
+    // Count only after a fresh, successful result is actually rendered.
+    if (step === RESULT_STEP && freshResult.current && result) analyticsAttempt.current.result(result);
+  }, [result, step]);
 
   const focusAreas = [firstFocus, secondFocus]
     .map((value) => value.trim())
@@ -96,6 +106,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     try {
       await persist(makeDraft(FIRST_CLARITY_STEP, clarityResponses, identityResponses, focusAreas));
       setStep(FIRST_CLARITY_STEP);
+      analyticsAttempt.current.begin();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'We could not start your Clarity Check.');
     } finally {
@@ -140,6 +151,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
           onboarding: false,
         });
         setResult(submission);
+        freshResult.current = true;
         setStep(RESULT_STEP);
       } else {
         await persist(makeDraft(nextStep, clarityResponses, nextResponses, focusAreas));
@@ -164,6 +176,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
         onboarding: mode === 'onboarding',
       });
       setResult(submission);
+      freshResult.current = true;
       setStep(RESULT_STEP);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'We could not save your Clarity Check.');

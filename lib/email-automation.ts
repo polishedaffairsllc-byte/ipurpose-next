@@ -5,6 +5,7 @@
  */
 
 import { firebaseAdmin } from './firebaseAdmin';
+import { enrollNurture } from './launch-metrics/enrollNurture';
 
 const FROM_ADDRESS = 'iPurpose <renita@ipurposesoul.com>';
 const SITE_URL = 'https://ipurposesoul.com';
@@ -953,53 +954,20 @@ export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
 /**
  * Schedule emails (Day 1 immediately, Day 5 after 5 days)
  */
-export async function scheduleEmailSequence(data: ClarityCheckEmailData) {
+export async function scheduleEmailSequence(data: ClarityCheckEmailData): Promise<'enrolled' | 'opted_out' | 'duplicate' | 'failed'> {
   try {
     // Normalize email to lowercase to prevent case-sensitivity duplicates
     data = { ...data, email: data.email.trim().toLowerCase() };
 
-    // Skip the whole sequence if the user has already opted out
-    const optedOut = await isEmailOptedOut(data.email);
-    if (optedOut) {
-      console.log(`[Email] Skipping sequence for opted-out address: ${data.email}`);
-      return true;
+    const enrollment = await enrollNurture(firebaseAdmin.firestore(), data);
+    if (enrollment === 'enrolled') {
+      // Delivery is separate from enrollment: the committed queue is authoritative.
+      // This helper reports delivery failures without throwing.
+      await sendClarityCheckThankYouEmail(data);
     }
-
-    // Send Day 1 email immediately
-    await sendClarityCheckThankYouEmail(data);
-
-    const DAY = 24 * 60 * 60 * 1000;
-    const tasks = [
-      { type: 'nurture_1', delay: 2 * DAY },   // Day 2
-      { type: 'nurture_2', delay: 4 * DAY },   // Day 4
-      { type: 'clarity_check_founders_rate', delay: 5 * DAY }, // Day 5 — existing Starter Pack offer
-      { type: 'nurture_3', delay: 7 * DAY },   // Day 7
-      { type: 'nurture_4', delay: 10 * DAY },  // Day 10
-      { type: 'nurture_5', delay: 14 * DAY },  // Day 14
-    ];
-
-    const db = firebaseAdmin.firestore();
-    const batch = db.batch();
-    for (const task of tasks) {
-      const ref = db.collection('emailTasks').doc();
-      batch.set(ref, {
-        email: data.email,
-        name: data.name,
-        submissionId: data.submissionId,
-        ...(data.identityType && { identityType: data.identityType }),
-        ...(data.totalScore && { totalScore: data.totalScore }),
-        type: task.type,
-        scheduledFor: new Date(Date.now() + task.delay),
-        status: 'pending',
-        createdAt: new Date(),
-      });
-    }
-    await batch.commit();
-
-    console.log(`[Email] Scheduled full nurture sequence (6 tasks) for ${data.email}`);
-    return true;
+    return enrollment;
   } catch (error) {
     console.error('[Email] Failed to schedule email sequence:', error);
-    return false;
+    return 'failed';
   }
 }
