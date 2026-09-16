@@ -1,6 +1,7 @@
+import { ScreenSafeArea } from '../../components/ScreenSafeArea';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -25,7 +26,7 @@ export default function AnchorScreen() {
 
   return (
     <LinearGradient colors={tokens.atmosphereGradient.colors} locations={tokens.atmosphereGradient.locations} start={tokens.atmosphereGradient.start} end={tokens.atmosphereGradient.end} style={styles.gradient}>
-      <SafeAreaView style={styles.safe}>
+      <ScreenSafeArea dark style={styles.safe}>
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
           <View style={styles.topRow}>
             <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={[styles.backButton, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }]}>
@@ -51,7 +52,7 @@ export default function AnchorScreen() {
             </>
           )}
         </ScrollView>
-      </SafeAreaView>
+      </ScreenSafeArea>
     </LinearGradient>
   );
 }

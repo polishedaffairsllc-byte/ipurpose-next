@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 import { useFonts, Italiana_400Regular } from '@expo-google-fonts/italiana';
 import { Marcellus_400Regular } from '@expo-google-fonts/marcellus';
 import * as SplashScreen from 'expo-splash-screen';
@@ -31,7 +31,7 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <AuthProvider>
         <OnboardingProvider>
           <VisualEnvironmentProvider>

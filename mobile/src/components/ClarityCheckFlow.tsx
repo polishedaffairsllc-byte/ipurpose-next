@@ -1,3 +1,4 @@
+import { ScreenSafeArea } from './ScreenSafeArea';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useRef, useState } from 'react';
 import { createClarityAttempt } from '../lib/analyticsCore';
@@ -7,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -104,6 +104,14 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     setSaving(true);
     setError(null);
     try {
+      if (mode === 'retake') {
+        // Starting a retake clears only this local questionnaire, never profile/history.
+        setClarityResponses({});
+        setIdentityResponses([]);
+        setFirstFocus('');
+        setSecondFocus('');
+        setResult(null);
+      }
       await persist(makeDraft(FIRST_CLARITY_STEP, clarityResponses, identityResponses, focusAreas));
       setStep(FIRST_CLARITY_STEP);
       analyticsAttempt.current.begin();
@@ -188,6 +196,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   async function finish() {
     if (saving) return;
     if (mode === 'retake') {
+      setStep(0);
       router.replace('/account');
       return;
     }
@@ -258,7 +267,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
       end={theme.homeGradient.end}
       style={styles.gradient}
     >
-      <SafeAreaView style={styles.safe}>
+      <ScreenSafeArea hasTabBar={mode === 'retake'} dark style={styles.safe}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.flex}
@@ -269,6 +278,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.headerRow}>
+              <BrandHeader subtitle="Soul → Systems → AI" variant="dark-background" />
               {(mode === 'retake' || step > 0) ? (
                 <Pressable
                   accessibilityLabel="Go back"
@@ -279,8 +289,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
                 >
                   <Ionicons color={theme.colors.white} name="chevron-back" size={20} />
                 </Pressable>
-              ) : <View style={styles.backPlaceholder} />}
-              <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
+              ) : null}
             </View>
 
             <View style={styles.progressTrack}>
@@ -348,7 +357,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
             ) : null}
           </ScrollView>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      </ScreenSafeArea>
     </LinearGradient>
   );
 }
@@ -357,7 +366,7 @@ function Intro({ mode, onBegin, saving }: { mode: FlowMode; onBegin: () => void;
   return (
     <View style={styles.heroCard}>
       <Text style={styles.eyebrow}>{mode === 'retake' ? 'CLARITY CHECK' : 'WELCOME TO IPURPOSE'}</Text>
-      <Text style={styles.heroTitle}>{mode === 'retake' ? 'Check in with where you are now.' : 'Find your north.'}</Text>
+      <Text style={styles.heroTitle}>{mode === 'retake' ? 'Check in with where you are now.' : 'Clarity Check'}</Text>
       <Text style={styles.heroBody}>
         A short reflection will help Compass understand what feels clear, what needs movement,
         and what deserves your attention right now.
@@ -557,7 +566,8 @@ function PrimaryButton({
       onPress={onPress}
       style={({ pressed }) => [
         styles.primaryButton,
-        (pressed || disabled) && styles.primaryButtonPressed,
+        disabled && styles.primaryButtonDisabled,
+        pressed && styles.primaryButtonPressed,
       ]}
     >
       {loading ? <ActivityIndicator color={theme.colors.white} /> : <Text style={styles.primaryButtonText}>{label}</Text>}
@@ -576,7 +586,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: { flexGrow: 1, paddingBottom: 40, paddingHorizontal: 20, paddingTop: 8 },
-  headerRow: { alignItems: 'center', flexDirection: 'row', gap: 12 },
+  headerRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
   backButton: {
     alignItems: 'center',
     backgroundColor: theme.colors.glassPillBg,
@@ -587,7 +597,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 44,
   },
-  backPlaceholder: { width: 44 },
   progressTrack: {
     backgroundColor: theme.colors.glassPillBg,
     borderRadius: 999,
@@ -722,7 +731,8 @@ const styles = StyleSheet.create({
     minHeight: 54,
     paddingHorizontal: 18,
   },
-  primaryButtonPressed: { opacity: 0.62 },
+  primaryButtonDisabled: { backgroundColor: theme.colors.muted },
+  primaryButtonPressed: { opacity: 0.78 },
   primaryButtonText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 16 },
   accountSwitchButton: {
     alignItems: 'center',

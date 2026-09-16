@@ -5,6 +5,7 @@ import { Redirect, useRouter } from 'expo-router';
 import { AuthPanel, AuthScaffold, authStyles } from '../components/AuthScaffold';
 import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
+import { PasswordField } from '../components/PasswordField';
 
 function getAccountError(error: unknown): string {
   if (error instanceof FirebaseError) {
@@ -64,32 +65,31 @@ export default function CreateAccountScreen() {
           placeholder="you@example.com"
           placeholderTextColor="#767A94"
           style={authStyles.input}
-          textContentType="emailAddress"
+          autoComplete="username"
+          importantForAutofill="yes"
           value={email}
         />
         <Text style={authStyles.label}>PASSWORD</Text>
-        <TextInput
+        <PasswordField
+          purpose="new"
+          onDark
           accessibilityLabel="Password"
-          autoCapitalize="none"
           onChangeText={setPassword}
           placeholder="At least 6 characters"
           placeholderTextColor="#767A94"
-          secureTextEntry
           style={authStyles.input}
-          textContentType="newPassword"
           value={password}
         />
         <Text style={authStyles.label}>CONFIRM PASSWORD</Text>
-        <TextInput
+        <PasswordField
+          purpose="new"
+          onDark
           accessibilityLabel="Confirm password"
-          autoCapitalize="none"
           onChangeText={setConfirmation}
           onSubmitEditing={() => void handleCreateAccount()}
           placeholder="Enter your password again"
           placeholderTextColor="#767A94"
-          secureTextEntry
           style={authStyles.input}
-          textContentType="newPassword"
           value={confirmation}
         />
         {confirmation && !passwordsMatch ? (

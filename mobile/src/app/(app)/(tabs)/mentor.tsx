@@ -1,3 +1,4 @@
+import { ScreenSafeArea } from '../../../components/ScreenSafeArea';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
@@ -6,7 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -14,6 +15,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
@@ -30,6 +32,7 @@ const STARTERS = [
 
 export default function MentorScreen() {
   const { tokens } = useVisualEnvironment();
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ conversationId?: string | string[] }>();
   const requestedConversationId = Array.isArray(params.conversationId)
     ? params.conversationId[0]
@@ -42,12 +45,18 @@ export default function MentorScreen() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const listRef = useRef<FlatList<CompanionMessage>>(null);
+  const followLatest = useRef(true);
+
+  const scrollToLatest = useCallback(() => {
+    if (followLatest.current) listRef.current?.scrollToEnd({ animated: false });
+  }, []);
 
   const loadConversation = useCallback(async (id: string) => {
     setLoadingHistory(true);
     setError(null);
     try {
       const loaded = await getConversation(id);
+      followLatest.current = true;
       setConversationId(id);
       setMessages(loaded);
     } catch (caught) {
@@ -88,6 +97,7 @@ export default function MentorScreen() {
   }, [requestedConversationId]);
 
   function startNewConversation() {
+    followLatest.current = true;
     setConversationId(null);
     setMessages([]);
     setInput('');
@@ -107,6 +117,7 @@ export default function MentorScreen() {
       createdAt: new Date().toISOString(),
     };
 
+    followLatest.current = true;
     setMessages((current) => [...current, localUserMessage]);
     setInput('');
     setSending(true);
@@ -133,9 +144,6 @@ export default function MentorScreen() {
       setMessages((current) => [...current, localAssistantMessage]);
       setConversations(await getConversations());
 
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-      });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Compass could not respond. Please try again.');
     } finally {
@@ -151,55 +159,64 @@ export default function MentorScreen() {
       end={tokens.screenGradient.end}
       style={styles.gradient}
     >
-    <SafeAreaView style={styles.safe}>
+    <ScreenSafeArea hasTabBar style={styles.safe}>
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={8}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={insets.top}
       >
         <View style={styles.container}>
           <BrandHeader
+            guidedExperience
             subtitle="Your space for aligned reflection and action"
             variant="light-background"
           />
 
-          <View style={styles.introRow}>
-            <View style={styles.introCopy}>
-              <Text
-                style={[
-                  styles.kicker,
-                  {
-                    backgroundColor: tokens.buttonBackground,
-                    borderColor: tokens.accentStrong,
-                    color: tokens.buttonText,
-                  },
-                ]}
+          <ScrollView
+            style={styles.chatControls}
+            contentContainerStyle={styles.chatControlsContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.introRow}>
+              <View style={styles.introCopy}>
+                <Text
+                  style={[
+                    styles.kicker,
+                    {
+                      backgroundColor: tokens.buttonBackground,
+                      borderColor: tokens.accentStrong,
+                      color: tokens.buttonText,
+                    },
+                  ]}
+                >
+                  COMPASS
+                </Text>
+                <Text style={styles.screenTitle}>Think it through here.</Text>
+              </View>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Start a new conversation"
+                onPress={startNewConversation}
+                disabled={sending || loadingHistory}
+                style={[styles.newButton, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}
               >
-                COMPASS
-              </Text>
-              <Text style={styles.screenTitle}>Think it through here.</Text>
+                <Ionicons name="add" size={18} color={theme.colors.deepIndigo} />
+                <Text style={styles.newButtonText}>New</Text>
+              </Pressable>
             </View>
 
-            <Pressable
-              onPress={startNewConversation}
-              disabled={sending || loadingHistory}
-              style={[styles.newButton, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}
-            >
-              <Ionicons name="add" size={18} color={theme.colors.deepIndigo} />
-              <Text style={styles.newButtonText}>New</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.conversations}>
-            <ConversationList
-              conversations={conversations}
-              selectedId={conversationId}
-              disabled={sending || loadingHistory}
-              onNew={startNewConversation}
-              onSelect={loadConversation}
-              hideNew
-            />
-          </View>
+            <View style={styles.conversations}>
+              <ConversationList
+                conversations={conversations}
+                selectedId={conversationId}
+                disabled={sending || loadingHistory}
+                onNew={startNewConversation}
+                onSelect={loadConversation}
+                hideNew
+              />
+            </View>
+          </ScrollView>
 
           <View style={[styles.chat, { backgroundColor: tokens.surfaceTint, borderColor: tokens.surfaceBorder }]}>
             {loadingHistory ? (
@@ -208,7 +225,7 @@ export default function MentorScreen() {
                 <Text style={styles.muted}>Loading your conversation…</Text>
               </View>
             ) : messages.length === 0 ? (
-              <View style={styles.empty}>
+              <ScrollView contentContainerStyle={styles.empty} keyboardShouldPersistTaps="handled">
                 <View style={[styles.emptyMark, { backgroundColor: tokens.accentSoft }]}>
                   <Ionicons name="sparkles-outline" size={22} color={tokens.accentStrong} />
                 </View>
@@ -243,34 +260,48 @@ export default function MentorScreen() {
                     </Pressable>
                   ))}
                 </View>
-              </View>
+              </ScrollView>
             ) : (
               <FlatList
                 ref={listRef}
                 data={messages}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => <MessageBubble message={item} />}
+                style={styles.flex}
                 contentContainerStyle={styles.messageList}
+                removeClippedSubviews={false}
                 keyboardShouldPersistTaps="handled"
-                onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
+                keyboardDismissMode="on-drag"
+                onScroll={({ nativeEvent: { contentOffset, contentSize, layoutMeasurement } }) => {
+                  followLatest.current = contentSize.height - layoutMeasurement.height - contentOffset.y < 64;
+                }}
+                scrollEventThrottle={16}
+                onLayout={scrollToLatest}
+                onContentSizeChange={scrollToLatest}
               />
             )}
           </View>
 
           {error ? (
-            <View style={styles.errorCard}>
+            <ScrollView style={styles.errorRegion} contentContainerStyle={styles.errorCard} keyboardShouldPersistTaps="handled">
               <Ionicons name="information-circle-outline" size={17} color={theme.colors.deepIndigo} />
               <Text style={styles.error}>{error}</Text>
-            </View>
+            </ScrollView>
           ) : null}
 
           <View style={[styles.composer, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
             <TextInput
+              accessibilityLabel="Message to Compass"
               value={input}
               onChangeText={setInput}
               placeholder="Share what you're thinking through…"
               placeholderTextColor={theme.colors.muted}
               multiline
+              textAlignVertical="top"
+              onFocus={() => {
+                followLatest.current = true;
+                requestAnimationFrame(scrollToLatest);
+              }}
               maxLength={4000}
               editable={!sending && !loadingHistory}
               style={[
@@ -280,6 +311,8 @@ export default function MentorScreen() {
             />
 
             <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ disabled: sending || loadingHistory || !input.trim(), busy: sending }}
               onPress={send}
               disabled={sending || loadingHistory || !input.trim()}
               accessibilityLabel="Send message"
@@ -293,15 +326,15 @@ export default function MentorScreen() {
               ]}
             >
               {sending ? (
-                <ActivityIndicator color={tokens.buttonText} />
+                <ActivityIndicator color={theme.colors.deepIndigo} />
               ) : (
-                <Ionicons name="arrow-up" size={21} color={tokens.buttonText} />
+                <Ionicons name="arrow-up" size={21} color={loadingHistory || !input.trim() ? theme.colors.deepIndigo : tokens.buttonText} />
               )}
             </Pressable>
           </View>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </ScreenSafeArea>
     </LinearGradient>
   );
 }
@@ -310,7 +343,9 @@ const styles = StyleSheet.create({
   gradient: { flex: 1 },
   flex: { flex: 1 },
   safe: { flex: 1, backgroundColor: 'transparent' },
-  container: { flex: 1, paddingTop: 8, paddingHorizontal: 18 },
+  container: { flex: 1, minHeight: 0, paddingTop: 8, paddingHorizontal: 20 },
+  chatControls: { flexGrow: 0, flexShrink: 1, maxHeight: '32%' },
+  chatControlsContent: { paddingBottom: 12 },
   introRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -339,7 +374,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   newButton: {
-    minHeight: 38,
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -355,9 +390,10 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.body,
     fontSize: 12,
   },
-  conversations: { marginTop: 12, marginBottom: 12 },
+  conversations: { marginTop: 12 },
   chat: {
     flex: 1,
+    minHeight: 64,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.line,
@@ -372,7 +408,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   empty: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 22,
     paddingVertical: 24,
@@ -430,6 +466,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
   },
+  errorRegion: { flexGrow: 0, maxHeight: '20%', marginTop: 8 },
   errorCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -438,7 +475,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 9,
-    marginTop: 8,
   },
   error: {
     flex: 1,
@@ -448,6 +484,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   composer: {
+    flexShrink: 0,
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: 8,
@@ -478,5 +515,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  sendDisabled: { opacity: 0.36 },
+  sendDisabled: { backgroundColor: theme.colors.line, borderColor: theme.colors.muted },
 });

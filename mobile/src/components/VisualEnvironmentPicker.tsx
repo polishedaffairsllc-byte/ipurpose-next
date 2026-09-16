@@ -32,6 +32,8 @@ export function VisualEnvironmentPicker() {
     autoResolvedEnvironment,
     tokens,
     loading,
+    error: loadError,
+    retryLoad,
     previewPreference,
     cancelPreview,
     confirmPreference,
@@ -49,13 +51,14 @@ export function VisualEnvironmentPicker() {
   );
 
   function selectPreference(next: VisualEnvironmentPreference) {
+    if (loading || saving || loadError) return;
     setDraft(next);
     setError(null);
     previewPreference(next);
   }
 
   async function savePreference() {
-    if (saving || isSamePreference(draft, savedPreference)) return;
+    if (loading || saving || loadError || isSamePreference(draft, savedPreference)) return;
     setSaving(true);
     setError(null);
     try {
@@ -87,6 +90,7 @@ export function VisualEnvironmentPicker() {
 
       <View style={styles.options}>
         <EnvironmentOption
+          disabled={loading || saving || !!loadError}
           label="Follow time of day"
           description={`Following time of day · ${autoLabel}`}
           selected={draft.mode === 'auto'}
@@ -100,6 +104,7 @@ export function VisualEnvironmentPicker() {
 
         {MANUAL_ENVIRONMENTS.map((environment) => (
           <EnvironmentOption
+            disabled={loading || saving || !!loadError}
             key={environment.name}
             label={environment.label}
             description={environment.description}
@@ -115,23 +120,33 @@ export function VisualEnvironmentPicker() {
       </View>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
+      {loadError ? (
+        <View>
+          <Text accessibilityLiveRegion="polite" style={styles.error}>{loadError}</Text>
+          <Pressable accessibilityRole="button" onPress={retryLoad} style={styles.retryButton}>
+            <Text style={styles.retryText}>Try again</Text>
+          </Pressable>
+        </View>
+      ) : null}
 
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Use this visual environment"
-        disabled={loading || saving || !hasChanges}
+        disabled={loading || saving || !!loadError || !hasChanges}
+        accessibilityState={{ disabled: loading || saving || !!loadError || !hasChanges, busy: loading || saving }}
         onPress={savePreference}
         style={({ pressed }) => [
           styles.confirmButton,
           { backgroundColor: tokens.buttonBackground },
-          (pressed || loading || saving || !hasChanges) && styles.confirmButtonDisabled,
+          (loading || saving || loadError || !hasChanges) && styles.confirmButtonDisabled,
+          pressed && styles.optionPressed,
         ]}
       >
-        {saving ? (
-          <ActivityIndicator color={tokens.buttonText} />
+        {saving || loading ? (
+          <ActivityIndicator color={theme.colors.deepIndigo} />
         ) : (
-          <Text style={[styles.confirmButtonText, { color: tokens.buttonText }]}>
-            {hasChanges ? 'Use this environment' : 'Environment in use'}
+          <Text style={[styles.confirmButtonText, { color: !hasChanges || loadError ? theme.colors.deepIndigo : tokens.buttonText }]}>
+            {loadError ? 'Environment unavailable' : hasChanges ? 'Use this environment' : 'Environment in use'}
           </Text>
         )}
       </Pressable>
@@ -146,6 +161,7 @@ function EnvironmentOption({
   accent,
   surfaceTint,
   onPress,
+  disabled,
 }: {
   label: string;
   description: string;
@@ -153,11 +169,13 @@ function EnvironmentOption({
   accent: string;
   surfaceTint: string;
   onPress: () => void;
+  disabled: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="radio"
-      accessibilityState={{ checked: selected }}
+      accessibilityState={{ checked: selected, disabled }}
+      disabled={disabled}
       accessibilityLabel={`${label}. ${description}`}
       onPress={onPress}
       style={({ pressed }) => [
@@ -242,7 +260,9 @@ const styles = StyleSheet.create({
     minHeight: 50,
     paddingHorizontal: 16,
   },
-  confirmButtonDisabled: { opacity: 0.5 },
+  confirmButtonDisabled: { backgroundColor: theme.colors.line },
+  retryButton: { minHeight: 44, justifyContent: 'center', marginTop: 8 },
+  retryText: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13, textDecorationLine: 'underline' },
   confirmButtonText: {
     fontFamily: theme.fonts.body,
     fontSize: 14,

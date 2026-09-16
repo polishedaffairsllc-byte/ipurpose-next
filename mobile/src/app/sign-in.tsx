@@ -4,6 +4,7 @@ import { Redirect, useRouter } from 'expo-router';
 import { AuthPanel, AuthScaffold, authStyles } from '../components/AuthScaffold';
 import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
+import { PasswordField } from '../components/PasswordField';
 
 export default function SignInScreen() {
   const router = useRouter();
@@ -49,19 +50,20 @@ export default function SignInScreen() {
           placeholder="you@example.com"
           placeholderTextColor="#767A94"
           style={authStyles.input}
-          textContentType="emailAddress"
+          autoComplete="username"
+          importantForAutofill="yes"
           value={email}
         />
         <Text style={authStyles.label}>PASSWORD</Text>
-        <TextInput
+        <PasswordField
+          purpose="current"
+          onDark
           accessibilityLabel="Password"
           onChangeText={setPassword}
           onSubmitEditing={() => void handleSignIn()}
           placeholder="Your password"
           placeholderTextColor="#767A94"
-          secureTextEntry
           style={authStyles.input}
-          textContentType="password"
           value={password}
         />
         {error ? <Text accessibilityRole="alert" style={authStyles.error}>{error}</Text> : null}

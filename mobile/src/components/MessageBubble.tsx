@@ -23,7 +23,7 @@ export function MessageBubble({ message }: { message: CompanionMessage }) {
             isUser ? styles.userText : { color: tokens.accentStrong },
           ]}
         >
-          {isUser ? 'You' : 'iPurpose Compass'}
+          {isUser ? 'You' : 'Compass'}
         </Text>
         <Text style={[styles.content, isUser ? styles.userText : styles.mentorText]}>
           {message.content}

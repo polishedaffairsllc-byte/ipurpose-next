@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -34,6 +35,8 @@ interface VisualEnvironmentContextValue {
   deviceTimezone: string;
   effectiveTimezone: string;
   loading: boolean;
+  error: string | null;
+  retryLoad: () => void;
   previewPreference: (preference: VisualEnvironmentPreference) => void;
   cancelPreview: () => void;
   confirmPreference: (preference: VisualEnvironmentPreference) => Promise<void>;
@@ -47,6 +50,8 @@ const VisualEnvironmentContext = createContext<VisualEnvironmentContextValue | u
 export function VisualEnvironmentProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.uid;
+  const currentUserId = useRef(userId);
+  currentUserId.current = userId;
   const [savedPreference, setSavedPreference] = useState(
     DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE
   );
@@ -56,6 +61,9 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
   const [deviceTimezone, setDeviceTimezone] = useState(getDeviceTimezone);
   const [clock, setClock] = useState(() => new Date());
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const retryLoad = useCallback(() => setLoadAttempt((attempt) => attempt + 1), []);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
@@ -69,6 +77,7 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
 
   useEffect(() => {
     if (authLoading) return;
+    setError(null);
     if (!userId) {
       setSavedPreference(DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE);
       setPreviewedPreference(null);
@@ -94,6 +103,7 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
         if (!active) return;
         setSavedPreference(DEFAULT_VISUAL_ENVIRONMENT_PREFERENCE);
         setSavedTimezone(undefined);
+        setError('Your saved environment could not be loaded. Check your connection and try again.');
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -102,7 +112,7 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
     return () => {
       active = false;
     };
-  }, [authLoading, userId]);
+  }, [authLoading, userId, loadAttempt]);
 
   const previewPreference = useCallback((preference: VisualEnvironmentPreference) => {
     setPreviewedPreference(normalizeVisualEnvironmentPreference(preference));
@@ -116,12 +126,13 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
 
   const confirmPreference = useCallback(
     async (preference: VisualEnvironmentPreference) => {
+      const savingUserId = currentUserId.current;
       const normalized = normalizeVisualEnvironmentPreference(preference);
       const profile = await updateVisualEnvironmentPreference(normalized);
+      if (currentUserId.current !== savingUserId) return;
       setSavedPreference(
         normalizeVisualEnvironmentPreference(profile.visualEnvironmentPreference)
       );
-      setSavedTimezone(normalizeIanaTimezone(profile.timezone) ?? undefined);
       setPreviewedPreference(null);
       setClock(new Date());
     },
@@ -129,10 +140,12 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
   );
 
   const confirmTimezone = useCallback(async (timezone: string) => {
+    const savingUserId = currentUserId.current;
     const normalized = normalizeIanaTimezone(timezone);
     if (!normalized) throw new Error('Choose a valid timezone.');
 
     const profile = await updateCompanionTimezone(normalized);
+    if (currentUserId.current !== savingUserId) return;
     setSavedTimezone(normalizeIanaTimezone(profile.timezone) ?? normalized);
     setClock(new Date());
   }, []);
@@ -161,6 +174,8 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
       deviceTimezone,
       effectiveTimezone,
       loading,
+      error,
+      retryLoad,
       previewPreference,
       cancelPreview,
       confirmPreference,
@@ -175,6 +190,8 @@ export function VisualEnvironmentProvider({ children }: { children: ReactNode })
       deviceTimezone,
       effectiveTimezone,
       loading,
+      error,
+      retryLoad,
       previewPreference,
       resolvedEnvironment,
       savedPreference,

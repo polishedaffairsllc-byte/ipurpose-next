@@ -1,20 +1,21 @@
+import { ScreenSafeArea } from '../../../components/ScreenSafeArea';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { EmailVerificationControls } from '../../../components/EmailVerificationControls';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { PasswordField } from '../../../components/PasswordField';
+import { KeyboardAwareForm } from '../../../components/KeyboardAwareForm';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { VisualEnvironmentPicker } from '../../../components/VisualEnvironmentPicker';
 import { useAuth } from '../../../context/AuthContext';
@@ -62,8 +63,8 @@ function IdentityRow({
       <View style={styles.infoCopy}>
         <Text style={styles.infoLabel}>{label}</Text>
         <Text selectable style={styles.infoValue}>{value}</Text>
+        {trailing}
       </View>
-      {trailing}
     </View>
   );
 }
@@ -199,7 +200,7 @@ export default function AccountScreen() {
       end={tokens.screenGradient.end}
       style={styles.gradient}
     >
-      <SafeAreaView style={styles.safe}>
+      <ScreenSafeArea hasTabBar style={styles.safe}>
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
@@ -248,18 +249,7 @@ export default function AccountScreen() {
                 icon="mail-outline"
                 iconBackground={theme.colors.systemsTint}
                 label="Email"
-                trailing={(
-                  <View style={[styles.statusBadge, { backgroundColor: tokens.surfaceTint }]}>
-                    <Ionicons
-                      color={user?.emailVerified ? theme.colors.sageGreen : theme.colors.muted}
-                      name={user?.emailVerified ? 'checkmark-circle' : 'ellipse-outline'}
-                      size={14}
-                    />
-                    <Text style={styles.statusText}>
-                      {user?.emailVerified ? 'Verified' : 'Not verified'}
-                    </Text>
-                  </View>
-                )}
+                trailing={user ? <EmailVerificationControls key={user.uid} user={user} /> : null}
                 value={email}
               />
               <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
@@ -512,65 +502,65 @@ export default function AccountScreen() {
           transparent
           visible={deleteModalVisible}
         >
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={styles.modalBackdrop}
-          >
-            <View
-              accessibilityViewIsModal
-              style={[styles.deleteModal, { backgroundColor: tokens.surface }]}
-            >
-              <View style={[styles.deleteModalIcon, { backgroundColor: tokens.surfaceTint }]}>
-                <Ionicons color={theme.colors.deepIndigo} name="warning-outline" size={25} />
-              </View>
-              <Text style={styles.deleteModalTitle}>Delete your account?</Text>
-              <Text style={styles.deleteModalBody}>
-                This permanently deletes your account and iPurpose data. This action cannot be undone.
-              </Text>
-              <Text style={styles.deletePasswordLabel}>Confirm with your password</Text>
-              <TextInput
-                accessibilityLabel="Password to confirm account deletion"
-                autoCapitalize="none"
-                autoComplete="current-password"
-                editable={!deletingAccount}
-                onChangeText={setDeletePassword}
-                placeholder="Password"
-                placeholderTextColor={theme.colors.muted}
-                secureTextEntry
-                style={[styles.deletePasswordInput, { borderColor: tokens.surfaceBorder }]}
-                value={deletePassword}
-              />
-              {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
-              <Pressable
-                accessibilityLabel="Permanently delete account"
-                accessibilityRole="button"
-                disabled={deletingAccount || !deletePassword}
-                onPress={handleDeleteAccount}
-                style={({ pressed }) => [
-                  styles.confirmDeleteButton,
-                  { backgroundColor: theme.colors.deepIndigo },
-                  (pressed || deletingAccount || !deletePassword) && styles.confirmDeleteDisabled,
-                ]}
-              >
-                {deletingAccount ? (
-                  <ActivityIndicator color={theme.colors.white} />
-                ) : (
-                  <Text style={styles.confirmDeleteText}>Permanently delete account</Text>
-                )}
-              </Pressable>
-              <Pressable
-                accessibilityLabel="Cancel account deletion"
-                accessibilityRole="button"
-                disabled={deletingAccount}
-                onPress={closeDeleteConfirmation}
-                style={({ pressed }) => [styles.cancelDeleteButton, pressed && styles.pressed]}
-              >
-                <Text style={styles.cancelDeleteText}>Cancel</Text>
-              </Pressable>
-            </View>
-          </KeyboardAvoidingView>
+          <SafeAreaProvider>
+            <ScreenSafeArea style={styles.modalSafe}>
+              <KeyboardAwareForm containerStyle={styles.modalBackdrop} contentContainerStyle={styles.modalContent}>
+                <View
+                  accessibilityViewIsModal
+                  style={[styles.deleteModal, { backgroundColor: tokens.surface }]}
+                >
+                  <View style={[styles.deleteModalIcon, { backgroundColor: tokens.surfaceTint }]}>
+                    <Ionicons color={theme.colors.deepIndigo} name="warning-outline" size={25} />
+                  </View>
+                  <Text style={styles.deleteModalTitle}>Delete your account?</Text>
+                  <Text style={styles.deleteModalBody}>
+                    This permanently deletes your account and iPurpose data. This action cannot be undone.
+                  </Text>
+                  <Text style={styles.deletePasswordLabel}>Confirm with your password</Text>
+                  <PasswordField
+                    key={String(deleteModalVisible)}
+                    purpose="current"
+                    accessibilityLabel="Password to confirm account deletion"
+                    editable={!deletingAccount}
+                    onChangeText={setDeletePassword}
+                    placeholder="Password"
+                    placeholderTextColor={theme.colors.muted}
+                    style={[styles.deletePasswordInput, { borderColor: tokens.surfaceBorder }]}
+                    value={deletePassword}
+                  />
+                  {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
+                  <Pressable
+                    accessibilityLabel="Permanently delete account"
+                    accessibilityRole="button"
+                    disabled={deletingAccount || !deletePassword}
+                    onPress={handleDeleteAccount}
+                    style={({ pressed }) => [
+                      styles.confirmDeleteButton,
+                      { backgroundColor: theme.colors.deepIndigo },
+                      (pressed || deletingAccount || !deletePassword) && styles.confirmDeleteDisabled,
+                    ]}
+                  >
+                    {deletingAccount ? (
+                      <ActivityIndicator color={theme.colors.white} />
+                    ) : (
+                      <Text style={styles.confirmDeleteText}>Permanently delete account</Text>
+                    )}
+                  </Pressable>
+                  <Pressable
+                    accessibilityLabel="Cancel account deletion"
+                    accessibilityRole="button"
+                    disabled={deletingAccount}
+                    onPress={closeDeleteConfirmation}
+                    style={({ pressed }) => [styles.cancelDeleteButton, pressed && styles.pressed]}
+                  >
+                    <Text style={styles.cancelDeleteText}>Cancel</Text>
+                  </Pressable>
+                </View>
+              </KeyboardAwareForm>
+            </ScreenSafeArea>
+          </SafeAreaProvider>
         </Modal>
-      </SafeAreaView>
+      </ScreenSafeArea>
     </LinearGradient>
   );
 }
@@ -579,7 +569,7 @@ const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safe: { backgroundColor: 'transparent', flex: 1 },
   container: { paddingBottom: 44, paddingHorizontal: 20, paddingTop: 8 },
-  intro: { marginTop: 32 },
+  intro: { marginTop: 30 },
   eyebrow: {
     fontFamily: theme.fonts.body,
     fontSize: 10,
@@ -646,7 +636,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.body,
     fontSize: 13,
     lineHeight: 20,
-    marginBottom: 14,
+    marginBottom: 12,
     marginTop: 7,
   },
   sectionCard: {
@@ -686,19 +676,6 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   divider: { height: StyleSheet.hairlineWidth },
-  statusBadge: {
-    alignItems: 'center',
-    borderRadius: 999,
-    flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-  },
-  statusText: {
-    color: theme.colors.deepIndigo,
-    fontFamily: theme.fonts.body,
-    fontSize: 9,
-  },
   statusCard: {
     alignItems: 'center',
     borderRadius: 22,
@@ -746,7 +723,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   focusBlock: { paddingBottom: 18, paddingTop: 17 },
-  clarityCheckBlock: { paddingTop: 17 },
+  clarityCheckBlock: { paddingVertical: 17 },
   clarityCheckCopy: {
     color: theme.colors.muted,
     fontFamily: theme.fonts.body,
@@ -786,8 +763,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
-    marginTop: 14,
-    padding: 16,
+    marginTop: 16,
+    padding: 18,
   },
   timezoneIcon: {
     alignItems: 'center',
@@ -839,6 +816,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     minHeight: 54,
     paddingHorizontal: 18,
+    paddingVertical: 14,
   },
   signOutText: {
     color: theme.colors.deepIndigo,
@@ -863,18 +841,17 @@ const styles = StyleSheet.create({
     marginTop: 12,
     minHeight: 54,
     paddingHorizontal: 18,
+    paddingVertical: 14,
   },
   deleteAccountText: {
     color: theme.colors.deepIndigo,
     fontFamily: theme.fonts.body,
     fontSize: 14,
   },
+  modalSafe: { flex: 1, backgroundColor: 'rgba(27, 29, 51, 0.64)' },
+  modalContent: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   modalBackdrop: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(27, 29, 51, 0.64)',
     flex: 1,
-    justifyContent: 'center',
-    padding: 24,
   },
   deleteModal: {
     borderRadius: 26,
@@ -937,8 +914,9 @@ const styles = StyleSheet.create({
     marginTop: 18,
     minHeight: 54,
     paddingHorizontal: 18,
+    paddingVertical: 14,
   },
-  confirmDeleteDisabled: { opacity: 0.48 },
+  confirmDeleteDisabled: { backgroundColor: theme.colors.muted },
   confirmDeleteText: {
     color: theme.colors.white,
     fontFamily: theme.fonts.body,

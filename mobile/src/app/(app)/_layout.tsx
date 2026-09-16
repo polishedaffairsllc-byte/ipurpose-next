@@ -1,4 +1,5 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ScreenSafeArea } from '../../components/ScreenSafeArea';
+import { ScrollView, ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Redirect, Stack, useSegments } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { useOnboarding } from '../../context/OnboardingContext';
@@ -24,7 +25,7 @@ export default function AuthenticatedLayout() {
 
   if (error || !onboarding) {
     return (
-      <View style={styles.errorContainer}>
+      <ScreenSafeArea style={{ flex: 1, backgroundColor: theme.colors.cream }}><ScrollView contentContainerStyle={styles.errorContainer}>
         <Text style={styles.errorTitle}>We could not load your Compass setup.</Text>
         <Text style={styles.errorBody}>Check your connection, then try again.</Text>
         <Pressable onPress={() => void refresh()} style={styles.primaryButton}>
@@ -33,7 +34,7 @@ export default function AuthenticatedLayout() {
         <Pressable onPress={() => void signOut()} style={styles.secondaryButton}>
           <Text style={styles.secondaryButtonText}>Sign out</Text>
         </Pressable>
-      </View>
+      </ScrollView></ScreenSafeArea>
     );
   }
 
@@ -51,7 +52,7 @@ export default function AuthenticatedLayout() {
 
 const styles = StyleSheet.create({
   errorContainer: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.cream,

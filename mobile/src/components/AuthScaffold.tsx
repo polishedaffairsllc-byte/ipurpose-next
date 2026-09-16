@@ -1,11 +1,9 @@
+import { ScreenSafeArea } from './ScreenSafeArea';
+import { KeyboardAwareForm } from './KeyboardAwareForm';
 import type { ReactNode } from 'react';
 import {
   Image,
   ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -15,7 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { theme } from '../theme';
 
-const COMPASS_LOGO = require('../../assets/brand/compass-logo.png');
+const COMPASS_LOGO = require('../../assets/release/adaptive-icon-foreground.png');
 const WELCOME_ATMOSPHERE = require('../../assets/brand/welcome-atmosphere.jpg');
 
 interface AuthScaffoldProps {
@@ -43,53 +41,47 @@ export function AuthScaffold({
         locations={[0, 0.48, 1]}
         style={styles.overlay}
       >
-        <SafeAreaView style={styles.safe}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={styles.flex}
+        <ScreenSafeArea dark style={styles.safe}>
+          <KeyboardAwareForm
+            contentContainerStyle={[
+              styles.content,
+              welcome ? styles.welcomeContent : styles.formContent,
+            ]}
+            showsVerticalScrollIndicator={false}
           >
-            <ScrollView
-              contentContainerStyle={[
-                styles.content,
-                welcome ? styles.welcomeContent : styles.formContent,
-              ]}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-            >
-              <View style={[styles.brand, welcome ? styles.brandWelcome : styles.brandForm]}>
-                <View style={[styles.logoHalo, welcome ? styles.logoHaloWelcome : styles.logoHaloForm]}>
-                  <View style={styles.logoGlow} />
-                  <Image
-                    accessibilityLabel="iPurpose Compass logo"
-                    resizeMode="contain"
-                    source={COMPASS_LOGO}
-                    style={welcome ? styles.logoWelcome : styles.logoForm}
-                  />
-                </View>
-                <Text style={[styles.brandTitle, welcome && styles.brandTitleWelcome]}>
-                  iPurpose Compass
-                </Text>
-                <View style={styles.brandRule}>
-                  <View style={styles.ruleLine} />
-                  <Text style={styles.ruleStar}>✦</Text>
-                  <View style={styles.ruleLine} />
-                </View>
+            <View style={[styles.brand, welcome ? styles.brandWelcome : styles.brandForm]}>
+              <View style={[styles.logoHalo, welcome ? styles.logoHaloWelcome : styles.logoHaloForm]}>
+                <View style={styles.logoGlow} />
+                <Image
+                  accessibilityLabel="iPurpose logo"
+                  resizeMode="contain"
+                  source={COMPASS_LOGO}
+                  style={welcome ? styles.logoWelcome : styles.logoForm}
+                />
               </View>
-
-              <View style={welcome ? styles.copyWelcome : styles.copyForm}>
-                <Text style={styles.eyebrow}>{eyebrow}</Text>
-                <Text accessibilityRole="header" style={[styles.title, welcome && styles.titleWelcome]}>
-                  {title}
-                </Text>
-                <Text style={styles.body}>{body}</Text>
+              <Text style={[styles.brandTitle, welcome && styles.brandTitleWelcome]}>
+                iPurpose
+              </Text>
+              <View style={styles.brandRule}>
+                <View style={styles.ruleLine} />
+                <Text style={styles.ruleStar}>✦</Text>
+                <View style={styles.ruleLine} />
               </View>
+            </View>
 
-              {children}
+            <View style={welcome ? styles.copyWelcome : styles.copyForm}>
+              <Text style={styles.eyebrow}>{eyebrow}</Text>
+              <Text accessibilityRole="header" style={[styles.title, welcome && styles.titleWelcome]}>
+                {title}
+              </Text>
+              <Text style={styles.body}>{body}</Text>
+            </View>
 
-              <Text style={styles.signature}>SOUL  ·  SYSTEMS  ·  AI™</Text>
-            </ScrollView>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
+            {children}
+
+            <Text style={styles.signature}>Soul → Systems → AI</Text>
+          </KeyboardAwareForm>
+        </ScreenSafeArea>
       </LinearGradient>
     </ImageBackground>
   );
@@ -161,7 +153,7 @@ export const authStyles = StyleSheet.create({
     fontFamily: theme.fonts.body,
     fontSize: 15,
   },
-  buttonDisabled: { opacity: 0.5 },
+  buttonDisabled: { backgroundColor: theme.colors.line },
   buttonPressed: { opacity: 0.78 },
   textLink: { alignItems: 'center', marginTop: 16, padding: 8 },
   textLinkText: {

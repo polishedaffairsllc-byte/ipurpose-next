@@ -1,5 +1,45 @@
 # Signed-build physical-device checks
 
+## Android correction pass — 1.0.2 / code 3 authorized for Internal Testing
+
+Renita reported PASS on Android **1.0.1 / code 2** for controlled disposable-account
+creation, sign-out, manual sign-in, repeated sign-in and account deletion.
+Authentication and deletion are no longer current blockers. This evidence does
+not cover the newly prepared password/keyboard and branding corrections.
+
+After a new build is reviewed and authorized, record its actual version/code from
+Android app details (and the matching Play internal release), phone model, Android
+version, navigation mode and font scale. Do not label code 2 as the updated build.
+
+1. On a small Android display, open Create Account with the keyboard visible.
+   Focus Password, then Confirm Password. Confirm each field and its Show/Hide
+   control scroll fully above the keyboard. Scroll to and tap Create Account
+   without dismissing the keyboard first. Repeat with enlarged system text.
+2. Show and hide Password and Confirm Password independently. Confirm their
+   values and exact letter case remain intact; mismatched values prevent submit.
+3. With the device password manager enabled, check generated/saved credentials
+   on creation, retrieval/autofill on Sign In, and current-password autofill in
+   deletion confirmation. Do not turn autofill off for this check. Confirm
+   toggling visibility preserves the filled value.
+4. Sign out, sign back in repeatedly, then delete the disposable account. Check
+   Show/Hide in deletion and that cancel/reopen clears and hides the password.
+5. Verify iPurpose product headers, iPurpose Compass experience header, Compass
+   message labels, Soul → Systems → AI and the approved detailed gold emblem.
+   Check that all three approved welcome statements are unchanged.
+6. Repeat keyboard reachability with gesture and three-button navigation. Record
+   pass/fail separately from the automated geometry tests; those use native mocks
+   and cannot certify a real Android keyboard or password manager.
+
+See [PHYSICAL_ANDROID_QA_FINDINGS.md](PHYSICAL_ANDROID_QA_FINDINGS.md) for completed
+code changes and [CLARITY_WORKFLOW_AUDIT.md](CLARITY_WORKFLOW_AUDIT.md) for the
+separate email-workflow proposal awaiting approval.
+
+## Full signed-build data lifecycle
+
+For Android public-launch layout coverage, also run the pending matrix in
+[ANDROID_LAUNCH_QA.md](ANDROID_LAUNCH_QA.md). Items 1, 2, and 4 require native evidence
+before release sign-off.
+
 Use disposable email/password accounts only. Never run account-deletion testing
 with an owner, founder, customer, or paid account.
 

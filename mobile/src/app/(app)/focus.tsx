@@ -1,6 +1,7 @@
+import { ScreenSafeArea } from '../../components/ScreenSafeArea';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -28,7 +29,7 @@ export default function FocusScreen() {
   }
 
   return <LinearGradient colors={tokens.atmosphereGradient.colors} locations={tokens.atmosphereGradient.locations} start={tokens.atmosphereGradient.start} end={tokens.atmosphereGradient.end} style={styles.gradient}>
-    <SafeAreaView style={styles.safe}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
+    <ScreenSafeArea dark style={styles.safe}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
       <View style={styles.topRow}><Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.back()} style={[styles.backButton, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }]}><Ionicons name="chevron-back" size={20} color={tokens.atmosphereText} /></Pressable><BrandHeader subtitle="What matters now" variant="dark-background" /></View>
       <View style={styles.hero}><Text style={[styles.kicker, { color: tokens.accent }]}>CURRENT FOCUS</Text><Text style={[styles.title, { color: tokens.atmosphereText }]}>What deserves your attention right now?</Text><Text style={[styles.subtitle, { color: tokens.atmosphereTextMuted }]}>Keep this to one or two priorities. Compass will use them to orient your Home experience.</Text></View>
       {loading ? <ActivityIndicator color={tokens.accent} /> : <BlurView intensity={30} tint="dark" style={[styles.card, { backgroundColor: tokens.glassCardBackground, borderColor: tokens.glassCardBorder }]}>
@@ -37,7 +38,7 @@ export default function FocusScreen() {
         {error ? <Text style={styles.error}>{error}</Text> : null}{saved ? <Text style={styles.saved}>Your current focus is saved.</Text> : null}
         <Pressable accessibilityRole="button" accessibilityLabel="Save current focus" onPress={save} disabled={saving} style={({pressed}) => [styles.button, { backgroundColor: tokens.buttonBackground }, (pressed || saving) && styles.buttonPressed]}>{saving ? <ActivityIndicator color={tokens.buttonText} /> : <Text style={[styles.buttonText, { color: tokens.buttonText }]}>Save Focus</Text>}</Pressable>
       </BlurView>}
-    </ScrollView></SafeAreaView>
+    </ScrollView></ScreenSafeArea>
   </LinearGradient>;
 }
 

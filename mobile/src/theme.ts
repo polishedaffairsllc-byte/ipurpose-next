@@ -30,7 +30,7 @@ export const theme = {
     plum: '#9C88FF',
     plumDark: '#4B4E6D',
     ink: '#4B4E6D',
-    muted: '#767A94',
+    muted: '#60647D',
     cream: '#F5F7FA',
     line: '#E4E7EF',
     blush: '#FCC4B7',

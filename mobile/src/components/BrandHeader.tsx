@@ -3,17 +3,19 @@ import { BlurView } from 'expo-blur';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
-const COMPASS_LOGO = require('../../assets/brand/compass-logo.png');
+const COMPASS_LOGO = require('../../assets/release/adaptive-icon-foreground.png');
 
 type BrandHeaderVariant = 'dark-background' | 'light-background';
 
 type BrandHeaderProps = {
   subtitle?: string;
+  guidedExperience?: boolean;
   variant?: BrandHeaderVariant;
 };
 
 export function BrandHeader({
   subtitle,
+  guidedExperience = false,
   variant = 'light-background',
 }: BrandHeaderProps) {
   const onDarkBackground = variant === 'dark-background';
@@ -23,7 +25,7 @@ export function BrandHeader({
     <View style={styles.row}>
       <BlurView intensity={40} tint="light" style={styles.markContainer}>
         <View style={styles.markInnerGlow} />
-        <Image accessibilityLabel="iPurpose Compass logo" source={COMPASS_LOGO} style={styles.markImage} resizeMode="contain" />
+        <Image accessibilityLabel="iPurpose logo" source={COMPASS_LOGO} style={styles.markImage} resizeMode="contain" />
       </BlurView>
       <View style={styles.wordmark}>
         <Text
@@ -32,7 +34,7 @@ export function BrandHeader({
             onDarkBackground ? styles.titleOnDark : styles.titleOnLight,
           ]}
         >
-          iPurpose Compass
+          {guidedExperience ? 'iPurpose Compass' : 'iPurpose'}
         </Text>
         {subtitle ? (
           <Text
@@ -50,7 +52,7 @@ export function BrandHeader({
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, flexShrink: 1, minWidth: 0 },
   markContainer: { width: 44, height: 44, borderRadius: 22, overflow: 'hidden', borderWidth: 1, borderColor: theme.colors.glassCardBorder, alignItems: 'center', justifyContent: 'center' },
   markInnerGlow: { position: 'absolute', width: 44, height: 44, borderRadius: 22, backgroundColor: theme.colors.champagneGlow, opacity: 0.25 },
   markImage: { width: 34, height: 34 },

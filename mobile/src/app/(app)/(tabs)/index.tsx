@@ -1,3 +1,4 @@
+import { ScreenSafeArea } from '../../../components/ScreenSafeArea';
 // mobile/src/app/(app)/(tabs)/index.tsx
 // PR #35 — visual redesign only. Functional behavior preserved exactly:
 // getCompanionProfile(), getConversations(), formatUpdatedAt(),
@@ -7,7 +8,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   ActivityIndicator,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -145,17 +145,17 @@ export default function HomeScreen() {
       end={tokens.atmosphereGradient.end}
       style={styles.gradient}
     >
-      <SafeAreaView style={styles.safe}>
+      <ScreenSafeArea hasTabBar dark style={styles.safe}>
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
         >
-          <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
+          <BrandHeader subtitle="Soul → Systems → AI" variant="dark-background" />
 
           <View style={styles.hero}>
             <Text style={[styles.greeting, { color: tokens.atmosphereText }]}>{greeting}</Text>
             <Text style={[styles.heroSubtitle, { color: tokens.atmosphereTextMuted }]}>
-              Stay aligned. Follow your north.
+              Stay aligned.
             </Text>
           </View>
 
@@ -231,7 +231,7 @@ export default function HomeScreen() {
             </Text>
           </Pressable>
         </ScrollView>
-      </SafeAreaView>
+      </ScreenSafeArea>
     </LinearGradient>
   );
 }

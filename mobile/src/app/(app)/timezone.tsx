@@ -1,3 +1,4 @@
+import { ScreenSafeArea } from '../../components/ScreenSafeArea';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -5,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -85,7 +85,7 @@ export default function TimezoneScreen() {
       end={tokens.screenGradient.end}
       style={styles.gradient}
     >
-      <SafeAreaView style={styles.safe}>
+      <ScreenSafeArea dark style={styles.safe}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.flex}
@@ -270,7 +270,7 @@ export default function TimezoneScreen() {
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      </ScreenSafeArea>
     </LinearGradient>
   );
 }
