@@ -28,7 +28,7 @@
     },
     "android": {
       "package": "com.ipurpose.mobile",
-      "versionCode": 2,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/release/adaptive-icon-foreground.png",
         "backgroundImage": "./assets/release/adaptive-icon-background.png",
