@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createClarityAttempt } from '../mobile/src/lib/analyticsCore';
 import { emitLaunchEvent, trackConfirmedEmailSignup, trackNewClarityResult } from '../lib/launch-metrics/events';
+import { getLaunchMeasurementIds } from '../lib/launch-metrics/config';
+import { trackSignUp } from '../lib/analytics';
 import { weeklyMetricsCsv } from '../lib/launch-metrics/exportCsv';
 import { computeRates, emptyCounts, emptyPlatforms, type WeeklyMetrics } from '../functions/src/model';
 import { enrollNurture } from '../lib/launch-metrics/enrollNurture';
@@ -45,10 +47,49 @@ test('web credits only confirmed enrollment and newly computed valid results; no
     assert.equal(events.length, 2);
     assert.deepEqual(events.map(args => args[1]), ['email_signup', 'clarity_check_complete']);
     assert.ok(!JSON.stringify(events).includes('private@'));
-    assert.ok(events.every(args => (args[2] as { send_to: string }).send_to === 'G-9D1QBMLNWK'));
+    for (const args of events) assert.deepEqual((args[2] as { send_to: string[] }).send_to, getLaunchMeasurementIds());
     window.gtag = () => { throw new Error('blocked analytics'); };
     assert.equal(emitLaunchEvent('sign_up'), false);
   } finally {
+    if (original) Object.defineProperty(globalThis, 'window', original);
+    else Reflect.deleteProperty(globalThis, 'window');
+  }
+});
+
+test('web launch routing preserves both GA4 destinations and deduplicates identical IDs', () => {
+  assert.deepEqual(getLaunchMeasurementIds('G-FX51XM1DVS', 'G-9D1QBMLNWK'), ['G-FX51XM1DVS', 'G-9D1QBMLNWK']);
+  assert.deepEqual(getLaunchMeasurementIds('G-9D1QBMLNWK', 'G-9D1QBMLNWK'), ['G-9D1QBMLNWK']);
+  assert.deepEqual(getLaunchMeasurementIds('', 'G-9D1QBMLNWK'), ['G-9D1QBMLNWK']);
+  assert.deepEqual(getLaunchMeasurementIds('AW-17993147612', 'invalid'), []);
+});
+
+test('web queues canonical events before gtag loads, deduplicates starts without storage, and sends registration once', () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, 'window');
+  const websiteId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = 'G-FX51XM1DVS';
+  Object.defineProperty(globalThis, 'window', { configurable: true, value: {
+    get sessionStorage() { throw new Error('storage denied'); },
+  } });
+  try {
+    assert.equal(emitLaunchEvent('clarity_check_start', 'queued-attempt'), true);
+    assert.equal(emitLaunchEvent('clarity_check_start', 'queued-attempt'), false);
+    assert.equal(trackNewClarityResult({ analyticsAttemptId: 'queued-attempt', scores: { totalScore: 0 }, resultSummary: 'Ready' }), true);
+    assert.equal(trackConfirmedEmailSignup({ ok: true, enrollment: 'enrolled', id: 'queued-enrollment' }), true);
+    trackSignUp('email');
+    const commands = window.dataLayer.map(args => Array.from(args));
+    assert.deepEqual(commands.map(args => args[1]), ['clarity_check_start', 'clarity_check_complete', 'email_signup', 'sign_up']);
+    assert.equal(Object.prototype.toString.call(window.dataLayer[0]), '[object Arguments]');
+    for (const command of commands) assert.deepEqual((command[2] as { send_to: string[] }).send_to, getLaunchMeasurementIds());
+    assert.equal((commands[3][2] as { method: string }).method, 'email');
+    assert.ok(!JSON.stringify(commands).includes('first_open'));
+    const sent: unknown[][] = [];
+    window.gtag = (...args: unknown[]) => sent.push(args);
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = 'G-9D1QBMLNWK';
+    trackSignUp();
+    assert.deepEqual(sent, [['event', 'sign_up', { method: 'email', send_to: ['G-9D1QBMLNWK'] }]]);
+  } finally {
+    if (websiteId === undefined) delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+    else process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = websiteId;
     if (original) Object.defineProperty(globalThis, 'window', original);
     else Reflect.deleteProperty(globalThis, 'window');
   }

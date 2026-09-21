@@ -4,7 +4,6 @@
  */
 
 import { emitLaunchEvent } from './launch-metrics/events';
-import { LAUNCH_MEASUREMENT_ID } from './launch-metrics/config';
 
 // Ensure gtag is available globally
 declare global {
@@ -45,11 +44,7 @@ export const trackPageView = (pagePath: string, pageTitle?: string) => {
 
 // User creates account
 export const trackSignUp = (method?: string) => {
-  const legacy = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  if (legacy && legacy !== LAUNCH_MEASUREMENT_ID) {
-    try { trackEvent('sign_up', { method: method || 'email', send_to: legacy }); } catch { /* optional */ }
-  }
-  emitLaunchEvent('sign_up');
+  emitLaunchEvent('sign_up', undefined, { method: method || 'email' });
 };
 
 // User completes purchase

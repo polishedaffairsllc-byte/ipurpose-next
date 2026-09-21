@@ -1,13 +1,13 @@
-import { LAUNCH_MEASUREMENT_ID } from './config';
+import { getLaunchMeasurementIds } from './config';
 
 type LaunchEvent = 'sign_up' | 'clarity_check_start' | 'clarity_check_complete' | 'email_signup';
 const recorded = new Set<string>();
 
 /** Analytics failure must never turn a successful product action into an error. */
-export function emitLaunchEvent(name: LaunchEvent, key?: string): boolean {
+export function emitLaunchEvent(name: LaunchEvent, key?: string, parameters?: { method: string }): boolean {
   if (typeof window === 'undefined') return false;
-  const measurementId = LAUNCH_MEASUREMENT_ID;
-  if (!measurementId || !/^G-[A-Z0-9]+$/.test(measurementId)) return false;
+  const measurementIds = getLaunchMeasurementIds();
+  if (!measurementIds.length) return false;
   const onceKey = key ? `ipurpose:analytics:${name}:${key}` : undefined;
   try {
     if (onceKey && (recorded.has(onceKey) || window.sessionStorage.getItem(onceKey))) return false;
@@ -18,7 +18,8 @@ export function emitLaunchEvent(name: LaunchEvent, key?: string): boolean {
     // Google's gtag queue contract uses an Arguments object, not a raw event array.
     // eslint-disable-next-line prefer-rest-params
     const send = window.gtag || function (..._args: unknown[]) { window.dataLayer.push(arguments); };
-    send('event', name, { send_to: measurementId });
+    // One command, one event per unique GA4 destination; never send to Ads tags.
+    send('event', name, { ...parameters, send_to: measurementIds });
     if (onceKey) {
       recorded.add(onceKey);
       try { window.sessionStorage.setItem(onceKey, '1'); } catch { /* optional */ }
