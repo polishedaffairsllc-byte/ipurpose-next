@@ -27,35 +27,52 @@ const recurringQuestions = [
 const systemParts = [
   {
     title: '1. Define the Decision',
-    paragraphs: ['Be precise.', 'Do not ask:', '“What should I do with my business?”', 'Ask:', '“Should I invest in this specific tool for this specific workflow?”', 'A clear decision is easier to evaluate.'],
+    intro: ['Be precise.', 'Do not ask:', '“What should I do with my business?”', 'Ask:', '“Should I invest in this specific tool for this specific workflow?”', 'A clear decision is easier to evaluate.'],
+    listIntro: null,
+    items: null,
+    outro: [],
   },
   {
     title: '2. Define the Desired Outcome',
-    paragraphs: ['What are you trying to accomplish?', 'A decision cannot be evaluated well if success is undefined.'],
+    intro: ['What are you trying to accomplish?'],
+    listIntro: 'Examples:',
     items: ['save time', 'improve customer experience', 'increase revenue', 'reduce risk', 'simplify operations', 'protect capacity', 'improve quality', 'create consistency'],
+    outro: ['A decision cannot be evaluated well if success is undefined.'],
   },
   {
     title: '3. Identify the Constraints',
-    paragraphs: ['Every decision happens within limits.', 'Constraints are not necessarily obstacles. They are part of the decision.'],
+    intro: ['Every decision happens within limits.'],
+    listIntro: 'Those may include:',
     items: ['budget', 'time', 'staffing', 'technical capability', 'risk tolerance', 'contractual obligations', 'customer expectations', 'current priorities'],
+    outro: ['Constraints are not necessarily obstacles.', 'They are part of the decision.'],
   },
   {
     title: '4. Choose the Criteria',
-    paragraphs: ['Criteria are the questions each option must answer.', 'The criteria should reflect your business.'],
+    intro: ['Criteria are the questions each option must answer.', 'For example:'],
+    listIntro: null,
+    items: null,
+    outro: ['The criteria should reflect your business.'],
   },
   {
     title: '5. Decide Who Owns the Decision',
-    paragraphs: ['Many decisions stall because responsibility is unclear.', 'Collaboration does not mean everyone owns the final choice.'],
+    intro: ['Many decisions stall because responsibility is unclear.'],
+    listIntro: 'Identify:',
     items: ['who gathers information', 'who provides input', 'who makes the final decision', 'who implements it'],
+    outro: ['Collaboration does not mean everyone owns the final choice.'],
   },
   {
     title: '6. Set a Decision Deadline',
-    paragraphs: ['Without a deadline, analysis can continue indefinitely.', 'Not every decision needs the same amount of time.', 'A reversible low-risk decision may be made quickly.', 'A consequential decision may deserve deeper review.', 'Match the decision process to the level of risk.'],
+    intro: ['Without a deadline, analysis can continue indefinitely.', 'Not every decision needs the same amount of time.', 'A reversible low-risk decision may be made quickly.', 'A consequential decision may deserve deeper review.', 'Match the decision process to the level of risk.'],
+    listIntro: null,
+    items: null,
+    outro: [],
   },
   {
     title: '7. Define the Next Action',
-    paragraphs: ['A decision is not complete until something happens.', 'This prevents decisions from becoming documents instead of movement.'],
+    intro: ['A decision is not complete until something happens.'],
+    listIntro: 'After deciding:',
     items: ['what action begins', 'who owns it', 'when it starts', 'when the result will be reviewed'],
+    outro: ['This prevents decisions from becoming documents instead of movement.'],
   },
 ];
 
@@ -162,14 +179,15 @@ export default function BusinessDecisionMakingSystemPage() {
                 {systemParts.map((part) => (
                   <div className={styles.card} key={part.title}>
                     <h3 className={styles.cardTitle}>{part.title}</h3>
-                    {part.paragraphs.map((paragraph) => <p className={styles.paragraph} key={paragraph}>{paragraph}</p>)}
-                    {part.items ? <ul className={styles.list}>{part.items.map((item) => <li key={item}>{item},</li>)}</ul> : null}
+                    {part.intro.map((paragraph) => <p className={styles.paragraph} key={paragraph}>{paragraph}</p>)}
+                    {part.items ? <>{part.listIntro ? <p className={styles.paragraph}>{part.listIntro}</p> : null}<ul className={styles.list}>{part.items.map((item) => <li key={item}>{item},</li>)}</ul></> : null}
                     {part.title === '4. Choose the Criteria' ? (
                       <div className={styles.exampleGrid}>
                         <div><p className={styles.splitLabel}>If evaluating a new tool:</p><ul className={styles.list}><li>Does it solve a current problem?</li><li>Does it fit the existing workflow?</li><li>Will it save meaningful time?</li><li>Can the team realistically maintain it?</li><li>Does it duplicate something already in use?</li><li>Is the cost justified?</li></ul></div>
                         <div><p className={styles.splitLabel}>If evaluating a new opportunity:</p><ul className={styles.list}><li>Does it support the current business direction?</li><li>Is the audience aligned?</li><li>Is the time commitment realistic?</li><li>What would need to be delayed or dropped?</li><li>What is the potential upside?</li><li>What risk does it create?</li></ul></div>
                       </div>
                     ) : null}
+                    {part.outro.map((paragraph) => <p className={styles.paragraph} key={paragraph}>{paragraph}</p>)}
                   </div>
                 ))}
               </div>

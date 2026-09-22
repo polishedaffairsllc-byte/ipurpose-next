@@ -32,27 +32,35 @@ const aiStrengths = [
   {
     title: 'Organizing Information',
     intro: 'AI can help sort, group, summarize, or structure existing information.',
+    listIntro: 'Examples:',
     items: ['grouping survey responses', 'organizing meeting notes', 'categorizing ideas', 'summarizing long documents', 'extracting recurring themes'],
+    outro: null,
   },
   {
     title: 'First-Draft Support',
     intro: 'AI can help create a starting point.',
+    listIntro: 'Examples:',
     items: ['email drafts', 'outlines', 'standard operating procedures', 'descriptions', 'internal documentation'],
     outro: 'A first draft is not the same as a final answer. Human review still matters.',
   },
   {
     title: 'Reformatting Existing Work',
     intro: 'AI can transform approved information into another useful form.',
+    listIntro: 'Examples:',
     items: ['turning a transcript into notes', 'turning notes into an outline', 'turning a long explanation into a short internal summary', 'adapting existing material for another format'],
+    outro: null,
   },
   {
     title: 'Pattern Recognition',
     intro: 'AI can help identify repeated themes or patterns within a body of information.',
+    listIntro: 'That can be useful for:',
     items: ['customer feedback', 'intake responses', 'support questions', 'recurring operational issues'],
+    outro: null,
   },
   {
     title: 'Repetitive Administrative Work',
     intro: 'When the rules are clear, AI or automation may help reduce routine work such as:',
+    listIntro: null,
     items: ['routing information', 'preparing summaries', 'classifying requests', 'generating standardized first-pass responses', 'assisting with recurring reports'],
     outro: 'The key phrase is: when the rules are clear.',
   },
@@ -62,35 +70,42 @@ const opportunities = [
   {
     title: '1. Repetitive Writing',
     intro: 'Look for writing that follows a repeatable pattern.',
+    listIntro: 'Examples:',
     items: ['confirmation messages', 'standard follow-ups', 'recurring internal summaries', 'first-pass descriptions'],
     outro: 'Do not automate sensitive relationship-based communication simply because AI can produce words.',
   },
   {
     title: '2. Information Overload',
     intro: 'Look for places where you spend too much time reading, sorting, or condensing information.',
+    listIntro: 'Examples:',
     items: ['meeting notes', 'survey responses', 'research', 'client intake', 'customer feedback'],
     outro: 'AI may reduce the time required to find the useful signal inside a large amount of information.',
   },
   {
     title: '3. Repeated Research Tasks',
     intro: 'If you repeatedly gather the same categories of information, AI may help organize the process.',
+    listIntro: null,
+    items: null,
     outro: 'Human verification is still important when accuracy matters.',
   },
   {
     title: '4. Content Repurposing',
     intro: 'If you already have strong original material, AI can help transform it into other useful formats. For example, a long-form article might become:',
+    listIntro: null,
     items: ['an internal summary', 'an email outline', 'short educational points', 'FAQ ideas', 'a video outline'],
     outro: 'AI should preserve the original thinking rather than manufacture a point of view you never created.',
   },
   {
     title: '5. Routine Classification',
     intro: 'AI can help sort information when categories are already defined.',
+    listIntro: 'Examples:',
     items: ['inquiry type', 'topic category', 'urgency level', 'content theme', 'request type'],
     outro: 'The categories should come from the business. AI should not invent the operating rules.',
   },
   {
     title: '6. Repetitive Workflow Support',
     intro: 'Some workflows include administrative steps that happen the same way every time. AI or automation may help with:',
+    listIntro: null,
     items: ['data transfer', 'status updates', 'reminders', 'document preparation', 'first-pass processing'],
     outro: 'Before automating, confirm that the workflow itself is stable.',
   },
@@ -190,7 +205,7 @@ export default function HowToUseAiInYourBusinessPage() {
                   <div className={styles.card} key={item.title}>
                     <h3 className={styles.cardTitle}>{item.title}</h3>
                     <p className={styles.paragraph}>{item.intro}</p>
-                    <p className={styles.paragraph}>Examples:</p>
+                    {item.listIntro ? <p className={styles.paragraph}>{item.listIntro}</p> : null}
                     <ul className={styles.list}>{item.items.map((value) => <li key={value}>{value},</li>)}</ul>
                     {item.outro ? <p className={styles.paragraph}>{item.outro}</p> : null}
                   </div>
@@ -215,7 +230,7 @@ export default function HowToUseAiInYourBusinessPage() {
                   <div className={styles.card} key={item.title}>
                     <h3 className={styles.cardTitle}>{item.title}</h3>
                     <p className={styles.paragraph}>{item.intro}</p>
-                    {item.items ? <><p className={styles.paragraph}>Examples:</p><ul className={styles.list}>{item.items.map((value) => <li key={value}>{value},</li>)}</ul></> : null}
+                    {item.items ? <>{item.listIntro ? <p className={styles.paragraph}>{item.listIntro}</p> : null}<ul className={styles.list}>{item.items.map((value) => <li key={value}>{value},</li>)}</ul></> : null}
                     <p className={styles.paragraph}>{item.outro}</p>
                   </div>
                 ))}
