@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import styles from './page.module.css';
 
 const title = 'What to Automate in Your Business First | iPurpose';
 const description =
@@ -111,12 +112,12 @@ const examples = [
 
 export default function WhatToAutomateGuidePage() {
   return (
-    <div className="min-h-screen bg-white text-warmCharcoal">
+    <div className={`${styles.page} min-h-screen bg-white text-warmCharcoal`}>
       <PublicHeader />
 
       <main>
         <article>
-          <header className="relative overflow-hidden bg-gradient-to-br from-indigoDeep via-warmCharcoal to-indigoDeep px-4 py-20 text-center sm:px-6 sm:py-28">
+          <header className={`${styles.hero} relative overflow-hidden bg-gradient-to-br from-indigoDeep via-warmCharcoal to-indigoDeep px-4 py-20 text-center sm:px-6 sm:py-28`}>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(156,136,255,0.24),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(252,196,183,0.18),transparent_42%)]" />
             <div className="relative mx-auto max-w-4xl">
               <p className="mb-5 font-marcellus text-sm uppercase tracking-[0.25em] text-softGold">
@@ -131,7 +132,7 @@ export default function WhatToAutomateGuidePage() {
             </div>
           </header>
 
-          <div className="mx-auto max-w-4xl space-y-16 px-4 py-14 sm:px-6 sm:py-20">
+          <div className={`${styles.content} mx-auto max-w-4xl space-y-16 px-4 py-14 sm:px-6 sm:py-20`}>
             <section
               aria-labelledby="quick-answer"
               className="rounded-2xl border border-lavenderViolet/20 bg-lavenderViolet/5 p-7 sm:p-10"
@@ -318,7 +319,7 @@ export default function WhatToAutomateGuidePage() {
               </ol>
             </section>
 
-            <aside className="rounded-2xl bg-gradient-to-br from-indigoDeep to-warmCharcoal px-6 py-12 text-center sm:px-10 sm:py-16">
+            <aside className={`${styles.cta} rounded-2xl bg-gradient-to-br from-indigoDeep to-warmCharcoal px-6 py-12 text-center sm:px-10 sm:py-16`}>
               <p className="font-marcellus text-sm uppercase tracking-[0.22em] text-softGold">
                 Find the real starting point
               </p>
