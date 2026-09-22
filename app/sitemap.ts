@@ -53,6 +53,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${canonicalDomain}/guides/how-to-use-ai-in-your-business`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${canonicalDomain}/guides/business-decision-making-system`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${canonicalDomain}/guides/ai-for-overwhelmed-entrepreneurs`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: `${canonicalDomain}/delete-account`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
