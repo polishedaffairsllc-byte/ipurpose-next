@@ -155,6 +155,13 @@ export default function WhatToAutomateGuidePage() {
               <p className="font-marcellus text-lg leading-relaxed text-warmCharcoal/75">
                 A useful automation removes predictable work while leaving judgment with the person responsible for the outcome. Before choosing software, make sure you understand the decision being supported, the system carrying it, and the role technology should play.
               </p>
+              <p className="font-marcellus text-lg leading-relaxed text-warmCharcoal/75">
+                Before adding more technology, understand why{' '}
+                <Link href="/guides/ai-tools-vs-business-systems" className="font-semibold text-lavenderViolet underline underline-offset-4">
+                  AI tools and business systems solve different problems
+                </Link>
+                .
+              </p>
             </section>
 
             <section aria-labelledby="framework" className="space-y-8">

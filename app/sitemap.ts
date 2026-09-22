@@ -41,6 +41,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${canonicalDomain}/guides/ai-tools-vs-business-systems`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${canonicalDomain}/guides/why-ai-is-not-saving-you-time`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: `${canonicalDomain}/delete-account`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
