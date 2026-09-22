@@ -134,6 +134,13 @@ export default function Home() {
                   Explore the AI Blueprint
                 </Link>
               </p>
+              <p className="text-body !text-white mt-4" style={{ color: '#FFFFFF', opacity: 0.85 }}>
+                Not sure where automation belongs?{' '}
+                <Link href="/guides/what-to-automate-in-your-business" className="underline hover:opacity-70 transition-opacity font-semibold">
+                  Use the automation-readiness guide
+                </Link>
+                .
+              </p>
             </div>
           </div>
         </div>

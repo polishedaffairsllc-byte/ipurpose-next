@@ -176,6 +176,12 @@ export default async function ProgramPage() {
             <div className="text-center">
               <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">A Practical AI Usage Plan</h3>
               <p className="text-warmCharcoal/75 font-marcellus text-display-emphasis">Clear guidelines for where and how AI supports your work.</p>
+              <p className="mt-2 font-marcellus text-sm text-warmCharcoal/65">
+                <Link href="/guides/what-to-automate-in-your-business" className="font-semibold text-lavenderViolet underline underline-offset-4">
+                  Learn how to decide what to automate first
+                </Link>
+                .
+              </p>
             </div>
             <div className="text-center">
               <h3 className="font-italiana text-warmCharcoal mb-2 text-display-h3">Peer Network</h3>
