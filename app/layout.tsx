@@ -7,6 +7,7 @@ import BackgroundLayer from "./components/BackgroundLayer";
 import InternalNavbar from "./components/InternalNavbar";
 import VideoBackground from "./components/VideoBackground";
 import PixelInitializer from "./components/PixelInitializer";
+import SiteStructuredData from "./components/SiteStructuredData";
 
 export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
@@ -54,6 +55,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
+        <SiteStructuredData />
         {/* Pixel Initialization (Meta Pixel) */}
         <PixelInitializer />
         

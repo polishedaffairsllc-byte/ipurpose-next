@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import RelatedGuides from '../RelatedGuides';
 import styles from '../GuideArticle.module.css';
 
 const title = 'How to Use AI in Your Business Without Adding More Chaos | iPurpose';
@@ -117,6 +118,21 @@ const opportunityTest = [
   ['3. Judgment', 'How much human discernment does the task require?', 'The more nuanced, sensitive, or consequential the work, the more human involvement should remain.'],
   ['4. Reviewability', 'Can you easily tell when the output is wrong?', 'Tasks with clear, reviewable outputs are generally safer places to begin.'],
 ];
+
+const relatedGuides = [
+  {
+    href: '/guides/ai-tools-vs-business-systems',
+    title: 'AI Tools vs. Business Systems: What Does Your Business Actually Need?',
+  },
+  {
+    href: '/guides/what-to-automate-in-your-business',
+    title: 'How to Know What to Automate in Your Business',
+  },
+  {
+    href: '/guides/why-ai-is-not-saving-you-time',
+    title: 'Why AI Is Not Saving You Time',
+  },
+] as const;
 
 export default function HowToUseAiInYourBusinessPage() {
   return (
@@ -343,14 +359,7 @@ export default function HowToUseAiInYourBusinessPage() {
               <p className={styles.paragraph}>Technology is allowed to fail the test.</p>
             </section>
 
-            <section aria-labelledby="related-guides" className={`${styles.section} ${styles.related}`}>
-              <h2 id="related-guides" className={styles.sectionTitle}>Related Guides</h2>
-              <div className={styles.stack}>
-                <div><h3 className={styles.cardTitle}>Before You Add Another Tool</h3><p className={styles.paragraph}><Link href="/guides/ai-tools-vs-business-systems">AI Tools vs. Business Systems: What Does Your Business Actually Need?</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If AI Is Creating More Work</h3><p className={styles.paragraph}><Link href="/guides/why-ai-is-not-saving-you-time">Why AI Is Not Saving You Time</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If You Have a Stable Process</h3><p className={styles.paragraph}><Link href="/guides/what-to-automate-in-your-business">How to Know What to Automate in Your Business</Link></p></div>
-              </div>
-            </section>
+            <RelatedGuides guides={relatedGuides} />
 
             <section aria-labelledby="support-business" className={`${styles.section} ${styles.closing}`}>
               <h2 id="support-business" className={styles.sectionTitle}>Use AI to Support the Business You Intend to Build</h2>

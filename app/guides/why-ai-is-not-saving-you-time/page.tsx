@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import RelatedGuides from '../RelatedGuides';
 import styles from '../GuideArticle.module.css';
 
 const title = 'Why AI Is Not Saving You Time — And What to Fix First | iPurpose';
@@ -35,6 +36,21 @@ const timeSavingUses = [
   ['Summarization', 'Condensing known source material for review.'],
   ['Repetitive Administrative Support', 'Helping with standardized work after the workflow has already been defined.'],
 ];
+
+const relatedGuides = [
+  {
+    href: '/guides/ai-tools-vs-business-systems',
+    title: 'AI Tools vs. Business Systems: What Does Your Business Actually Need?',
+  },
+  {
+    href: '/guides/what-to-automate-in-your-business',
+    title: 'How to Know What to Automate in Your Business',
+  },
+  {
+    href: '/guides/ai-for-overwhelmed-entrepreneurs',
+    title: 'AI for Overwhelmed Entrepreneurs: Start With Less, Not More',
+  },
+] as const;
 
 export default function WhyAiIsNotSavingYouTimePage() {
   return (
@@ -477,25 +493,15 @@ export default function WhyAiIsNotSavingYouTimePage() {
                   <p className={styles.paragraph}>Keep the first automation small, visible, and reversible.</p>
                 </div>
               </div>
-            </section>
-
-            <section aria-labelledby="related-guides" className={`${styles.section} ${styles.related}`}>
-              <h2 id="related-guides" className={styles.sectionTitle}>
-                Not Sure Whether the Problem Is AI or Your Workflow?
-              </h2>
               <p className={styles.paragraph}>
-                Read{' '}
-                <Link href="/guides/ai-tools-vs-business-systems">
-                  AI Tools vs. Business Systems: What Does Your Business Actually Need?
-                </Link>
-              </p>
-              <p className={styles.paragraph}>
-                If your process is already stable and you are deciding what to automate next, read{' '}
-                <Link href="/guides/what-to-automate-in-your-business">
-                  How to Know What to Automate in Your Business
+                If reducing the stack still feels like too much, use{' '}
+                <Link href="/guides/ai-for-overwhelmed-entrepreneurs">
+                  a simpler approach to AI when everything feels like too much
                 </Link>.
               </p>
             </section>
+
+            <RelatedGuides guides={relatedGuides} />
 
             <section aria-labelledby="remove-friction" className={`${styles.section} ${styles.closing}`}>
               <h2 id="remove-friction" className={styles.sectionTitle}>

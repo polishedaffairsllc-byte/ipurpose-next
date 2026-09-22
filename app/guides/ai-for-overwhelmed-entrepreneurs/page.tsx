@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import RelatedGuides from '../RelatedGuides';
 import styles from '../GuideArticle.module.css';
 
 const title = 'AI for Overwhelmed Entrepreneurs: Start With Less, Not More | iPurpose';
@@ -50,6 +51,21 @@ const signs = [
     paragraphs: ['You bought the subscription.', 'Saved the tutorial.', 'Created the account.', 'Joined the platform.', 'And now you feel as if you should be doing more with it.', 'That is not a reason to use technology.', 'The tool serves the business.', 'The business does not exist to justify the tool.'],
   },
 ];
+
+const relatedGuides = [
+  {
+    href: '/guides/how-to-use-ai-in-your-business',
+    title: 'How to Use AI in Your Business Without Adding More Chaos',
+  },
+  {
+    href: '/guides/why-ai-is-not-saving-you-time',
+    title: 'Why AI Is Not Saving You Time',
+  },
+  {
+    href: '/guides/business-decision-making-system',
+    title: 'How to Build a Business Decision-Making System',
+  },
+] as const;
 
 export default function AiForOverwhelmedEntrepreneursPage() {
   return (
@@ -260,16 +276,7 @@ export default function AiForOverwhelmedEntrepreneursPage() {
               <p className={styles.paragraph}>AI can help process information.</p><p className={styles.paragraph}>It does not need to become the source of every decision.</p>
             </section>
 
-            <section aria-labelledby="related-guides" className={`${styles.section} ${styles.related}`}>
-              <h2 id="related-guides" className={styles.sectionTitle}>Related Guides</h2>
-              <div className={styles.stack}>
-                <div><h3 className={styles.cardTitle}>If You Want a Practical Starting Point</h3><p className={styles.paragraph}><Link href="/guides/how-to-use-ai-in-your-business">How to Use AI in Your Business Without Adding More Chaos</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If You Are Wondering Whether You Need Another Tool</h3><p className={styles.paragraph}><Link href="/guides/ai-tools-vs-business-systems">AI Tools vs. Business Systems: What Does Your Business Actually Need?</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If AI Is Creating More Work</h3><p className={styles.paragraph}><Link href="/guides/why-ai-is-not-saving-you-time">Why AI Is Not Saving You Time</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If You Need to Decide What to Automate</h3><p className={styles.paragraph}><Link href="/guides/what-to-automate-in-your-business">How to Know What to Automate in Your Business</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If Too Many Choices Are the Problem</h3><p className={styles.paragraph}><Link href="/guides/business-decision-making-system">How to Build a Business Decision-Making System</Link></p></div>
-              </div>
-            </section>
+            <RelatedGuides guides={relatedGuides} />
 
             <section aria-labelledby="keep-up-business" className={`${styles.section} ${styles.closing}`}>
               <h2 id="keep-up-business" className={styles.sectionTitle}>You Do Not Have to Keep Up With AI</h2>

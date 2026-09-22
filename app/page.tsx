@@ -32,39 +32,9 @@ export const metadata: Metadata = {
   },
 };
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Organization',
-      '@id': `${canonicalUrl}#organization`,
-      name: 'iPurpose',
-      url: canonicalUrl,
-      logo: socialImageUrl,
-      description,
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${canonicalUrl}#website`,
-      name: 'iPurpose',
-      url: canonicalUrl,
-      description,
-      publisher: {
-        '@id': `${canonicalUrl}#organization`,
-      },
-    },
-  ],
-};
-
 export default function Home() {
   return (
     <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
-      }}
-    />
     <SplashVideoModal />
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import RelatedGuides from '../RelatedGuides';
 import styles from '../GuideArticle.module.css';
 
 const title = 'AI Tools vs. Business Systems: What Your Business Actually Needs | iPurpose';
@@ -73,6 +74,21 @@ const systemsProblemSigns = [
     ],
   },
 ];
+
+const relatedGuides = [
+  {
+    href: '/guides/what-to-automate-in-your-business',
+    title: 'How to Know What to Automate in Your Business',
+  },
+  {
+    href: '/guides/business-decision-making-system',
+    title: 'How to Build a Business Decision-Making System',
+  },
+  {
+    href: '/guides/how-to-use-ai-in-your-business',
+    title: 'How to Use AI in Your Business Without Adding More Chaos',
+  },
+] as const;
 
 export default function AiToolsVsBusinessSystemsPage() {
   return (
@@ -191,6 +207,12 @@ export default function AiToolsVsBusinessSystemsPage() {
               <p className={styles.paragraph}>
                 Learn more about the{' '}
                 <Link href="/discover">Soul → Systems → AI™ framework</Link>.
+              </p>
+              <p className={styles.paragraph}>
+                Once the operating structure is stable, learn{' '}
+                <Link href="/guides/how-to-use-ai-in-your-business">
+                  how to use AI once the underlying workflow is clear
+                </Link>.
               </p>
             </section>
 
@@ -355,6 +377,12 @@ export default function AiToolsVsBusinessSystemsPage() {
               </ul>
               <p className={styles.paragraph}>Those questions are less exciting than testing new technology.</p>
               <p className={styles.paragraph}>They are also what make technology useful.</p>
+              <p className={styles.paragraph}>
+                If the same choices keep returning without clear ownership or criteria,{' '}
+                <Link href="/guides/business-decision-making-system">
+                  build a repeatable business decision-making system
+                </Link>.
+              </p>
             </section>
 
             <section aria-labelledby="seven-questions" className={styles.section}>
@@ -397,6 +425,8 @@ export default function AiToolsVsBusinessSystemsPage() {
                 guide.
               </p>
             </section>
+
+            <RelatedGuides guides={relatedGuides} />
 
             <section aria-labelledby="problem-beneath-tool" className={`${styles.section} ${styles.closing}`}>
               <h2 id="problem-beneath-tool" className={styles.sectionTitle}>Start With the Problem Beneath the Tool</h2>

@@ -17,21 +17,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${canonicalDomain}/about`,
+      url: `${canonicalDomain}/clarity-check`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 0.9,
     },
     {
       url: `${canonicalDomain}/program`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/clarity-check`,
+      url: `${canonicalDomain}/programs`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
@@ -71,10 +71,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/delete-account`,
+      url: `${canonicalDomain}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${canonicalDomain}/starter-pack`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${canonicalDomain}/ai-blueprint`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${canonicalDomain}/contact`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
-      priority: 0.5,
+      priority: 0.3,
     },
   ];
 }

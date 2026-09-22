@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import RelatedGuides from '../RelatedGuides';
 import styles from './page.module.css';
 
 const title = 'What to Automate in Your Business First | iPurpose';
@@ -110,6 +111,21 @@ const examples = [
   },
 ];
 
+const relatedGuides = [
+  {
+    href: '/guides/ai-tools-vs-business-systems',
+    title: 'AI Tools vs. Business Systems: What Does Your Business Actually Need?',
+  },
+  {
+    href: '/guides/why-ai-is-not-saving-you-time',
+    title: 'Why AI Is Not Saving You Time',
+  },
+  {
+    href: '/guides/how-to-use-ai-in-your-business',
+    title: 'How to Use AI in Your Business Without Adding More Chaos',
+  },
+] as const;
+
 export default function WhatToAutomateGuidePage() {
   return (
     <div className={`${styles.page} min-h-screen bg-white text-warmCharcoal`}>
@@ -162,6 +178,13 @@ export default function WhatToAutomateGuidePage() {
                 </Link>
                 .
               </p>
+              <p className="font-marcellus text-lg leading-relaxed text-warmCharcoal/75">
+                If automation is creating more review, maintenance, or decisions, examine{' '}
+                <Link href="/guides/why-ai-is-not-saving-you-time" className="font-semibold text-lavenderViolet underline underline-offset-4">
+                  why AI may not be saving you time
+                </Link>
+                .
+              </p>
             </section>
 
             <section aria-labelledby="framework" className="space-y-8">
@@ -199,6 +222,13 @@ export default function WhatToAutomateGuidePage() {
                   Soul → Systems → AI™ framework
                 </Link>
                 : technology follows clarity instead of trying to replace it.
+              </p>
+              <p className="font-marcellus text-lg leading-relaxed text-warmCharcoal/75">
+                Once the workflow is clear, use this practical guide to understand{' '}
+                <Link href="/guides/how-to-use-ai-in-your-business" className="font-semibold text-lavenderViolet underline underline-offset-4">
+                  how to use AI in your business intentionally
+                </Link>
+                .
               </p>
             </section>
 
@@ -325,6 +355,8 @@ export default function WhatToAutomateGuidePage() {
                 <li><strong className="text-warmCharcoal">6. Review the result.</strong> Confirm that the change saved meaningful effort without weakening quality or care.</li>
               </ol>
             </section>
+
+            <RelatedGuides guides={relatedGuides} />
 
             <aside className={`${styles.cta} rounded-2xl bg-gradient-to-br from-indigoDeep to-warmCharcoal px-6 py-12 text-center sm:px-10 sm:py-16`}>
               <p className="font-marcellus text-sm uppercase tracking-[0.22em] text-softGold">

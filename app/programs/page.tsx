@@ -7,6 +7,8 @@ import Card from '../components/Card';
 export const metadata: Metadata = {
   title: 'Programs & Offers — iPurpose',
   description: 'Explore iPurpose programs: Starter Pack, AI Blueprint, Accelerator, and Deepen offerings.',
+  alternates: { canonical: 'https://ipurposesoul.com/programs' },
+  robots: { index: true, follow: true },
 };
 
 export default function ProgramsPage() {

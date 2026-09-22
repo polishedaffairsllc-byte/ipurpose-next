@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
 import PublicHeader from '../../components/PublicHeader';
+import RelatedGuides from '../RelatedGuides';
 import styles from '../GuideArticle.module.css';
 
 const title = 'How to Build a Business Decision-Making System | iPurpose';
@@ -90,6 +91,21 @@ const decisionLevels = [
   ['Moderate Impact', ['adopting a new recurring software tool', 'adjusting an onboarding workflow', 'changing a regular business process'], 'These deserve structured review.'],
   ['High-Consequence or Difficult to Reverse', ['major financial commitments', 'legal commitments', 'significant staffing decisions', 'major strategic changes'], 'These require deeper information, appropriate professional input where necessary, and clear human accountability.'],
 ];
+
+const relatedGuides = [
+  {
+    href: '/guides/ai-tools-vs-business-systems',
+    title: 'AI Tools vs. Business Systems: What Does Your Business Actually Need?',
+  },
+  {
+    href: '/guides/what-to-automate-in-your-business',
+    title: 'How to Know What to Automate in Your Business',
+  },
+  {
+    href: '/guides/ai-for-overwhelmed-entrepreneurs',
+    title: 'AI for Overwhelmed Entrepreneurs: Start With Less, Not More',
+  },
+] as const;
 
 export default function BusinessDecisionMakingSystemPage() {
   return (
@@ -301,6 +317,12 @@ export default function BusinessDecisionMakingSystemPage() {
               <p className={styles.paragraph}>A decision system creates space between the stimulus and the response.</p>
               <p className={styles.paragraph}>Instead of immediately changing direction, you return to:</p><ul className={styles.list}><li>the objective,</li><li>the criteria,</li><li>the constraints,</li><li>and the current priorities.</li></ul>
               <p className={styles.paragraph}>That does not eliminate emotion.</p><p className={styles.paragraph}>It prevents emotion from having to carry the entire decision.</p>
+              <p className={styles.paragraph}>
+                A clear filter can also help you{' '}
+                <Link href="/guides/ai-for-overwhelmed-entrepreneurs">
+                  reduce AI overwhelm by making fewer, clearer decisions
+                </Link>.
+              </p>
             </section>
 
             <section aria-labelledby="decision-template" className={styles.section}>
@@ -311,14 +333,7 @@ export default function BusinessDecisionMakingSystemPage() {
               </ol>
             </section>
 
-            <section aria-labelledby="related-guides" className={`${styles.section} ${styles.related}`}>
-              <h2 id="related-guides" className={styles.sectionTitle}>Related Guides</h2>
-              <div className={styles.stack}>
-                <div><h3 className={styles.cardTitle}>If the Decision Is About Technology</h3><p className={styles.paragraph}><Link href="/guides/ai-tools-vs-business-systems">AI Tools vs. Business Systems: What Does Your Business Actually Need?</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If the Decision Is About Automation</h3><p className={styles.paragraph}><Link href="/guides/what-to-automate-in-your-business">How to Know What to Automate in Your Business</Link></p></div>
-                <div><h3 className={styles.cardTitle}>If You Are Trying to Use AI More Intentionally</h3><p className={styles.paragraph}><Link href="/guides/how-to-use-ai-in-your-business">How to Use AI in Your Business Without Adding More Chaos</Link></p></div>
-              </div>
-            </section>
+            <RelatedGuides guides={relatedGuides} />
 
             <section aria-labelledby="better-decisions" className={`${styles.section} ${styles.closing}`}>
               <h2 id="better-decisions" className={styles.sectionTitle}>Better Decisions Make Better Systems Possible</h2>
