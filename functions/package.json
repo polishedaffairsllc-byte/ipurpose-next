@@ -1,0 +1,25 @@
+{
+  "name": "ipurpose-launch-metrics-functions",
+  "private": true,
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --import tsx --test test/*.test.ts",
+    "test:emulator": "node --import tsx --test test/emulator/*.test.ts"
+  },
+  "dependencies": {
+    "@google-analytics/data": "6.1.0",
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "7.3.2"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "3.0.4",
+    "@types/node": "^20.19.25",
+    "firebase": "^10.14.1",
+    "tsx": "4.19.2",
+    "typescript": "^5.9.2"
+  }
+}

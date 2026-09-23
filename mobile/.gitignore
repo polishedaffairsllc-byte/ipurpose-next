@@ -11,3 +11,5 @@ credentials.json
 *.keystore
 *.p12
 *.mobileprovision
+google-services.json
+GoogleService-Info.plist

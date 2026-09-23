@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { deleteIPurposeAccount } from '../lib/api';
+import { logLaunchEvent } from '../lib/analyticsEvents';
 
 interface AuthContextValue {
   user: User | null;
@@ -38,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     createAccount: async (email, password) => {
       await createUserWithEmailAndPassword(auth, email.trim(), password);
+      logLaunchEvent('sign_up');
     },
     deleteAccount: async (password) => {
       const currentUser = auth.currentUser;

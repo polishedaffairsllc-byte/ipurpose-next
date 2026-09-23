@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { LAUNCH_MEASUREMENT_ID } from '@/lib/launch-metrics/config';
 import { getCanonicalMetadata } from '@/lib/canonical';
 import { AuthContextProvider } from './context/AuthContext';
 import BackgroundLayer from "./components/BackgroundLayer";
@@ -79,6 +80,15 @@ export default function RootLayout({
             `,
           }}
         />
+        {LAUNCH_MEASUREMENT_ID !== process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <Script id="launch-metrics-config" strategy="afterInteractive">{`
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+            window.gtag('config', ${JSON.stringify(LAUNCH_MEASUREMENT_ID).replace(/</g, '\\u003c')}, {
+              send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false
+            });
+          `}</Script>
+        )}
         <div className="fixed inset-0 -z-40">
           <VideoBackground src="/videos/water-reflection.mp4" />
         </div>
