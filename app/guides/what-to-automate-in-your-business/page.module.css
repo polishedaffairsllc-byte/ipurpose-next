@@ -1,0 +1,418 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #2a2a2a;
+  font-family: 'Marcellus', serif;
+}
+
+.page main {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 1rem;
+  text-align: center;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at top right, rgba(156, 136, 255, 0.3), transparent 45%),
+    radial-gradient(circle at bottom left, rgba(252, 196, 183, 0.2), transparent 42%),
+    linear-gradient(135deg, #4b4e6d 0%, #2a2a2a 52%, #4b4e6d 100%);
+}
+
+.hero > div:first-child {
+  position: absolute;
+  inset: 0;
+}
+
+.hero > div:nth-child(2) {
+  position: relative;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.hero p:first-child {
+  margin: 0 0 1.25rem;
+  color: #f5e8c7;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 56rem;
+  margin: 0 auto;
+  color: #ffffff;
+  font-family: 'Italiana', serif;
+  font-size: clamp(2.35rem, 7vw, 4rem);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.hero h1 + p {
+  max-width: 44rem;
+  margin: 1.75rem auto 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.content {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 3.5rem 1rem 5rem;
+}
+
+.content > section,
+.content > aside {
+  margin-top: 4rem;
+}
+
+.content > section:first-child {
+  margin-top: 0;
+  padding: 1.75rem;
+  border: 1px solid rgba(156, 136, 255, 0.24);
+  border-radius: 1rem;
+  background: rgba(156, 136, 255, 0.06);
+}
+
+.content h2,
+.content h3 {
+  margin: 0;
+  color: #4b4e6d;
+  font-family: 'Italiana', serif;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.content h2 {
+  font-size: clamp(1.9rem, 5vw, 2.55rem);
+}
+
+.content h3 {
+  font-size: 1.55rem;
+}
+
+.content p,
+.content li,
+.content td,
+.content th {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.content section > p,
+.content section > div > p,
+.content section > div > div > p {
+  color: rgba(42, 42, 42, 0.78);
+}
+
+.content section > p + p {
+  margin-top: 1.25rem;
+}
+
+.content section h2 + p,
+.content section div > h2 + p {
+  margin-top: 1rem;
+}
+
+.content a {
+  color: #6758b8;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+
+.content a:focus-visible {
+  outline: 3px solid rgba(156, 136, 255, 0.5);
+  outline-offset: 4px;
+}
+
+.content section[aria-labelledby='framework'] > div:first-child > p,
+.content section[aria-labelledby='scorecard'] > div:first-child > p:first-child {
+  margin: 0 0 0.75rem;
+  color: #6758b8;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) > div {
+  padding: 1.5rem;
+  border: 1px solid rgba(75, 78, 109, 0.14);
+  border-radius: 1rem;
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) > div:nth-child(1) {
+  border-color: rgba(252, 196, 183, 0.55);
+  background: rgba(252, 196, 183, 0.1);
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) > div:nth-child(2) {
+  border-color: rgba(245, 232, 199, 0.7);
+  background: rgba(245, 232, 199, 0.18);
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) > div:nth-child(3) {
+  border-color: rgba(156, 136, 255, 0.38);
+  background: rgba(156, 136, 255, 0.08);
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) p:first-child {
+  margin: 0;
+  color: #4b4e6d;
+  font-family: 'Italiana', serif;
+  font-size: 1.55rem;
+}
+
+.content section[aria-labelledby='framework'] > div:nth-child(2) p:last-child {
+  margin: 0.75rem 0 0;
+}
+
+.content section[aria-labelledby='framework'] > p:last-child {
+  margin-top: 1.5rem;
+}
+
+.content section[aria-labelledby='ready-signs'] ol {
+  display: grid;
+  gap: 1rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.content section[aria-labelledby='ready-signs'] li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.2rem;
+  border: 1px solid rgba(75, 78, 109, 0.14);
+  border-radius: 0.85rem;
+}
+
+.content section[aria-labelledby='ready-signs'] li > span:first-child {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #4b4e6d;
+  color: #ffffff;
+  font-size: 0.78rem;
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(2) {
+  margin-top: 1.75rem;
+  overflow-x: auto;
+  border: 1px solid rgba(75, 78, 109, 0.14);
+  border-radius: 1rem;
+}
+
+.content section[aria-labelledby='scorecard'] table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.content section[aria-labelledby='scorecard'] thead {
+  background: #4b4e6d;
+  color: #ffffff;
+}
+
+.content section[aria-labelledby='scorecard'] th,
+.content section[aria-labelledby='scorecard'] td {
+  padding: 1rem 1.2rem;
+  border-top: 1px solid rgba(75, 78, 109, 0.12);
+  vertical-align: top;
+}
+
+.content section[aria-labelledby='scorecard'] thead th {
+  border-top: 0;
+  font-weight: 400;
+}
+
+.content section[aria-labelledby='scorecard'] tbody th {
+  color: #4b4e6d;
+  font-weight: 600;
+}
+
+.content section[aria-labelledby='scorecard'] tbody tr:nth-child(even) {
+  background: rgba(75, 78, 109, 0.035);
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) > div {
+  padding: 1.25rem;
+  border-radius: 0.85rem;
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) > div:nth-child(1) {
+  background: rgba(252, 196, 183, 0.18);
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) > div:nth-child(2) {
+  background: rgba(245, 232, 199, 0.28);
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) > div:nth-child(3) {
+  background: rgba(156, 136, 255, 0.12);
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) p:first-child {
+  margin: 0;
+  color: #4b4e6d;
+  font-family: 'Italiana', serif;
+  font-size: 1.55rem;
+}
+
+.content section[aria-labelledby='scorecard'] > div:nth-child(3) p:last-child {
+  margin: 0.5rem 0 0;
+}
+
+.content section[aria-labelledby='not-yet'] > div {
+  margin-top: 1.5rem;
+  padding: 1.75rem;
+  border: 1px solid rgba(252, 196, 183, 0.55);
+  border-radius: 1rem;
+  background: rgba(252, 196, 183, 0.1);
+}
+
+.content section[aria-labelledby='not-yet'] ul,
+.content section[aria-labelledby='first-automation'] ol {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.content section[aria-labelledby='not-yet'] li + li,
+.content section[aria-labelledby='first-automation'] li + li {
+  margin-top: 0.85rem;
+}
+
+.content section[aria-labelledby='examples'] > div {
+  margin-top: 1.5rem;
+}
+
+.content section[aria-labelledby='examples'] > div > div {
+  padding: 1.5rem;
+  border: 1px solid rgba(75, 78, 109, 0.14);
+  border-radius: 1rem;
+}
+
+.content section[aria-labelledby='examples'] > div > div + div {
+  margin-top: 1rem;
+}
+
+.content section[aria-labelledby='examples'] h3 + div {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.content section[aria-labelledby='examples'] p {
+  margin: 0;
+}
+
+.content section[aria-labelledby='examples'] strong:first-child {
+  color: #6758b8;
+}
+
+.content section[aria-labelledby='first-automation'] ol {
+  margin-top: 1.5rem;
+}
+
+.cta {
+  padding: 3rem 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #4b4e6d 0%, #2a2a2a 100%);
+}
+
+.cta > p:first-child {
+  margin: 0;
+  color: #f5e8c7;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.cta h2 {
+  margin-top: 1rem;
+  color: #ffffff;
+}
+
+.cta h2 + p {
+  max-width: 42rem;
+  margin: 1.25rem auto 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.cta > a[href='/clarity-check'] {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  background: #9c88ff;
+  color: #ffffff;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.cta > p:last-child {
+  margin: 1.5rem 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.85rem;
+}
+
+.cta > p:last-child a {
+  color: #ffffff;
+}
+
+@media (min-width: 48rem) {
+  .hero {
+    padding: 7rem 1.5rem;
+  }
+
+  .content {
+    padding: 5rem 1.5rem 6rem;
+  }
+
+  .content > section,
+  .content > aside {
+    margin-top: 5rem;
+  }
+
+  .content > section:first-child {
+    padding: 2.5rem;
+  }
+
+  .content section[aria-labelledby='framework'] > div:nth-child(2),
+  .content section[aria-labelledby='scorecard'] > div:nth-child(3) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .content section[aria-labelledby='ready-signs'] ol,
+  .content section[aria-labelledby='examples'] h3 + div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cta {
+    padding: 4rem 2.5rem;
+  }
+}

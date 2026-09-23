@@ -32,39 +32,9 @@ export const metadata: Metadata = {
   },
 };
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Organization',
-      '@id': `${canonicalUrl}#organization`,
-      name: 'iPurpose',
-      url: canonicalUrl,
-      logo: socialImageUrl,
-      description,
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${canonicalUrl}#website`,
-      name: 'iPurpose',
-      url: canonicalUrl,
-      description,
-      publisher: {
-        '@id': `${canonicalUrl}#organization`,
-      },
-    },
-  ],
-};
-
 export default function Home() {
   return (
     <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
-      }}
-    />
     <SplashVideoModal />
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />
@@ -133,6 +103,13 @@ export default function Home() {
                 <Link href="/ai-blueprint" className="underline hover:opacity-70 transition-opacity font-semibold">
                   Explore the AI Blueprint
                 </Link>
+              </p>
+              <p className="text-body !text-white mt-4" style={{ color: '#FFFFFF', opacity: 0.85 }}>
+                Not sure where automation belongs?{' '}
+                <Link href="/guides/what-to-automate-in-your-business" className="underline hover:opacity-70 transition-opacity font-semibold">
+                  Use the automation-readiness guide
+                </Link>
+                .
               </p>
             </div>
           </div>

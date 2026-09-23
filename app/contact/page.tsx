@@ -5,6 +5,8 @@ import ContactForm from "./ContactForm";
 
 export const metadata = {
   title: "Contact — iPurpose",
+  alternates: { canonical: "https://ipurposesoul.com/contact" },
+  robots: { index: true, follow: true },
 };
 
 export default function ContactPage() {

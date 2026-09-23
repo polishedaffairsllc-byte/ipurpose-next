@@ -165,6 +165,13 @@ export default function DiscoverPage() {
               <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
               Together, these layers help you move from self-understanding to ethical, sustainable action.
             </p>
+              <p className="font-marcellus text-display-emphasis" style={{ color: 'rgba(42,42,42,0.75)' }}>
+                Before adding new tools, use this practical guide to{' '}
+                <Link href="/guides/what-to-automate-in-your-business" className="font-semibold text-lavenderViolet underline underline-offset-4">
+                  decide what to automate in your business
+                </Link>
+                .
+              </p>
             </div>
             <img 
               src="/images/discover-page/W6RS98jvVvjPVRrRAl0m09G1C1AGTDLnQvYa60BaCRlXEVvHLZu0LZPRK6mD2BDaHgHFSDCPSJsCAUDyH4EHulYiXXmMJ7My_TMuJigaG0E.jpeg" 
