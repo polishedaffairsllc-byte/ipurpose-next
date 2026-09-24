@@ -7,7 +7,7 @@
 - Transport: stateless Streamable HTTP, using `mcp-handler` and the official MCP SDK.
 - Tool: `get_launch_metrics`, with no arguments, read-only and idempotent.
 - OAuth resource/audience: `https://ipurposesoul.com/api/mcp` (no trailing slash).
-- Permission: `launch_metrics:read`.
+- Permission: `read:launch_metrics`.
 - Discovery: `https://ipurposesoul.com/.well-known/oauth-protected-resource/api/mcp`.
 - Only authorized identity: verified `mshmltn@gmail.com`.
 
@@ -30,7 +30,7 @@ OAuth application. Provider setup is separate from the application code.
 2. Register an API named `iPurpose Launch Metrics`, identifier
    `https://ipurposesoul.com/api/mcp`, signing algorithm RS256. Use the RFC 9068
    access-token profile, and set access-token lifetime to **900 seconds**.
-   Add only the permission `launch_metrics:read` (read weekly launch metrics).
+   Add only the permission `read:launch_metrics` (read weekly launch metrics).
 3. Register a dedicated **Regular Web Application** for ChatGPT. Use the
    authorization-code flow with S256 PKCE; do not enable implicit, password,
    or client-credentials grants. Use a predefined OAuth client for this small

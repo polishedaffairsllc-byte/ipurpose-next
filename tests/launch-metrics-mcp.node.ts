@@ -86,6 +86,7 @@ test('actual MCP route rejects unauthenticated, malformed, cookie and query-toke
 });
 
 test('signed verified owner token is accepted; other emails and unverified claims are rejected', async () => {
+  assert.equal(MCP_SCOPE, 'read:launch_metrics');
   assert.equal(await verify(await token()), 'owner');
   assert.equal(await verify(await token({ [EMAIL_CLAIM]: 'MsHmltn@gmail.com' })), 'owner');
   for (const claims of [
@@ -93,6 +94,7 @@ test('signed verified owner token is accepted; other emails and unverified claim
     { [EMAIL_CLAIM]: 'mshmltn+other@gmail.com' },
     { [VERIFIED_CLAIM]: false }, { [VERIFIED_CLAIM]: 'true' },
     { [EMAIL_CLAIM]: undefined }, { scope: 'admin' }, { scope: undefined },
+    { scope: 'launch_metrics:read' },
     { client_id: 'another-client' }, { sub: '' },
   ]) assert.equal(await verify(await token(claims)), 'forbidden');
 });

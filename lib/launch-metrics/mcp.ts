@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 export const MCP_RESOURCE = 'https://ipurposesoul.com/api/mcp';
 export const MCP_METADATA = 'https://ipurposesoul.com/.well-known/oauth-protected-resource/api/mcp';
-export const MCP_SCOPE = 'launch_metrics:read';
+export const MCP_SCOPE = 'read:launch_metrics';
 export const OWNER_EMAIL = 'mshmltn@gmail.com';
 export const EMAIL_CLAIM = 'https://ipurposesoul.com/mcp/email';
 export const VERIFIED_CLAIM = 'https://ipurposesoul.com/mcp/email_verified';
