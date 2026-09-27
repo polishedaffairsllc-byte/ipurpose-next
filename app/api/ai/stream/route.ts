@@ -1,4 +1,5 @@
 import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
+import { OPENAI_CONFIG } from "@/app/api/gpt/utils/openai-client";
 import {
   getCompanionModelConfig,
   resolveCompanionModel,
@@ -45,6 +46,7 @@ export async function POST(request: Request) {
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
+      signal: AbortSignal.timeout(OPENAI_CONFIG.TIMEOUT_MS),
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
