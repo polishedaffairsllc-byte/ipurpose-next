@@ -4,6 +4,10 @@ Audited September 27, 2026 from latest fetched merged `main`, `6473818` (`fix(mc
 
 ## Launch decision
 
+**Current sign-off (September 27, 2026): no remaining launch-cost item blocks October 1 on the basis of the owner-verified controls and accepted residual risks recorded in the [final sign-off](#final-sign-off--september-27-2026).** The original conditional decision and proposed dashboard actions below are retained as audit history; the dated sign-off supersedes their unverified status and proposed thresholds only where explicitly confirmed.
+
+### Initial audit decision (superseded by final sign-off)
+
 **Conditional no-go on cost containment until the owner verifies the controls below.** Free accounts can generate paid AI traffic; there is no aggregate application spending cap. Legacy AI and public email routes widen the exposure. Per-user numbers must not be represented as a launch spending ceiling. This PR reduces a few failure modes; it does not certify launch readiness. Renita Hamilton / the production billing owner must execute and evidence the dashboard actions **before October 1**, or explicitly resolve the blockers through a separately reviewed change. An alert alone is not containment.
 
 [Service inventory and call paths](launch-cost-service-inventory.md) covers mobile, web, backend, scheduled functions, and supporting services. [Validation results](launch-cost-validation.md) records commands and limitations.
@@ -77,7 +81,7 @@ Request-only sensitivity: 1,000 Compass calls × 1,024 output tokens = 1.024M ou
 
 ## Deferred risks and launch gates
 
-Estimates are engineering effort, not calendar commitments. Exposure excludes the underlying provider limits, which are unverified.
+Estimates are engineering effort, not calendar commitments. These were the initial risk assessments and conditional gates before dashboard verification; exposure excludes provider limits. See the final sign-off for verified controls and the current non-blocking disposition.
 
 | Risk | Severity / effort | Likely exposure and decision before October 1 |
 | --- | --- | --- |
@@ -93,7 +97,7 @@ Estimates are engineering effort, not calendar commitments. Exposure excludes th
 
 ## Owner dashboard actions — must be verified before October 1
 
-**Accountable owner: Renita Hamilton / iPurpose production billing owner for every row. Status: NOT VERIFIED for every row.** These are manual pre-launch work, not future suggestions or changes applied by this PR. Save timestamped screenshots/exported settings (without secrets), project/account IDs, recipients, and test results in the release record. Thresholds below are conservative proposals for a small initial launch, not inferred approved budgets; owner must confirm or document a replacement and its aggregate cost math. Verify preview deployments using production keys too. Billing alerts are delayed, so nominate a backup and a response within 15 minutes during launch.
+**Accountable owner: Renita Hamilton / iPurpose production billing owner for every row. Initial audit status: NOT VERIFIED; see the final sign-off for September 27 confirmations and deliberate exceptions.** The following table preserves the original proposed manual pre-launch work, not future suggestions or changes applied by this PR. Save timestamped screenshots/exported settings (without secrets), project/account IDs, recipients, and test results in the release record. Thresholds below are conservative proposals for a small initial launch, not inferred approved budgets; owner must confirm or document a replacement and its aggregate cost math. Verify preview deployments using production keys too. Billing alerts are delayed, so nominate a backup and a response within 15 minutes during launch.
 
 | Provider / dashboard | Exact control and recommended threshold | Evidence / containment limitation |
 | --- | --- | --- |
@@ -111,4 +115,40 @@ Estimates are engineering effort, not calendar commitments. Exposure excludes th
 | Stripe → Radar / Developers → Webhooks & API logs; Google Ads / Meta Ads → campaign budgets | Stripe: review **20 failed payments/hour**, signature failures and repeated event IDs; confirm Radar protection and owner notifications. Ads: verify owner-approved campaign totals; recommendation **$0 for any campaign without an approved launch budget**. | Checkout APIs do not set advertising budgets. No aggregate Stripe fee cap established in code; fees/disputes depend on real payments and plan. GA/Meta conversion events are measurement, not an instruction to buy ads. No payment, email, advertising or dashboard changes performed. |
 | Expo EAS / GitHub → Billing; supporting subscriptions | Verify existing build/CI quotas; **$0 automatic overage until explicitly approved**, alerts **80/100%** where supported. Review Drive/Zoom/domain renewals under existing subscriptions. | These are supporting costs, not per-Compass-token spend. Confirm no duplicate automated build/deploy loop; no EAS build or release configuration changed. |
 
-At sign-off the owner must record: **verified by / verified at / effective thresholds / evidence / exception rationale** for each row. Unverified aggregate AI containment, unsafe Firebase rules, or uncontained public email abuse remain blockers. This audit opens one review PR and must not auto-merge.
+The original audit required owner records of **verified by / verified at / effective thresholds / evidence / exception rationale**. Aggregate AI containment, deployed Firebase rules, and public email abuse were conditional gates; their current disposition is recorded below. Evidence retention remains the owner’s responsibility. This documentation PR must not auto-merge.
+
+## Final sign-off — September 27, 2026
+
+**Owner verification:** The iPurpose production billing owner reported the following control categories manually verified on **September 27, 2026**. This records owner-supplied confirmation, not an independent dashboard inspection by Codex. Detailed settings and evidence belong in the private release record. These confirmations supersede the corresponding preliminary audit statuses above.
+
+| Control category | Verified September 27, 2026 — classification |
+| --- | --- |
+| OpenAI spending controls | **Enforced aggregate spend cap**; associated alerts verified. |
+| OpenAI capacity controls | **Enforced throughput caps**, not dollar spending caps. |
+| Firebase Cloud Run Functions spending controls | **Enforced service spend cap**, scoped to that service. |
+| Google Cloud project budget | **Alert-only control**, not an enforced spending cap. |
+| Firestore access controls | Access-control verification; **not a spending cap**. |
+| Firebase Authentication configuration | Authentication-control verification; **not a spending cap**. |
+| Firebase Functions capacity controls | **Enforced capacity caps**, distinct from spending caps. |
+| Firebase Storage configuration | Configuration verified; related cleanup is a **deferred follow-up**. |
+| Vercel traffic protection | Protection verified, including an **enforced request cap**; not a spending cap. |
+| Resend usage controls | **Free-plan limits** and overage prevention verified. |
+| GA4 integration configuration | Configuration verified; **not a spending cap**. |
+| Auth0 account and security controls | **Free-plan limits** and security-control verification; not a spending cap. |
+| Stripe payment integration controls | Payment-control verification; **not a spending cap**. |
+| GitHub metered-service controls | **Enforced usage caps**, scoped to the verified services. |
+| Expo EAS usage controls | **Free-plan limits** verified. |
+
+### Deferred follow-ups — non-blocking
+
+The owner reviewed the following categories on September 27, 2026 and retained them as **deferred, non-blocking follow-ups**:
+
+- Compass limiter engineering.
+- Client abuse-protection rollout.
+- Broader edge-protection coverage.
+- Root lint configuration repair recorded during PR #52 validation.
+- Dormant upload-code cleanup.
+
+**Launch conclusion:** no remaining launch-cost item blocks **October 1, 2026** on the basis of the owner-verified controls and accepted follow-ups. This is not a guarantee of zero spend or uninterrupted availability. Enforced caps have defined scopes; alert-only controls require owner action; free-plan limits are distinct from spending caps. Access and configuration checks do not themselves establish spending ceilings.
+
+The production billing owner remains responsible for retaining private verification evidence, maintaining the controls through launch, and monitoring alerts and usage.
