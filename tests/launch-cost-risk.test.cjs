@@ -9,15 +9,15 @@ function load(file, dependencies = {}, extra = {}) {
   const output = ts.transpileModule(readFileSync(path.join(__dirname, '..', file), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
   }).outputText;
-  const module = { exports: {} };
+  const fixtureModule = { exports: {} };
   const resolve = id => {
     if (Object.hasOwn(dependencies, id)) return dependencies[id];
     throw new Error(`Unexpected dependency: ${id}`);
   };
   new Function('require', 'module', 'exports', 'console', ...Object.keys(extra), output)(
-    resolve, module, module.exports, { warn() {}, error() {} }, ...Object.values(extra),
+    resolve, fixtureModule, fixtureModule.exports, { warn() {}, error() {} }, ...Object.values(extra),
   );
-  return module.exports;
+  return fixtureModule.exports;
 }
 const clientModule = () => load('app/api/gpt/utils/openai-client.ts', { openai: require('openai') }, {
   process: { env: { OPENAI_API_KEY: 'synthetic-test-key' } },
