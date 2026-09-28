@@ -21,7 +21,12 @@ export function getOpenAI(): OpenAI {
     if (!apiKey) {
       throw new Error('Missing OPENAI_API_KEY environment variable');
     }
-    cachedOpenAI = new OpenAI({ apiKey });
+    cachedOpenAI = new OpenAI({
+      apiKey,
+      // A timed-out generation may still be billed. Do not replay it automatically.
+      maxRetries: 0,
+      timeout: OPENAI_CONFIG.TIMEOUT_MS,
+    });
   }
   return cachedOpenAI;
 }

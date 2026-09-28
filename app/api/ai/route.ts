@@ -72,7 +72,10 @@ export async function POST(request: NextRequest) {
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: rateLimit.reason || "Too many Mentor requests" },
-        { status: 429 }
+        {
+          status: rateLimit.unavailable ? 503 : 429,
+          headers: { "Cache-Control": "no-store" },
+        }
       );
     }
 
@@ -101,6 +104,10 @@ export async function POST(request: NextRequest) {
       response.choices[0]?.message?.content?.trim() ||
       "I'm unable to respond right now.";
 
+    // Account for completed billable work even if conversation persistence fails.
+    // Await the write so a serverless response cannot abandon it in the background.
+    await recordRequest(uid, response.usage?.total_tokens || 0);
+
     const savedConversationId = await saveCompanionTurn({
       uid,
       conversationId,
@@ -109,10 +116,6 @@ export async function POST(request: NextRequest) {
       assistantMessage,
       model: response.model || model,
       inferredLens,
-    });
-
-    recordRequest(uid, response.usage?.total_tokens || 0).catch((error) => {
-      console.warn("Unable to record Mentor token usage:", error);
     });
 
     return NextResponse.json({

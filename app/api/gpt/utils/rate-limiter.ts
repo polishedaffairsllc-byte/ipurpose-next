@@ -34,6 +34,7 @@ export async function checkRateLimit(userId: string): Promise<{
   allowed: boolean;
   reason?: string;
   resetAt?: Date;
+  unavailable?: boolean;
 }> {
   try {
     const db = getDb();
@@ -51,6 +52,11 @@ export async function checkRateLimit(userId: string): Promise<{
     const windowStart = data.windowStart instanceof Date 
       ? data.windowStart 
       : (data.windowStart as any).toDate();
+    if (!Number.isSafeInteger(data.requests) || data.requests < 0
+      || !Number.isSafeInteger(data.tokens) || data.tokens < 0
+      || !Number.isFinite(windowStart.getTime())) {
+      throw new Error('Invalid rate limit counters');
+    }
     const timeSinceWindowStart = now.getTime() - windowStart.getTime();
 
     // Check minute window
@@ -103,8 +109,13 @@ export async function checkRateLimit(userId: string): Promise<{
     return { allowed: true };
   } catch (error) {
     console.error('Rate limit check failed:', error);
-    // Fail open - allow request if rate limiting fails
-    return { allowed: true };
+    // Never start billable work when the usage guard cannot be checked.
+    // This does not make the check/record sequence atomic; see the launch audit.
+    return {
+      allowed: false,
+      unavailable: true,
+      reason: 'Usage limits are temporarily unavailable. Please try again later.',
+    };
   }
 }
 
