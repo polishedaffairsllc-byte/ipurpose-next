@@ -4,6 +4,10 @@ Audited September 27, 2026 from latest fetched merged `main`, `6473818` (`fix(mc
 
 ## Launch decision
 
+**Current sign-off (September 27, 2026): no remaining launch-cost item blocks October 1 on the basis of the owner-verified controls and accepted residual risks recorded in the [final sign-off](#final-sign-off--september-27-2026).** The original conditional decision and proposed dashboard actions below are retained as audit history; the dated sign-off supersedes their unverified status and proposed thresholds only where explicitly confirmed.
+
+### Initial audit decision (superseded by final sign-off)
+
 **Conditional no-go on cost containment until the owner verifies the controls below.** Free accounts can generate paid AI traffic; there is no aggregate application spending cap. Legacy AI and public email routes widen the exposure. Per-user numbers must not be represented as a launch spending ceiling. This PR reduces a few failure modes; it does not certify launch readiness. Renita Hamilton / the production billing owner must execute and evidence the dashboard actions **before October 1**, or explicitly resolve the blockers through a separately reviewed change. An alert alone is not containment.
 
 [Service inventory and call paths](launch-cost-service-inventory.md) covers mobile, web, backend, scheduled functions, and supporting services. [Validation results](launch-cost-validation.md) records commands and limitations.
@@ -77,7 +81,7 @@ Request-only sensitivity: 1,000 Compass calls × 1,024 output tokens = 1.024M ou
 
 ## Deferred risks and launch gates
 
-Estimates are engineering effort, not calendar commitments. Exposure excludes the underlying provider limits, which are unverified.
+Estimates are engineering effort, not calendar commitments. These were the initial risk assessments and conditional gates before dashboard verification; exposure excludes provider limits. See the final sign-off for verified controls and the current non-blocking disposition.
 
 | Risk | Severity / effort | Likely exposure and decision before October 1 |
 | --- | --- | --- |
@@ -93,7 +97,7 @@ Estimates are engineering effort, not calendar commitments. Exposure excludes th
 
 ## Owner dashboard actions — must be verified before October 1
 
-**Accountable owner: Renita Hamilton / iPurpose production billing owner for every row. Status: NOT VERIFIED for every row.** These are manual pre-launch work, not future suggestions or changes applied by this PR. Save timestamped screenshots/exported settings (without secrets), project/account IDs, recipients, and test results in the release record. Thresholds below are conservative proposals for a small initial launch, not inferred approved budgets; owner must confirm or document a replacement and its aggregate cost math. Verify preview deployments using production keys too. Billing alerts are delayed, so nominate a backup and a response within 15 minutes during launch.
+**Accountable owner: Renita Hamilton / iPurpose production billing owner for every row. Initial audit status: NOT VERIFIED; see the final sign-off for September 27 confirmations and deliberate exceptions.** The following table preserves the original proposed manual pre-launch work, not future suggestions or changes applied by this PR. Save timestamped screenshots/exported settings (without secrets), project/account IDs, recipients, and test results in the release record. Thresholds below are conservative proposals for a small initial launch, not inferred approved budgets; owner must confirm or document a replacement and its aggregate cost math. Verify preview deployments using production keys too. Billing alerts are delayed, so nominate a backup and a response within 15 minutes during launch.
 
 | Provider / dashboard | Exact control and recommended threshold | Evidence / containment limitation |
 | --- | --- | --- |
@@ -111,4 +115,41 @@ Estimates are engineering effort, not calendar commitments. Exposure excludes th
 | Stripe → Radar / Developers → Webhooks & API logs; Google Ads / Meta Ads → campaign budgets | Stripe: review **20 failed payments/hour**, signature failures and repeated event IDs; confirm Radar protection and owner notifications. Ads: verify owner-approved campaign totals; recommendation **$0 for any campaign without an approved launch budget**. | Checkout APIs do not set advertising budgets. No aggregate Stripe fee cap established in code; fees/disputes depend on real payments and plan. GA/Meta conversion events are measurement, not an instruction to buy ads. No payment, email, advertising or dashboard changes performed. |
 | Expo EAS / GitHub → Billing; supporting subscriptions | Verify existing build/CI quotas; **$0 automatic overage until explicitly approved**, alerts **80/100%** where supported. Review Drive/Zoom/domain renewals under existing subscriptions. | These are supporting costs, not per-Compass-token spend. Confirm no duplicate automated build/deploy loop; no EAS build or release configuration changed. |
 
-At sign-off the owner must record: **verified by / verified at / effective thresholds / evidence / exception rationale** for each row. Unverified aggregate AI containment, unsafe Firebase rules, or uncontained public email abuse remain blockers. This audit opens one review PR and must not auto-merge.
+The original audit required owner records of **verified by / verified at / effective thresholds / evidence / exception rationale**. Aggregate AI containment, deployed Firebase rules, and public email abuse were conditional gates; their current disposition is recorded below. Evidence retention remains the owner’s responsibility. This documentation PR must not auto-merge.
+
+## Final sign-off — September 27, 2026
+
+**Owner verification:** Renita Hamilton / the iPurpose production billing owner reported the following controls manually verified on September 27, 2026. These are owner-supplied dashboard confirmations, not a new independent inspection by Codex. This documentation-only sign-off follows merged PR #52 and does not change application code, deployment settings, provider configuration, or launch timing. The effective settings below replace the corresponding preliminary proposals above; unlisted proposals are not represented as completed.
+
+| Provider / surface | Owner-verified effective control or observation |
+| --- | --- |
+| OpenAI spend | **$50/month hard spend limit**, hard-limit enforcement enabled; alerts at **30/50/80/100%**. |
+| OpenAI capacity | Usage tier **1**; observed `gpt-4o-mini` provider limits **200K TPM, 500 RPM, 10K RPD**. These are aggregate provider throughput limits, not additional per-user allowances or dollar caps. |
+| Firebase Cloud Run Functions | **$10/month service spend cap**. This is scoped to the service, not the whole Google Cloud project. |
+| Google Cloud `iPurpose-MVP` | **$50 monthly budget**, alerts at **50/75/90/100%**. This is notification-based monitoring, not a hard spending cap. |
+| Firestore | Current usage very low. Restrictive client rules verified: users limited to their own `/users/{uid}` document; all other client access denied. Server/Admin SDK operations remain a separate cost exposure. |
+| Firebase Authentication | **Email/Password only**, no phone/SMS provider; current usage low. Free account creation and multi-account abuse remain possible. |
+| Firebase Functions | Three expected deployed functions present: `getLaunchMetrics`, `weeklyLaunchMetrics`, `runLaunchMetricsNow`; max instances **3/1/1**, respectively. No abnormal recent invocation activity. |
+| Firebase Storage | **Not provisioned**; no current user-facing photo-upload feature. Dormant profile-photo upload code is a non-blocking cleanup item, not evidence of active Storage usage. |
+| Vercel plan | **Hobby**, no payment method, no paid team budget; DDoS mitigation active. No paid-plan spend-management cap is claimed. |
+| Vercel firewall | Production rule enabled for **`/api/ai`: 60 requests per 60 seconds per IP**, returning **429**. This does not cover every legacy/public endpoint or stop distributed-IP abuse. |
+| Resend | **Free: 3,000 transactional emails/month, 100/day**; pay-as-you-go transactional and automation overages disabled. |
+| GA4 | **No BigQuery link configured**. |
+| Auth0 | **Free**; Suspicious IP Throttling and Brute-force Protection enabled. Bot Detection and Breached Password Detection disabled and deliberately left unchanged to avoid last-minute auth-flow risk. |
+| Stripe | **One active live checkout webhook**; no webhook failures/replays observed for the current week; signing secret configured; Radar subscription screening active. This observation does not prove durable replay deduplication or cap payment fees. |
+| GitHub | Current metered usage low; **$0 budgets with “Stop usage: Yes”** for Actions, Codespaces, Packages, Git LFS, and AI Credit SKUs. These controls are scoped to those SKUs. |
+| Expo EAS | **Free**, **$0 upcoming bill**, **6/30 builds used**, **0 iOS builds, 0 MAUs, 0 bandwidth, 0 Observe events**. These are current plan/usage observations, not perpetual zero-cost guarantees. |
+
+### Deliberately deferred / non-blocking
+
+- **Full atomic Compass limiter redesign:** retain the scope and effort estimate above. PR #52's narrow fail-closed hardening remains useful, but per-user counters still do not cap aggregate spend. The verified OpenAI hard limit supplies the provider-level containment needed to defer the redesign.
+- **Firebase App Check rollout:** stage client compatibility and enforcement after launch; direct free signup and account farming remain residual abuse risks.
+- **Broader Vercel firewall rules for legacy AI, public form, and health endpoints:** defer broader enforcement; the verified `/api/ai` rule has limited scope. OpenAI and Resend controls contain their respective provider usage, but do not cap Firestore server reads/writes or all infrastructure costs.
+- **Root ESLint configuration issue identified during PR #52 validation:** defer the existing configuration repair; the recorded lint failure remains disclosed in the validation report. This sign-off does not turn that failure into a passing result.
+- **Dormant Storage/profile-photo upload code cleanup:** defer removal or redesign; review limits, lifecycle, and rules before provisioning Storage or exposing uploads.
+
+**Launch conclusion:** no remaining item in this launch-cost audit blocks the **October 1, 2026** launch given these owner-verified controls and the deliberately accepted residual risks. The earlier conditional cost gates are resolved by the reported controls or explicitly deferred above; broader edge protection remains incomplete. Other deferred engineering findings in this report remain follow-ups, not additional cost sign-off blockers.
+
+This is **not a guarantee of zero spend or uninterrupted availability**. The OpenAI hard limit is aggregate provider protection, distinct from the application's non-atomic per-user limits; many accounts can exhaust it sooner and cause denied requests. Its observed model rate limits are throughput ceilings, not a daily dollar budget. The Functions cap covers only that service; the Google Cloud budget sends alerts and does not stop Firestore or other project charges. Free-plan quotas and disabled overages can restrict service when exhausted; Vercel Hobby, GitHub SKU stops, and current low usage do not establish a universal cap across vendors. Provider enforcement delays, supporting services, and payment-related fees remain relevant. The theoretical API figures above describe exposure without effective aggregate containment, not an expected bill under the verified OpenAI limit.
+
+**Ongoing owner responsibility:** retain the September 27 verification evidence in the release record, keep these controls effective through October 1, and monitor alerts and usage during launch. Respond promptly to abnormal account creation, legacy/public endpoint traffic, or Firestore activity; budget alerts require action. Any key/project/plan change must be checked for continued coverage of every active AI route before relying on this sign-off.
