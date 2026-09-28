@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
+import styles from './page.module.css';
 
 type ClarityCheckPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -78,27 +79,27 @@ export default async function ClarityCheckPage({ searchParams }: ClarityCheckPag
 
       <main>
         <header
-          className="relative flex min-h-[calc(82svh-64px)] items-center justify-center overflow-hidden px-4 py-20 text-center sm:px-6"
+          className={styles.hero}
           style={{
             backgroundImage: 'url(/images/cosmic-timetraveler-Gg6Oz8026C8-unsplash.jpg)',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
           }}
         >
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="relative z-10 mx-auto max-w-4xl">
-            <p className="font-marcellus text-sm uppercase tracking-[0.24em] text-softGold">
+          <div className={styles.overlay} aria-hidden="true" />
+          <div className={styles.content}>
+            <p className={styles.eyebrow}>
               iPurpose Clarity Check
             </p>
-            <h1 className="mt-5 font-italiana text-4xl leading-tight text-white sm:text-5xl md:text-6xl">
+            <h1 className={styles.title}>
               Find the Real Source of What&rsquo;s Slowing You Down
             </h1>
-            <p className="mx-auto mt-7 max-w-3xl font-marcellus text-lg leading-relaxed text-white/85 sm:text-xl">
+            <p className={styles.description}>
               When everything feels connected, it can be hard to tell whether the problem is your direction, your systems, or the way you are using AI. The iPurpose Clarity Check helps you identify which layer may need attention first.
             </p>
             <Link
               href={ctaHref}
-              className="mt-9 inline-block rounded-full bg-lavenderViolet px-8 py-4 font-marcellus text-lg font-semibold text-white transition-opacity hover:opacity-90"
+              className={styles.cta}
             >
               Start the Free Clarity Check
             </Link>
