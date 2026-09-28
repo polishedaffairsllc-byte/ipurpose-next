@@ -25,7 +25,7 @@ function harness({ token = TEST_TOKEN, rows = [], fail = false } = {}) {
       return { docs: sorted.slice(0, limit).map(row => ({ data: () => row })) };
     },
   };
-  const module = { exports: {} };
+  const fixtureModule = { exports: {} };
   const env = token === null ? {} : { LAUNCH_METRICS_FEED_TOKEN: token };
   const load = id => {
     if (id === 'node:crypto') return require(id);
@@ -35,12 +35,12 @@ function harness({ token = TEST_TOKEN, rows = [], fail = false } = {}) {
       collection(name) { calls.push(['collection', name]); return query; },
     }) } };
   };
-  new Function('require', 'module', 'exports', 'process', output)(load, module, module.exports, { env });
-  const request = (authorization, suffix = '') => module.exports.GET(new Request(
+  new Function('require', 'module', 'exports', 'process', output)(load, fixtureModule, fixtureModule.exports, { env });
+  const request = (authorization, suffix = '') => fixtureModule.exports.GET(new Request(
     `https://ipurposesoul.com/api/admin/launch-metrics-feed${suffix}`,
     { headers: authorization === undefined ? {} : { Authorization: authorization } },
   ));
-  return { request, calls, route: module.exports };
+  return { request, calls, route: fixtureModule.exports };
 }
 
 test('missing, wrong, malformed, and query-string tokens return 401 before Firebase is touched', async () => {

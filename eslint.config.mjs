@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "mobile/**",
   ]),
   {
+    // Register plugins wherever these overrides apply, including .cjs files.
+    plugins: nextVitals.find((config) => config.name === "next").plugins,
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": [
