@@ -1,4 +1,5 @@
-import { getLatestQuestionnaire } from "@/lib/clarity/latestQuestionnaire";
+import { summarizeLabMap } from "@/lib/labs/mapSummary";
+import { getLatestQuestionnaire, legacyAccountEmail } from "@/lib/clarity/latestQuestionnaire";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import type {
   CompanionCheckInContext,
@@ -106,7 +107,7 @@ async function readCompanionProfile(uid: string): Promise<CompanionProfileReadRe
 
   return {
     profile,
-    email: authUser?.email || undefined,
+    email: legacyAccountEmail(authUser),
   };
 }
 
@@ -316,53 +317,13 @@ async function readRecentJournal(uid: string): Promise<CompanionReflectionContex
   });
 }
 
-function collectStrings(value: unknown, depth = 0): string[] {
-  if (typeof value === "string") return value.trim() ? [value.trim()] : [];
-  if (depth >= 2 || !value || typeof value !== "object") return [];
-  if (Array.isArray(value)) {
-    return value.flatMap((item) => collectStrings(item, depth + 1));
-  }
-  return Object.values(value as UnknownRecord).flatMap((item) => collectStrings(item, depth + 1));
-}
-
 async function readLabs(uid: string): Promise<CompanionLabContext[]> {
   const db = firebaseAdmin.firestore();
-  const userLabRefs = LAB_IDS.map((labId) =>
-    db.collection("users").doc(uid).collection("labs").doc(labId)
-  );
-  const legacyRefs = [
-    db.collection("identity_maps").doc(uid),
-    db.collection("meaning_maps").doc(uid),
-    db.collection("agency_maps").doc(uid),
-  ];
-  const aggregateLabRef = db.collection("labs").doc(uid);
-
-  const [userLabs, legacyLabs, aggregateLab] = await Promise.all([
-    db.getAll(...userLabRefs),
-    db.getAll(...legacyRefs),
-    aggregateLabRef.get(),
-  ]);
-  const aggregateData = aggregateLab.exists ? asRecord(aggregateLab.data()) : {};
-
+  const docs = await db.getAll(...LAB_IDS.map(labId => db.collection(`${labId}_maps`).doc(uid)));
   return LAB_IDS.flatMap((labId, index) => {
-    const userData = userLabs[index].exists ? asRecord(userLabs[index].data()) : {};
-    const legacyData = legacyLabs[index].exists ? asRecord(legacyLabs[index].data()) : {};
-    const aggregateLabData = asRecord(aggregateData[labId]);
-    const strings = [
-      ...collectStrings(userData),
-      ...collectStrings(legacyData),
-      ...collectStrings(aggregateLabData),
-    ]
-      .filter((value, position, all) => all.indexOf(value) === position)
-      .slice(0, 6);
-    if (!strings.length) return [];
-
-    return [{
-      labId,
-      status: asString(userData.status),
-      summary: strings.join(" | "),
-      updatedAt: toIso(userData.updatedAt) || toIso(legacyData.updatedAt) || toIso(aggregateData.updatedAt),
-    }];
+    const data = asRecord(docs[index].data());
+    const summary = summarizeLabMap(labId, data);
+    return summary ? [{ labId, summary, updatedAt: toIso(data.updatedAt) }] : [];
   });
 }
 

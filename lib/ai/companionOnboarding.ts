@@ -1,3 +1,4 @@
+import { isQuestionnaire } from '@/lib/clarity/submissionType';
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { hasExistingFocus, normalizeFocusAreas } from "@/lib/ai/profileFocus";
 
@@ -152,7 +153,7 @@ export async function getCompanionOnboardingState(
       .doc(draft.claritySubmissionId)
       .get();
     const submissionData = submission.exists ? asRecord(submission.data()) : {};
-    if (submissionData.uid === uid) result = parseResult(submissionData);
+    if (submissionData.uid === uid && isQuestionnaire(submissionData)) result = parseResult(submissionData);
   }
 
   return { status, ...draft, result };

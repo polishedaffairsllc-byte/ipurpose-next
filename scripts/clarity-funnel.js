@@ -1,4 +1,6 @@
-const admin = require('/Users/renita.hamilton/Desktop/ipurpose-next/node_modules/firebase-admin');
+require('tsx/cjs');
+const { isQuestionnaire } = require('../lib/clarity/submissionType.ts');
+const admin = require('firebase-admin');
 
 const raw = process.env.FIREBASE_SERVICE_ACCOUNT || '';
 if (!raw) { console.error('No FIREBASE_SERVICE_ACCOUNT env var'); process.exit(1); }
@@ -12,24 +14,25 @@ const db = admin.firestore();
 async function run() {
   // Total submissions
   const allSnap = await db.collection('clarityCheckSubmissions').get();
+  const questionnaires = allSnap.docs.filter(d => isQuestionnaire(d.data()));
   console.log('\n=== CLARITY CHECK FUNNEL ===');
-  console.log('Total quiz completions:', allSnap.size);
+  console.log('Total quiz completions:', questionnaires.length);
 
   // With email (converted to lead)
-  const withEmail = allSnap.docs.filter(d => {
+  const withEmail = questionnaires.filter(d => {
     const e = d.data().email;
     return e && e !== 'not_provided' && e !== '';
   });
   console.log('With email (leads):', withEmail.length);
 
-  if (allSnap.size > 0) {
-    const rate = ((withEmail.length / allSnap.size) * 100).toFixed(1);
+  if (questionnaires.length > 0) {
+    const rate = ((withEmail.length / questionnaires.length) * 100).toFixed(1);
     console.log('Email capture rate:', rate + '%');
   }
 
   // By identity type
   const byType = {};
-  allSnap.docs.forEach(d => {
+  questionnaires.forEach(d => {
     const t = d.data().identityType || 'unknown';
     byType[t] = (byType[t] || 0) + 1;
   });
@@ -37,8 +40,8 @@ async function run() {
 
   // Last 7 days
   const week = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const recent = allSnap.docs.filter(d => {
-    const ts = d.data().submittedAt;
+  const recent = questionnaires.filter(d => {
+    const ts = d.data().createdAt;
     return ts && ts.toDate && ts.toDate() > week;
   });
   console.log('\nLast 7 days:', recent.length);

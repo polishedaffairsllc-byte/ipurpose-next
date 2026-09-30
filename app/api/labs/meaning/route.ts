@@ -1,3 +1,4 @@
+import { summarizeLabMap } from "@/lib/labs/mapSummary";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -22,18 +23,7 @@ export async function GET() {
       });
     }
 
-    const data = docSnap.data();
-    const valueStructure = data?.valueStructure || "";
-    const coherenceStructure = data?.coherenceStructure || "";
-    const directionStructure = data?.directionStructure || "";
-
-    // Format as summary text for Integration display
-    const parts = [];
-    if (valueStructure) parts.push(`Values: ${valueStructure}`);
-    if (coherenceStructure) parts.push(`Coherence: ${coherenceStructure}`);
-    if (directionStructure) parts.push(`Direction: ${directionStructure}`);
-    
-    const text = parts.length > 0 ? parts.join(" | ") : "";
+    const text = summarizeLabMap("meaning", docSnap.data());
 
     return NextResponse.json({
       success: true,

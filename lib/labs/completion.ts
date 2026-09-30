@@ -20,40 +20,25 @@ export function mergeProgress(previous: unknown, added: readonly string[]) {
 export async function getLabCompletion(db: Firestore, uid: string) {
   const docs = await db.getAll(
     ...LAB_KEYS.map(key => db.collection('lab_completion').doc(`${uid}_${key}`)),
-    db.collection('labCompletion').doc(uid),
   );
-  const legacy = docs[3].data() || {};
-  return Object.fromEntries(LAB_KEYS.map((key, i) => [key, docs[i].exists || legacy[key] === true])) as Record<LabKey, boolean>;
+  return Object.fromEntries(LAB_KEYS.map((key, i) => [key, docs[i].exists])) as Record<LabKey, boolean>;
 }
 
-/** Canonical completion, compatibility mirror, and progress commit together. */
+/** Canonical completion and additive progress commit together; legacy data stays untouched. */
 export async function completeLab(db: Firestore, uid: string, labKey: LabKey, method: string) {
   const refs = LAB_KEYS.map(key => db.collection('lab_completion').doc(`${uid}_${key}`));
-  const legacyRef = db.collection('labCompletion').doc(uid);
   const progressRef = db.collection('learning_path_progress').doc(uid);
   await db.runTransaction(async transaction => {
-    const docs = await transaction.getAll(...refs, legacyRef, progressRef);
-    const legacy = docs[3].data() || {};
-    const completed = LAB_KEYS.filter((key, i) => key === labKey || docs[i].exists || legacy[key] === true);
+    const docs = await transaction.getAll(...refs, progressRef);
+    const completed = LAB_KEYS.filter((key, i) => key === labKey || docs[i].exists);
     const now = FieldValue.serverTimestamp();
-    for (const key of completed) {
-      const index = LAB_KEYS.indexOf(key);
-      if (!docs[index].exists) {
-        transaction.set(refs[index], {
-          uid, labKey: key,
-          ...(key === labKey
-            ? { completedAt: now, method }
-            // Do not invent the date a legacy completion occurred.
-            : { method: 'legacy', migratedAt: now }),
-        });
-      }
+    const index = LAB_KEYS.indexOf(labKey);
+    if (!docs[index].exists) {
+      transaction.create(refs[index], { uid, labKey, completedAt: now, method });
     }
-    transaction.set(legacyRef, {
-      ...Object.fromEntries(completed.map(key => [key, true])), updatedAt: now,
-    }, { merge: true });
     transaction.set(progressRef, {
       uid, arcKey: 'orientation',
-      ...mergeProgress(docs[4].data()?.completedSteps, completed.map(key => `${key}_lab`)),
+      ...mergeProgress(docs[3].data()?.completedSteps, completed.map(key => `${key}_lab`)),
       updatedAt: now,
     }, { merge: true });
   });

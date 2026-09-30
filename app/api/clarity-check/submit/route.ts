@@ -172,6 +172,7 @@ export async function POST(request: NextRequest) {
     let submissionDocId = '';
     try {
       const submissionData: Record<string, unknown> = {
+        type: 'questionnaire',
         email: userEmail,
         responses,
         scores,

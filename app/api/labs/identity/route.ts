@@ -1,3 +1,4 @@
+import { summarizeLabMap } from "@/lib/labs/mapSummary";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -22,18 +23,7 @@ export async function GET() {
       });
     }
 
-    const data = docSnap.data();
-    const selfPerceptionMap = data?.selfPerceptionMap || "";
-    const selfConceptMap = data?.selfConceptMap || "";
-    const selfNarrativeMap = data?.selfNarrativeMap || "";
-
-    // Format as summary text for Integration display
-    const parts = [];
-    if (selfPerceptionMap) parts.push(`Self-Perception: ${selfPerceptionMap}`);
-    if (selfConceptMap) parts.push(`Self-Concept: ${selfConceptMap}`);
-    if (selfNarrativeMap) parts.push(`Self-Narrative: ${selfNarrativeMap}`);
-    
-    const text = parts.length > 0 ? parts.join(" | ") : "";
+    const text = summarizeLabMap("identity", docSnap.data());
 
     return NextResponse.json({
       success: true,

@@ -3,7 +3,8 @@ import { after, test } from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { Firestore, Timestamp } from 'firebase-admin/firestore';
 import { completeLab, getLabCompletion, mergeProgress, updateOrientationProgress } from '../lib/labs/completion';
-import { getLatestQuestionnaire } from '../lib/clarity/latestQuestionnaire';
+import { getLatestQuestionnaire, legacyAccountEmail } from '../lib/clarity/latestQuestionnaire';
+import { isQuestionnaire, submissionType } from '../lib/clarity/submissionType';
 import { createSaveQueue } from '../lib/serializedSave';
 
 const emulator = process.env.FIRESTORE_EMULATOR_HOST;
@@ -14,23 +15,19 @@ const db = new Firestore({ projectId: 'demo-data-alignment' });
 after(() => db.terminate());
 const uid = () => `alignment-test-${randomUUID()}`;
 
-test('completion keeps non-lab progress and synchronizes both readers', async () => {
+test('canonical completion preserves Orientation, Integration, Community and leaves legacy data untouched', async () => {
   const user = uid();
-  await db.doc(`learning_path_progress/${user}`).set({ completedSteps: ['orientation_intro', 'integration_reflection'], currentStep: 'agency_lab' });
+  const existing = ['orientation_intro', 'integration_reflection', 'community_reflection'];
+  await db.doc(`learning_path_progress/${user}`).set({ completedSteps: existing, currentStep: 'agency_lab' });
   await db.doc(`labCompletion/${user}`).set({ meaning: true });
   await completeLab(db, user, 'identity', 'threshold');
-  const flags = await getLabCompletion(db, user);
-  assert.deepEqual(flags, { identity: true, meaning: true, agency: false });
+  assert.deepEqual(await getLabCompletion(db, user), { identity: true, meaning: false, agency: false });
   const progress = (await db.doc(`learning_path_progress/${user}`).get()).data()!;
-  assert.deepEqual(new Set(progress.completedSteps), new Set(['orientation_intro', 'integration_reflection', 'identity_lab', 'meaning_lab']));
+  assert.deepEqual(new Set(progress.completedSteps), new Set([...existing, 'identity_lab']));
   assert.equal(progress.percentComplete, 67);
   assert.equal(progress.currentStep, 'agency_lab');
-  const legacy = (await db.doc(`labCompletion/${user}`).get()).data()!;
-  assert.equal(legacy.identity, true);
-  assert.equal(legacy.meaning, true);
-  const migrated = (await db.doc(`lab_completion/${user}_meaning`).get()).data()!;
-  assert.equal(migrated.method, 'legacy');
-  assert.equal(migrated.completedAt, undefined);
+  assert.deepEqual((await db.doc(`labCompletion/${user}`).get()).data(), { meaning: true });
+  assert.equal((await db.doc(`lab_completion/${user}_meaning`).get()).exists, false);
 });
 
 test('concurrent completions and reflection progress cannot overwrite each other', async () => {
@@ -113,4 +110,82 @@ test('a slow save cannot finish after a newer save and overwrite its data', asyn
   release();
   await Promise.all([first, second]);
   assert.deepEqual(writes, ['first', 'latest']);
+});
+
+
+test('explicit types are authoritative and ambiguous legacy shapes are not questionnaires', async () => {
+  assert.equal(submissionType({ messageCount: 2 }), 'conversation');
+  assert.equal(isQuestionnaire(questionnaire('u', 1, { type: 'conversation' })), false);
+  assert.equal(isQuestionnaire(questionnaire('u', 1, { conversationHistory: [] })), false);
+  assert.equal(isQuestionnaire(questionnaire('u', 1, { type: 'unknown' })), false);
+  assert.equal(isQuestionnaire(questionnaire('u', 1, { type: 'questionnaire' })), true);
+  const user = uid();
+  await db.collection('clarityCheckSubmissions').add(questionnaire(user, 1000));
+  await db.collection('clarityCheckSubmissions').add(questionnaire(user, 2000, { type: 'conversation', identityType: 'wrong' }));
+  assert.equal((await getLatestQuestionnaire(db, user))?.identityType, 'Builder');
+});
+
+test('save → reload → dashboard → Integration uses canonical maps for all three labs', async () => {
+  const { loadRoute } = await import('./alignmentRoutes');
+  const { summarizeLabMap } = await import('../lib/labs/mapSummary');
+  const user = uid();
+  const dashboard = await loadRoute('app/api/dashboard/route.ts', db, user);
+  const labs = {
+    identity: { selfPerceptionMap: 'I listen carefully.', selfConceptMap: 'I build useful tools.', selfNarrativeMap: 'I choose a steady direction.' },
+    meaning: { valueStructure: 'Care and honesty.', coherenceStructure: 'My work reflects my values.', directionStructure: 'Make the next useful thing.' },
+    agency: { awarenessPatterns: 'Notice when I pause.', decisionPatterns: 'Choose one small next step.', actionPatterns: 'Make time every morning.' },
+  };
+  for (const lab of ['identity', 'meaning', 'agency'] as const) {
+    // Contradictory legacy text must neither win nor be modified.
+    await db.doc(`users/${user}/labs/${lab}`).set({ text: 'Legacy text must stay untouched' });
+    const save = await loadRoute(`app/api/labs/${lab}/save/route.ts`, db, user);
+    const active = await loadRoute(`app/api/labs/${lab}/active/route.ts`, db, user);
+    const complete = await loadRoute(`app/api/labs/${lab}/complete/route.ts`, db, user);
+    const saved = await save.POST(new Request('http://localhost/save', { method: 'POST', body: JSON.stringify({ ...labs[lab], completeEnough: true }) }));
+    assert.equal(saved.status, 201);
+    const reloaded = await (await active.GET()).json();
+    for (const [field, value] of Object.entries(labs[lab])) assert.equal(reloaded.data.map[field], value);
+    let status = await (await dashboard.GET()).json();
+    assert.equal(status.data[`${lab}Status`], 'in_progress');
+    assert.equal((await complete.POST()).status, 200);
+    status = await (await dashboard.GET()).json();
+    assert.equal(status.data[`${lab}Status`], 'complete');
+    // Integration uses this exact active endpoint and shared summary formatter.
+    const integrationMap = (await (await active.GET()).json()).data.map;
+    const summary = summarizeLabMap(lab, integrationMap);
+    for (const value of Object.values(labs[lab])) assert.ok(summary.includes(value));
+    assert.ok(!summary.includes(user) && !summary.includes('mvp_v1') && !summary.includes('Legacy'));
+    assert.deepEqual((await db.doc(`users/${user}/labs/${lab}`).get()).data(), { text: 'Legacy text must stay untouched' });
+  }
+  assert.equal((await db.doc(`labCompletion/${user}`).get()).exists, false);
+});
+
+
+test('legacy matching requires verified email and never selects unowned anonymous questionnaires', async () => {
+  const email = `${uid()}@example.test`;
+  assert.equal(legacyAccountEmail({ email, emailVerified: false }), undefined);
+  assert.equal(legacyAccountEmail({ email }), undefined);
+  assert.equal(legacyAccountEmail({ email, emailVerified: true }), email);
+  await db.collection('clarityCheckSubmissions').add(questionnaire('', 5000, { email: null }));
+  assert.equal(await getLatestQuestionnaire(db, uid(), email), undefined);
+});
+
+test('founder intake pages past conversations to find compatible questionnaires', async () => {
+  const { loadRoute } = await import('./alignmentRoutes');
+  const user = uid();
+  await db.doc(`users/${user}`).set({ isFounder: true });
+  const batch = db.batch();
+  const expected = db.collection('clarityCheckSubmissions').doc();
+  const now = Date.now();
+  batch.set(expected, questionnaire(user, now, { type: 'questionnaire' }));
+  for (let i = 0; i < 101; i++) batch.set(db.collection('clarityCheckSubmissions').doc(), {
+    type: 'conversation', createdAt: Timestamp.fromMillis(now + 1 + i), messageCount: 1,
+  });
+  await batch.commit();
+  const route = await loadRoute('app/api/deepen/admin/intake/clarity-checks/route.ts', db, user);
+  const response = await route.GET();
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.ok(body.data.some((d: { id: string }) => d.id === expected.id));
+  assert.ok(body.data.every((d: { type: string }) => d.type === 'questionnaire'));
 });

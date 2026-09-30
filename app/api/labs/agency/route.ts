@@ -1,3 +1,4 @@
+import { summarizeLabMap } from "@/lib/labs/mapSummary";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -22,18 +23,7 @@ export async function GET() {
       });
     }
 
-    const data = docSnap.data();
-    const awarenessPatterns = data?.awarenessPatterns || "";
-    const decisionPatterns = data?.decisionPatterns || "";
-    const actionPatterns = data?.actionPatterns || "";
-
-    // Format as summary text for Integration display
-    const parts = [];
-    if (awarenessPatterns) parts.push(`Awareness: ${awarenessPatterns}`);
-    if (decisionPatterns) parts.push(`Decision: ${decisionPatterns}`);
-    if (actionPatterns) parts.push(`Action: ${actionPatterns}`);
-    
-    const text = parts.length > 0 ? parts.join(" | ") : "";
+    const text = summarizeLabMap("agency", docSnap.data());
 
     return NextResponse.json({
       success: true,

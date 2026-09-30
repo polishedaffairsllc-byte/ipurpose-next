@@ -1,11 +1,12 @@
 import type { Firestore, Query } from 'firebase-admin/firestore';
 
+import { isQuestionnaire } from './submissionType';
+export { isQuestionnaire } from './submissionType';
 type Questionnaire = Record<string, unknown>;
-export function isQuestionnaire(data: Questionnaire): boolean {
-  const scores = data.scores;
-  return !!scores && typeof scores === 'object' && !Array.isArray(scores)
-    && typeof (scores as Questionnaire).totalScore === 'number'
-    && typeof data.resultSummary === 'string';
+
+/** Legacy email matching requires ownership verified by Firebase Auth. */
+export function legacyAccountEmail(user: { email?: string; emailVerified?: boolean } | null): string | undefined {
+  return user?.emailVerified === true ? user.email : undefined;
 }
 
 async function findQuestionnaire(query: Query, uid: string): Promise<Questionnaire | undefined> {
@@ -26,7 +27,7 @@ async function findQuestionnaire(query: Query, uid: string): Promise<Questionnai
 /** UID is authoritative; legacy email comes only from the authenticated account. */
 export async function getLatestQuestionnaire(db: Firestore, uid: string, verifiedAccountEmail?: string) {
   const collection = db.collection('clarityCheckSubmissions');
-  const fields = ['uid', 'scores', 'identityType', 'resultSummary', 'resultDetail', 'nextStep', 'createdAt'];
+  const fields = ['type', 'messageCount', 'conversationSummary', 'conversationHistory', 'uid', 'scores', 'identityType', 'resultSummary', 'resultDetail', 'nextStep', 'createdAt'];
   const owned = await findQuestionnaire(collection.where('uid', '==', uid).select(...fields), uid);
   if (owned) return owned;
   if (!verifiedAccountEmail) return undefined;

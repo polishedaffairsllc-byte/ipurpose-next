@@ -1,4 +1,4 @@
-import { getLatestQuestionnaire } from "@/lib/clarity/latestQuestionnaire";
+import { getLatestQuestionnaire, legacyAccountEmail } from "@/lib/clarity/latestQuestionnaire";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
     let identityType = userData.archetypePrimary || "";
     if (!identityType) {
       try {
-        const latestSubmission = await getLatestQuestionnaire(db, decoded.uid, user.email);
+        const latestSubmission = await getLatestQuestionnaire(db, decoded.uid, legacyAccountEmail(user));
         if (typeof latestSubmission?.identityType === "string" && latestSubmission.identityType) {
           identityType = latestSubmission.identityType;
           await db.collection("users").doc(decoded.uid).update({
@@ -91,18 +91,18 @@ export default async function DashboardPage() {
       }
     }
 
-    // Fetch identity anchor from multiple sources
+    // Profile anchor with canonical Identity map fallback
     let identityAnchor = "";
     try {
       // First check user profile for identity anchor
       if (userData?.identityAnchor) {
         identityAnchor = userData.identityAnchor;
       } else {
-        // Fallback to labs data
-        const labsDoc = await db.collection("labs").doc(decoded.uid).get();
+        // Fallback to the canonical structured Identity map
+        const labsDoc = await db.collection("identity_maps").doc(decoded.uid).get();
         const labsData = labsDoc.data();
-        if (labsData?.identity?.map?.selfNarrativeMap) {
-          identityAnchor = labsData.identity.map.selfNarrativeMap;
+        if (labsData?.selfNarrativeMap) {
+          identityAnchor = labsData.selfNarrativeMap;
         }
       }
     } catch (err) {
