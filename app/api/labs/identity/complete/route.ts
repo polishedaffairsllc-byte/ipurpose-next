@@ -1,3 +1,4 @@
+import { completeLab } from "@/lib/labs/completion";
 import { ok, fail } from "@/lib/http";
 import { hasMeaningfulText } from "@/lib/validators";
 import { requireUid, requireRole } from "@/lib/firebase/requireUser";
@@ -36,42 +37,7 @@ export async function POST() {
       return fail("NOT_READY", "Add a bit more detail in at least one section before completing.", 400);
     }
 
-    const completionRef = db.collection("lab_completion").doc(`${uid}_identity`);
-    await completionRef.set(
-      {
-        uid,
-        labKey: "identity",
-        completedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-        method: completeEnough ? "checkbox" : "threshold",
-      },
-      { merge: true }
-    );
-
-    const completionSnap = await completionRef.get();
-    const completedAt = completionSnap.data()?.completedAt?.toDate?.() ?? null;
-
-    // Update learning_path_progress to sync with Learning Path page
-    const [identityCompletion, meaningCompletion, agencyCompletion] = await db.getAll(
-      db.collection("lab_completion").doc(`${uid}_identity`),
-      db.collection("lab_completion").doc(`${uid}_meaning`),
-      db.collection("lab_completion").doc(`${uid}_agency`)
-    );
-
-    const completedSteps: string[] = [];
-    if (identityCompletion.exists) completedSteps.push("identity_lab");
-    if (meaningCompletion.exists) completedSteps.push("meaning_lab");
-    if (agencyCompletion.exists) completedSteps.push("agency_lab");
-
-    const percentComplete = Math.round((completedSteps.length / 6) * 100); // 6 total steps including other activities
-
-    await db.collection("learning_path_progress").doc(uid).set(
-      {
-        completedSteps,
-        percentComplete,
-        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    const completedAt = await completeLab(db, uid, "identity", completeEnough ? "checkbox" : "threshold");
 
     return ok({ labKey: "identity", completedAt });
   } catch (error) {

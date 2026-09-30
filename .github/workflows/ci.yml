@@ -36,6 +36,24 @@ jobs:
           
           echo "✅ No sensitive files committed"
 
+  firestore-alignment:
+    name: Firestore alignment regression tests
+    runs-on: ubuntu-latest
+    needs: verify-secrets
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --ignore-scripts
+      - name: Test with isolated Firestore data
+        run: npx --yes firebase-tools@15.6.0 emulators:exec --only firestore --project demo-data-alignment --config firebase.alignment-test.json "npm run test:firestore-alignment"
+
   build:
     name: Install, Lint, Type Check, Build & Test
     runs-on: ubuntu-latest

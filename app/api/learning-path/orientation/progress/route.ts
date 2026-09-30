@@ -1,3 +1,4 @@
+import { ORIENTATION_STEPS, updateOrientationProgress } from "@/lib/labs/completion";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { ok, fail } from "@/lib/http";
 import { requireUid, requireRole } from "@/lib/firebase/requireUser";
@@ -9,21 +10,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { currentStep, completedSteps } = body || {};
 
-    const db = firebaseAdmin.firestore();
-    const docRef = db.collection("learning_path_progress").doc(uid);
-
-    await docRef.set(
-      {
-        ...(currentStep ? { currentStep } : {}),
-        ...(Array.isArray(completedSteps) ? { completedSteps: completedSteps.slice(0, 200) } : {}),
-        percentComplete:
-          typeof body?.percentComplete === "number"
-            ? Math.max(0, Math.min(100, Math.floor(body.percentComplete)))
-            : undefined,
-        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    const validStep = (step: unknown): step is string => typeof step === "string" && (ORIENTATION_STEPS as readonly string[]).includes(step);
+    if ((currentStep !== undefined && !validStep(currentStep)) ||
+        (completedSteps !== undefined && (!Array.isArray(completedSteps) || !completedSteps.every(validStep)))) {
+      return fail("VALIDATION_ERROR", "Choose valid orientation steps.", 400);
+    }
+    await updateOrientationProgress(firebaseAdmin.firestore(), uid, completedSteps ?? [], currentStep);
 
     return ok({ updated: true });
   } catch (error) {

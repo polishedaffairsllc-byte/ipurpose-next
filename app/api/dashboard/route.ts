@@ -1,3 +1,4 @@
+import { getLabCompletion } from "@/lib/labs/completion";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import { ok, fail } from "@/lib/http";
 import { isBlank } from "@/lib/validators";
@@ -8,25 +9,15 @@ export async function GET() {
     const uid = await requireUid();
     await requireRole(uid, "explorer");
     const db = firebaseAdmin.firestore();
-    const [userDoc, identityDoc, meaningDoc, agencyDoc, completionDocs] = await Promise.all([
+    const [userDoc, identityDoc, meaningDoc, agencyDoc, completionFlags] = await Promise.all([
       db.collection("users").doc(uid).get(),
       db.collection("identity_maps").doc(uid).get(),
       db.collection("meaning_maps").doc(uid).get(),
       db.collection("agency_maps").doc(uid).get(),
-      db.getAll(
-        db.collection("lab_completion").doc(`${uid}_identity`),
-        db.collection("lab_completion").doc(`${uid}_meaning`),
-        db.collection("lab_completion").doc(`${uid}_agency`)
-      ),
+      getLabCompletion(db, uid),
     ]);
 
-    const completed = new Set<string>();
-    completionDocs.forEach((doc) => {
-      if (doc.exists) {
-        const key = doc.data()?.labKey as string | undefined;
-        if (key) completed.add(key);
-      }
-    });
+    const completed = new Set(Object.entries(completionFlags).filter(([, value]) => value).map(([key]) => key));
 
     const identity = identityDoc.exists ? identityDoc.data() : null;
     const meaning = meaningDoc.exists ? meaningDoc.data() : null;

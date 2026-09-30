@@ -1,3 +1,4 @@
+import { completeLab, getLabCompletion, type LabKey } from "@/lib/labs/completion";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -15,13 +16,8 @@ export async function GET() {
     }
 
     const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const docRef = firebaseAdmin.firestore().collection("labCompletion").doc(decoded.uid);
-    const docSnap = await docRef.get();
-
-    return NextResponse.json({
-      success: true,
-      data: docSnap.exists ? docSnap.data() : {},
-    });
+    const data = await getLabCompletion(firebaseAdmin.firestore(), decoded.uid);
+    return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error("Lab completion GET error:", error);
     return NextResponse.json({ error: "Failed to load completion" }, { status: 500 });
@@ -51,14 +47,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid labKey" }, { status: 400 });
     }
 
-    const docRef = firebaseAdmin.firestore().collection("labCompletion").doc(decoded.uid);
-    await docRef.set(
-      {
-        [labKey]: true,
-        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    await completeLab(firebaseAdmin.firestore(), decoded.uid, labKey as LabKey, "legacy_endpoint");
 
     await recordRequest(decoded.uid, 1);
 

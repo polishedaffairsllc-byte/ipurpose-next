@@ -1,3 +1,4 @@
+import { getLatestQuestionnaire } from "@/lib/clarity/latestQuestionnaire";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import type {
   CompanionCheckInContext,
@@ -201,19 +202,9 @@ export async function updateCompanionTimezone(
   return getCompanionProfile(uid);
 }
 
-async function readClarityCheck(email: string | undefined): Promise<CompanionClarityContext | undefined> {
-  if (!email) return undefined;
-
-  const snapshot = await firebaseAdmin
-    .firestore()
-    .collection("clarityCheckSubmissions")
-    .where("email", "==", email.toLowerCase())
-    .orderBy("createdAt", "desc")
-    .limit(1)
-    .get();
-
-  if (snapshot.empty) return undefined;
-  const data = asRecord(snapshot.docs[0].data());
+async function readClarityCheck(uid: string, email: string | undefined): Promise<CompanionClarityContext | undefined> {
+  const data = await getLatestQuestionnaire(firebaseAdmin.firestore(), uid, email);
+  if (!data) return undefined;
   const scores = asRecord(data.scores);
 
   return {
@@ -382,12 +373,11 @@ async function readLabs(uid: string): Promise<CompanionLabContext[]> {
  */
 export async function getCompanionContext(uid: string): Promise<CompanionContext> {
   const { profile, email } = await readCompanionProfile(uid);
-  // The Clarity Check's legacy schema is email-linked. Use the email owned by
-  // the authenticated Firebase account, never an arbitrary client value.
+  // Prefer UID ownership, with the authenticated account email for legacy records.
 
   const [clarityCheck, recentCheckIns, dailySessions, recentLabs, journalReflections] =
     await Promise.all([
-      safeRead("Clarity Check", () => readClarityCheck(email), undefined),
+      safeRead("Clarity Check", () => readClarityCheck(uid, email), undefined),
       safeRead("check-ins", () => readRecentCheckIns(uid), []),
       safeRead(
         "daily sessions",
