@@ -1,5 +1,7 @@
 "use client";
 
+import { summarizeLabMap } from "@/lib/labs/mapSummary";
+
 import { useEffect, useState } from "react";
 import Button from "@/app/components/Button";
 import { useRouter } from "next/navigation";
@@ -111,9 +113,9 @@ export default function IntegrationPage() {
     async function load() {
       try {
         const [identityRes, meaningRes, agencyRes, integrationRes] = await Promise.all([
-          fetch("/api/labs/identity"),
-          fetch("/api/labs/meaning"),
-          fetch("/api/labs/agency"),
+          fetch("/api/labs/identity/active", { cache: "no-store" }),
+          fetch("/api/labs/meaning/active", { cache: "no-store" }),
+          fetch("/api/labs/agency/active", { cache: "no-store" }),
           fetch("/api/integration"),
         ]);
 
@@ -129,6 +131,10 @@ export default function IntegrationPage() {
             router.replace("/labs?message=complete-labs");
           }
           return;
+        }
+
+        if (![identityRes, meaningRes, agencyRes, integrationRes].every(response => response.ok)) {
+          throw new Error("Unable to load canonical maps");
         }
 
         const [identityJson, meaningJson, agencyJson, integrationJson] = await Promise.all([
@@ -173,9 +179,9 @@ export default function IntegrationPage() {
           console.error("Failed to load user data", err);
         }
 
-        setIdentity(identityJson?.data ?? null);
-        setMeaning(meaningJson?.data ?? null);
-        setAgency(agencyJson?.data ?? null);
+        setIdentity({ text: summarizeLabMap("identity", identityJson?.data?.map) });
+        setMeaning({ text: summarizeLabMap("meaning", meaningJson?.data?.map) });
+        setAgency({ text: summarizeLabMap("agency", agencyJson?.data?.map) });
 
         if (integrationJson?.data) {
           setIntegration({

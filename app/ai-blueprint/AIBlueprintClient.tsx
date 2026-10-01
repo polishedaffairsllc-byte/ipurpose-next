@@ -1,5 +1,6 @@
 "use client";
 
+import { createSaveQueue } from "@/lib/serializedSave";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getFirebaseAuth } from "@/lib/firebaseClient";
 
@@ -75,6 +76,14 @@ export default function AIBlueprintClient() {
   const [current, setCurrent] = useState(0);
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [hasSaved, setHasSaved] = useState(false);
+  const [loadedUid, setLoadedUid] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const activeUid = useRef<string | null>(null);
+  const saveRevision = useRef(0);
+  const saveTimer = useRef<number | null>(null);
+  const saveQueue = useRef(createSaveQueue());
   const [uid, setUid] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [steps] = useState(DEFAULT_STEPS);
@@ -83,6 +92,17 @@ export default function AIBlueprintClient() {
   useEffect(() => {
     const auth = getFirebaseAuth();
     const unsub = auth.onAuthStateChanged((u) => {
+      if (activeUid.current !== (u?.uid ?? null)) {
+        activeUid.current = u?.uid ?? null;
+        ++saveRevision.current;
+        if (saveTimer.current) window.clearTimeout(saveTimer.current);
+        setValues({});
+        setLoadedUid(null);
+        setHasSaved(false);
+        setSaving(false);
+        setSaveError(null);
+        setLoadError(null);
+      }
       if (u) {
         setUid(u.uid);
         if (u.displayName) setUserName(u.displayName);
@@ -96,14 +116,22 @@ export default function AIBlueprintClient() {
   // load existing responses via server API
   useEffect(() => {
     if (!uid) return;
-    fetch('/api/ai-blueprint/responses', { credentials: 'include' })
-      .then((res) => res.json())
+    const controller = new AbortController();
+    fetch('/api/ai-blueprint/responses', { credentials: 'include', signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error('Could not load your saved answers. Please refresh before editing.');
+        return res.json();
+      })
       .then((json) => {
+        if (controller.signal.aborted) return;
+        setLoadedUid(uid);
         if (json.data && Object.keys(json.data).length > 0) {
-          setValues(json.data as Record<string, string>);
+          setValues(previous => ({ ...json.data, ...previous }));
         }
       })
-      .catch((err) => console.error('Failed loading AI Blueprint responses', err));
+      .catch((err) => {
+        if (!controller.signal.aborted) setLoadError(err instanceof Error ? err.message : 'Could not load your saved answers.');
+      });
     if (!userName) {
       fetch('/api/auth/me', { credentials: 'include' })
         .then((res) => res.json())
@@ -112,32 +140,46 @@ export default function AIBlueprintClient() {
         })
         .catch(() => {});
     }
+    return () => controller.abort();
   }, [uid]);
 
-  const saveTimer = useRef<number | null>(null);
-  async function saveNow(nextValues: Record<string, string>) {
-    if (!uid) return;
+  async function saveNow(nextValues: Record<string, string>, revision = saveRevision.current) {
+    if (!uid || loadedUid !== uid) {
+      setSaving(false);
+      setSaveError("Sign in to save your changes.");
+      return;
+    }
     setSaving(true);
+    setSaveError(null);
     try {
-      await fetch('/api/ai-blueprint/responses', {
+      await saveQueue.current(() => {
+        if (activeUid.current !== uid) throw new Error('Your sign-in changed. Please reload your answers.');
+        return fetch('/api/ai-blueprint/responses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ responses: nextValues }),
+        });
       });
+      if (revision === saveRevision.current) setHasSaved(true);
     } catch (err) {
-      console.error('Failed to save AI Blueprint responses:', err);
+      if (revision === saveRevision.current) {
+        setSaveError(err instanceof Error ? err.message : 'Your changes could not be saved.');
+      }
     } finally {
-      setSaving(false);
+      if (revision === saveRevision.current) setSaving(false);
     }
   }
 
   function onChange(key: string, value: string) {
     const next = { ...values, [key]: value };
     setValues(next);
+    const revision = ++saveRevision.current;
+    setHasSaved(false);
+    setSaving(true);
+    setSaveError(null);
     if (saveTimer.current) window.clearTimeout(saveTimer.current);
-    // @ts-ignore
-    saveTimer.current = window.setTimeout(() => saveNow(next), 700);
+    saveTimer.current = window.setTimeout(() => saveNow(next, revision), 700);
   }
 
   // Build formatted text content
@@ -327,6 +369,7 @@ export default function AIBlueprintClient() {
 
   return (
     <div className="max-w-3xl mx-auto">
+      {loadError && <p role="alert" className="mb-4 text-sm text-red-700">{loadError}</p>}
       {/* Title */}
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">iPurpose AI Blueprint</h2>
 
@@ -435,6 +478,7 @@ export default function AIBlueprintClient() {
                         const isChecked = selected.includes(opt);
                         return (
                           <button
+                            disabled={!uid || loadedUid !== uid}
                             key={opt}
                             type="button"
                             onClick={() => {
@@ -474,6 +518,7 @@ export default function AIBlueprintClient() {
                                 return (
                                   <td key={col} className="p-1.5 border-b border-indigoDeep/5">
                                     <input
+                                      disabled={!uid || loadedUid !== uid}
                                       type="text"
                                       value={values[cellKey] || ''}
                                       onChange={(e) => onChange(cellKey, e.target.value)}
@@ -490,6 +535,7 @@ export default function AIBlueprintClient() {
                     </div>
                   ) : (
                     <textarea
+                      disabled={!uid || loadedUid !== uid}
                       value={values[field.key] || ''}
                       onChange={(e) => onChange(field.key, e.target.value)}
                       placeholder={field.placeholder || "Start writing here…"}
@@ -535,18 +581,26 @@ export default function AIBlueprintClient() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-warmCharcoal/40 font-marcellus">
-              {saving ? (
+            <div className="flex items-center gap-2 text-xs text-warmCharcoal font-marcellus" role="status" aria-live="polite">
+              {saveError ? (
+                <>
+                  <span>{saveError}</span>
+                  <button type="button" className="underline" disabled={saving} onClick={() => {
+                    if (saveTimer.current) window.clearTimeout(saveTimer.current);
+                    void saveNow(values);
+                  }}>Retry save</button>
+                </>
+              ) : saving ? (
                 <>
                   <span className="inline-block w-2 h-2 rounded-full bg-softGold animate-pulse" />
                   Saving…
                 </>
-              ) : (
+              ) : hasSaved ? (
                 <>
                   <span className="inline-block w-2 h-2 rounded-full bg-green-400" />
                   All changes saved
                 </>
-              )}
+              ) : <span>Changes save automatically</span>}
             </div>
           </div>
         </div>

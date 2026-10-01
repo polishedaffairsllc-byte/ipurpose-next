@@ -1,3 +1,4 @@
+import { getLatestQuestionnaire, legacyAccountEmail } from "@/lib/clarity/latestQuestionnaire";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -71,70 +72,37 @@ export default async function DashboardPage() {
 
     const name = user.displayName || (user.email ? user.email.split("@")[0] : "Friend");
     
-    // ONE-TIME BACKFILL: Sync Clarity Check identityType to user profile if missing
-    // This ensures existing users get their archetype populated from their Clarity Check
-    if (!userData.archetypePrimary && user.email) {
-      try {
-        const clarityCheckQuery = await db
-          .collection("clarityCheckSubmissions")
-          .where("email", "==", user.email)
-          .orderBy("createdAt", "desc")
-          .limit(1)
-          .get();
-        
-        if (!clarityCheckQuery.empty) {
-          const latestSubmission = clarityCheckQuery.docs[0].data();
-          if (latestSubmission?.identityType) {
-            await db.collection("users").doc(decoded.uid).update({
-              archetypePrimary: latestSubmission.identityType,
-              archetypeSecondary: null,
-              archetypeSource: 'clarity_check',
-              archetypeUpdatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-            });
-            userData.archetypePrimary = latestSubmission.identityType; // Update local copy
-            console.log('Backfilled archetypePrimary from Clarity Check:', { uid: decoded.uid, archetype: latestSubmission.identityType });
-          }
-        }
-      } catch (err) {
-        console.error("Failed to backfill archetypePrimary from Clarity Check", err);
-      }
-    }
-    
-    // Read identity type from user profile (primary source)
-    // Fallback to Clarity Check submissions only if profile is empty
     let identityType = userData.archetypePrimary || "";
     if (!identityType) {
       try {
-        const clarityCheckQuery = await db
-          .collection("clarityCheckSubmissions")
-          .where("email", "==", user.email)
-          .orderBy("createdAt", "desc")
-          .limit(1)
-          .get();
-        
-        if (!clarityCheckQuery.empty) {
-          const latestSubmission = clarityCheckQuery.docs[0].data();
-          if (latestSubmission?.identityType) {
-            identityType = latestSubmission.identityType;
-          }
+        const latestSubmission = await getLatestQuestionnaire(db, decoded.uid, legacyAccountEmail(user));
+        if (typeof latestSubmission?.identityType === "string" && latestSubmission.identityType) {
+          identityType = latestSubmission.identityType;
+          await db.collection("users").doc(decoded.uid).update({
+            archetypePrimary: identityType,
+            archetypeSecondary: null,
+            archetypeSource: "clarity_check",
+            archetypeUpdatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+          });
+          userData.archetypePrimary = identityType;
         }
       } catch (err) {
-        console.error("Failed to fetch identity type from Clarity Check", err);
+        console.error("Failed to load Clarity Check identity", err);
       }
     }
-    
-    // Fetch identity anchor from multiple sources
+
+    // Profile anchor with canonical Identity map fallback
     let identityAnchor = "";
     try {
       // First check user profile for identity anchor
       if (userData?.identityAnchor) {
         identityAnchor = userData.identityAnchor;
       } else {
-        // Fallback to labs data
-        const labsDoc = await db.collection("labs").doc(decoded.uid).get();
+        // Fallback to the canonical structured Identity map
+        const labsDoc = await db.collection("identity_maps").doc(decoded.uid).get();
         const labsData = labsDoc.data();
-        if (labsData?.identity?.map?.selfNarrativeMap) {
-          identityAnchor = labsData.identity.map.selfNarrativeMap;
+        if (labsData?.selfNarrativeMap) {
+          identityAnchor = labsData.selfNarrativeMap;
         }
       }
     } catch (err) {

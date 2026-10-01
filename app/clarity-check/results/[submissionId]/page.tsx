@@ -1,3 +1,4 @@
+import { isQuestionnaire } from '@/lib/clarity/submissionType';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { notFound } from 'next/navigation';
 import ClarityCheckResultsClient from '../ClarityCheckResultsClient';
@@ -37,6 +38,7 @@ async function getSubmission(submissionId: string): Promise<SubmissionData | nul
       return null;
     }
 
+    if (!isQuestionnaire(doc.data() || {})) return null;
     const data = doc.data() as SubmissionData;
     
     // Convert Firestore Timestamp to ISO string for client serialization
