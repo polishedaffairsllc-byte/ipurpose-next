@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false, "types": ["node", "next"] },
+  "include": [
+    "../lib/admin-activity/**/*.ts",
+    "../app/api/admin/launch-activity/route.ts",
+    "../app/admin/launch-metrics/LaunchActivity.tsx",
+    "../app/admin/launch-metrics/LaunchMetricsClient.tsx",
+    "../app/api/tasks/send-scheduled-emails/route.ts"
+  ],
+  "exclude": ["../node_modules"]
+}

@@ -15,6 +15,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { canDeliverQueuedEmail } from '@/lib/admin-activity/emailGuard';
 import {
   sendClarityCheckFoundersRateEmail,
   sendNurtureEmail1,
@@ -107,6 +108,8 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
           'nurture_5': sendNurtureEmail5,
         };
         const sender = senderMap[task.type];
+        // Do not deliver a stale queued task after an administrator purges its account.
+        if (!await canDeliverQueuedEmail(firebaseAdmin.firestore(), doc.ref, task.email)) continue;
         const sent = sender ? await sender(emailData) : false;
 
         if (sent) {

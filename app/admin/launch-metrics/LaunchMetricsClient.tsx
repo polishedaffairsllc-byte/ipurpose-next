@@ -9,6 +9,7 @@ import { addCounts, emptyCounts, EVENTS, type Counts, type WeeklyMetrics } from 
 import { downloadWeeklyMetrics } from '@/lib/launch-metrics/exportCsv';
 import { LaunchMetricsChart, labels } from './LaunchMetricsChart';
 import styles from './metrics.module.css';
+import LaunchActivity from './LaunchActivity';
 
 type State = { status: 'checking' | 'denied' | 'loading' | 'ready' | 'error'; rows: WeeklyMetrics[]; message?: string };
 const messageOf = (error: unknown) => error instanceof Error ? error.message : 'Unable to load Launch Metrics.';
@@ -74,6 +75,7 @@ export default function LaunchMetricsClient() {
   return <main className={styles.dashboard}>
     <a href="/">← iPurpose home</a>
     <header><p className="text-sm uppercase tracking-widest">iPurpose · Administration</p><h1 className="mt-2 text-4xl font-italiana">Launch Metrics</h1></header>
+    <LaunchActivity />
     {['checking', 'loading'].includes(state.status) && <p role="status">{state.status === 'checking' ? 'Checking administrator access…' : 'Loading weekly snapshots…'}</p>}
     {state.status === 'denied' && <p>Administrator access is required. <a className="underline" href="/login?next=/admin/launch-metrics">Sign in</a> with an administrator account.</p>}
     {state.status === 'error' && <div role="alert"><p>{state.message}</p><button className="mt-3 rounded border bg-white px-4 py-2" onClick={() => window.location.reload()}>Try again</button></div>}
