@@ -86,6 +86,14 @@ export default function PublicHeader() {
         {/* Desktop Navigation - Show only on large screens */}
         {isLargeScreen && (
           <>
+            <Link
+              href="/purpose"
+              className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
+              style={{ background: 'linear-gradient(to right, #FCC4B7, rgba(252, 196, 183, 0))', color: '#FFFFFF', fontSize: '40px' }}
+            >
+              Purpose
+            </Link>
+
             <Link 
               href="/discover" 
               className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-italiana text-center hover:opacity-90 transition-opacity whitespace-nowrap"
@@ -191,6 +199,15 @@ export default function PublicHeader() {
       {mobileMenuOpen && !isLargeScreen && (
         <nav id={menuId} className={styles.mobileMenu} aria-label="Public navigation">
           <div className={styles.mobileLinks}>
+            <Link
+              href="/purpose"
+              className="px-4 py-2 text-sm hover:bg-white/10 rounded"
+              style={{ color: '#FFFFFF' }}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Purpose
+            </Link>
+
             <Link 
               href="/discover" 
               className="px-4 py-2 text-sm hover:bg-white/10 rounded"
