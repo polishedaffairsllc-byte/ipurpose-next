@@ -1,9 +1,20 @@
 import { MetadataRoute } from 'next';
+import { purposePages } from '@/content/purpose';
 
 const canonicalDomain = 'https://ipurposesoul.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
+    {
+      url: `${canonicalDomain}/purpose`,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    ...purposePages.map((page) => ({
+      url: `${canonicalDomain}/purpose/${page.slug}`,
+      changeFrequency: 'monthly' as const,
+      priority: page.slug === 'what-is-my-purpose' ? 0.9 : 0.7,
+    })),
     {
       url: `${canonicalDomain}/`,
       lastModified: new Date(),
