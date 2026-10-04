@@ -1,3 +1,5 @@
+import { CLARITY_LIFECYCLE_COPY } from '../lib/clarityLifecycleCopy';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { FirebaseError } from 'firebase/app';
@@ -21,6 +23,7 @@ export default function CreateAccountScreen() {
   const router = useRouter();
   const { createAccount, loading, user } = useAuth();
   const [email, setEmail] = useState('');
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -40,7 +43,7 @@ export default function CreateAccountScreen() {
     setSubmitting(true);
     setError(null);
     try {
-      await createAccount(normalizedEmail, password);
+      await createAccount(normalizedEmail, password, marketingOptIn);
     } catch (caught) {
       setError(getAccountError(caught));
       setSubmitting(false);
@@ -92,6 +95,12 @@ export default function CreateAccountScreen() {
           textContentType="newPassword"
           value={confirmation}
         />
+        <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: marketingOptIn }}
+          accessibilityLabel={CLARITY_LIFECYCLE_COPY.consent} disabled={submitting}
+          onPress={() => setMarketingOptIn(value => !value)} style={styles.consentRow}>
+          <Ionicons name={marketingOptIn ? 'checkbox' : 'square-outline'} size={24} color={theme.colors.champagne} />
+          <Text style={styles.consentText}>{CLARITY_LIFECYCLE_COPY.consent}</Text>
+        </Pressable>
         {confirmation && !passwordsMatch ? (
           <Text accessibilityRole="alert" style={authStyles.error}>Passwords do not match.</Text>
         ) : error ? (
@@ -127,6 +136,8 @@ export default function CreateAccountScreen() {
 }
 
 const styles = StyleSheet.create({
+  consentRow: { flexDirection: 'row', gap: 10, paddingVertical: 14, alignItems: 'flex-start' },
+  consentText: { flex: 1, color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 21 },
   loading: {
     alignItems: 'center',
     backgroundColor: theme.colors.midnightIndigo,

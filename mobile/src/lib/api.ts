@@ -1,3 +1,5 @@
+import { CLARITY_LIFECYCLE_COPY } from './clarityLifecycleCopy';
+import { logLaunchEvent } from './analyticsEvents';
 import { auth } from './firebase';
 import type { CompanionMessage, CompanionProfile, ConversationSummary, MentorResponse, ResponseMode } from '../types/companion';
 import type { VisualEnvironmentPreference } from './visualEnvironment';
@@ -38,6 +40,17 @@ async function readJson<T>(response: Response): Promise<T> {
   if (!data) throw new Error('The server returned an empty response.');
   return data;
 }
+
+export function createClarityRequestId() {
+  return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}_${Math.random().toString(36).slice(2)}`;
+}
+export async function saveMarketingConsent(): Promise<void> {
+  const response = await authorizedFetch('/api/ai/marketing-consent', {
+    method: 'POST', body: JSON.stringify({ granted: true, copyVersion: CLARITY_LIFECYCLE_COPY.consentVersion }),
+  });
+  await readJson<{ saved: true }>(response);
+}
+const enrolledAttempts = new Set<string>();
 
 export async function deleteIPurposeAccount(): Promise<void> {
   const response = await authorizedFetch('/api/account', { method: 'DELETE' }, true);
@@ -84,12 +97,18 @@ export async function submitClarityCheck(options: {
   responses: Record<string, number>;
   identityResponses: string[];
   onboarding?: boolean;
+  requestId: string;
 }): Promise<ClarityCheckSubmission> {
   const response = await authorizedFetch('/api/clarity-check/submit', {
     method: 'POST',
     body: JSON.stringify(options),
   });
-  return readJson<ClarityCheckSubmission>(response);
+  const result = await readJson<ClarityCheckSubmission & { lifecycle?: { enrollment?: string } }>(response);
+  const key = `${auth.currentUser?.uid}:${options.requestId}`;
+  if (result.lifecycle?.enrollment === 'enrolled' && !enrolledAttempts.has(key)) {
+    enrolledAttempts.add(key); logLaunchEvent('email_signup');
+  }
+  return result;
 }
 export async function updateCompanionFocusAreas(focusAreas: string[]): Promise<CompanionProfile> {
   const response = await authorizedFetch('/api/ai/profile', { method: 'PATCH', body: JSON.stringify({ focusAreas }) });

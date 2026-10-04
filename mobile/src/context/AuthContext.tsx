@@ -9,13 +9,13 @@ import {
   type User,
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { deleteIPurposeAccount } from '../lib/api';
+import { deleteIPurposeAccount, saveMarketingConsent } from '../lib/api';
 import { logLaunchEvent } from '../lib/analyticsEvents';
 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
-  createAccount: (email: string, password: string) => Promise<void>;
+  createAccount: (email: string, password: string, marketingOptIn?: boolean) => Promise<void>;
   deleteAccount: (password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -37,9 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => ({
     user,
     loading,
-    createAccount: async (email, password) => {
+    createAccount: async (email, password, marketingOptIn = false) => {
       await createUserWithEmailAndPassword(auth, email.trim(), password);
       logLaunchEvent('sign_up');
+      if (marketingOptIn) await saveMarketingConsent();
     },
     deleteAccount: async (password) => {
       const currentUser = auth.currentUser;
