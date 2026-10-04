@@ -20,7 +20,7 @@
     "test:firestore-alignment": "node --import tsx --test tests/firestore-alignment.node.ts"
   },
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
