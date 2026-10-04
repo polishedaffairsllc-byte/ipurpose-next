@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
+import { completeClarityLifecycle } from '@/lib/clarity/lifecycleServer';
 import { rateLimit } from '@/lib/rate-limit-simple';
-import { scheduleEmailSequence, sendClarityCheckResultsEmail, sendFounderNotification, ClarityCheckScores } from '@/lib/email-automation';
+import { sendFounderNotification, ClarityCheckScores } from '@/lib/email-automation';
 
 interface ClarityCheckRequest {
   name: string;
@@ -104,36 +105,16 @@ export async function POST(request: NextRequest) {
 
     console.log('[CLARITY CHECK] Success:', { id: result.id, deduped: result.deduped });
 
-    // A stored lead alone is not a confirmed nurture enrollment.
-    let enrollment: 'enrolled' | 'opted_out' | 'failed' | 'duplicate' = 'failed';
+    // Web enrollment policy remains unchanged; the shared helper supplies the real quiz ID.
+    let enrollment = 'failed';
     try {
-      enrollment = await scheduleEmailSequence({
-        email,
-        name,
-        submissionId: result.id || clientSubmissionId || '',
-        ...(identityType && { identityType }),
-        ...(totalScore !== undefined && { totalScore }),
+      const lifecycle = await completeClarityLifecycle({
+        platform: 'web', email, name, contactId: result.id,
+        quizSubmissionId: clientSubmissionId || '', identityType, totalScore,
+        scores, resultSummary, nextStep,
       });
-    } catch (emailError) {
-      console.error('[CLARITY CHECK] Email scheduling failed (non-blocking):', emailError);
-    }
-
-    // Send full results email if scores were provided by the client
-    if (scores && resultSummary && nextStep) {
-      try {
-        await sendClarityCheckResultsEmail({
-          email,
-          name,
-          scores: scores as ClarityCheckScores,
-          resultSummary,
-          nextStep,
-          submissionId: clientSubmissionId || '',
-          identityType,
-        });
-      } catch (resultsEmailError) {
-        console.error('[CLARITY CHECK] Results email failed (non-blocking):', resultsEmailError);
-      }
-    }
+      enrollment = lifecycle.enrollment;
+    } catch { console.error('[CLARITY CHECK] Lifecycle processing failed'); }
 
     // Notify founder that email was captured (step 2 — now we know who this person is)
     try {

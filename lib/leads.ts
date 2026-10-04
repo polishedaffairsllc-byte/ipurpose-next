@@ -6,6 +6,7 @@
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { trackServerGenerateLead } from '@/lib/ga4-server';
 import { Timestamp } from 'firebase-admin/firestore';
+import { resolveContact } from './clarity/contacts';
 
 export type LeadSource = 'clarity-check' | 'info-session' | 'contact' | 'workshop';
 
@@ -191,31 +192,12 @@ export async function processLead(
   const normalizedEmail = normalizeEmail(email);
 
   try {
-    // Check for existing lead
-    const existing = await findExistingLead(source, normalizedEmail);
-
-    if (existing) {
-      // Dedupe: update existing
-      console.log(`[LEADS] Dedupe ${source} from ${normalizedEmail}`, existing.data);
-      const id = await updateExistingLead(existing.docId);
-      return { ok: true, id, deduped: true };
-    }
-
-    // Create new lead
-    const id = await createNewLead({
-      source,
-      name: name.trim(),
-      email: normalizedEmail,
-      userAgent: context.userAgent || null,
-      ip: context.ip || null,
-      referer: context.referer || null,
-      pathname: context.pathname || null,
-      utm_source: context.utm_source || null,
-      utm_medium: context.utm_medium || null,
-      utm_campaign: context.utm_campaign || null,
-      utm_content: context.utm_content || null,
-      utm_term: context.utm_term || null,
+    const contact = await resolveContact(firebaseAdmin.firestore(), {
+      source, email: normalizedEmail, name,
+      context: Object.fromEntries(Object.entries(context).map(([key, value]) => [key, value ?? null])),
     });
+    const id = contact.id;
+    if (contact.deduped) return { ok: true, id, deduped: true };
 
     // Send GA4 generate_lead event for new leads only
     try {

@@ -15,6 +15,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { retryTransactionalDeliveries } from '@/lib/clarity/delivery';
+import { sendTransactionalEmail } from '@/lib/clarity/lifecycleServer';
 import { canDeliverQueuedEmail } from '@/lib/admin-activity/emailGuard';
 import {
   sendClarityCheckFoundersRateEmail,
@@ -48,6 +50,10 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
     }
 
     const now = new Date();
+    // Separate idempotent transactional queue; legacy marketing task claiming is unchanged.
+    let transactionalProcessed = 0;
+    try { transactionalProcessed = await retryTransactionalDeliveries(firebaseAdmin.firestore(), sendTransactionalEmail, now); }
+    catch { console.error('[SCHEDULER] Transactional retry queue unavailable'); }
     console.log(`[SCHEDULER] Running scheduled email task at ${now.toISOString()}`);
 
     // Query for pending email tasks that are due
@@ -154,6 +160,7 @@ async function runScheduler(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       success: true,
+      transactionalProcessed,
       processed,
       failed,
       timestamp: now.toISOString(),
