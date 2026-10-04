@@ -1,0 +1,18 @@
+/* Load the existing design system explicitly for Tailwind 4. Prefix utilities
+   so this hub does not change the styling of existing pages or shared chrome. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(purpose);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(purpose) source(none);
+@config "../../tailwind.config.ts";
+@source "./";
+
+/* Style Bible v5 neutral, absent from the site's older token collection. */
+@theme {
+  --color-lightMistGray: #F5F7FA;
+}
+
+@layer base {
+  #purpose-content :where(h1, h2, h3, p, ol, ul, blockquote) {
+    @apply purpose:m-0;
+  }
+}

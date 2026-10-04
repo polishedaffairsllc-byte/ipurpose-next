@@ -57,6 +57,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     || pathname === "/clarity-check"
     || pathname === "/program"
     || pathname?.startsWith("/guides/")
+    || pathname === "/purpose"
+    || pathname?.startsWith("/purpose/")
     || pathname?.startsWith("/orientation")
     || pathname?.startsWith("/ethics");
 
