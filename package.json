@@ -16,7 +16,8 @@
     "crawl:local": "BASE_URL=http://localhost:3000 node scripts/crawl-routes.mjs",
     "crawl:ui": "node scripts/crawl-ui.mjs",
     "crawl:ui:vercel": "BASE_URL=https://ipurpose-fix-api-params-and-public-routes.vercel.app node scripts/crawl-ui.mjs",
-    "crawl:ui:local": "BASE_URL=http://localhost:3000 node scripts/crawl-ui.mjs"
+    "crawl:ui:local": "BASE_URL=http://localhost:3000 node scripts/crawl-ui.mjs",
+    "test:firestore-alignment": "node --import tsx --test tests/firestore-alignment.node.ts"
   },
   "engines": {
     "node": "24.x"
@@ -64,6 +65,6 @@
     "vercel": "^49.1.1"
   },
   "overrides": {
-    "undici@6.19.7": "6.28.0"
+    "undici@6.19.7": "6.28.1"
   }
 }

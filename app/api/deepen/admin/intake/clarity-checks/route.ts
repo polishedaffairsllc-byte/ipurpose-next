@@ -1,3 +1,4 @@
+import { isQuestionnaire } from '@/lib/clarity/submissionType';
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { requireUid } from '@/lib/firebase/requireUser';
@@ -22,16 +23,18 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const snapshot = await db
-      .collection('clarityCheckSubmissions')
-      .orderBy('createdAt', 'desc')
-      .limit(100)
-      .get();
-
-    const submissions = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const query = db.collection('clarityCheckSubmissions').orderBy('createdAt', 'desc');
+    let page = query.limit(100);
+    const submissions: Record<string, unknown>[] = [];
+    while (submissions.length < 100) {
+      const snapshot = await page.get();
+      for (const doc of snapshot.docs) {
+        if (isQuestionnaire(doc.data())) submissions.push({ ...doc.data(), id: doc.id, type: 'questionnaire' });
+        if (submissions.length === 100) break;
+      }
+      if (snapshot.size < 100) break;
+      page = query.startAfter(snapshot.docs[snapshot.size - 1]).limit(100);
+    }
 
     return NextResponse.json({
       ok: true,

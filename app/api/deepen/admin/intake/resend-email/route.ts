@@ -1,3 +1,4 @@
+import { isQuestionnaire } from '@/lib/clarity/submissionType';
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { requireUid } from '@/lib/firebase/requireUser';
@@ -227,7 +228,7 @@ export async function POST(request: NextRequest) {
       const summary = data?.resultSummary;
       const nextStep = data?.resultDetail;
 
-      if (!email || !summary || !nextStep) {
+      if (!isQuestionnaire(data || {}) || !email || !summary || !nextStep) {
         return NextResponse.json(
           { ok: false, error: 'Missing email or result data' },
           { status: 400 }
