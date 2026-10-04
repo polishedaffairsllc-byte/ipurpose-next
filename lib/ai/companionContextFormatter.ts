@@ -42,6 +42,15 @@ export function formatCompanionContext(context: CompanionContext): string {
     append(lines, "Current Focus", context.profile.focusAreas.slice(0, 5).join(", "));
   }
 
+  if (context.purpose) {
+    lines.push("Purpose Check (signals, not an identity type):");
+    append(lines, "- Signals", context.purpose.signals.join(", "));
+    append(lines, "- Audience", context.purpose.audience.join(", "));
+    append(lines, "- Desired impact", context.purpose.impact);
+    append(lines, "- Purpose Direction", context.purpose.direction);
+    append(lines, "- Explicitly saved reflection", context.purpose.reflection);
+  }
+
   if (context.clarityCheck) {
     lines.push("Clarity Check:");
     append(lines, "- Identity type", context.clarityCheck.identityType);

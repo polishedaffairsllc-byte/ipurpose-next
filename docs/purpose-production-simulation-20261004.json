@@ -1,0 +1,73 @@
+{
+  "sampleSize": 10000,
+  "seed": 20261004,
+  "residualOrder": [
+    "Belonging",
+    "Teaching",
+    "Access",
+    "Creative expression",
+    "Justice",
+    "Stability",
+    "Healing",
+    "Problem solving",
+    "Independence"
+  ],
+  "averagePercent": 22.22222222222222,
+  "thresholdPercent": 33.33333333333333,
+  "frequency": [
+    {
+      "signal": "Belonging",
+      "count": 2615,
+      "percent": 26.15,
+      "flagged": false
+    },
+    {
+      "signal": "Teaching",
+      "count": 2776,
+      "percent": 27.76,
+      "flagged": false
+    },
+    {
+      "signal": "Access",
+      "count": 1930,
+      "percent": 19.3,
+      "flagged": false
+    },
+    {
+      "signal": "Creative expression",
+      "count": 2654,
+      "percent": 26.54,
+      "flagged": false
+    },
+    {
+      "signal": "Justice",
+      "count": 1652,
+      "percent": 16.52,
+      "flagged": false
+    },
+    {
+      "signal": "Stability",
+      "count": 1666,
+      "percent": 16.66,
+      "flagged": false
+    },
+    {
+      "signal": "Healing",
+      "count": 2331,
+      "percent": 23.31,
+      "flagged": false
+    },
+    {
+      "signal": "Problem solving",
+      "count": 1979,
+      "percent": 19.79,
+      "flagged": false
+    },
+    {
+      "signal": "Independence",
+      "count": 2397,
+      "percent": 23.97,
+      "flagged": false
+    }
+  ]
+}

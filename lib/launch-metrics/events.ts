@@ -1,6 +1,6 @@
 import { getLaunchMeasurementIds } from './config';
 
-type LaunchEvent = 'sign_up' | 'clarity_check_start' | 'clarity_check_complete' | 'email_signup';
+type LaunchEvent = 'purpose_check_start' | 'purpose_check_complete' | 'sign_up' | 'clarity_check_start' | 'clarity_check_complete' | 'email_signup';
 const recorded = new Set<string>();
 
 /** Analytics failure must never turn a successful product action into an error. */
