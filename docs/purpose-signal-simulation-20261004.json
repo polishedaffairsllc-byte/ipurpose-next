@@ -1,0 +1,135 @@
+{
+  "seed": 20261004,
+  "samplesPerPolicy": 10000,
+  "selectionModel": "Uniform 1 or 2 distinct choices for Q1/Q2/Q3/Q5; uniform single choice for Q6. Q4 omitted because it adds no signals.",
+  "tieModel": "Total points, then per-question points Q3,Q5,Q6,Q2,Q1. Residual ties are unspecified by the brief; report two diagnostic policies, neither adopted as product behavior.",
+  "questionFrequency": {
+    "Belonging": 5,
+    "Teaching": 5,
+    "Access": 4,
+    "Creative expression": 5,
+    "Justice": 4,
+    "Stability": 4,
+    "Healing": 5,
+    "Problem solving": 4,
+    "Independence": 5
+  },
+  "stableBriefOrderResidualTies": {
+    "unresolvedSecondThirdTies": 1271,
+    "topTwo": {
+      "Belonging": {
+        "count": 2531,
+        "percent": 25.31,
+        "multipleOfAverage": 1.139,
+        "above1_5TimesAverage": false
+      },
+      "Teaching": {
+        "count": 2718,
+        "percent": 27.18,
+        "multipleOfAverage": 1.223,
+        "above1_5TimesAverage": false
+      },
+      "Access": {
+        "count": 1816,
+        "percent": 18.16,
+        "multipleOfAverage": 0.817,
+        "above1_5TimesAverage": false
+      },
+      "Creative expression": {
+        "count": 2735,
+        "percent": 27.35,
+        "multipleOfAverage": 1.231,
+        "above1_5TimesAverage": false
+      },
+      "Justice": {
+        "count": 1646,
+        "percent": 16.46,
+        "multipleOfAverage": 0.741,
+        "above1_5TimesAverage": false
+      },
+      "Stability": {
+        "count": 1636,
+        "percent": 16.36,
+        "multipleOfAverage": 0.736,
+        "above1_5TimesAverage": false
+      },
+      "Healing": {
+        "count": 2404,
+        "percent": 24.04,
+        "multipleOfAverage": 1.082,
+        "above1_5TimesAverage": false
+      },
+      "Problem solving": {
+        "count": 2035,
+        "percent": 20.35,
+        "multipleOfAverage": 0.916,
+        "above1_5TimesAverage": false
+      },
+      "Independence": {
+        "count": 2479,
+        "percent": 24.79,
+        "multipleOfAverage": 1.116,
+        "above1_5TimesAverage": false
+      }
+    }
+  },
+  "seededRandomResidualTies": {
+    "unresolvedSecondThirdTies": 1271,
+    "topTwo": {
+      "Belonging": {
+        "count": 2283,
+        "percent": 22.83,
+        "multipleOfAverage": 1.027,
+        "above1_5TimesAverage": false
+      },
+      "Teaching": {
+        "count": 2643,
+        "percent": 26.43,
+        "multipleOfAverage": 1.189,
+        "above1_5TimesAverage": false
+      },
+      "Access": {
+        "count": 1685,
+        "percent": 16.85,
+        "multipleOfAverage": 0.758,
+        "above1_5TimesAverage": false
+      },
+      "Creative expression": {
+        "count": 2700,
+        "percent": 27.0,
+        "multipleOfAverage": 1.215,
+        "above1_5TimesAverage": false
+      },
+      "Justice": {
+        "count": 1713,
+        "percent": 17.13,
+        "multipleOfAverage": 0.771,
+        "above1_5TimesAverage": false
+      },
+      "Stability": {
+        "count": 1724,
+        "percent": 17.24,
+        "multipleOfAverage": 0.776,
+        "above1_5TimesAverage": false
+      },
+      "Healing": {
+        "count": 2527,
+        "percent": 25.27,
+        "multipleOfAverage": 1.137,
+        "above1_5TimesAverage": false
+      },
+      "Problem solving": {
+        "count": 2122,
+        "percent": 21.22,
+        "multipleOfAverage": 0.955,
+        "above1_5TimesAverage": false
+      },
+      "Independence": {
+        "count": 2603,
+        "percent": 26.03,
+        "multipleOfAverage": 1.171,
+        "above1_5TimesAverage": false
+      }
+    }
+  }
+}
