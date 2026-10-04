@@ -1,4 +1,4 @@
-export type NativeEvent = 'sign_up' | 'clarity_check_start' | 'clarity_check_complete';
+export type NativeEvent = 'purpose_check_start' | 'purpose_check_complete' | 'sign_up' | 'clarity_check_start' | 'clarity_check_complete';
 export type EventSink = (name: NativeEvent) => void;
 
 /** One attempt per mounted flow; resumed drafts already own their start event. */

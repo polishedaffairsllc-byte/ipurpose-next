@@ -1,3 +1,4 @@
+import { PurposeDeletionControl } from '../../../components/PurposeDeletionControl';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState, type ReactNode } from 'react';
 import {
@@ -478,6 +479,8 @@ export default function AccountScreen() {
                 </>
               )}
             </Pressable>
+
+            <PurposeDeletionControl />
 
             <View style={[styles.accountDivider, { backgroundColor: tokens.surfaceBorder }]} />
             <Text style={styles.deleteAccountIntro}>
