@@ -1,5 +1,7 @@
 'use client';
 
+import { usePublicForm } from '@/lib/trust/publicClient';
+
 import { useState } from 'react';
 import Button from '../components/Button';
 import Link from 'next/link';
@@ -8,6 +10,7 @@ import Footer from '../components/Footer';
 import { useUTMParams } from '@/lib/hooks/useUTMParams';
 
 export default function InfoSessionPage() {
+  const publicFetch = usePublicForm('info-session');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +24,7 @@ export default function InfoSessionPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/leads/info-session', {
+      const res = await publicFetch('/api/leads/info-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, ...utmParams }),

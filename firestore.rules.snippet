@@ -4,3 +4,10 @@ match /analytics_weekly/{weekEnding} {
   allow read: if request.auth != null && request.auth.token.admin == true;
   allow write: if false;
 }
+
+// QA refinement: all of these collections are accessed only by Admin SDK.
+// An overlapping permissive wildcard MUST exclude these collection names.
+match /emailTrust/{record} { allow read, write: if false; }
+match /publicChallenges/{record} { allow read, write: if false; }
+match /publicThrottle/{record} { allow read, write: if false; }
+match /publicReplays/{record} { allow read, write: if false; }

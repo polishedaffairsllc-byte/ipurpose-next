@@ -7,6 +7,7 @@ import { runClarityLifecycle, type LifecycleInput } from '../lib/clarity/lifecyc
 import { saveNativeSubmission } from '../lib/clarity/nativeSubmission';
 import { enrollNurture } from '../lib/launch-metrics/enrollNurture';
 import { marketingSuppressed } from '../lib/clarity/suppression';
+import { recordAuthEmailStatus } from '../lib/trust/emailPolicy';
 import { recordMobileMarketingConsent } from '../lib/clarity/marketingConsent';
 import { CLARITY_LIFECYCLE_COPY as COPY } from '../mobile/src/lib/clarityLifecycleCopy';
 
@@ -44,6 +45,7 @@ test('an existing web lead older than seven days is reused; prior web welcome is
 });
 test('repeat and concurrent submits send one result and one welcome; retake sends a new result only', async () => {
   const { db, sent, deps } = setup();
+  await recordAuthEmailStatus(db.asFirestore(), { uid: 'account', email: 'person@example.test', emailVerified: true });
   await recordMobileMarketingConsent(db.asFirestore(), 'account', 'person@example.test', { granted: true, copyVersion: COPY.consentVersion });
   await Promise.all([runClarityLifecycle(input, deps), runClarityLifecycle(input, deps)]);
   await runClarityLifecycle(input, deps);
@@ -70,6 +72,7 @@ test('explicit app consent records copy/source/time and never clears opt-out or 
   const { db, deps, sent } = setup();
   db.documents.set('users/account', { emailOptOut: true, subscriptionStatus: 'unsubscribed' });
   await assert.rejects(recordMobileMarketingConsent(db.asFirestore(), 'account', input.email, { granted: false, copyVersion: COPY.consentVersion }));
+  await recordAuthEmailStatus(db.asFirestore(), { uid: 'account', email: 'person@example.test', emailVerified: true });
   await recordMobileMarketingConsent(db.asFirestore(), 'account', input.email, { granted: true, copyVersion: COPY.consentVersion }, new Date(1000));
   const before = db.documents.get('users/account')!;
   assert.equal(before.marketingConsent.source, COPY.consentSource);
@@ -108,11 +111,11 @@ test('saved native attempt is stable across concurrency/retry, rejects different
   await assert.rejects(saveNativeSubmission(db.asFirestore(), 'account', 'attempt-one', { ...data, responses: { ...data.responses, '1': 4 } }, true, new Date()), /CONFLICT/);
   assert.notEqual(await saveNativeSubmission(db.asFirestore(), 'account', 'attempt-two', data, false, new Date()), ids[0]);
 });
-test('web helper preserves legacy enrollment without fabricating consent and carries the quiz ID separately', async () => {
+test('web helper does not treat legacy enrollment as verified consent and carries the quiz ID separately', async () => {
   const { db, deps } = setup(); let webQuiz = '';
   const result = await runClarityLifecycle({ ...input, platform: 'web', name: 'Person' }, { ...deps,
     webResults: async data => { webQuiz = data.quizSubmissionId; return true; } });
-  assert.equal(result.enrollment, 'enrolled'); assert.equal(webQuiz, 'quiz-123');
+  assert.equal(result.enrollment, 'unverified'); assert.equal(webQuiz, 'quiz-123');
   assert.ok([...db.documents].filter(([key]) => key.startsWith('emailTasks/')).every(([, task]) => task.quizSubmissionId === 'quiz-123'));
   assert.equal(db.documents.get('users/account')?.marketingConsent, undefined);
 });

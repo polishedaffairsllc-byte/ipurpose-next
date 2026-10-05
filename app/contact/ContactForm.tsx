@@ -1,5 +1,7 @@
 "use client";
 
+import { usePublicForm } from '@/lib/trust/publicClient';
+
 import React, { useState } from "react";
 
 const topics = [
@@ -11,6 +13,8 @@ const topics = [
 ];
 
 export default function ContactForm() {
+  const publicFetch = usePublicForm('contact');
+  const [website, setWebsite] = useState('');
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [topic, setTopic] = useState("Account & Access");
@@ -24,10 +28,10 @@ export default function ContactForm() {
     setStatus("submitting");
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await publicFetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, topic, message }),
+        body: JSON.stringify({ name, email, topic, message, website }),
       });
 
       if (!res.ok) {
@@ -61,11 +65,13 @@ export default function ContactForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <div aria-hidden="true" style={{ position: 'absolute', left: -10000 }}><label>Website<input name="website" tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)} /></label></div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-white/80" style={{ fontSize: "35px" }}>Your name</label>
             <input
               required
+              maxLength={120}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-lavenderViolet/60"
@@ -78,6 +84,7 @@ export default function ContactForm() {
             <input
               type="email"
               required
+              maxLength={254}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-lavenderViolet/60"
@@ -107,6 +114,7 @@ export default function ContactForm() {
           <label className="text-white/80" style={{ fontSize: "35px" }}>How can we help?</label>
           <textarea
             required
+            maxLength={5000}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-lavenderViolet/60 min-h-[180px]"

@@ -161,3 +161,8 @@ export async function putPurposeResults(body: import('./purposeCheck').PurposePa
 export async function deletePurposeResults(): Promise<void> {
  await readJson(await authorizedFetch('/api/ai/purpose', { method: 'DELETE' }));
 }
+
+export async function refreshEmailStatus(): Promise<boolean> {
+  const response = await authorizedFetch('/api/auth/email-status', { method: 'POST' }, true);
+  return (await readJson<{ emailVerified: boolean }>(response)).emailVerified;
+}

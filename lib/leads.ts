@@ -3,6 +3,7 @@
  * Shared lead submission helper for storing leads in Firestore
  */
 
+import { validEmail, validText } from './trust/publicProtection';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { trackServerGenerateLead } from '@/lib/ga4-server';
 import { Timestamp } from 'firebase-admin/firestore';
@@ -37,11 +38,11 @@ export function validateLead(
   name: string | undefined,
   email: string | undefined
 ): { valid: boolean; error?: string } {
-  if (!name || typeof name !== 'string' || name.trim().length < 2) {
+  if (!validText(name, 1, 120)) {
     return { valid: false, error: 'INVALID_NAME' };
   }
 
-  if (!email || typeof email !== 'string') {
+  if (!validEmail(email)) {
     return { valid: false, error: 'INVALID_EMAIL' };
   }
 

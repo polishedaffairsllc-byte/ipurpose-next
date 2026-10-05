@@ -1,5 +1,7 @@
 'use client';
 
+import { usePublicForm } from '@/lib/trust/publicClient';
+
 import { useState } from 'react';
 
 interface Props {
@@ -7,6 +9,7 @@ interface Props {
 }
 
 export default function WorkshopRegisterForm({ buttonStyle }: Props) {
+  const publicFetch = usePublicForm('workshop');
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [session, setSession] = useState('');
@@ -22,7 +25,7 @@ export default function WorkshopRegisterForm({ buttonStyle }: Props) {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/leads/workshop', {
+      const res = await publicFetch('/api/leads/workshop', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firstName, email, session, building, website }),

@@ -1,3 +1,5 @@
+import { recordAuthEmailStatus } from '../trust/emailPolicy';
+import { requestContactVerification } from '../trust/emailVerification';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { scheduleEmailSequence, sendClarityCheckResultsEmail, type ClarityCheckScores } from '@/lib/email-automation';
 import { runClarityLifecycle, type LifecycleInput } from './lifecycle';
@@ -13,8 +15,12 @@ export const sendTransactionalEmail: TransactionalSender = async (message, key) 
   return response.data.id;
 };
 
-export function completeClarityLifecycle(input: LifecycleInput) {
-  return runClarityLifecycle(input, {
+export async function completeClarityLifecycle(input: LifecycleInput) {
+  if (input.platform === 'mobile' && input.uid) {
+    try { await recordAuthEmailStatus(firebaseAdmin.firestore(), await firebaseAdmin.auth().getUser(input.uid)); }
+    catch { /* Delivery gate fails closed; transactional results/welcome remain independent. */ }
+  }
+  const result = await runClarityLifecycle(input, {
     db: firebaseAdmin.firestore(),
     enroll: scheduleEmailSequence,
     webResults: data => sendClarityCheckResultsEmail({ email: data.email, name: data.name || '',
@@ -22,4 +28,9 @@ export function completeClarityLifecycle(input: LifecycleInput) {
       nextStep: data.nextStep!, submissionId: data.quizSubmissionId, identityType: data.identityType }),
     send: sendTransactionalEmail,
   });
+  if (input.platform === 'web') {
+    try { await requestContactVerification(firebaseAdmin.firestore(), input.email, sendTransactionalEmail); }
+    catch { /* Results remain available if verification delivery is unavailable. */ }
+  }
+  return result;
 }

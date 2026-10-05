@@ -1,3 +1,5 @@
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { protectPublicSubmission, PublicInputError, readPublicJson, requestIp } from '@/lib/trust/publicProtection';
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { completeClarityLifecycle } from '@/lib/clarity/lifecycleServer';
@@ -48,7 +50,10 @@ function getRequestContext(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as ClarityCheckRequest;
+    const body = (await readPublicJson(request)) as unknown as ClarityCheckRequest;
+    const guard = await protectPublicSubmission(firebaseAdmin.firestore(), 'clarity-lead', requestIp(request), body as unknown as Record<string, unknown>, { requireChallenge: true });
+    if (guard === 'dropped') return NextResponse.json({ ok: true });
+    if (guard !== 'accepted') return NextResponse.json({ error: 'Please reload this form or wait before submitting again.' }, { status: guard === 'duplicate' ? 409 : 400 });
     const { name, website, submissionId: clientSubmissionId, identityType, totalScore, scores, resultSummary, nextStep, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
     const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
 
@@ -141,7 +146,7 @@ export async function POST(request: NextRequest) {
     console.error('[CLARITY CHECK] Unexpected error:', error);
     return NextResponse.json(
       { ok: false, error: 'INTERNAL_ERROR' },
-      { status: 500 }
+      { status: error instanceof PublicInputError ? error.status : 503 }
     );
   }
 }

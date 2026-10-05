@@ -1,3 +1,4 @@
+import { protectPublicSubmission, PublicInputError, readPublicJson, requestIp } from '@/lib/trust/publicProtection';
 import { CLARITY_LIFECYCLE_COPY as COPY } from '@/mobile/src/lib/clarityLifecycleCopy';
 import { saveNativeSubmission } from '@/lib/clarity/nativeSubmission';
 import { completeClarityLifecycle } from '@/lib/clarity/lifecycleServer';
@@ -105,7 +106,8 @@ function generateSummary(scores: ReturnType<typeof calculateDimensionScores>) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body: ClarityCheckRequest = await request.json();
+    const rawBody = await readPublicJson(request);
+    const body = rawBody as unknown as ClarityCheckRequest;
     const { email, responses, identityResponses } = body;
     const bearerAuth = await getRequestBearerAuth();
     if (bearerAuth.attempted && !bearerAuth.uid) {
@@ -115,6 +117,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!bearerAuth.attempted) {
+      const guard = await protectPublicSubmission(firebaseAdmin.firestore(), 'clarity-submit', requestIp(request), rawBody, { requireChallenge: true, limit: 15 });
+      if (guard !== 'accepted') return NextResponse.json({ error: 'Please reload the assessment or wait before submitting again.' }, { status: guard === 'duplicate' ? 409 : 400 });
+    }
     const authenticatedUser = bearerAuth.uid
       ? await firebaseAdmin.auth().getUser(bearerAuth.uid)
       : null;
@@ -345,7 +351,7 @@ export async function POST(request: NextRequest) {
     console.error('Clarity check submission error:', error);
     return NextResponse.json(
       { error: 'Failed to process clarity check' },
-      { status: 500 }
+      { status: error instanceof PublicInputError ? error.status : 503 }
     );
   }
 }

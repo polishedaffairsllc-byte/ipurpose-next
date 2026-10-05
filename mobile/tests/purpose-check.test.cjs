@@ -31,16 +31,17 @@ const text = node => typeof node === 'string' ? node : (node.children || []).map
 const button = (tree, label) => tree.root.findAllByType('Pressable').find(n => text(n) === label);
 async function press(tree, label) { const node = button(tree, label); assert.ok(node, label); assert.ok(!node.props.disabled, label); await act(async () => { await node.props.onPress(); }); }
 async function render(element) { let tree; await act(async () => { tree = create(element); }); return tree; }
-async function answerAll(h, tree) { const { PURPOSE_QUESTIONS } = h.load('lib/purposeCheckCopy.ts'); for (const q of PURPOSE_QUESTIONS) { await press(tree, q.options[0].label); await press(tree, 'Continue'); } }
+async function answerAll(h, tree) { const { PURPOSE_QUESTIONS } = h.load('lib/purposeCheckCopy.ts'); for (const q of PURPOSE_QUESTIONS) { await press(tree, q.options[0].label); if (q.max > 1) await press(tree, 'Continue'); } }
 for (const saveReflection of [false, true]) test(`actual six-question flow sends reflection only when save is ${saveReflection}`, async () => {
  const h = harness(); const writes = []; h.state.save = async body => { writes.push(body); h.state.profile = h.load('lib/purposeCheck.ts').generatePurposeProfile(body); };
  const Screen = h.load('app/(app)/(tabs)/purpose.tsx').default; const tree = await render(React.createElement(Screen));
  await press(tree, 'Take the Purpose Check');
  assert.equal(button(tree, 'Continue').props.disabled, true);
  const q1 = h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS[0];
- await press(tree, q1.options[0].label); await press(tree, q1.options[1].label); assert.equal(button(tree, q1.options[2].label).props.disabled, true);
+ await press(tree, q1.options[0].label); await press(tree, q1.options[1].label);
+ await press(tree, 'Back'); assert.equal(button(tree, q1.options[2].label).props.disabled, true);
  await press(tree, '✓ ' + q1.options[1].label); await press(tree, 'Continue');
- for (const q of h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS.slice(1)) { await press(tree, q.options[0].label); await press(tree, 'Continue'); }
+ for (const q of h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS.slice(1)) { await press(tree, q.options[0].label); if (q.max > 1) await press(tree, 'Continue'); }
  const input = tree.root.findByType('TextInput'); await act(async () => input.props.onChangeText('private words'));
  const checkbox = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'checkbox'); assert.equal(checkbox.props.accessibilityState.checked, false);
  if (saveReflection) await act(async () => checkbox.props.onPress());

@@ -1,3 +1,4 @@
+import { protectPublicSubmission, PublicInputError, readPublicJson, requestIp } from '@/lib/trust/publicProtection';
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { processLead } from '@/lib/leads';
@@ -219,7 +220,10 @@ async function sendFounderInfoSessionNotification(
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as InfoSessionRequest;
+    const body = (await readPublicJson(request)) as unknown as InfoSessionRequest;
+    const guard = await protectPublicSubmission(firebaseAdmin.firestore(), 'info-session', requestIp(request), body as unknown as Record<string, unknown>, { requireChallenge: true });
+    if (guard === 'dropped') return NextResponse.json({ ok: true });
+    if (guard !== 'accepted') return NextResponse.json({ error: 'Please reload this form or wait before submitting again.' }, { status: guard === 'duplicate' ? 409 : 400 });
     const { name, email, timezone, notes, utm_source, utm_medium, utm_campaign, utm_content, utm_term } = body;
 
     // Get request context
@@ -291,7 +295,7 @@ export async function POST(request: NextRequest) {
     console.error('[INFO SESSION] Unexpected error:', error);
     return NextResponse.json(
       { ok: false, error: 'INTERNAL_ERROR' },
-      { status: 500 }
+      { status: error instanceof PublicInputError ? error.status : 503 }
     );
   }
 }
