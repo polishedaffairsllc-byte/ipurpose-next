@@ -1,6 +1,6 @@
 # Purpose privacy draft and release gates
 
-Draft for Renita's review only. Not published or approved.
+Purpose disclosure, Compass-history caveat, marketing checkbox, and neutral welcome subject/body approved by Renita on October 4, 2026. Publication and store declaration review remain separate steps. Signed test builds and testing-channel uploads are authorized after the iOS Firebase configuration gate is resolved; public production release is not authorized.
 
 > If you take the Purpose Check in iPurpose Compass, we save your selected answers, Purpose signals, audience, desired impact and Purpose Direction to your authenticated profile. Compass uses these results to personalize your conversations. If you explicitly choose to save the optional written reflection, we store it and allow Compass to use it; otherwise your reflection is not sent to our server or saved. You can replace your results by retaking the Purpose Check or delete your Purpose results and saved reflection from Account. Deleting your account also removes them.
 
@@ -10,13 +10,13 @@ The optional reflection save checkbox defaults off and says: “Save this reflec
 
 | Required gate | Current evidence/status |
 | --- | --- |
-| Privacy policy updated and approved by Renita | Draft above only; pending approval/publication |
+| Privacy policy updated and approved by Renita | Disclosure approved October 4, 2026; policy publication pending |
 | Apple App Privacy reviewed | Data inventory above; pending owner review |
 | Google Play Data Safety reviewed | Data inventory above; pending owner review |
 | Dedicated Purpose deletion tested | Mock production repository and actual Account confirmation interaction passed; live/device confirmation pending |
 | Full account deletion tested | Actual production data-removal code passed with fake Purpose/reflection fixtures; live Firebase Auth/device confirmation pending |
 | Physical-device testing completed | Pending; JavaScript exports and mock UI tests do not satisfy this |
-| Final marketing checkbox copy approved | Working draft only; pending Renita approval |
+| Final marketing checkbox copy approved | Approved exactly as drafted by Renita, October 4, 2026 |
 | Final neutral welcome copy approved | Working draft only; pending Renita approval |
 
-No release-ready status, public native build, store upload or policy deployment is authorized or claimed.
+Signed test builds and testing-channel uploads are authorized after the iOS Firebase gate is resolved. No public production release or policy deployment is authorized or claimed. Store disclosure review and physical-device confirmation remain pending.

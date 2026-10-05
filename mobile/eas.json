@@ -9,6 +9,29 @@
     },
     "production": {
       "environment": "production"
+    },
+    "testing": {
+      "extends": "production",
+      "distribution": "store",
+      "autoIncrement": false,
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
+      }
+    }
+  },
+  "submit": {
+    "testing": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "completed",
+        "changesNotSentForReview": true
+      },
+      "ios": {
+        "ascAppId": "6818498930"
+      }
     }
   }
 }
