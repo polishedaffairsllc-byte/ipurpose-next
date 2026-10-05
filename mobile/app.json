@@ -24,7 +24,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ipurpose.mobile",
-      "buildNumber": "2"
+      "buildNumber": "2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.ipurpose.mobile",
