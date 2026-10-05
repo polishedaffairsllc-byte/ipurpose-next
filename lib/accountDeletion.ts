@@ -21,8 +21,7 @@ async function recursiveDeleteDocuments(
  * Every operation is safe to retry. The route deletes Firebase Auth only after
  * this function completes successfully.
  */
-export async function deleteAccountData(uid: string, email?: string): Promise<void> {
-  const db = firebaseAdmin.firestore();
+export async function deleteAccountData(uid: string, email?: string, db: firestore.Firestore = firebaseAdmin.firestore()): Promise<void> {
   const plan = getAccountDeletionPlan(uid, email);
 
   for (const target of plan.fieldQueries) {

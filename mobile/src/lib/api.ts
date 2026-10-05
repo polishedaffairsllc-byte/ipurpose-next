@@ -145,3 +145,13 @@ export async function sendMentorMessage(options: { message: string; conversation
   const response = await authorizedFetch('/api/ai', { method: 'POST', body: JSON.stringify({ message: options.message, responseMode: options.responseMode || 'balanced', ...(options.conversationId ? { conversationId: options.conversationId } : {}) }) });
   return readJson<MentorResponse>(response);
 }
+
+export async function getPurposeResults(): Promise<{ purposeProfile: import('./purposeCheck').PurposeProfile | null; identityType: string | null }> {
+ return readJson(await authorizedFetch('/api/ai/purpose'));
+}
+export async function putPurposeResults(body: import('./purposeCheck').PurposePayload): Promise<import('./purposeCheck').PurposeProfile> {
+ const result = await readJson<{ purposeProfile: import('./purposeCheck').PurposeProfile }>(await authorizedFetch('/api/ai/purpose', { method: 'PUT', body: JSON.stringify(body) })); return result.purposeProfile;
+}
+export async function deletePurposeResults(): Promise<void> {
+ await readJson(await authorizedFetch('/api/ai/purpose', { method: 'DELETE' }));
+}

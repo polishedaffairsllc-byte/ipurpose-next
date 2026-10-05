@@ -1,3 +1,4 @@
+import { purposeCompassContext } from '@/mobile/src/lib/purposeCheck';
 import { summarizeLabMap } from "@/lib/labs/mapSummary";
 import { getLatestQuestionnaire, legacyAccountEmail } from "@/lib/clarity/latestQuestionnaire";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
@@ -94,6 +95,7 @@ function getProfileContext(data: UnknownRecord): CompanionProfileContext {
 interface CompanionProfileReadResult {
   profile: CompanionProfileContext;
   email?: string;
+  purpose?: CompanionContext["purpose"];
 }
 
 async function readCompanionProfile(uid: string): Promise<CompanionProfileReadResult> {
@@ -108,6 +110,7 @@ async function readCompanionProfile(uid: string): Promise<CompanionProfileReadRe
   return {
     profile,
     email: legacyAccountEmail(authUser),
+    purpose: purposeCompassContext(userData.purposeProfile),
   };
 }
 
@@ -333,7 +336,7 @@ async function readLabs(uid: string): Promise<CompanionLabContext[]> {
  * existing Clarity Check schema). Individual source failures degrade gracefully.
  */
 export async function getCompanionContext(uid: string): Promise<CompanionContext> {
-  const { profile, email } = await readCompanionProfile(uid);
+  const { profile, email, purpose } = await readCompanionProfile(uid);
   // Prefer UID ownership, with the authenticated account email for legacy records.
 
   const [clarityCheck, recentCheckIns, dailySessions, recentLabs, journalReflections] =
@@ -356,6 +359,7 @@ export async function getCompanionContext(uid: string): Promise<CompanionContext
   return {
     profile,
     clarityCheck,
+    purpose,
     recentCheckIns,
     recentDailySessions: dailySessions.sessions,
     recentLabs,

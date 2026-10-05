@@ -76,6 +76,7 @@ export interface CompanionDailySessionContext {
 
 export interface CompanionContext {
   profile: CompanionProfileContext;
+  purpose?: { signals: string[]; audience: string[]; impact: string; direction: string; reflection?: string };
   clarityCheck?: CompanionClarityContext;
   recentCheckIns: CompanionCheckInContext[];
   recentDailySessions: CompanionDailySessionContext[];

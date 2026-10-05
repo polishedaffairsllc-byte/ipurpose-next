@@ -5,6 +5,7 @@ export class FakeFirestore {
   failReads = false;
   private tail: Promise<unknown> = Promise.resolve();
   asFirestore() { return this as unknown as Firestore; }
+  collectionGroup(name: string) { return new FakeQuery(this, name, [], Infinity, true); }
   collection(name: string) { return new FakeQuery(this, name); }
   async runTransaction<T>(operation: (tx: FakeTransaction) => Promise<T>): Promise<T> {
     const previous = this.tail;
@@ -37,13 +38,12 @@ export class FakeRef {
   async update(data: Data) { return this.set(data, { merge: true }); }
 }
 class FakeQuery {
-  constructor(public db: FakeFirestore, public name: string, public filters: [string, unknown][] = [], public cap = Infinity) {}
+  constructor(public db: FakeFirestore, public name: string, public filters: [string, unknown][] = [], public cap = Infinity, public group = false) {}
   doc(id = 'random-test-document') { return new FakeRef(this.db, `${this.name}/${id}`); }
-  where(field: string, _operator: string, value: unknown) { return new FakeQuery(this.db, this.name, [...this.filters, [field, value]], this.cap); }
-  limit(cap: number) { return new FakeQuery(this.db, this.name, this.filters, cap); }
+  where(field: string, _operator: string, value: unknown) { return new FakeQuery(this.db, this.name, [...this.filters, [field, value]], this.cap, this.group); }
+  limit(cap: number) { return new FakeQuery(this.db, this.name, this.filters, cap, this.group); }
   snapshot(map: Map<string, Data>) {
-    const docs = [...map.entries()].filter(([key, value]) => key.startsWith(`${this.name}/`)
-      && key.split('/').length === 2 && this.filters.every(([field, expected]) => value[field] === expected))
+    const docs = [...map.entries()].filter(([key, value]) => (this.group ? key.split('/').at(-2) === this.name : key.startsWith(`${this.name}/`) && key.split('/').length === this.name.split('/').length + 1) && this.filters.every(([field, expected]) => value[field] === expected))
       .slice(0, this.cap).map(([key, value]) => new FakeSnapshot(new FakeRef(this.db, key), value));
     return { docs, empty: docs.length === 0, size: docs.length, forEach: (visit: (doc: FakeSnapshot) => void) => docs.forEach(visit) };
   }
@@ -56,7 +56,9 @@ class FakeTransaction {
     return target instanceof FakeRef ? new FakeSnapshot(target, this.map.get(target.path)) : target.snapshot(this.map);
   }
   set(ref: FakeRef, data: Data, options?: { merge?: boolean }) {
-    this.map.set(ref.path, { ...(options?.merge ? this.map.get(ref.path) : {}), ...structuredClone(data) });
+    const value = { ...(options?.merge ? this.map.get(ref.path) : {}), ...structuredClone(data) };
+    for (const [key, field] of Object.entries(value)) if (field && typeof field === 'object' && field.fakeDelete === true) delete value[key];
+    this.map.set(ref.path, value);
   }
   create(ref: FakeRef, data: Data) { if (this.map.has(ref.path)) throw new Error('Already exists'); this.set(ref, data); }
   update(ref: FakeRef, data: Data) { this.set(ref, data, { merge: true }); }
