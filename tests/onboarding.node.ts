@@ -134,7 +134,7 @@ test('mobile offers Firebase account creation from sign in', async () => {
 
   assert.match(authSource, /createUserWithEmailAndPassword/);
   assert.match(signInSource, /router\.push\('\/create-account'\)/);
-  assert.match(createAccountSource, /await createAccount\(normalizedEmail, password\)/);
+  assert.match(createAccountSource, /await createAccount\(normalizedEmail, password, marketingOptIn\)/);
   assert.match(createAccountSource, /<Redirect href="\/" \/>/);
 });
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "iPurpose",
     "slug": "ipurpose-mobile",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/release/app-icon.png",
     "scheme": "ipurpose",
@@ -24,11 +24,14 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ipurpose.mobile",
-      "buildNumber": "1"
+      "buildNumber": "2",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.ipurpose.mobile",
-      "versionCode": 1,
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/release/adaptive-icon-foreground.png",
         "backgroundImage": "./assets/release/adaptive-icon-background.png",

@@ -1,3 +1,4 @@
+/* global __dirname */
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const fs = require('node:fs');
@@ -10,7 +11,7 @@ const ts = require('typescript');
 global.IS_REACT_ACT_ENVIRONMENT = true;
 function harness() {
  const cache = new Map(); const routes = []; const events = [];
- const native = { ...Object.fromEntries(['ActivityIndicator', 'KeyboardAvoidingView', 'Pressable', 'Text', 'TextInput', 'View', 'Modal'].map(s => [s, s])), ScrollView: React.forwardRef((props, ref) => { React.useImperativeHandle(ref, () => ({ scrollTo() {} })); return React.createElement('ScrollView', props); }), Platform: { OS: 'ios' }, useWindowDimensions: () => ({ width: 320, height: 640, fontScale: 1 }), StyleSheet: { create: s => s } };
+ const native = { ...Object.fromEntries(['ActivityIndicator', 'KeyboardAvoidingView', 'Pressable', 'Text', 'TextInput', 'View', 'Modal'].map(s => [s, s])), ScrollView: React.forwardRef(function TestScrollView(props, ref) { React.useImperativeHandle(ref, () => ({ scrollTo() {} })); return React.createElement('ScrollView', props); }), Platform: { OS: 'ios' }, useWindowDimensions: () => ({ width: 320, height: 640, fontScale: 1 }), StyleSheet: { create: s => s } };
  const Tabs = props => React.createElement('Tabs', props); Tabs.Screen = 'TabScreen';
  const mocks = { react: React, 'react/jsx-runtime': testRequire('react/jsx-runtime'), 'react-native': native, '@expo/vector-icons/Ionicons': 'Icon', 'react-native-safe-area-context': { SafeAreaView: 'SafeAreaView', useSafeAreaInsets: () => ({ bottom: 34 }) }, 'expo-router': { Tabs, useRouter: () => ({ push: route => routes.push(route) }), useFocusEffect: fn => React.useEffect(fn, [fn]) } };
  function load(relative) {

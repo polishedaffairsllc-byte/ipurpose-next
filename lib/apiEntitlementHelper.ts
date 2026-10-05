@@ -73,7 +73,7 @@ export async function requireAuthenticated() {
 
   if (!uid) {
     return {
-      error: NextResponse.json(fail('Unauthorized', 'No valid session found'), { status: 401 }),
+      error: fail('Unauthorized', 'No valid session found', 401),
     };
   }
 

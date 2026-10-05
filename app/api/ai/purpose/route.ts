@@ -17,7 +17,11 @@ export async function GET() {
     if (auth.error)
         return auth.error;
     try {
-        const [purposeProfile, identityType] = await Promise.all([getPurposeProfile(firebaseAdmin.firestore(), auth.uid), clarityIdentity(auth.uid)]);
+        const [purposeProfile, identityType] = await Promise.all([getPurposeProfile(firebaseAdmin.firestore(), auth.uid), clarityIdentity(auth.uid).catch(() => {
+            // Clarity pairing is optional; it must not gate the Purpose assessment.
+            console.warn('Purpose optional Clarity context unavailable');
+            return null;
+        })]);
         return NextResponse.json({ purposeProfile, identityType }, { headers });
     }
     catch {
