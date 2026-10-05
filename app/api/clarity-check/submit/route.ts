@@ -1,3 +1,6 @@
+import { CLARITY_LIFECYCLE_COPY as COPY } from '@/mobile/src/lib/clarityLifecycleCopy';
+import { saveNativeSubmission } from '@/lib/clarity/nativeSubmission';
+import { completeClarityLifecycle } from '@/lib/clarity/lifecycleServer';
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { sendFounderNotification, ClarityCheckScores } from '@/lib/email-automation';
@@ -10,6 +13,7 @@ interface ClarityCheckRequest {
   responses: Record<string, number>;
   identityResponses?: string[];
   onboarding?: boolean;
+  requestId?: string;
 }
 
 function calculateDimensionScores(responses: Record<string, number>) {
@@ -155,6 +159,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (body.requestId !== undefined && (typeof body.requestId !== 'string' || !/^[a-zA-Z0-9_-]{8,100}$/.test(body.requestId))) {
+      return NextResponse.json({ error: COPY.requestInvalid }, { status: 400 });
+    }
+
     // Calculate scores
     const scores = calculateDimensionScores(responses);
     const { summary, detail, nextStep } = generateSummary(scores);
@@ -196,7 +204,10 @@ export async function POST(request: NextRequest) {
       const db = firebaseAdmin.firestore();
       const docRef = db.collection('clarityCheckSubmissions').doc();
 
-      if (bearerAuth.uid && identityType) {
+      if (bearerAuth.uid && identityType && body.requestId) {
+        submissionDocId = await saveNativeSubmission(db, bearerAuth.uid, body.requestId,
+          submissionData, body.onboarding === true, firebaseAdmin.firestore.FieldValue.serverTimestamp());
+      } else if (bearerAuth.uid && identityType) {
         const userRef = db.collection('users').doc(bearerAuth.uid);
         await db.runTransaction(async (transaction) => {
           const userDocument = await transaction.get(userRef);
@@ -234,7 +245,7 @@ export async function POST(request: NextRequest) {
       } else {
         await docRef.set(submissionData);
       }
-      submissionDocId = docRef.id;
+      if (!submissionDocId) submissionDocId = docRef.id;
       console.log('Clarity check submission stored:', { id: submissionDocId, email: userEmail ?? 'not_provided', identityType });
 
       // Preserve the legacy public-web sync as fill-if-empty. Authenticated
@@ -272,6 +283,9 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (firestoreError) {
+      if (firestoreError instanceof Error && firestoreError.message === 'CLARITY_REQUEST_CONFLICT') {
+        return NextResponse.json({ error: COPY.requestConflict }, { status: 409 });
+      }
       console.error('Firestore error storing submission:', firestoreError);
       // The public website historically returns the calculated result when
       // intake storage is unavailable. Native onboarding cannot do that: its
@@ -282,6 +296,18 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
+    }
+
+    // New clients explicitly provide a stable attempt ID. Legacy clients keep their prior lifecycle;
+    // no past submission is enrolled or emailed by this code.
+    let lifecycle: { contactId: string; enrollment: string } | undefined;
+    if (bearerAuth.uid && authenticatedEmail && identityType && body.requestId && submissionDocId) {
+      try {
+        lifecycle = await completeClarityLifecycle({ platform: 'mobile', uid: bearerAuth.uid,
+          email: authenticatedEmail, name: authenticatedUser?.displayName,
+          quizSubmissionId: submissionDocId, identityType, totalScore: scores.totalScore,
+          scores, resultSummary: summary, nextStep });
+      } catch { console.error('Mobile lifecycle processing incomplete; quiz results remain saved'); }
     }
 
     // Always notify founder on every quiz completion (step 1)
@@ -311,6 +337,7 @@ export async function POST(request: NextRequest) {
         identityType,
         identityCounts,
         submissionId: submissionDocId,
+        ...(lifecycle ? { lifecycle } : {}),
       },
       { status: 200 }
     );

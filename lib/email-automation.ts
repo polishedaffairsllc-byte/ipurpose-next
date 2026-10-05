@@ -6,6 +6,7 @@
 
 import { firebaseAdmin } from './firebaseAdmin';
 import { enrollNurture } from './launch-metrics/enrollNurture';
+import { marketingSuppressed } from './clarity/suppression';
 
 const FROM_ADDRESS = 'iPurpose <renita@ipurposesoul.com>';
 const SITE_URL = 'https://ipurposesoul.com';
@@ -14,14 +15,7 @@ const SITE_URL = 'https://ipurposesoul.com';
  * Check if an email address has opted out of marketing emails.
  */
 async function isEmailOptedOut(email: string): Promise<boolean> {
-  try {
-    const db = firebaseAdmin.firestore();
-    const key = Buffer.from(email.trim().toLowerCase()).toString('base64');
-    const doc = await db.collection('email_opt_outs').doc(key).get();
-    return doc.exists;
-  } catch {
-    return false; // fail open — better to send than to block on an error
-  }
+  return marketingSuppressed(firebaseAdmin.firestore(), email);
 }
 
 /**
@@ -42,6 +36,8 @@ interface ClarityCheckEmailData {
   submissionId: string;
   identityType?: string;
   totalScore?: number;
+  quizSubmissionId?: string;
+  consentUid?: string;
 }
 
 export interface ClarityCheckScores {
@@ -462,7 +458,8 @@ export async function sendWorkshopAccountEmail(data: {
 // ─────────────────────────────────────────────
 
 export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData) {
-  const { email, name, submissionId, identityType } = data;
+  if (await isEmailOptedOut(data.email)) return false;
+  const { email, name, quizSubmissionId, identityType } = data;
   const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';
 
   const htmlContent = `
@@ -531,7 +528,7 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
             <p>These insights matter because clarity without action is just knowledge. The Starter Pack is designed to bridge that gap—turning your understanding into coherent, aligned action.</p>
 
             <p style="text-align: center; margin-top: 30px;">
-              <a href="https://ipurposesoul.com/clarity-check/results/${submissionId}" class="cta-button">
+              <a href="${quizSubmissionId ? `https://ipurposesoul.com/clarity-check/results/${encodeURIComponent(quizSubmissionId)}` : "https://ipurposesoul.com/clarity-check"}" class="cta-button">
                 View Your Full Results →
               </a>
             </p>
@@ -572,6 +569,7 @@ export async function sendClarityCheckThankYouEmail(data: ClarityCheckEmailData)
  * Send Day 5 Founder's Rate Offer Email
  */
 export async function sendClarityCheckFoundersRateEmail(data: ClarityCheckEmailData) {
+  if (await isEmailOptedOut(data.email)) return false;
   const { email, name } = data;
   const firstName = name ? name.trim().split(/\s+/)[0].charAt(0).toUpperCase() + name.trim().split(/\s+/)[0].slice(1).toLowerCase() : 'Friend';
 
@@ -697,6 +695,7 @@ const FTC_DISCLAIMER = `<p style="margin:20px 0 0 0;padding-top:16px;border-top:
  * Send Day 2 — What your result is actually telling you
  */
 export async function sendNurtureEmail1(data: ClarityCheckEmailData) {
+  if (await isEmailOptedOut(data.email)) return false;
   const { email, name } = data;
   const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
 
@@ -743,6 +742,7 @@ export async function sendNurtureEmail1(data: ClarityCheckEmailData) {
  * Send Day 4 — The real reason strategies stop working
  */
 export async function sendNurtureEmail2(data: ClarityCheckEmailData) {
+  if (await isEmailOptedOut(data.email)) return false;
   const { email, name } = data;
   const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
 
@@ -790,6 +790,7 @@ export async function sendNurtureEmail2(data: ClarityCheckEmailData) {
  * Send Day 7 — What changes when you build from the inside out
  */
 export async function sendNurtureEmail3(data: ClarityCheckEmailData) {
+  if (await isEmailOptedOut(data.email)) return false;
   const { email, name } = data;
   const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
 
@@ -841,6 +842,7 @@ export async function sendNurtureEmail3(data: ClarityCheckEmailData) {
  * Send Day 10 — The week most programs skip (Money Healing)
  */
 export async function sendNurtureEmail4(data: ClarityCheckEmailData) {
+  if (await isEmailOptedOut(data.email)) return false;
   const { email, name } = data;
   const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
 
@@ -893,6 +895,7 @@ export async function sendNurtureEmail4(data: ClarityCheckEmailData) {
  * Send Day 14 — You're invited (workshop)
  */
 export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
+  if (await isEmailOptedOut(data.email)) return false;
   const { email, name } = data;
   const firstName = name ? name.trim().split(/\s+/)[0] : 'Friend';
 
@@ -954,13 +957,15 @@ export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
 /**
  * Schedule emails (Day 1 immediately, Day 5 after 5 days)
  */
-export async function scheduleEmailSequence(data: ClarityCheckEmailData): Promise<'enrolled' | 'opted_out' | 'duplicate' | 'failed'> {
+export async function scheduleEmailSequence(data: ClarityCheckEmailData): Promise<'enrolled' | 'opted_out' | 'duplicate' | 'failed' | 'not_consented'> {
   try {
     // Normalize email to lowercase to prevent case-sensitivity duplicates
     data = { ...data, email: data.email.trim().toLowerCase() };
 
     const enrollment = await enrollNurture(firebaseAdmin.firestore(), data);
-    if (enrollment === 'enrolled') {
+    if (enrollment === 'enrolled' && !data.consentUid) {
+      // Mobile uses its neutral once-only welcome for the first touch.
+      // The promotional web thank-you remains web-only.
       // Delivery is separate from enrollment: the committed queue is authoritative.
       // This helper reports delivery failures without throwing.
       await sendClarityCheckThankYouEmail(data);

@@ -19,6 +19,7 @@ export const ACCOUNT_DIRECT_DOCUMENT_COLLECTIONS = [
 
 export const ACCOUNT_UID_QUERY_COLLECTIONS = [
   "clarityCheckSubmissions",
+  "clarityDeliveries",
   "workflowSystems",
   "lab_events",
   "activation_a_states",
@@ -58,6 +59,8 @@ export function getAccountDeletionPlan(uid: string, email?: string) {
         { collection: "clarityCheckSubmissions", field: "email", value: normalizedEmail },
         { collection: "emailTasks", field: "email", value: normalizedEmail },
         { collection: "leads", field: "email", value: normalizedEmail },
+        { collection: "leadEmailKeys", field: "email", value: normalizedEmail },
+        { collection: "clarityDeliveries", field: "email", value: normalizedEmail },
       ] : []),
     ],
     purchaseQuery: { collection: "purchases", field: "uid", value: uid },
