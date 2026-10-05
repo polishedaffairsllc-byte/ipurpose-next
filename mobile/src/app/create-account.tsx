@@ -26,6 +26,8 @@ export default function CreateAccountScreen() {
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,30 +73,54 @@ export default function CreateAccountScreen() {
           value={email}
         />
         <Text style={authStyles.label}>PASSWORD</Text>
-        <TextInput
-          accessibilityLabel="Password"
-          autoCapitalize="none"
-          onChangeText={setPassword}
-          placeholder="At least 6 characters"
-          placeholderTextColor="#767A94"
-          secureTextEntry
-          style={authStyles.input}
-          textContentType="newPassword"
-          value={password}
-        />
+        <View style={styles.passwordField}>
+          <TextInput
+            accessibilityLabel="Password"
+            autoCapitalize="none"
+            onChangeText={setPassword}
+            placeholder="At least 6 characters"
+            placeholderTextColor="#767A94"
+            secureTextEntry={!passwordVisible}
+            style={[authStyles.input, styles.passwordInput]}
+            textContentType="newPassword"
+            value={password}
+          />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={passwordVisible ? 'Hide password' : 'Show password'}
+            accessibilityState={{ disabled: submitting }}
+            disabled={submitting}
+            onPress={() => setPasswordVisible(visible => !visible)}
+            style={styles.visibilityButton}
+          >
+            <Ionicons name={passwordVisible ? 'eye-off-outline' : 'eye-outline'} size={24} color={theme.colors.deepIndigo} />
+          </Pressable>
+        </View>
         <Text style={authStyles.label}>CONFIRM PASSWORD</Text>
-        <TextInput
-          accessibilityLabel="Confirm password"
-          autoCapitalize="none"
-          onChangeText={setConfirmation}
-          onSubmitEditing={() => void handleCreateAccount()}
-          placeholder="Enter your password again"
-          placeholderTextColor="#767A94"
-          secureTextEntry
-          style={authStyles.input}
-          textContentType="newPassword"
-          value={confirmation}
-        />
+        <View style={styles.passwordField}>
+          <TextInput
+            accessibilityLabel="Confirm password"
+            autoCapitalize="none"
+            onChangeText={setConfirmation}
+            onSubmitEditing={() => void handleCreateAccount()}
+            placeholder="Enter your password again"
+            placeholderTextColor="#767A94"
+            secureTextEntry={!confirmationVisible}
+            style={[authStyles.input, styles.passwordInput]}
+            textContentType="newPassword"
+            value={confirmation}
+          />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={confirmationVisible ? 'Hide confirm password' : 'Show confirm password'}
+            accessibilityState={{ disabled: submitting }}
+            disabled={submitting}
+            onPress={() => setConfirmationVisible(visible => !visible)}
+            style={styles.visibilityButton}
+          >
+            <Ionicons name={confirmationVisible ? 'eye-off-outline' : 'eye-outline'} size={24} color={theme.colors.deepIndigo} />
+          </Pressable>
+        </View>
         <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: marketingOptIn }}
           accessibilityLabel={CLARITY_LIFECYCLE_COPY.consent} disabled={submitting}
           onPress={() => setMarketingOptIn(value => !value)} style={styles.consentRow}>
@@ -136,6 +162,9 @@ export default function CreateAccountScreen() {
 }
 
 const styles = StyleSheet.create({
+  passwordField: { position: 'relative' },
+  passwordInput: { paddingRight: 60 },
+  visibilityButton: { position: 'absolute', right: 4, top: 0, bottom: 0, minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
   consentRow: { flexDirection: 'row', gap: 10, paddingVertical: 14, alignItems: 'flex-start' },
   consentText: { flex: 1, color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 21 },
   loading: {

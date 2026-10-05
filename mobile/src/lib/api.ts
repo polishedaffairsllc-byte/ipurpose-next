@@ -1,3 +1,4 @@
+import { readPurposeProfile, type PurposeProfile } from './purposeCheck';
 import { CLARITY_LIFECYCLE_COPY } from './clarityLifecycleCopy';
 import { logLaunchEvent } from './analyticsEvents';
 import { auth } from './firebase';
@@ -146,8 +147,13 @@ export async function sendMentorMessage(options: { message: string; conversation
   return readJson<MentorResponse>(response);
 }
 
-export async function getPurposeResults(): Promise<{ purposeProfile: import('./purposeCheck').PurposeProfile | null; identityType: string | null }> {
- return readJson(await authorizedFetch('/api/ai/purpose'));
+export async function getPurposeResults(): Promise<{ purposeProfile: PurposeProfile | null; identityType: string | null }> {
+ const data = await readJson<{ purposeProfile: unknown; identityType: unknown }>(await authorizedFetch('/api/ai/purpose'));
+ const profile = readPurposeProfile(data.purposeProfile);
+ // Only an explicit null is an empty profile; a missing route or malformed
+ // success response remains a genuine request failure.
+ if (data.purposeProfile !== null && !profile) throw new Error('Invalid Purpose response.');
+ return { purposeProfile: profile, identityType: typeof data.identityType === 'string' ? data.identityType : null };
 }
 export async function putPurposeResults(body: import('./purposeCheck').PurposePayload): Promise<import('./purposeCheck').PurposeProfile> {
  const result = await readJson<{ purposeProfile: import('./purposeCheck').PurposeProfile }>(await authorizedFetch('/api/ai/purpose', { method: 'PUT', body: JSON.stringify(body) })); return result.purposeProfile;

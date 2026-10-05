@@ -1,5 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { createClarityAttempt } from '../lib/analyticsCore';
 import { logLaunchEvent } from '../lib/analyticsEvents';
 import {
@@ -28,7 +29,7 @@ import {
 } from '../lib/api';
 import { CLARITY_QUESTIONS, IDENTITY_QUESTIONS } from '../lib/onboarding';
 import type { ClarityCheckResult, OnboardingDraft } from '../types/onboarding';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 const FIRST_CLARITY_STEP = 1;
 const FIRST_IDENTITY_STEP = FIRST_CLARITY_STEP + CLARITY_QUESTIONS.length;
@@ -56,6 +57,7 @@ function makeDraft(
 }
 
 export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
+  const { styles, tokens } = useClarityAppearance();
   const router = useRouter();
   const { signOut } = useAuth();
   const { onboarding, refresh } = useOnboarding();
@@ -250,7 +252,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   if (!hydrated) {
     return (
       <View style={styles.loadingScreen}>
-        <ActivityIndicator color={theme.colors.plum} />
+        <ActivityIndicator color={tokens.accentStrong} />
       </View>
     );
   }
@@ -259,10 +261,10 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
 
   return (
     <LinearGradient
-      colors={theme.homeGradient.colors}
-      locations={theme.homeGradient.locations}
-      start={theme.homeGradient.start}
-      end={theme.homeGradient.end}
+      colors={tokens.atmosphereGradient.colors}
+      locations={tokens.atmosphereGradient.locations}
+      start={tokens.atmosphereGradient.start}
+      end={tokens.atmosphereGradient.end}
       style={styles.gradient}
     >
       <SafeAreaView style={styles.safe}>
@@ -284,7 +286,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
                   onPress={() => void goBack()}
                   style={styles.backButton}
                 >
-                  <Ionicons color={theme.colors.white} name="chevron-back" size={20} />
+                  <Ionicons color={tokens.atmosphereText} name="chevron-back" size={20} />
                 </Pressable>
               ) : <View style={styles.backPlaceholder} />}
               <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
@@ -347,7 +349,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
                 ]}
               >
                 {switchingAccount ? (
-                  <ActivityIndicator color={theme.colors.champagne} />
+                  <ActivityIndicator color={tokens.accent} />
                 ) : (
                   <Text style={styles.accountSwitchText}>Returning user? Sign in with a different account</Text>
                 )}
@@ -361,6 +363,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
 }
 
 function Intro({ mode, onBegin, saving }: { mode: FlowMode; onBegin: () => void; saving: boolean }) {
+  const { styles } = useClarityAppearance();
   return (
     <View style={styles.heroCard}>
       <Text style={styles.eyebrow}>{mode === 'retake' ? 'CLARITY CHECK' : 'WELCOME TO IPURPOSE'}</Text>
@@ -390,6 +393,7 @@ function ClarityQuestion({
   saving: boolean;
   selected?: number;
 }) {
+  const { styles, tokens } = useClarityAppearance();
   return (
     <View style={styles.card}>
       <Text style={styles.eyebrow}>CLARITY · {index + 1} OF {CLARITY_QUESTIONS.length}</Text>
@@ -413,7 +417,7 @@ function ClarityQuestion({
           </Pressable>
         ))}
       </View>
-      {saving ? <ActivityIndicator color={theme.colors.champagne} style={styles.savingIndicator} /> : null}
+      {saving ? <ActivityIndicator color={tokens.accent} style={styles.savingIndicator} /> : null}
     </View>
   );
 }
@@ -430,6 +434,7 @@ function IdentityQuestion({
   selected?: IdentityAnswer;
 }) {
   const question = IDENTITY_QUESTIONS[index];
+  const { styles, tokens } = useClarityAppearance();
   return (
     <View style={styles.card}>
       <Text style={styles.eyebrow}>PATTERN · {index + 1} OF {IDENTITY_QUESTIONS.length}</Text>
@@ -445,13 +450,13 @@ function IdentityQuestion({
             style={[styles.option, selected === key && styles.selectedOption]}
           >
             <View style={[styles.optionMark, selected === key && styles.selectedOptionMark]}>
-              <Text style={styles.optionMarkText}>{key}</Text>
+              <Text style={[styles.optionMarkText, selected === key && { color: tokens.buttonText }]}>{key}</Text>
             </View>
             <Text style={styles.optionText}>{label}</Text>
           </Pressable>
         ))}
       </View>
-      {saving ? <ActivityIndicator color={theme.colors.champagne} style={styles.savingIndicator} /> : null}
+      {saving ? <ActivityIndicator color={tokens.accent} style={styles.savingIndicator} /> : null}
     </View>
   );
 }
@@ -471,6 +476,7 @@ function FocusQuestion({
   saving: boolean;
   second: string;
 }) {
+  const { styles } = useClarityAppearance();
   return (
     <View style={styles.card}>
       <Text style={styles.eyebrow}>RIGHT NOW</Text>
@@ -512,6 +518,7 @@ function Results({
   result: ClarityCheckResult;
   saving: boolean;
 }) {
+  const { styles } = useClarityAppearance();
   return (
     <View style={styles.card}>
       <Text style={styles.eyebrow}>YOUR CLARITY CHECK</Text>
@@ -538,6 +545,7 @@ function Results({
 }
 
 function Score({ label, value }: { label: string; value: number }) {
+  const { styles } = useClarityAppearance();
   return (
     <View style={styles.scoreCard}>
       <Text style={styles.scoreValue}>{value}</Text>
@@ -557,6 +565,7 @@ function PrimaryButton({
   loading?: boolean;
   onPress: () => void;
 }) {
+  const { styles, tokens } = useClarityAppearance();
   return (
     <Pressable
       accessibilityRole="button"
@@ -567,217 +576,225 @@ function PrimaryButton({
         (pressed || disabled) && styles.primaryButtonPressed,
       ]}
     >
-      {loading ? <ActivityIndicator color={theme.colors.white} /> : <Text style={styles.primaryButtonText}>{label}</Text>}
+      {loading ? <ActivityIndicator color={tokens.buttonText} /> : <Text style={styles.primaryButtonText}>{label}</Text>}
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  gradient: { flex: 1 },
-  safe: { flex: 1 },
-  loadingScreen: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.cream,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  container: { flexGrow: 1, paddingBottom: 40, paddingHorizontal: 20, paddingTop: 8 },
-  headerRow: { alignItems: 'center', flexDirection: 'row', gap: 12 },
-  backButton: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.glassPillBg,
-    borderColor: theme.colors.glassPillBorder,
-    borderRadius: 22,
-    borderWidth: 1,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
-  backPlaceholder: { width: 44 },
-  progressTrack: {
-    backgroundColor: theme.colors.glassPillBg,
-    borderRadius: 999,
-    height: 4,
-    marginBottom: 28,
-    marginTop: 22,
-    overflow: 'hidden',
-  },
-  progressFill: { backgroundColor: theme.colors.champagne, height: 4 },
-  heroCard: { flex: 1, justifyContent: 'center', minHeight: 560, paddingBottom: 48 },
-  eyebrow: {
-    color: theme.colors.champagne,
-    fontFamily: theme.fonts.body,
-    fontSize: 11,
-    letterSpacing: 1.7,
-    marginBottom: 12,
-  },
-  heroTitle: {
-    color: theme.colors.white,
-    fontFamily: theme.fonts.heading,
-    fontSize: 45,
-    lineHeight: 52,
-  },
-  heroBody: {
-    color: theme.colors.textOnDarkMuted,
-    fontFamily: theme.fonts.body,
-    fontSize: 16,
-    lineHeight: 25,
-    marginTop: 16,
-  },
-  principleCard: {
-    backgroundColor: theme.colors.glassCardBg,
-    borderColor: theme.colors.glassCardBorder,
-    borderRadius: 20,
-    borderWidth: 1,
-    marginTop: 26,
-    padding: 18,
-  },
-  principle: {
-    color: theme.colors.textOnDark,
-    fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 25,
-  },
-  card: {
-    backgroundColor: 'rgba(27, 29, 51, 0.78)',
-    borderColor: theme.colors.glassCardBorder,
-    borderRadius: 24,
-    borderWidth: 1,
-    padding: 22,
-  },
-  cardTitle: {
-    color: theme.colors.white,
-    fontFamily: theme.fonts.heading,
-    fontSize: 30,
-    lineHeight: 38,
-  },
-  cardBody: {
-    color: theme.colors.textOnDarkMuted,
-    fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 22,
-    marginTop: 10,
-  },
-  scaleLabels: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 34 },
-  scaleLabel: { color: theme.colors.textOnDarkFaint, fontFamily: theme.fonts.body, fontSize: 11 },
-  scaleRow: { flexDirection: 'row', gap: 9, justifyContent: 'space-between', marginTop: 10 },
-  scaleButton: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.glassPillBg,
-    borderColor: theme.colors.glassPillBorder,
-    borderRadius: 24,
-    borderWidth: 1,
-    height: 48,
-    justifyContent: 'center',
-    width: 48,
-  },
-  selectedScaleButton: { backgroundColor: theme.colors.lavenderPurple, borderColor: theme.colors.lavenderPurple },
-  scaleNumber: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 16 },
-  selectedScaleNumber: { fontWeight: '700' },
-  savingIndicator: { marginTop: 20 },
-  options: { gap: 11, marginTop: 24 },
-  option: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.glassPillBg,
-    borderColor: theme.colors.glassPillBorder,
-    borderRadius: 16,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 12,
-    padding: 14,
-  },
-  selectedOption: { borderColor: theme.colors.champagne },
-  optionMark: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.deepIndigo,
-    borderRadius: 17,
-    height: 34,
-    justifyContent: 'center',
-    width: 34,
-  },
-  selectedOptionMark: { backgroundColor: theme.colors.lavenderPurple },
-  optionMarkText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 13 },
-  optionText: { color: theme.colors.textOnDark, flex: 1, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 20 },
-  inputLabel: {
-    color: theme.colors.champagne,
-    fontFamily: theme.fonts.body,
-    fontSize: 10,
-    letterSpacing: 1.2,
-    marginBottom: 8,
-    marginTop: 24,
-  },
-  input: {
-    backgroundColor: theme.colors.white,
-    borderColor: theme.colors.line,
-    borderRadius: 16,
-    borderWidth: 1,
-    color: theme.colors.ink,
-    fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 22,
-    minHeight: 72,
-    padding: 14,
-    textAlignVertical: 'top',
-  },
-  primaryButton: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.lavenderPurple,
-    borderRadius: 18,
-    justifyContent: 'center',
-    marginTop: 28,
-    minHeight: 54,
-    paddingHorizontal: 18,
-  },
-  primaryButtonPressed: { opacity: 0.62 },
-  primaryButtonText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 16 },
-  accountSwitchButton: {
-    alignItems: 'center',
-    minHeight: 44,
-    justifyContent: 'center',
-    marginTop: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  accountSwitchButtonPressed: { opacity: 0.62 },
-  accountSwitchText: {
-    color: theme.colors.textOnDark,
-    fontFamily: theme.fonts.body,
-    fontSize: 14,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-  },
-  errorCard: {
-    backgroundColor: 'rgba(252, 196, 183, 0.16)',
-    borderColor: theme.colors.salmonPeach,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginTop: 16,
-    padding: 14,
-  },
-  errorText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 20 },
-  errorHint: { color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, fontSize: 12, marginTop: 5 },
-  resultType: { color: theme.colors.white, fontFamily: theme.fonts.heading, fontSize: 42 },
-  resultSummary: { color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 24, marginTop: 12 },
-  scoreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 24 },
-  scoreCard: {
-    backgroundColor: theme.colors.glassPillBg,
-    borderColor: theme.colors.glassPillBorder,
-    borderRadius: 16,
-    borderWidth: 1,
-    minHeight: 96,
-    padding: 13,
-    width: '48%',
-  },
-  scoreValue: { color: theme.colors.champagne, fontFamily: theme.fonts.heading, fontSize: 28 },
-  scoreLabel: { color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, fontSize: 11, lineHeight: 16 },
-  nextStepCard: {
-    backgroundColor: theme.colors.glassCardBg,
-    borderColor: theme.colors.glassCardBorder,
-    borderRadius: 18,
-    borderWidth: 1,
-    marginTop: 22,
-    padding: 16,
-  },
-  nextStepText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 22 },
-});
+function useClarityAppearance() {
+  const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
+  return { tokens, styles };
+}
+
+function createStyles(tokens: VisualEnvironmentTokens) {
+  return StyleSheet.create({
+    flex: { flex: 1 },
+    gradient: { flex: 1 },
+    safe: { flex: 1 },
+    loadingScreen: {
+      alignItems: 'center',
+      backgroundColor: tokens.screenBackground,
+      flex: 1,
+      justifyContent: 'center',
+    },
+    container: { flexGrow: 1, paddingBottom: 40, paddingHorizontal: 20, paddingTop: 8 },
+    headerRow: { alignItems: 'center', flexDirection: 'row', gap: 12 },
+    backButton: {
+      alignItems: 'center',
+      backgroundColor: tokens.glassPillBackground,
+      borderColor: tokens.glassPillBorder,
+      borderRadius: 22,
+      borderWidth: 1,
+      height: 44,
+      justifyContent: 'center',
+      width: 44,
+    },
+    backPlaceholder: { width: 44 },
+    progressTrack: {
+      backgroundColor: tokens.glassPillBackground,
+      borderRadius: 999,
+      height: 4,
+      marginBottom: 28,
+      marginTop: 22,
+      overflow: 'hidden',
+    },
+    progressFill: { backgroundColor: tokens.accent, height: 4 },
+    heroCard: { flex: 1, justifyContent: 'center', minHeight: 560, paddingBottom: 48 },
+    eyebrow: {
+      color: tokens.accent,
+      fontFamily: theme.fonts.body,
+      fontSize: 11,
+      letterSpacing: 1.7,
+      marginBottom: 12,
+    },
+    heroTitle: {
+      color: tokens.atmosphereText,
+      fontFamily: theme.fonts.heading,
+      fontSize: 45,
+      lineHeight: 52,
+    },
+    heroBody: {
+      color: tokens.atmosphereTextMuted,
+      fontFamily: theme.fonts.body,
+      fontSize: 16,
+      lineHeight: 25,
+      marginTop: 16,
+    },
+    principleCard: {
+      backgroundColor: tokens.glassCardBackground,
+      borderColor: tokens.glassCardBorder,
+      borderRadius: 20,
+      borderWidth: 1,
+      marginTop: 26,
+      padding: 18,
+    },
+    principle: {
+      color: tokens.atmosphereText,
+      fontFamily: theme.fonts.body,
+      fontSize: 15,
+      lineHeight: 25,
+    },
+    card: {
+      backgroundColor: tokens.glassCardDeepBackground,
+      borderColor: tokens.glassCardBorder,
+      borderRadius: 24,
+      borderWidth: 1,
+      padding: 22,
+    },
+    cardTitle: {
+      color: tokens.atmosphereText,
+      fontFamily: theme.fonts.heading,
+      fontSize: 30,
+      lineHeight: 38,
+    },
+    cardBody: {
+      color: tokens.atmosphereTextMuted,
+      fontFamily: theme.fonts.body,
+      fontSize: 14,
+      lineHeight: 22,
+      marginTop: 10,
+    },
+    scaleLabels: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 34 },
+    scaleLabel: { color: tokens.atmosphereTextFaint, fontFamily: theme.fonts.body, fontSize: 11 },
+    scaleRow: { flexDirection: 'row', gap: 9, justifyContent: 'space-between', marginTop: 10 },
+    scaleButton: {
+      alignItems: 'center',
+      backgroundColor: tokens.glassPillBackground,
+      borderColor: tokens.glassPillBorder,
+      borderRadius: 24,
+      borderWidth: 1,
+      height: 48,
+      justifyContent: 'center',
+      width: 48,
+    },
+    selectedScaleButton: { backgroundColor: tokens.accentStrong, borderColor: tokens.accentStrong },
+    scaleNumber: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 16 },
+    selectedScaleNumber: { fontWeight: '700' },
+    savingIndicator: { marginTop: 20 },
+    options: { gap: 11, marginTop: 24 },
+    option: {
+      alignItems: 'center',
+      backgroundColor: tokens.glassPillBackground,
+      borderColor: tokens.glassPillBorder,
+      borderRadius: 16,
+      borderWidth: 1,
+      flexDirection: 'row',
+      gap: 12,
+      padding: 14,
+    },
+    selectedOption: { borderColor: tokens.accent },
+    optionMark: {
+      alignItems: 'center',
+      backgroundColor: tokens.profileCardBackground,
+      borderRadius: 17,
+      height: 34,
+      justifyContent: 'center',
+      width: 34,
+    },
+    selectedOptionMark: { backgroundColor: tokens.buttonBackground },
+    optionMarkText: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 13 },
+    optionText: { color: tokens.atmosphereText, flex: 1, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 20 },
+    inputLabel: {
+      color: tokens.accent,
+      fontFamily: theme.fonts.body,
+      fontSize: 10,
+      letterSpacing: 1.2,
+      marginBottom: 8,
+      marginTop: 24,
+    },
+    input: {
+      backgroundColor: tokens.surface,
+      borderColor: tokens.surfaceBorder,
+      borderRadius: 16,
+      borderWidth: 1,
+      color: theme.colors.ink,
+      fontFamily: theme.fonts.body,
+      fontSize: 15,
+      lineHeight: 22,
+      minHeight: 72,
+      padding: 14,
+      textAlignVertical: 'top',
+    },
+    primaryButton: {
+      alignItems: 'center',
+      backgroundColor: tokens.buttonBackground,
+      borderRadius: 18,
+      justifyContent: 'center',
+      marginTop: 28,
+      minHeight: 54,
+      paddingHorizontal: 18,
+    },
+    primaryButtonPressed: { opacity: 0.62 },
+    primaryButtonText: { color: tokens.buttonText, fontFamily: theme.fonts.body, fontSize: 16 },
+    accountSwitchButton: {
+      alignItems: 'center',
+      minHeight: 44,
+      justifyContent: 'center',
+      marginTop: 18,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+    },
+    accountSwitchButtonPressed: { opacity: 0.62 },
+    accountSwitchText: {
+      color: tokens.atmosphereText,
+      fontFamily: theme.fonts.body,
+      fontSize: 14,
+      textAlign: 'center',
+      textDecorationLine: 'underline',
+    },
+    errorCard: {
+      backgroundColor: 'rgba(252, 196, 183, 0.16)',
+      borderColor: theme.colors.salmonPeach,
+      borderRadius: 16,
+      borderWidth: 1,
+      marginTop: 16,
+      padding: 14,
+    },
+    errorText: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 20 },
+    errorHint: { color: tokens.atmosphereTextMuted, fontFamily: theme.fonts.body, fontSize: 12, marginTop: 5 },
+    resultType: { color: tokens.atmosphereText, fontFamily: theme.fonts.heading, fontSize: 42 },
+    resultSummary: { color: tokens.atmosphereTextMuted, fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 24, marginTop: 12 },
+    scoreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 24 },
+    scoreCard: {
+      backgroundColor: tokens.glassPillBackground,
+      borderColor: tokens.glassPillBorder,
+      borderRadius: 16,
+      borderWidth: 1,
+      minHeight: 96,
+      padding: 13,
+      width: '48%',
+    },
+    scoreValue: { color: tokens.accent, fontFamily: theme.fonts.heading, fontSize: 28 },
+    scoreLabel: { color: tokens.atmosphereTextMuted, fontFamily: theme.fonts.body, fontSize: 11, lineHeight: 16 },
+    nextStepCard: {
+      backgroundColor: tokens.glassCardBackground,
+      borderColor: tokens.glassCardBorder,
+      borderRadius: 18,
+      borderWidth: 1,
+      marginTop: 22,
+      padding: 16,
+    },
+    nextStepText: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 22 },
+  });
+}
