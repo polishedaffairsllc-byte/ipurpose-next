@@ -21,6 +21,7 @@ import { useAuth } from '../context/AuthContext';
 import { useOnboarding } from '../context/OnboardingContext';
 import {
   completeOnboarding,
+  createClarityRequestId,
   initializeCompanionFocusAreas,
   saveOnboardingDraft,
   submitClarityCheck,
@@ -70,6 +71,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   const [error, setError] = useState<string | null>(null);
   const analyticsAttempt = useRef(createClarityAttempt(logLaunchEvent));
   const freshResult = useRef(false);
+  const requestId = useRef(createClarityRequestId());
 
   useEffect(() => {
     if (mode !== 'onboarding' || hydrated || !onboarding) return;
@@ -105,6 +107,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     setError(null);
     try {
       await persist(makeDraft(FIRST_CLARITY_STEP, clarityResponses, identityResponses, focusAreas));
+      requestId.current = createClarityRequestId();
       setStep(FIRST_CLARITY_STEP);
       analyticsAttempt.current.begin();
     } catch (caught) {
@@ -117,6 +120,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   async function answerClarity(value: number) {
     if (saving) return;
     const questionIndex = step - FIRST_CLARITY_STEP;
+    if (clarityResponses[String(questionIndex + 1)] !== value) requestId.current = createClarityRequestId();
     const nextResponses = { ...clarityResponses, [String(questionIndex + 1)]: value };
     const nextStep = step + 1;
     setClarityResponses(nextResponses);
@@ -135,6 +139,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
   async function answerIdentity(value: IdentityAnswer) {
     if (saving) return;
     const questionIndex = step - FIRST_IDENTITY_STEP;
+    if (identityResponses[questionIndex] !== value) requestId.current = createClarityRequestId();
     const nextResponses = [...identityResponses];
     nextResponses[questionIndex] = value;
     const nextStep = step + 1;
@@ -146,6 +151,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     try {
       if (shouldSubmitRetake) {
         const submission = await submitClarityCheck({
+          requestId: requestId.current,
           responses: clarityResponses,
           identityResponses: nextResponses,
           onboarding: false,
@@ -171,6 +177,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
     try {
       await persist(makeDraft(FOCUS_STEP, clarityResponses, identityResponses, focusAreas));
       const submission = await submitClarityCheck({
+          requestId: requestId.current,
         responses: clarityResponses,
         identityResponses,
         onboarding: mode === 'onboarding',
