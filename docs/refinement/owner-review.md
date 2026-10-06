@@ -1,10 +1,12 @@
 # iPurpose QA refinement — owner review
 
+**READY FOR OWNER REVIEW**
+
 Prepared October 5, 2026. Review branch: `codex/qa-refinement-20261005`, based on the tested 1.0.3 release source `b2420f3`. Workspace: `/private/tmp/ipurpose-qa-refinement-20261005`. The original working directory and its unfinished changes were preserved.
 
 ## Review gate
 
-The five implementation areas are complete. Final validation results are recorded below before this report is finalized. A draft review PR and test-only CI workflow provide independent validation while local machine memory pressure delays reruns. Vercel automatic deployment is explicitly disabled for this review branch; the existing Actions deploy job is restricted to main. No EAS build, TestFlight upload, Android internal-testing upload, public release, backend deployment, production email send, store resubmission, or Google Play production/review change was performed. Production 1.0.2/code 5 remains outside this batch.
+The five implementation areas are complete and all required validation gates passed. [Draft PR #63](https://github.com/polishedaffairsllc-byte/ipurpose-next/pull/63) remains unmerged. A test-only CI workflow provided independent clean-install validation after local machine memory pressure delayed reruns. Vercel automatic deployment is explicitly disabled for this review branch; the existing Actions deploy job is restricted to main and was skipped. No EAS build, TestFlight upload, Android internal-testing upload, public release, backend deployment, production email send, store resubmission, or Google Play production/review change was performed. Production 1.0.2/code 5 remains outside this batch.
 
 ## Findings and resulting behavior
 
@@ -50,18 +52,32 @@ See [trust design](trust-design.md) for exact limits, failure behavior, retentio
 | --- | --- |
 | Mobile interaction/regression tests | 29 passed, 0 failed |
 | Relevant server/API regression tests | 95 passed, 0 failed, 0 skipped |
-| Final root TypeScript | Pending final result |
-| Final mobile TypeScript | Passed locally; repeated in CI |
-| Final root lint | Pending final result |
-| Final mobile lint | Pending final result |
+| Final root TypeScript | Passed in clean CI |
+| Final mobile TypeScript | Passed locally and in clean CI |
+| Final root lint | Passed: 0 errors, 965 warnings |
+| Final mobile lint | Passed: 0 errors/warnings |
 | New backend/API/test code lint | Passed, 0 errors/warnings |
-| Final unsigned iOS export | Passed; bundle and metadata produced |
-| Final unsigned Android export | Pending artifact verification |
-| Git whitespace check | Passed; repeat before finalizing |
+| Final unsigned iOS export | Passed locally and in CI; bundle and metadata verified |
+| Final unsigned Android export | Passed in CI; bundle and metadata verified |
+| Git whitespace check | Passed |
+| Normal web production build | Passed in CI |
+| Repository Firestore alignment/secret/type safety checks | Passed in CI |
+| Existing Playwright suite | 8 passed, 6 skipped; skipped tests are not claimed as coverage |
 
 Coverage includes all requested Purpose selection/Back/reflection behaviors; all nine complete profiles; actual Home/Account saved/retaken/deleted summaries; account and guest verified/unverified transitions; verification independent of consent/opt-out; live Auth delivery gating; contact legitimate unusual payloads; size/type bounds; timing/honeypot/rate/replay/concurrency; failed-save retry; existing Clarity, Purpose, deletion, onboarding and launch-metrics behavior.
 
-External Firebase/mail boundaries were mocked in automated tests; no real verification or marketing email was sent. Unsigned exports validate bundling, not signing, physical device behavior or live analytics delivery. An additional optional local Next production compile and competing validation reruns were interrupted during local machine memory contention; they are not reported as passing. CI repeats all required checks without signing or deployment. Normal web CI/build and owned-mailbox checks remain required before backend rollout.
+Implementation commit `17cfa7788c9d4015574dd83cd7e58a0252db9f38` passed [all refinement gates](https://github.com/polishedaffairsllc-byte/ipurpose-next/actions/runs/37391335256), [normal web CI](https://github.com/polishedaffairsllc-byte/ipurpose-next/actions/runs/37391335756), and [repository/type-safety verification](https://github.com/polishedaffairsllc-byte/ipurpose-next/actions/runs/37391335233). Both export artifacts were downloaded and inspected: the compiled bundles contain the Purpose summary, full-profile strengths and email-status API additions. The first clean mobile run exposed the prior harness's undeclared renderer dependency; it is now pinned as a development dependency matching React 19.1.0, and all 29 tests pass on a fresh install.
+
+External Firebase/mail boundaries were mocked in automated tests; no real verification or marketing email was sent. Unsigned exports validate bundling, not signing, physical device behavior or live analytics delivery. Interrupted local reruns are not claimed as passes; completed clean CI supplies those results. Owned-mailbox and deployed-backend checks remain required before a signed candidate.
+
+An additional mobile dependency audit reported 44 advisories (31 high, 13 moderate, zero critical). Every flagged dependency path/version already exists in baseline `b2420f3`; the added test renderer has no advisory. The flagged groups include existing Expo/Metro/React Native tooling and Firebase Node-side dependencies. No framework/analytics dependency upgrade or force downgrade was made in this batch. This is an existing dependency-maintenance item requiring targeted reachability/upgrade review before a future release; passing this refinement gate does not certify the entire dependency tree as vulnerability-free. The existing server dependency-audit policy check passed CI.
+
+Unsigned export evidence (SHA-256):
+
+- iOS: `00af3bf542eb77045faa1d39ddecde712740c69bce5c9ce37ea740cdaae2e6db` (3,375,941 bytes).
+- Android: `af4ff32cee35978f196347ee7d2af43154baab431d671464cd3432e52331b401` (3,370,774 bytes).
+
+Artifacts are available from the refinement CI run as `unsigned-refinement-exports` for seven days and locally at `/private/tmp/ipurpose-refinement-ci-exports`.
 
 ## Regression boundaries
 
@@ -72,6 +88,8 @@ Purpose and Clarity scoring/content, the approved six Purpose questions, approve
 Privacy-policy updates are required before rollout: describe reachability verification independently of marketing consent and temporary anti-abuse security records/retention. The source policy also still needs the previously identified Purpose answers/results/optional-reflection disclosure. Suggested disclosure scope is documented in the trust design; no approved policy/consent wording was replaced here.
 
 Apple App Privacy and Google Play Data Safety must be compared with the current submitted declarations for email/status, security diagnostics and Purpose data. Existing email/name categories may already cover some data, but their sufficiency is not established by this batch. Owner/store review is required; do not alter the active Google Play production review.
+
+This review follows the stores' accuracy/update requirements: [Apple App Privacy](https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy) and [Google Play Data Safety](https://support.google.com/googleplay/android-developer/answer/10787469?hl=en). The need for particular store-answer changes remains conditional on the actual submitted declarations.
 
 Backend deployment is needed **before the mobile rebuild**. After owner review:
 

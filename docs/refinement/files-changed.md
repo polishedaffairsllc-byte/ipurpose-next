@@ -4,6 +4,11 @@ Source checkout: `/private/tmp/ipurpose-qa-refinement-20261005`
 
 Branch: `codex/qa-refinement-20261005`, based on tested candidate `b2420f3`. Original working directory and unfinished prior changes are preserved.
 
+Draft review: https://github.com/polishedaffairsllc-byte/ipurpose-next/pull/63
+
+The PR also carries the already tested candidate metadata (iOS 3 / Android 7) from its baseline; this batch does not assign later identifiers.
+
+- [.github/workflows/refinement-regressions.yml](../../.github/workflows/refinement-regressions.yml)
 - [app/api/auth/email-status/route.ts](../../app/api/auth/email-status/route.ts)
 - [app/api/auth/login/route.ts](../../app/api/auth/login/route.ts)
 - [app/api/clarity-check/submit/route.ts](../../app/api/clarity-check/submit/route.ts)
@@ -25,6 +30,8 @@ Branch: `codex/qa-refinement-20261005`, based on tested candidate `b2420f3`. Ori
 - [app/verify-email/page.tsx](../../app/verify-email/page.tsx)
 - [app/workshop/WorkshopRegisterForm.tsx](../../app/workshop/WorkshopRegisterForm.tsx)
 - [docs/refinement/archetype-audit.md](../../docs/refinement/archetype-audit.md)
+- [docs/refinement/files-changed.md](../../docs/refinement/files-changed.md)
+- [docs/refinement/owner-review.md](../../docs/refinement/owner-review.md)
 - [docs/refinement/trust-design.md](../../docs/refinement/trust-design.md)
 - [firestore.rules.snippet](../../firestore.rules.snippet)
 - [lib/accountDeletionPlan.ts](../../lib/accountDeletionPlan.ts)
@@ -38,6 +45,8 @@ Branch: `codex/qa-refinement-20261005`, based on tested candidate `b2420f3`. Ori
 - [lib/trust/emailVerification.ts](../../lib/trust/emailVerification.ts)
 - [lib/trust/publicClient.ts](../../lib/trust/publicClient.ts)
 - [lib/trust/publicProtection.ts](../../lib/trust/publicProtection.ts)
+- [mobile/package-lock.json](../../mobile/package-lock.json)
+- [mobile/package.json](../../mobile/package.json)
 - [mobile/src/app/(app)/(tabs)/account.tsx](../../mobile/src/app/(app)/(tabs)/account.tsx)
 - [mobile/src/app/(app)/(tabs)/index.tsx](../../mobile/src/app/(app)/(tabs)/index.tsx)
 - [mobile/src/app/(app)/(tabs)/purpose.tsx](../../mobile/src/app/(app)/(tabs)/purpose.tsx)
@@ -54,3 +63,4 @@ Branch: `codex/qa-refinement-20261005`, based on tested candidate `b2420f3`. Ori
 - [tests/helpers/trust-harness.cjs](../../tests/helpers/trust-harness.cjs)
 - [tests/trust-api.test.cjs](../../tests/trust-api.test.cjs)
 - [tests/trust.node.ts](../../tests/trust.node.ts)
+- [vercel.json](../../vercel.json)
