@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
 import { trackSignUp } from '@/lib/analytics';
@@ -35,6 +35,8 @@ export default function SignupPage() {
     try {
       const auth = getFirebaseAuth();
       const credential = await createUserWithEmailAndPassword(auth, email, password);
+      try { await sendEmailVerification(credential.user); }
+      catch { /* Account is usable; /verify-email offers resend. */ }
 
       // Track GA4 sign_up event
       trackSignUp('email');

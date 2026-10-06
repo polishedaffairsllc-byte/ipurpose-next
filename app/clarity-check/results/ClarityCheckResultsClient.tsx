@@ -1,5 +1,7 @@
 'use client';
 
+import { usePublicForm } from '@/lib/trust/publicClient';
+
 import { useEffect, useState } from 'react';
 import PrintButton from './PrintButton';
 import { trackConfirmedEmailSignup } from '@/lib/launch-metrics/events';
@@ -39,6 +41,7 @@ function getIdentityBlurb(identityType: string): string {
 }
 
 export default function ClarityCheckResultsClient({ submission, submissionId }: Props) {
+  const publicFetch = usePublicForm('clarity-lead');
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [captureEmail, setCaptureEmail] = useState('');
   const [captureName, setCaptureName] = useState('');
@@ -62,7 +65,7 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
     setCaptureLoading(true);
 
     try {
-      const res = await fetch('/api/leads/clarity-check', {
+      const res = await publicFetch('/api/leads/clarity-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: captureName, email: captureEmail, website: captureWebsite, ...utmParams }),
@@ -303,7 +306,7 @@ export default function ClarityCheckResultsClient({ submission, submissionId }: 
             {captureSubmitted && (
               <div className="space-y-6">
                 <div className="max-w-md mx-auto bg-green-50 border border-green-200 rounded-lg p-4 text-green-700 font-marcellus">
-                  ✓ Check your inbox! Your full results and personalized next steps are on the way.
+                  ✓ Your results are available. Check your inbox for your results and a separate email confirmation link. Confirming your address does not subscribe you to marketing.
                 </div>
                 
                 {/* Starter Pack Offer - $27 */}

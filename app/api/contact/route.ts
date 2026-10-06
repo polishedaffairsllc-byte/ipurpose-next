@@ -1,3 +1,4 @@
+import { protectPublicSubmission, releasePublicSubmission, PublicInputError, readPublicJson, requestIp, validEmail, validText } from '@/lib/trust/publicProtection';
 import { NextRequest, NextResponse } from 'next/server';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { processLead } from '@/lib/leads';
@@ -38,6 +39,8 @@ async function sendFounderNotification(payload: {
     const { Resend } = await import('resend');
     const resend = new Resend(resendApiKey);
 
+    const escape = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+    payload = { ...payload, name: escape(payload.name), email: escape(payload.email), message: escape(payload.message), ...(payload.topic ? { topic: escape(payload.topic) } : {}) };
     const emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -85,9 +88,16 @@ async function sendFounderNotification(payload: {
 }
 
 export async function POST(request: NextRequest) {
+  let reserved: Record<string, unknown> | null = null;
   try {
-    const body = (await request.json()) as ContactRequest;
-    const { name, email, topic, message } = body;
+    const body = await readPublicJson(request);
+    if (!validText(body.name, 1, 120) || !validEmail(body.email) || !validText(body.message, 5, 5000) || (body.topic !== undefined && !validText(body.topic, 1, 120))) return NextResponse.json({ ok: false, error: 'Please check your name, email, and message.' }, { status: 400 });
+    const guard = await protectPublicSubmission(firebaseAdmin.firestore(), 'contact', requestIp(request), body, { requireChallenge: true, limit: 5 });
+    if (guard === 'dropped') return NextResponse.json({ ok: true });
+    if (guard !== 'accepted') return NextResponse.json({ ok: false, error: guard === 'duplicate' ? 'Please wait before submitting this message again.' : 'Please reload the form and try again.' }, { status: guard === 'duplicate' ? 409 : 400 });
+    reserved = body;
+    const payload = body as unknown as ContactRequest;
+    const { name, email, topic, message } = payload;
 
     if (!message || typeof message !== 'string' || message.trim().length < 5) {
       return NextResponse.json({ ok: false, error: 'INVALID_MESSAGE' }, { status: 400 });
@@ -98,13 +108,13 @@ export async function POST(request: NextRequest) {
     const leadResult = await processLead('contact', name, email, context);
 
     if (!leadResult.ok || !leadResult.id) {
+      await releasePublicSubmission(firebaseAdmin.firestore(), 'contact', requestIp(request), body);
       return NextResponse.json({ ok: false, error: leadResult.error || 'LEAD_ERROR' }, { status: 400 });
     }
 
     let contactDocId = leadResult.id;
 
-    try {
-      const docRef = await firebaseAdmin.firestore().collection('contactRequests').add({
+    const docRef = await firebaseAdmin.firestore().collection('contactRequests').add({
         name,
         email,
         topic: topic || null,
@@ -112,12 +122,10 @@ export async function POST(request: NextRequest) {
         source: 'contact',
         createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-      });
-      contactDocId = docRef.id;
-      console.log('[CONTACT] Stored contact request:', { id: contactDocId, email });
-    } catch (firestoreError) {
-      console.error('[CONTACT] Firestore error storing contact request:', firestoreError);
-    }
+    });
+    contactDocId = docRef.id;
+    reserved = null;
+    console.log('[CONTACT] Stored contact request:', { id: contactDocId, email });
 
     try {
       await sendFounderNotification({ name, email, topic, message: message.trim(), docId: contactDocId });
@@ -127,7 +135,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, id: contactDocId, deduped: leadResult.deduped || false });
   } catch (error) {
+    if (reserved) await releasePublicSubmission(firebaseAdmin.firestore(), 'contact', requestIp(request), reserved).catch(() => {});
     console.error('[CONTACT] Unexpected error:', error);
-    return NextResponse.json({ ok: false, error: 'INTERNAL_ERROR' }, { status: 500 });
+    return NextResponse.json({ ok: false, error: error instanceof PublicInputError ? error.message : 'Please try again later.' }, { status: error instanceof PublicInputError ? error.status : 503 });
   }
 }

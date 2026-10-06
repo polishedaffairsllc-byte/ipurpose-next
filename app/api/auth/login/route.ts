@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { deriveFounderContext } from "@/lib/isFounder";
+import { recordAuthEmailStatus } from '@/lib/trust/emailPolicy';
 import crypto from 'crypto';
 
 // Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
@@ -49,6 +50,7 @@ export async function POST(req: Request) {
     try {
       const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
       uid = decoded.uid;
+      await recordAuthEmailStatus(db, await firebaseAdmin.auth().getUser(uid));
       const userRef = db.collection('users').doc(uid);
       const userDoc = await userRef.get();
       const userData = userDoc.exists ? userDoc.data() : null;

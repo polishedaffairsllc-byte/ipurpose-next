@@ -1,5 +1,7 @@
 'use client';
 
+import { usePublicForm } from '@/lib/trust/publicClient';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
@@ -25,6 +27,7 @@ interface ResultsData {
 }
 
 export default function ClarityCheckResultsPage() {
+  const publicFetch = usePublicForm('clarity-lead');
   const [results, setResults] = useState<ResultsData | null>(null);
   const [captureEmail, setCaptureEmail] = useState('');
   const [captureName, setCaptureName] = useState('');
@@ -69,7 +72,7 @@ export default function ClarityCheckResultsPage() {
       const stored = sessionStorage.getItem('clarityCheckResults');
       const sessionData = stored ? JSON.parse(stored) : {};
 
-      const res = await fetch('/api/leads/clarity-check', {
+      const res = await publicFetch('/api/leads/clarity-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -235,6 +238,7 @@ export default function ClarityCheckResultsPage() {
 
 
 
+          {captureSubmitted ? <p role="status" className="my-4">Your results are available. Check your inbox for an email confirmation link. Confirmation does not subscribe you to marketing.</p> : null}
           {/* Full results — shown after email submitted */}
           {captureSubmitted && (
             <>

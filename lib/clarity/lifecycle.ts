@@ -16,7 +16,7 @@ export interface LifecycleDependencies {
   webResults: (input: LifecycleInput) => Promise<unknown>;
 }
 
-/** Authenticated mobile caller supplies server-derived results and verified Auth email/name. */
+/** Authenticated mobile caller supplies server-derived results and Auth-owned email/name. */
 export async function runClarityLifecycle(input: LifecycleInput, deps: LifecycleDependencies) {
   const email = normalizedEmail(input.email);
   const contact = input.contactId ? { id: input.contactId, legacyDuplicateIds: [] as string[] }

@@ -1,3 +1,4 @@
+import { PurposeSummary } from '../../../components/PurposeSummary';
 // mobile/src/app/(app)/(tabs)/index.tsx
 // PR #35 — visual redesign only. Functional behavior preserved exactly:
 // getCompanionProfile(), getConversations(), formatUpdatedAt(),
@@ -180,6 +181,8 @@ export default function HomeScreen() {
               </BlurView>
             </Pressable>
           )}
+
+          <PurposeSummary atmosphere />
 
           {/* Right Now */}
           {!profileLoading ? (

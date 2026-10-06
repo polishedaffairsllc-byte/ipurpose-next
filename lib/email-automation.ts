@@ -6,6 +6,7 @@
 
 import { firebaseAdmin } from './firebaseAdmin';
 import { enrollNurture } from './launch-metrics/enrollNurture';
+import { canSendMarketing } from './trust/emailServer';
 import { marketingSuppressed } from './clarity/suppression';
 
 const FROM_ADDRESS = 'iPurpose <renita@ipurposesoul.com>';
@@ -15,7 +16,7 @@ const SITE_URL = 'https://ipurposesoul.com';
  * Check if an email address has opted out of marketing emails.
  */
 async function isEmailOptedOut(email: string): Promise<boolean> {
-  return marketingSuppressed(firebaseAdmin.firestore(), email);
+  return !await canSendMarketing(email) || await marketingSuppressed(firebaseAdmin.firestore(), email);
 }
 
 /**
@@ -957,7 +958,7 @@ export async function sendNurtureEmail5(data: ClarityCheckEmailData) {
 /**
  * Schedule emails (Day 1 immediately, Day 5 after 5 days)
  */
-export async function scheduleEmailSequence(data: ClarityCheckEmailData): Promise<'enrolled' | 'opted_out' | 'duplicate' | 'failed' | 'not_consented'> {
+export async function scheduleEmailSequence(data: ClarityCheckEmailData): Promise<'enrolled' | 'opted_out' | 'duplicate' | 'failed' | 'not_consented' | 'unverified'> {
   try {
     // Normalize email to lowercase to prevent case-sensitivity duplicates
     data = { ...data, email: data.email.trim().toLowerCase() };

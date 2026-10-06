@@ -1,0 +1,66 @@
+name: Purpose and trust refinement gates
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refinement:
+    name: Tests, types, lint and unsigned mobile exports
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_NO_CACHE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+      - name: Install server dependencies
+        run: npm ci --ignore-scripts
+      - name: Server TypeScript
+        run: npx tsc --noEmit
+      - name: Server lint
+        run: npx eslint .
+      - name: Purpose, identity, spam and server regressions
+        run: node --import tsx --test tests/trust.node.ts tests/trust-api.test.cjs tests/clarity-lifecycle.node.ts tests/clarity-email-adapter.test.cjs tests/purpose.node.ts tests/purpose-api.test.cjs tests/account-deletion.node.ts tests/onboarding.node.ts tests/launch-metrics.node.ts tests/admin-activity.test.cjs tests/launch-cost-risk.test.cjs
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm ci --ignore-scripts
+      - name: Mobile regression tests
+        working-directory: mobile
+        run: node --test tests/*.test.cjs
+      - name: Mobile TypeScript
+        working-directory: mobile
+        run: npm run typecheck
+      - name: Mobile lint
+        working-directory: mobile
+        run: npm run lint
+      - name: Unsigned iOS export
+        working-directory: mobile
+        run: npx expo export --platform ios --output-dir dist/qa-ios
+      - name: Unsigned Android export
+        working-directory: mobile
+        run: npx expo export --platform android --output-dir dist/qa-android
+      - name: Verify export metadata
+        working-directory: mobile
+        run: |
+          test -s dist/qa-ios/metadata.json
+          test -s dist/qa-android/metadata.json
+      - name: Preserve unsigned export artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-refinement-exports
+          retention-days: 7
+          path: |
+            mobile/dist/qa-ios
+            mobile/dist/qa-android

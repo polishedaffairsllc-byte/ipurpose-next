@@ -12,6 +12,7 @@ function adapter(db, calls) {
  const mocks = {
   './firebaseAdmin': { firebaseAdmin: { firestore: () => db.asFirestore() } },
   './launch-metrics/enrollNurture': require('../lib/launch-metrics/enrollNurture.ts'),
+  './trust/emailServer': { canSendMarketing: email => require('../lib/trust/emailPolicy.ts').marketingEligible(db.asFirestore(), email) },
   './clarity/suppression': require('../lib/clarity/suppression.ts'),
   resend: { Resend: class { emails = { send: async data => { calls.push(data); return { data: { id: 'fake-provider' } }; } }; } },
  };
@@ -24,6 +25,9 @@ test('real scheduling adapter gives mobile no promotional web thank-you and pres
  const before = process.env.RESEND_API_KEY; process.env.RESEND_API_KEY = 'mock-only';
  try {
   const db = new FakeFirestore(); const calls = []; const email = adapter(db, calls);
+  await require('../lib/trust/emailPolicy.ts').recordAuthEmailStatus(db.asFirestore(), { uid: 'mobile', email: 'mobile@example.test', emailVerified: true });
+  await require('../lib/trust/emailPolicy.ts').recordAuthEmailStatus(db.asFirestore(), { uid: 'web', email: 'web@example.test', emailVerified: true });
+  await recordMobileMarketingConsent(db.asFirestore(), 'web', 'web@example.test', { granted: true, copyVersion: COPY.consentVersion });
   await recordMobileMarketingConsent(db.asFirestore(), 'mobile', 'mobile@example.test', { granted: true, copyVersion: COPY.consentVersion });
   assert.equal(await email.scheduleEmailSequence({ email: 'mobile@example.test', name: '', submissionId: 'mobile-contact', quizSubmissionId: 'quiz-mobile', consentUid: 'mobile' }), 'enrolled'); assert.equal(calls.length, 0);
   assert.equal(await email.scheduleEmailSequence({ email: 'web@example.test', name: 'Web', submissionId: 'web-contact', quizSubmissionId: 'quiz-web' }), 'enrolled'); assert.equal(calls.length, 1); assert.ok(calls[0].html.includes('/clarity-check/results/quiz-web')); assert.ok(!calls[0].html.includes('/clarity-check/results/web-contact'));

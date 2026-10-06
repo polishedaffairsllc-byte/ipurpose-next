@@ -124,6 +124,7 @@ export default async function DashboardPage() {
 
     return (
       <div className="relative">
+        {!user.emailVerified ? <div className="mx-auto max-w-6xl px-6 py-4"><a href="/verify-email">Confirm your email address · Send or check verification</a></div> : null}
         {/* Hero Background */}
         <div className="relative h-[40vh] mb-10 overflow-hidden">
           <VideoBackground src="/videos/water-reflection.mp4" />

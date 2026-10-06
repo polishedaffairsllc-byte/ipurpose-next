@@ -60,6 +60,7 @@ export function getAccountDeletionPlan(uid: string, email?: string) {
         { collection: "emailTasks", field: "email", value: normalizedEmail },
         { collection: "leads", field: "email", value: normalizedEmail },
         { collection: "leadEmailKeys", field: "email", value: normalizedEmail },
+        { collection: "emailTrust", field: "email", value: normalizedEmail },
         { collection: "clarityDeliveries", field: "email", value: normalizedEmail },
       ] : []),
     ],

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   EmailAuthProvider,
   onAuthStateChanged,
   reauthenticateWithCredential,
@@ -38,7 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     loading,
     createAccount: async (email, password, marketingOptIn = false) => {
-      await createUserWithEmailAndPassword(auth, email.trim(), password);
+      const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
+      try { await sendEmailVerification(credential.user); }
+      catch { /* Account remains usable; Account offers resend/retry. */ }
       logLaunchEvent('sign_up');
       if (marketingOptIn) await saveMarketingConsent();
     },

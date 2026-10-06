@@ -1,5 +1,7 @@
 'use client';
 
+import { usePublicForm } from '@/lib/trust/publicClient';
+
 import { useEffect, useRef, useState } from 'react';
 import { emitLaunchEvent } from '@/lib/launch-metrics/events';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -84,6 +86,7 @@ const identityQuestions = [
 ];
 
 export default function ClarityCheckQuizPage() {
+  const publicFetch = usePublicForm('clarity-submit');
   const [responses, setResponses] = useState<Record<number, number>>({});
   const [identityResponses, setIdentityResponses] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(false);
@@ -134,7 +137,7 @@ export default function ClarityCheckQuizPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/clarity-check/submit', {
+      const response = await publicFetch('/api/clarity-check/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

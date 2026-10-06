@@ -1,3 +1,5 @@
+import { EmailVerificationControls } from '../../../components/EmailVerificationControls';
+import { PurposeSummary } from '../../../components/PurposeSummary';
 import { PurposeDeletionControl } from '../../../components/PurposeDeletionControl';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState, type ReactNode } from 'react';
@@ -249,20 +251,9 @@ export default function AccountScreen() {
                 icon="mail-outline"
                 iconBackground={theme.colors.systemsTint}
                 label="Email"
-                trailing={(
-                  <View style={[styles.statusBadge, { backgroundColor: tokens.surfaceTint }]}>
-                    <Ionicons
-                      color={user?.emailVerified ? theme.colors.sageGreen : theme.colors.muted}
-                      name={user?.emailVerified ? 'checkmark-circle' : 'ellipse-outline'}
-                      size={14}
-                    />
-                    <Text style={styles.statusText}>
-                      {user?.emailVerified ? 'Verified' : 'Not verified'}
-                    </Text>
-                  </View>
-                )}
                 value={email}
               />
+              {user ? <EmailVerificationControls key={user.uid} user={user} /> : null}
               <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
               <IdentityRow
                 icon="shield-checkmark-outline"
@@ -480,7 +471,8 @@ export default function AccountScreen() {
               )}
             </Pressable>
 
-            <PurposeDeletionControl />
+            <PurposeSummary />
+          <PurposeDeletionControl />
 
             <View style={[styles.accountDivider, { backgroundColor: tokens.surfaceBorder }]} />
             <Text style={styles.deleteAccountIntro}>

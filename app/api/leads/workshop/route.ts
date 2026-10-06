@@ -1,3 +1,4 @@
+import { protectPublicSubmission, PublicInputError, readPublicJson, requestIp } from '@/lib/trust/publicProtection';
 import { NextRequest, NextResponse } from 'next/server';
 import { processLead } from '@/lib/leads';
 import { rateLimit } from '@/lib/rate-limit-simple';
@@ -16,7 +17,10 @@ const workshopLimiter = rateLimit({ requests: 5, window: 60 * 1000 });
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as WorkshopRegistrationRequest;
+    const body = (await readPublicJson(request)) as unknown as WorkshopRegistrationRequest;
+    const guard = await protectPublicSubmission(firebaseAdmin.firestore(), 'workshop', requestIp(request), body as unknown as Record<string, unknown>, { requireChallenge: true });
+    if (guard === 'dropped') return NextResponse.json({ ok: true });
+    if (guard !== 'accepted') return NextResponse.json({ error: 'Please reload this form or wait before submitting again.' }, { status: guard === 'duplicate' ? 409 : 400 });
     const { firstName, building, website, session } = body;
     const email = (body.email || '').trim().toLowerCase();
 
@@ -121,6 +125,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, id: result.id, deduped: result.deduped });
   } catch (error) {
     console.error('[WORKSHOP] Unexpected error:', error);
-    return NextResponse.json({ ok: false, error: 'Something went wrong.' }, { status: 500 });
+    return NextResponse.json({ ok: false, error: 'Something went wrong.' }, { status: error instanceof PublicInputError ? error.status : 503 });
   }
 }

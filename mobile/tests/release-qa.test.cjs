@@ -39,7 +39,7 @@ for (const existing of [false, true]) test(`actual Purpose provider + API + scre
  assert.doesNotMatch(text(tree.root), /could not be loaded/);
  await press(tree, existing ? 'Retake the Purpose Check' : 'Take the Purpose Check');
  const qs = h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS; assert.equal(qs.length, 6);
- for (const q of qs) { assert.match(text(tree.root), new RegExp(q.prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))); await press(tree, q.options[0].label); await press(tree, 'Continue'); }
+ for (const q of qs) { assert.match(text(tree.root), new RegExp(q.prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))); await press(tree, q.options[0].label); if (q.max > 1) await press(tree, 'Continue'); }
  await press(tree, 'See my Purpose Direction'); assert.equal(writes.length, 1); assert.equal(Object.keys(writes[0].answers).length, 6);
  assert.ok(button(tree, 'Retake the Purpose Check')); assert.equal(button(tree, 'Continue to the Purpose Path').props.disabled, true);
  await act(async () => tree.unmount());

@@ -1,3 +1,5 @@
+import { emailKey } from '../clarity/contacts';
+import { hasExplicitMarketingConsent } from '../trust/emailPolicy';
 import type { Firestore } from 'firebase-admin/firestore';
 
 export interface NurtureEnrollment {
@@ -36,6 +38,13 @@ export async function enrollNurture(db: Firestore, data: NurtureEnrollment, now 
       if (!consent || consent.granted !== true || !consent.grantedAt
         || typeof consent.source !== 'string' || typeof consent.copyVersion !== 'string') return 'not_consented' as const;
       if (!priorEmailTasks.empty) return 'duplicate' as const;
+    }
+    const trust = await tx.get(db.collection('emailTrust').doc(emailKey(email)));
+    if (trust.data()?.verified !== true || (data.consentUid && (trust.data()?.kind !== 'firebase' || trust.data()?.uid !== data.consentUid))) return 'unverified' as const;
+    if (!data.consentUid) {
+      const leads = await tx.get(db.collection('leads').where('email', '==', email));
+      const users = await tx.get(db.collection('users').where('email', '==', email));
+      if (!leads.docs.some(doc => hasExplicitMarketingConsent(doc.data().marketingConsent)) && !users.docs.some(doc => doc.id === trust.data()?.uid && hasExplicitMarketingConsent(doc.data().marketingConsent))) return 'not_consented' as const;
     }
     if (!queued.empty) return 'duplicate' as const;
     for (const [type, days] of tasks) {
