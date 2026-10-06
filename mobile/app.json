@@ -24,14 +24,14 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.ipurpose.mobile",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "com.ipurpose.mobile",
-      "versionCode": 7,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/release/adaptive-icon-foreground.png",
         "backgroundImage": "./assets/release/adaptive-icon-background.png",
