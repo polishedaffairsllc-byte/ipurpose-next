@@ -48,6 +48,7 @@ async function findPages(directory, parts = []) {
 }
 await findPages(new URL('../app', import.meta.url).pathname);
 let checked = 0;
+let stagedNoindexHeaders = 0;
 let redirectedOrMissing = 0;
 const queue = [...paths];
 async function worker() {
@@ -65,7 +66,10 @@ async function worker() {
       const canonicals = tags.filter((a) => a.rel === 'canonical').map((a) => a.href);
       assert.equal(canonicals.length, 1, `${path}: expected exactly one canonical`);
       assert.equal(new URL(canonicals[0]).href, new URL(path, preferredOrigin).href, `${path}: incorrect canonical ${canonicals[0]}`);
-      const robots = tags.filter((a) => ['robots', 'googlebot'].includes(a.name)).map((a) => a.content).join(',') + r.xRobots;
+      // Vercel intentionally sends noindex headers on unique staged deployment URLs.
+      // Validate application metadata here; the promoted origin must also pass headers.
+      if (useVercel && /noindex/i.test(r.xRobots)) stagedNoindexHeaders++;
+      const robots = tags.filter((a) => ['robots', 'googlebot'].includes(a.name)).map((a) => a.content).join(',') + (useVercel ? '' : r.xRobots);
       if (sitemapPaths.has(path) || required.includes(path)) assert.doesNotMatch(robots, /noindex/i, `${path} must be indexable`);
       for (const m of r.body.matchAll(/<a\b[^>]*>/gi)) {
         const href = attributes(m[0]).href;
@@ -81,5 +85,5 @@ async function worker() {
   }
 }
 await Promise.all(Array.from({ length: useVercel ? 4 : 6 }, worker));
-console.log(JSON.stringify({ origin, sitemapUrls: urls.length, checked, redirectedOrMissing, failures }, null, 2));
+console.log(JSON.stringify({ origin, sitemapUrls: urls.length, checked, redirectedOrMissing, stagedNoindexHeaders, failures }, null, 2));
 assert.equal(failures.length, 0, 'Rendered indexing audit failed');
