@@ -7,7 +7,7 @@ const canonical = 'https://ipurposesoul.com/clarity-check';
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical },
+  alternates: { canonical: './' },
   openGraph: {
     title,
     description,

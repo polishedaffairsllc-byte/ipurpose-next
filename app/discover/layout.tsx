@@ -7,7 +7,7 @@ const canonical = 'https://ipurposesoul.com/discover';
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical },
+  alternates: { canonical: './' },
   openGraph: {
     title,
     description,
