@@ -1,107 +1,106 @@
 import { MetadataRoute } from 'next';
 import { purposePages } from '@/content/purpose';
-
-const canonicalDomain = 'https://ipurposesoul.com';
+import { getCanonicalUrl } from '@/lib/canonical';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: `${canonicalDomain}/purpose`,
+      url: getCanonicalUrl('/purpose'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     ...purposePages.map((page) => ({
-      url: `${canonicalDomain}/purpose/${page.slug}`,
+      url: getCanonicalUrl(`/purpose/${page.slug}`),
       changeFrequency: 'monthly' as const,
       priority: page.slug === 'what-is-my-purpose' ? 0.9 : 0.7,
     })),
     {
-      url: `${canonicalDomain}/`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/'),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${canonicalDomain}/discover`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/discover'),
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${canonicalDomain}/clarity-check`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/clarity-check'),
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${canonicalDomain}/program`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/program'),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/programs`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/programs'),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/guides/what-to-automate-in-your-business`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/guides/what-to-automate-in-your-business'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/guides/ai-tools-vs-business-systems`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/guides/ai-tools-vs-business-systems'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/guides/why-ai-is-not-saving-you-time`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/guides/why-ai-is-not-saving-you-time'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/guides/how-to-use-ai-in-your-business`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/guides/how-to-use-ai-in-your-business'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/guides/business-decision-making-system`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/guides/business-decision-making-system'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/guides/ai-for-overwhelmed-entrepreneurs`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/guides/ai-for-overwhelmed-entrepreneurs'),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${canonicalDomain}/about`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/about'),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${canonicalDomain}/starter-pack`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/starter-pack'),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${canonicalDomain}/ai-blueprint`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/ai-blueprint'),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    ...[
+      '/clarity-check-quiz',
+      '/ipurpose-6-week',
+      '/build',
+      '/workshop',
+      '/info-session',
+      '/support',
+      '/privacy',
+      '/terms',
+      '/disclaimer',
+    ].map((path) => ({
+      url: getCanonicalUrl(path),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
     {
-      url: `${canonicalDomain}/contact`,
-      lastModified: new Date(),
+      url: getCanonicalUrl('/contact'),
       changeFrequency: 'yearly',
       priority: 0.3,
     },

@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { LAUNCH_MEASUREMENT_ID } from '@/lib/launch-metrics/config';
-import { getCanonicalMetadata } from '@/lib/canonical';
+import { CANONICAL_DOMAIN_CONFIG } from '@/lib/canonical';
 import { AuthContextProvider } from './context/AuthContext';
 import BackgroundLayer from "./components/BackgroundLayer";
 import InternalNavbar from "./components/InternalNavbar";
@@ -13,8 +13,9 @@ import SiteStructuredData from "./components/SiteStructuredData";
 export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
   description: "iPurpose helps creators move from stuck or self-doubting into clarity and coherent action by integrating inner alignment, practical structure, and thoughtful use of AI.",
-  metadataBase: new URL('https://ipurposesoul.com'),
-  alternates: getCanonicalMetadata('/'),
+  metadataBase: new URL(CANONICAL_DOMAIN_CONFIG.domain),
+  // Next.js resolves './' against the final route, so children self-canonicalize.
+  alternates: { canonical: './' },
 };
 
 export const viewport: Viewport = {
