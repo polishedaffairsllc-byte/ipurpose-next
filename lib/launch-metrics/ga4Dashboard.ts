@@ -6,7 +6,7 @@ const TZ = 'America/New_York';
 
 type Row = Record<string, string | number | null>;
 type Report = { rows?: Array<{ dimensionValues?: Array<{ value?: string }>; metricValues?: Array<{ value?: string }> }>; dimensionHeaders?: Array<{ name?: string }>; metricHeaders?: Array<{ name?: string }> };
-type Section = { rows: Row[]; available: boolean };
+type Section = { rows: Row[]; available: boolean; error?: string };
 
 function propertyName(value?: string | null) {
   const raw = value?.trim();
@@ -42,8 +42,8 @@ async function post(property: string, method: 'runReport' | 'runRealtimeReport',
     body: JSON.stringify(body),
   });
   if (!response.ok) {
-    await response.body?.cancel();
-    throw new Error(`GA4 ${method} failed (${response.status}).`);
+    const detail = (await response.text().catch(() => '')).replace(/\s+/g, ' ').trim();
+    throw new Error(`GA4 ${method} failed (${response.status})${detail ? `: ${detail.slice(0, 700)}` : ''}`);
   }
   return normalize(await response.json() as Report);
 }
@@ -76,7 +76,13 @@ function currentWeekStart(now = new Date()) {
 
 async function safe(work: () => Promise<Row[]>): Promise<Section> {
   try { return { rows: await work(), available: true }; }
-  catch { return { rows: [], available: false }; }
+  catch (error) {
+    return {
+      rows: [],
+      available: false,
+      error: error instanceof Error ? error.message : 'Unknown GA4 error',
+    };
+  }
 }
 
 export async function getGa4Dashboard(propertyHint?: string | null) {
@@ -103,6 +109,13 @@ export async function getGa4Dashboard(propertyHint?: string | null) {
     safe(() => post(property, 'runRealtimeReport', { dimensions: dimensions(['minutesAgo', 'city', 'country']), metrics: metrics(['activeUsers']), limit: 100 }, token)),
   ]);
 
+  const diagnosticSections = { today, currentWeek, last7Days, last28Days, daily28, pages, landingPages, channels, sources, events, countries, cities, platforms, devices, realtime };
+  const diagnostics = Object.fromEntries(
+    Object.entries(diagnosticSections)
+      .filter(([, section]) => section.error)
+      .map(([name, section]) => [name, section.error]),
+  );
+
   return {
     property,
     reportingTimezone: TZ,
@@ -114,6 +127,7 @@ export async function getGa4Dashboard(propertyHint?: string | null) {
       sources: sources.available, events: events.available, countries: countries.available, cities: cities.available,
       platforms: platforms.available, devices: devices.available, realtime: realtime.available,
     },
+    diagnostics,
     windows: {
       today: today.rows[0] || {}, currentWeekToDate: currentWeek.rows[0] || {},
       last7Days: last7Days.rows[0] || {}, last28Days: last28Days.rows[0] || {},
