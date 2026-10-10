@@ -1,7 +1,7 @@
 {
   "git": {
     "deploymentEnabled": {
-      "codex/qa-refinement-20261005": false
+      "codex/**": false
     }
   },
   "buildCommand": "npm run build",
@@ -21,7 +21,9 @@
   },
   "build": {
     "env": {
-      "NEXT_TELEMETRY_DISABLED": "1"
+      "NEXT_TELEMETRY_DISABLED": "1",
+      "HUSKY": "0",
+      "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
     }
   },
   "headers": [
