@@ -79,7 +79,12 @@ async function readJson(url: string, fetcher: typeof fetch = fetch) {
   if (!token?.trim()) return toolError('Launch metrics are unavailable.');
   try {
     const response = await fetcher(url, {
-      method: 'GET', headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+        'X-iPurpose-Metrics-Version': '2',
+      },
       cache: 'no-store', credentials: 'omit', redirect: 'error', signal: AbortSignal.timeout(20000),
     });
     if (!response.ok) {
@@ -141,19 +146,14 @@ export function createLaunchMetricsHandler(
   const mcp = createMcpHandler(server => {
     server.registerTool('get_launch_metrics', {
       title: 'Get iPurpose analytics dashboard',
-      description: 'Read the comprehensive iPurpose analytics view: current GA4 traffic, pages, acquisition, events, geography, technology, people/activity summaries, and up to 52 weekly launch snapshots. Read-only.',
-      inputSchema: z.object({}).strict(),
+      description: 'Read the comprehensive iPurpose analytics view: current GA4 traffic, pages, acquisition, events, geography, technology, people/activity summaries, and up to 52 weekly launch snapshots. Optionally page through a People & Activity category. Read-only.',
+      inputSchema: z.object({
+        activityKind: z.enum(ACTIVITY_KINDS).optional(),
+        cursor: z.string().max(4000).optional(),
+      }).strict().refine(value => !value.cursor || !!value.activityKind, { message: 'cursor requires activityKind' }),
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
       _meta: { securitySchemes: [{ type: 'oauth2', scopes: [MCP_SCOPE] }] },
-    }, () => readFeed());
-
-    server.registerTool('get_launch_activity', {
-      title: 'Get iPurpose people and activity records',
-      description: 'Read one paged category from the owner-only People & Activity dashboard. Use the returned cursor to continue through retained records. Read-only.',
-      inputSchema: z.object({ kind: z.enum(ACTIVITY_KINDS), cursor: z.string().max(4000).optional() }).strict(),
-      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
-      _meta: { securitySchemes: [{ type: 'oauth2', scopes: [MCP_SCOPE] }] },
-    }, ({ kind, cursor }) => readActivity(kind, cursor));
+    }, ({ activityKind, cursor }) => activityKind ? readActivity(activityKind, cursor) : readFeed());
   }, { serverInfo: { name: 'ipurpose-launch-metrics', version: '2.0.0' }, verboseLogs: false, maxSubscriptions: 0 });
 
   return async (request: Request): Promise<Response> => {
