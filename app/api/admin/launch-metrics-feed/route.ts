@@ -1,15 +1,13 @@
 import { timingSafeEqual } from 'node:crypto';
 import type { Auth } from 'firebase-admin/auth';
 import type { WeeklyMetrics } from '@/functions/src/model';
-import { ACTIVITY_KINDS, type ActivityKind } from '@/lib/admin-activity/types';
-import { createActivityService } from '@/lib/admin-activity/service';
-import { getGa4Dashboard } from '@/lib/launch-metrics/ga4Dashboard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60;
 
 const responseHeaders = { 'Cache-Control': 'private, no-store', Vary: 'Authorization' };
+const ACTIVITY_KINDS = ['accounts', 'profiles', 'leads', 'clarity', 'registrations', 'cohorts', 'emails'] as const;
+type ActivityKind = typeof ACTIVITY_KINDS[number];
 const COLLECTIONS: Partial<Record<ActivityKind, string>> = {
   profiles: 'users', leads: 'leads', clarity: 'clarityCheckSubmissions', registrations: 'infoSessionRegistrations',
   cohorts: 'cohort-registrations', emails: 'emailTasks',
@@ -43,18 +41,6 @@ export async function GET(request: Request) {
   try {
     const { firebaseAdmin } = await import('@/lib/firebaseAdmin');
     const db = firebaseAdmin.firestore();
-    const auth = firebaseAdmin.auth();
-    const service = createActivityService(db, auth);
-    const url = new URL(request.url);
-    const activityKind = url.searchParams.get('activityKind') as ActivityKind | null;
-
-    if (activityKind) {
-      if (!ACTIVITY_KINDS.includes(activityKind)) return Response.json({ error: 'Invalid activity kind' }, { status: 400, headers: responseHeaders });
-      const cursor = url.searchParams.get('cursor') || undefined;
-      const page = await service.list(activityKind, cursor);
-      return Response.json({ kind: activityKind, ...page }, { headers: responseHeaders });
-    }
-
     const result = await db.collection('analytics_weekly').orderBy('weekEnding', 'desc').limit(52).get();
     const snapshots = result.docs.map(doc => {
       const data = doc.data() as WeeklyMetrics;
@@ -65,6 +51,25 @@ export async function GET(request: Request) {
       };
     });
 
+    // Keep the original feed contract for existing callers/tests. The MCP explicitly opts in to v2.
+    if (request.headers.get('x-ipurpose-metrics-version') !== '2') {
+      return Response.json({ count: snapshots.length, snapshots }, { headers: responseHeaders });
+    }
+
+    const url = new URL(request.url);
+    const activityKind = url.searchParams.get('activityKind') as ActivityKind | null;
+    const auth = firebaseAdmin.auth();
+    const { createActivityService } = await import('@/lib/admin-activity/service');
+    const service = createActivityService(db, auth);
+
+    if (activityKind) {
+      if (!ACTIVITY_KINDS.includes(activityKind)) return Response.json({ error: 'Invalid activity kind' }, { status: 400, headers: responseHeaders });
+      const cursor = url.searchParams.get('cursor') || undefined;
+      const page = await service.list(activityKind, cursor);
+      return Response.json({ kind: activityKind, ...page }, { headers: responseHeaders });
+    }
+
+    const { getGa4Dashboard } = await import('@/lib/launch-metrics/ga4Dashboard');
     const propertyHint = snapshots[0]?.property;
     const ga4Promise = getGa4Dashboard(propertyHint).catch(() => null);
     const countsPromise = Promise.all(ACTIVITY_KINDS.map(async kind => {
