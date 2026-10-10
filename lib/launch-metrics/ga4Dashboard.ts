@@ -1,12 +1,15 @@
 import 'server-only';
-import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { SignJWT, importPKCS8 } from 'jose';
 
 const API = 'https://analyticsdata.googleapis.com/v1beta';
+const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const ANALYTICS_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly';
 const TZ = 'America/New_York';
 
 type Row = Record<string, string | number | null>;
 type Report = { rows?: Array<{ dimensionValues?: Array<{ value?: string }>; metricValues?: Array<{ value?: string }> }>; dimensionHeaders?: Array<{ name?: string }>; metricHeaders?: Array<{ name?: string }> };
 type Section = { rows: Row[]; available: boolean; error?: string };
+type ServiceAccount = { client_email: string; private_key: string };
 
 function propertyName(value?: string | null) {
   const raw = value?.trim();
@@ -14,11 +17,45 @@ function propertyName(value?: string | null) {
   return `properties/${raw.replace(/^properties\//, '')}`;
 }
 
+function parseServiceAccount(): ServiceAccount {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_ADMIN_CREDENTIALS || process.env.FIREBASE_SERVICE_ACCOUNT_KEY || '';
+  if (!raw) throw new Error('Google service account credentials are unavailable.');
+
+  const parse = (value: string) => {
+    try { return JSON.parse(value) as Partial<ServiceAccount>; }
+    catch { return null; }
+  };
+
+  const direct = parse(raw);
+  const decoded = direct || parse(Buffer.from(raw, 'base64').toString('utf8'));
+  if (!decoded?.client_email || !decoded.private_key) throw new Error('Google service account credentials are invalid.');
+  return { client_email: decoded.client_email, private_key: decoded.private_key };
+}
+
 async function accessToken() {
-  const app = firebaseAdmin.app();
-  const credential = app.options.credential as { getAccessToken?: () => Promise<{ access_token: string }> } | undefined;
-  if (!credential?.getAccessToken) throw new Error('Google credential is unavailable.');
-  return (await credential.getAccessToken()).access_token;
+  const serviceAccount = parseServiceAccount();
+  const now = Math.floor(Date.now() / 1000);
+  const privateKey = await importPKCS8(serviceAccount.private_key, 'RS256');
+  const assertion = await new SignJWT({ scope: ANALYTICS_SCOPE })
+    .setProtectedHeader({ alg: 'RS256', typ: 'JWT' })
+    .setIssuer(serviceAccount.client_email)
+    .setAudience(TOKEN_URL)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 3600)
+    .sign(privateKey);
+
+  const response = await fetch(TOKEN_URL, {
+    method: 'POST',
+    cache: 'no-store',
+    signal: AbortSignal.timeout(12000),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion }),
+  });
+  const payload = await response.json().catch(() => ({})) as { access_token?: string; error?: string; error_description?: string };
+  if (!response.ok || !payload.access_token) {
+    throw new Error(`Google OAuth token failed (${response.status})${payload.error_description ? `: ${payload.error_description}` : payload.error ? `: ${payload.error}` : ''}`);
+  }
+  return payload.access_token;
 }
 
 function normalize(report: Report): Row[] {
