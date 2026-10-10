@@ -11,6 +11,7 @@ export const EMAIL_CLAIM = 'https://ipurposesoul.com/mcp/email';
 export const VERIFIED_CLAIM = 'https://ipurposesoul.com/mcp/email_verified';
 const FEED_URL = 'https://ipurposesoul.com/api/admin/launch-metrics-feed';
 const PRIVATE_HEADERS = { 'Cache-Control': 'private, no-store', Vary: 'Authorization' };
+const ACTIVITY_KINDS = ['accounts', 'profiles', 'leads', 'clarity', 'registrations', 'cohorts', 'emails'] as const;
 
 type OwnerVerification = 'owner' | 'forbidden' | 'invalid';
 type VerifyOwner = (token: string) => Promise<OwnerVerification>;
@@ -22,7 +23,6 @@ export function oauthConfig(): OAuthConfig | undefined {
   if (!issuer || !clientId?.trim()) return undefined;
   try {
     const url = new URL(issuer);
-    // A dedicated Auth0 tenant, not a URL supplied by an MCP caller.
     if (url.protocol !== 'https:' || !url.hostname.endsWith('.auth0.com')
       || url.pathname !== '/' || url.port || url.search || url.hash
       || url.username || url.password || url.href !== issuer) return undefined;
@@ -36,12 +36,8 @@ export function createOwnerVerifier(config: OAuthConfig, keys: JWTVerifyGetKey):
   return async token => {
     try {
       const { payload } = await jwtVerify(token, keys, {
-        issuer: config.issuer,
-        audience: MCP_RESOURCE,
-        algorithms: ['RS256'],
-        requiredClaims: ['iss', 'aud', 'sub', 'exp', 'iat'],
-        maxTokenAge: '15m',
-        clockTolerance: 5,
+        issuer: config.issuer, audience: MCP_RESOURCE, algorithms: ['RS256'],
+        requiredClaims: ['iss', 'aud', 'sub', 'exp', 'iat'], maxTokenAge: '15m', clockTolerance: 5,
       });
       const scopes = typeof payload.scope === 'string' ? payload.scope.split(/\s+/) : [];
       if (typeof payload.sub !== 'string' || !payload.sub
@@ -52,7 +48,6 @@ export function createOwnerVerifier(config: OAuthConfig, keys: JWTVerifyGetKey):
         || !scopes.includes(MCP_SCOPE)) return 'forbidden';
       return 'owner';
     } catch {
-      // JWT/JWKS errors can contain request details. Never log or return them.
       return 'invalid';
     }
   };
@@ -64,10 +59,7 @@ async function verifyProductionOwner(token: string): Promise<OwnerVerification> 
   if (!config) return 'invalid';
   if (!configuredVerifier || configuredVerifier.config.issuer !== config.issuer
     || configuredVerifier.config.clientId !== config.clientId) {
-    const keys = createRemoteJWKSet(new URL('.well-known/jwks.json', config.issuer), {
-      timeoutDuration: 5000,
-      cooldownDuration: 30000,
-    });
+    const keys = createRemoteJWKSet(new URL('.well-known/jwks.json', config.issuer), { timeoutDuration: 5000, cooldownDuration: 30000 });
     configuredVerifier = { config, verify: createOwnerVerifier(config, keys) };
   }
   return configuredVerifier.verify(token);
@@ -76,24 +68,19 @@ async function verifyProductionOwner(token: string): Promise<OwnerVerification> 
 function toolError(message: string) {
   return { isError: true as const, content: [{ type: 'text' as const, text: message }] };
 }
-
 function containsSecret(value: unknown, secret: string): boolean {
   if (typeof value === 'string') return value.includes(secret);
   if (!value || typeof value !== 'object') return false;
   return Object.entries(value).some(([key, item]) => key.includes(secret) || containsSecret(item, secret));
 }
 
-export async function getLaunchMetrics(fetcher: typeof fetch = fetch) {
+async function readJson(url: string, fetcher: typeof fetch = fetch) {
   const token = process.env.LAUNCH_METRICS_FEED_TOKEN;
   if (!token?.trim()) return toolError('Launch metrics are unavailable.');
   try {
-    const response = await fetcher(FEED_URL, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
-      cache: 'no-store',
-      credentials: 'omit',
-      redirect: 'error',
-      signal: AbortSignal.timeout(10000),
+    const response = await fetcher(url, {
+      method: 'GET', headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+      cache: 'no-store', credentials: 'omit', redirect: 'error', signal: AbortSignal.timeout(20000),
     });
     if (!response.ok) {
       await response.body?.cancel();
@@ -101,22 +88,39 @@ export async function getLaunchMetrics(fetcher: typeof fetch = fetch) {
         ? 'Launch metrics feed authorization failed.' : 'Launch metrics are temporarily unavailable.');
     }
     const text = await response.text();
-    // Reject accidental upstream credential echoes, even on a success response.
     if (text.includes(token)) return toolError('Launch metrics returned an invalid response.');
     const data: unknown = JSON.parse(text);
-    if (!data || typeof data !== 'object' || Array.isArray(data)
-      || !('count' in data) || !Number.isInteger(data.count)
-      || !('snapshots' in data) || !Array.isArray(data.snapshots)
-      || data.count !== data.snapshots.length || data.snapshots.length > 52) {
+    if (!data || typeof data !== 'object' || Array.isArray(data) || containsSecret(data, token)) {
       return toolError('Launch metrics returned an invalid response.');
     }
-    // Check decoded JSON too: an upstream echo could use Unicode escape sequences.
-    if (containsSecret(data, token)) return toolError('Launch metrics returned an invalid response.');
-    // Preserve the upstream JSON object without filtering, recomputing, or writing.
     return { content: [{ type: 'text' as const, text: JSON.stringify(data) }], structuredContent: data };
   } catch {
     return toolError('Launch metrics are temporarily unavailable.');
   }
+}
+
+export async function getLaunchMetrics(fetcher: typeof fetch = fetch) {
+  const result = await readJson(FEED_URL, fetcher);
+  if ('isError' in result) return result;
+  const data = result.structuredContent as Record<string, unknown>;
+  if (!Number.isInteger(data.count) || !Array.isArray(data.snapshots)
+    || data.count !== data.snapshots.length || data.snapshots.length > 52) {
+    return toolError('Launch metrics returned an invalid response.');
+  }
+  return result;
+}
+
+export async function getLaunchActivity(kind: typeof ACTIVITY_KINDS[number], cursor?: string, fetcher: typeof fetch = fetch) {
+  const url = new URL(FEED_URL);
+  url.searchParams.set('activityKind', kind);
+  if (cursor) url.searchParams.set('cursor', cursor);
+  const result = await readJson(url.toString(), fetcher);
+  if ('isError' in result) return result;
+  const data = result.structuredContent as Record<string, unknown>;
+  if (data.kind !== kind || !Array.isArray(data.rows) || !(data.cursor === null || typeof data.cursor === 'string')) {
+    return toolError('Launch activity returned an invalid response.');
+  }
+  return result;
 }
 
 function denied(status: 401 | 403) {
@@ -132,16 +136,25 @@ function denied(status: 401 | 403) {
 export function createLaunchMetricsHandler(
   verify: VerifyOwner = verifyProductionOwner,
   readFeed: typeof getLaunchMetrics = getLaunchMetrics,
+  readActivity: typeof getLaunchActivity = getLaunchActivity,
 ) {
   const mcp = createMcpHandler(server => {
     server.registerTool('get_launch_metrics', {
-      title: 'Get iPurpose launch metrics',
-      description: 'Read the latest up to 52 weekly iPurpose launch-metrics snapshots, newest first. No writes or recomputation.',
+      title: 'Get iPurpose analytics dashboard',
+      description: 'Read the comprehensive iPurpose analytics view: current GA4 traffic, pages, acquisition, events, geography, technology, people/activity summaries, and up to 52 weekly launch snapshots. Read-only.',
       inputSchema: z.object({}).strict(),
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
       _meta: { securitySchemes: [{ type: 'oauth2', scopes: [MCP_SCOPE] }] },
     }, () => readFeed());
-  }, { serverInfo: { name: 'ipurpose-launch-metrics', version: '1.0.0' }, verboseLogs: false, maxSubscriptions: 0 });
+
+    server.registerTool('get_launch_activity', {
+      title: 'Get iPurpose people and activity records',
+      description: 'Read one paged category from the owner-only People & Activity dashboard. Use the returned cursor to continue through retained records. Read-only.',
+      inputSchema: z.object({ kind: z.enum(ACTIVITY_KINDS), cursor: z.string().max(4000).optional() }).strict(),
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+      _meta: { securitySchemes: [{ type: 'oauth2', scopes: [MCP_SCOPE] }] },
+    }, ({ kind, cursor }) => readActivity(kind, cursor));
+  }, { serverInfo: { name: 'ipurpose-launch-metrics', version: '2.0.0' }, verboseLogs: false, maxSubscriptions: 0 });
 
   return async (request: Request): Promise<Response> => {
     const origin = request.headers.get('origin');
@@ -165,10 +178,7 @@ export function protectedResourceMetadata() {
   const config = oauthConfig();
   if (!config) return Response.json({ error: 'OAuth is not configured' }, { status: 503, headers: PRIVATE_HEADERS });
   return Response.json({
-    resource: MCP_RESOURCE,
-    resource_name: 'iPurpose Launch Metrics',
-    authorization_servers: [config.issuer],
-    scopes_supported: [MCP_SCOPE],
-    bearer_methods_supported: ['header'],
+    resource: MCP_RESOURCE, resource_name: 'iPurpose Launch Metrics', authorization_servers: [config.issuer],
+    scopes_supported: [MCP_SCOPE], bearer_methods_supported: ['header'],
   }, { headers: { 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' } });
 }
