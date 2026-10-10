@@ -4,9 +4,9 @@
       "codex/**": false
     }
   },
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && rm -rf .next/cache",
   "devCommand": "npm run dev",
-  "installCommand": "npm ci",
+  "installCommand": "npm ci --cache /tmp/npm-cache",
   "crons": [
     {
       "path": "/api/tasks/send-scheduled-emails",
