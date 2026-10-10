@@ -1,4 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
+import type { Auth } from 'firebase-admin/auth';
 import type { WeeklyMetrics } from '@/functions/src/model';
 import { ACTIVITY_KINDS, type ActivityKind } from '@/lib/admin-activity/types';
 import { createActivityService } from '@/lib/admin-activity/service';
@@ -22,7 +23,7 @@ function authorized(request: Request) {
     && timingSafeEqual(Buffer.from(expected), Buffer.from(supplied));
 }
 
-async function accountCount(auth: ReturnType<typeof import('firebase-admin').auth>) {
+async function accountCount(auth: Auth) {
   let count = 0; let token: string | undefined;
   do {
     const page = await auth.listUsers(1000, token);
