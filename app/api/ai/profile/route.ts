@@ -10,14 +10,17 @@ import {
 import { normalizeIanaTimezone } from "@/lib/ai/timezone";
 import { parseVisualEnvironmentPreference } from "@/lib/ai/visualEnvironmentPreference";
 
+import { completeIntro, getIntroCompletions } from "@/lib/introVideos";
+import { isIntroKind } from "@/mobile/src/lib/introVideos";
+
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
     const authentication = await requireAuthenticated();
     if (authentication.error) return authentication.error;
-    const profile = await getCompanionProfile(authentication.uid);
-    return NextResponse.json({ profile }, { headers: { "Cache-Control": "private, no-store" } });
+    const [profile, introVideos] = await Promise.all([getCompanionProfile(authentication.uid), getIntroCompletions(authentication.uid)]);
+    return NextResponse.json({ profile: { ...profile, introVideos } }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {
     console.error("Companion profile GET error:", error);
     return NextResponse.json({ error: "Failed to load companion profile" }, { status: 500 });
@@ -30,6 +33,7 @@ export async function PATCH(request: NextRequest) {
     if (authentication.error) return authentication.error;
 
     const body = await request.json().catch(() => null) as {
+      completedIntro?: unknown;
       focusAreas?: unknown;
       initializeFocusAreas?: unknown;
       timezone?: unknown;
@@ -42,7 +46,7 @@ export async function PATCH(request: NextRequest) {
     const requestedFields = Object.keys(body);
     if (
       requestedFields.length !== 1
-      || !["focusAreas", "initializeFocusAreas", "timezone", "visualEnvironmentPreference"].includes(requestedFields[0])
+      || !["focusAreas", "initializeFocusAreas", "timezone", "visualEnvironmentPreference", "completedIntro"].includes(requestedFields[0])
     ) {
       return NextResponse.json(
         { error: "Update exactly one supported profile field" },
@@ -51,7 +55,13 @@ export async function PATCH(request: NextRequest) {
     }
 
     let profile;
-    if (requestedFields[0] === "focusAreas" || requestedFields[0] === "initializeFocusAreas") {
+    if (requestedFields[0] === "completedIntro") {
+      if (!isIntroKind(body.completedIntro)) {
+        return NextResponse.json({ error: "Invalid intro" }, { status: 400 });
+      }
+      await completeIntro(authentication.uid, body.completedIntro);
+      profile = await getCompanionProfile(authentication.uid);
+    } else if (requestedFields[0] === "focusAreas" || requestedFields[0] === "initializeFocusAreas") {
       const requestedFocusAreas = requestedFields[0] === "focusAreas"
         ? body.focusAreas
         : body.initializeFocusAreas;
@@ -103,7 +113,10 @@ export async function PATCH(request: NextRequest) {
       profile = await updateCompanionTimezone(authentication.uid, timezone);
     }
 
-    return NextResponse.json({ profile }, { headers: { "Cache-Control": "private, no-store" } });
+    const responseProfile = requestedFields[0] === "completedIntro"
+      ? { ...profile, introVideos: await getIntroCompletions(authentication.uid) }
+      : profile;
+    return NextResponse.json({ profile: responseProfile }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {
     console.error("Companion profile PATCH error:", error);
     return NextResponse.json({ error: "Failed to update companion profile" }, { status: 500 });
