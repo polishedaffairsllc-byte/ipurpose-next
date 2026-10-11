@@ -80,6 +80,9 @@ jobs:
       - name: Run launch metrics tests
         run: npm run test:launch-metrics
 
+      - name: Run attribution link tests
+        run: node --test tests/attribution-links.test.mjs
+
       - name: Audit dependencies (fail on high vulnerabilities)
         run: |
           node --test tests/audit-production.test.mjs
