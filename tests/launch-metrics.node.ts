@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { createClarityAttempt } from '../mobile/src/lib/analyticsCore';
 import { emitLaunchEvent, trackConfirmedEmailSignup, trackNewClarityResult } from '../lib/launch-metrics/events';
 import { getLaunchMeasurementIds } from '../lib/launch-metrics/config';
@@ -54,6 +55,20 @@ test('web credits only confirmed enrollment and newly computed valid results; no
     if (original) Object.defineProperty(globalThis, 'window', original);
     else Reflect.deleteProperty(globalThis, 'window');
   }
+});
+
+test('Gate 2 wiring stays attached to the real web and native Clarity flows', async () => {
+  const [webQuiz, webResults, nativeFlow] = await Promise.all([
+    readFile(new URL('../app/clarity-check-quiz/page.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../app/clarity-check-results/page.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../mobile/src/components/ClarityCheckFlow.tsx', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(webQuiz, /emitLaunchEvent\('clarity_check_start',\s*analyticsAttempt\.current\)/);
+  assert.match(webResults, /trackNewClarityResult\(results\)/);
+  assert.match(nativeFlow, /analyticsAttempt\.current\.begin\(\)/);
+  assert.match(nativeFlow, /analyticsAttempt\.current\.result\(result\)/);
+  assert.match(nativeFlow, /freshResult\.current\s*=\s*true/);
 });
 
 test('web launch routing preserves both GA4 destinations and deduplicates identical IDs', () => {
