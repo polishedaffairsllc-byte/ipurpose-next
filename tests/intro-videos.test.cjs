@@ -5,9 +5,9 @@ const path = require('node:path');
 const ts = require('typescript');
 function load(file, mocks) {
   const output = ts.transpileModule(fs.readFileSync(path.resolve(__dirname, '..', file), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-  const module = { exports: {} };
-  new Function('require', 'module', 'exports', output)(name => { assert.ok(Object.hasOwn(mocks, name), name); return mocks[name]; }, module, module.exports);
-  return module.exports;
+  const compiled = { exports: {} };
+  new Function('require', 'module', 'exports', output)(name => { assert.ok(Object.hasOwn(mocks, name), name); return mocks[name]; }, compiled, compiled.exports);
+  return compiled.exports;
 }
 const schema = load('mobile/src/lib/introVideos.ts', {});
 function backend() {
