@@ -2,10 +2,34 @@ import { getLaunchMeasurementIds } from './config';
 
 type LaunchEvent = 'purpose_check_start' | 'purpose_check_complete' | 'sign_up' | 'clarity_check_start' | 'clarity_check_complete' | 'email_signup';
 const recorded = new Set<string>();
+const INTERNAL_BROWSER_KEY = 'ipurpose_internal_traffic';
+const QA_BROWSER_KEY = 'ipurpose_qa_traffic';
+
+function isKnownInternalOrQaBrowser(): boolean {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    if (window.location?.pathname?.startsWith('/admin')) return true;
+    const params = new URLSearchParams(window.location?.search || '');
+    if (params.get('ipurpose_qa') === '1' || params.get('utm_source')?.toLowerCase() === 'codex_qa') return true;
+  } catch {
+    // Continue to storage and GA disable checks.
+  }
+
+  try {
+    if (window.localStorage.getItem(INTERNAL_BROWSER_KEY) === '1') return true;
+    if (window.localStorage.getItem(QA_BROWSER_KEY) === '1') return true;
+  } catch {
+    // Storage may be unavailable in private/restricted contexts.
+  }
+
+  const gaWindow = window as typeof window & Record<string, unknown>;
+  return getLaunchMeasurementIds().some(id => gaWindow[`ga-disable-${id}`] === true);
+}
 
 /** Analytics failure must never turn a successful product action into an error. */
 export function emitLaunchEvent(name: LaunchEvent, key?: string, parameters?: { method: string }): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined' || isKnownInternalOrQaBrowser()) return false;
   const measurementIds = getLaunchMeasurementIds();
   if (!measurementIds.length) return false;
   const onceKey = key ? `ipurpose:analytics:${name}:${key}` : undefined;
