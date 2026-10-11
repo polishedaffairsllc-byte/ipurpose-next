@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { LAUNCH_MEASUREMENT_ID } from '@/lib/launch-metrics/config';
 import { CANONICAL_DOMAIN_CONFIG } from '@/lib/canonical';
 import { AuthContextProvider } from './context/AuthContext';
 import BackgroundLayer from "./components/BackgroundLayer";
@@ -15,7 +14,6 @@ export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
   description: "iPurpose helps creators move from stuck or self-doubting into clarity and coherent action by integrating inner alignment, practical structure, and thoughtful use of AI.",
   metadataBase: new URL(CANONICAL_DOMAIN_CONFIG.domain),
-  // Next.js resolves './' against the final route, so children self-canonicalize.
   alternates: { canonical: './' },
 };
 
@@ -25,16 +23,10 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Trigger rebuild to ensure NavBar removal is picked up
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="antialiased">
       <head>
-        {/* Google Ads Conversion Tracking (updated from Call-Only to modern event-based tracking) */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=AW-17993147612"
@@ -48,7 +40,6 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              // Legacy Call-Only configuration - migrating to event-based conversions
               gtag('config', 'AW-17993147612', {
                 'allow_google_signals': true,
                 'allow_ad_personalization_signals': true
@@ -59,20 +50,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
         <SiteStructuredData />
-        {/* Pixel Initialization (Meta Pixel) */}
         <PixelInitializer />
-
-        {/* Google Analytics 4 — public/product routes only; /admin is excluded. */}
         <GoogleAnalytics />
-        {LAUNCH_MEASUREMENT_ID !== process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <Script id="launch-metrics-config" strategy="afterInteractive">{`
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
-            window.gtag('config', ${JSON.stringify(LAUNCH_MEASUREMENT_ID).replace(/</g, '\\u003c')}, {
-              send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false
-            });
-          `}</Script>
-        )}
         <div className="fixed inset-0 -z-40">
           <VideoBackground src="/videos/water-reflection.mp4" />
         </div>
