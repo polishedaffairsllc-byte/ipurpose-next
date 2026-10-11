@@ -18,14 +18,23 @@ function hasKnownQaSignal() {
   }
 }
 
+function isOwnerOrAdminProfile(profile: any) {
+  if (!profile) return false;
+  const role = String(profile.role || '').toLowerCase();
+  const tier = String(profile.entitlementTier || '').toLowerCase();
+  return profile.isFounder === true || role === 'admin' || role === 'founder' || tier === 'founder';
+}
+
 /**
  * Loads GA4 only for public/product routes and excludes known internal/QA browsers.
  *
- * Any browser that visits /admin is marked as internal in localStorage. QA
- * browsers can be marked by the known Codex QA source (utm_source=codex_qa) or
- * the explicit ipurpose_qa=1 switch. Those browsers then remain excluded from
- * future GA4 collection on public routes. This identifies known test behavior
- * without using geography or personally identifying information.
+ * Exclusion signals:
+ * - any /admin route marks the browser internal;
+ * - utm_source=codex_qa or ipurpose_qa=1 marks the browser QA;
+ * - authenticated founder/admin profiles are auto-excluded on every device/session.
+ *
+ * Known internal/QA browsers remain excluded through localStorage. Geography is
+ * never used as the deciding signal.
  */
 export default function GoogleAnalytics() {
   const pathname = usePathname();
@@ -36,29 +45,65 @@ export default function GoogleAnalytics() {
   useEffect(() => {
     if (!measurementId) return;
 
-    let excluded = false;
-    try {
-      if (isAdminRoute) {
-        window.localStorage.setItem(INTERNAL_BROWSER_KEY, '1');
-      }
-      if (hasKnownQaSignal()) {
-        window.localStorage.setItem(QA_BROWSER_KEY, '1');
+    let cancelled = false;
+
+    async function resolveExclusion() {
+      let excluded = false;
+      const explicitQa = hasKnownQaSignal();
+
+      try {
+        if (isAdminRoute) {
+          window.localStorage.setItem(INTERNAL_BROWSER_KEY, '1');
+        }
+        if (explicitQa) {
+          window.localStorage.setItem(QA_BROWSER_KEY, '1');
+        }
+
+        excluded =
+          isAdminRoute ||
+          window.localStorage.getItem(INTERNAL_BROWSER_KEY) === '1' ||
+          window.localStorage.getItem(QA_BROWSER_KEY) === '1';
+      } catch {
+        excluded = isAdminRoute || explicitQa;
       }
 
-      excluded =
-        isAdminRoute ||
-        window.localStorage.getItem(INTERNAL_BROWSER_KEY) === '1' ||
-        window.localStorage.getItem(QA_BROWSER_KEY) === '1';
-    } catch {
-      // If storage is unavailable, still exclude the current admin or explicit QA route.
-      excluded = isAdminRoute || hasKnownQaSignal();
+      // Before loading GA4, verify whether the current signed-in account is a
+      // founder/admin account. /api/auth/me returns only a safe profile subset.
+      if (!excluded) {
+        try {
+          const res = await fetch('/api/auth/me', {
+            credentials: 'include',
+            cache: 'no-store',
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (isOwnerOrAdminProfile(json?.user)) {
+              excluded = true;
+              try {
+                window.localStorage.setItem(INTERNAL_BROWSER_KEY, '1');
+              } catch {
+                // Session-level exclusion still applies even if storage is unavailable.
+              }
+            }
+          }
+        } catch {
+          // If the auth check fails, preserve the explicit browser/route decision.
+        }
+      }
+
+      if (cancelled) return;
+
+      setIsExcludedBrowser(excluded);
+      setReady(true);
+
+      const gaWindow = window as typeof window & Record<string, unknown>;
+      gaWindow[`ga-disable-${measurementId}`] = excluded;
     }
 
-    setIsExcludedBrowser(excluded);
-    setReady(true);
-
-    const gaWindow = window as typeof window & Record<string, unknown>;
-    gaWindow[`ga-disable-${measurementId}`] = excluded;
+    resolveExclusion();
+    return () => {
+      cancelled = true;
+    };
   }, [isAdminRoute, pathname]);
 
   if (!measurementId || !ready || isExcludedBrowser) return null;
