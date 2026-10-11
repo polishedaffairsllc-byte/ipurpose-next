@@ -9,6 +9,7 @@ import InternalNavbar from "./components/InternalNavbar";
 import VideoBackground from "./components/VideoBackground";
 import PixelInitializer from "./components/PixelInitializer";
 import SiteStructuredData from "./components/SiteStructuredData";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "iPurpose — Where Inner Alignment Becomes Coherent Action",
@@ -60,27 +61,9 @@ export default function RootLayout({
         <SiteStructuredData />
         {/* Pixel Initialization (Meta Pixel) */}
         <PixelInitializer />
-        
-        {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script
-          id="ga4-config"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
-                'anonymize_ip': true,
-                'allow_google_signals': false
-              });
-            `,
-          }}
-        />
+
+        {/* Google Analytics 4 — public/product routes only; /admin is excluded. */}
+        <GoogleAnalytics />
         {LAUNCH_MEASUREMENT_ID !== process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <Script id="launch-metrics-config" strategy="afterInteractive">{`
             window.dataLayer = window.dataLayer || [];
