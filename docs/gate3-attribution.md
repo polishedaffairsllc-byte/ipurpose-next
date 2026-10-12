@@ -50,20 +50,37 @@ Examples:
 
 The generator always uses the canonical customer-facing domain `ipurposesoul.com`.
 
-## YouTube weekly attribution record
+## YouTube attribution
 
-YouTube Studio external-link clicks are a platform-side metric and cannot be reconstructed from GA4 alone. Record the number once weekly, using the same reporting week as the launch metrics brief.
+YouTube Studio does not provide a built-in click count for standard external URLs placed in video descriptions. Do not use a nonexistent Studio description-link click metric as a Gate 3 requirement.
+
+For normal iPurpose YouTube attribution, use the UTM-tagged links generated above and measure the resulting website traffic in GA4. At minimum, review:
+
+- sessions/users with `utm_source=youtube`;
+- landing page;
+- campaign and content values;
+- Clarity Check starts/completions attributed to those sessions;
+- Starter Pack visits or downstream purchase activity when relevant.
+
+Because `utm_content` is unique to the video or placement, GA4 can distinguish traffic from individual Shorts or long-form videos as long as the published description link uses the generated URL.
+
+If exact raw click counts are ever needed in addition to GA4 sessions, use an iPurpose-controlled redirect/custom shortlink or a dedicated third-party shortlink. That is optional and is not required to clear Gate 3.
+
+## Weekly YouTube attribution record
+
+Use the same reporting week as the launch metrics brief and record the GA4-attributed YouTube traffic that actually reached iPurpose.
 
 Track:
 
-- week starting
-- week ending
-- Shorts external-link clicks
-- long-form external-link clicks, if available
-- top linked video/content
-- notes on description/pinned-comment changes
+- week starting;
+- week ending;
+- YouTube-attributed sessions/users;
+- top `utm_content` video/placement;
+- Clarity Check starts/completions from YouTube-attributed traffic where available;
+- downstream Starter Pack activity where available;
+- notes on description or pinned-comment link changes.
 
-This is one weekly platform check, not a per-video manual test.
+This is a website-attribution check, not a YouTube Studio description-link click report.
 
 ## Gate 3 completion criteria
 
@@ -72,6 +89,6 @@ Gate 3 is complete when:
 1. the canonical UTM contract is documented;
 2. controlled outbound links use generated UTMs consistently;
 3. the attribution-link tests pass in CI;
-4. YouTube Studio external-link clicks have a defined weekly recording process.
+4. YouTube attribution is measured through UTM-tagged website traffic in GA4, with optional shortlink tracking only if raw click counts are specifically needed.
 
-The first weekly YouTube click value becomes part of the baseline record; it does not block implementation of the UTM system itself.
+A separate YouTube Studio description-link click metric is not required because YouTube Studio does not expose one for standard description URLs.
