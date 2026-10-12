@@ -70,6 +70,8 @@ If exact raw click counts are ever needed in addition to GA4 sessions, use an iP
 
 Use the same reporting week as the launch metrics brief and record the GA4-attributed YouTube traffic that actually reached iPurpose.
 
+**Baseline reporting policy:** the weekly YouTube measure is GA4 website traffic carrying the canonical YouTube UTM tags. A YouTube Studio description-link click count is not part of the baseline report.
+
 Track:
 
 - week starting;
