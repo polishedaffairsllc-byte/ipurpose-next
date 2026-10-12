@@ -29,13 +29,19 @@ These items are recorded as **owner-verified**, not independently re-performed b
 
 Performed 2026-10-11 before the four-week baseline was formally logged.
 
-- **Email:** a live iPurpose Clarity Check results email contained working iPurpose links but those transactional links were not UTM-tagged. No recent UTM-tagged campaign email was available in the connected mailbox to verify.
-- **QR:** the stored `iPurpose-website-QR.png` decodes to `https://ipurposesoul.com` with no UTM parameters. The previously planned `/app` destination currently returns 404 and should not be treated as a live baseline destination.
-- **YouTube Shorts:** a live Short URL was located, but the currently published external description link could not be inspected through the available connected/public sources, so its UTM placement was not independently verified.
+- **Email:** a live iPurpose Clarity Check results email contained working iPurpose links but those transactional links were not UTM-tagged. This is not a baseline limitation. The first campaign email must use the canonical email UTMs before distribution.
+- **QR:** the stored `iPurpose-website-QR.png` decodes to `https://ipurposesoul.com` with no UTM parameters. The QR has not been distributed, so it is not sending traffic and does not affect the four-week baseline.
+- **QR distribution rule:** **QR code must carry UTMs before first distribution.** Regenerate the QR using the canonical `utm_source=qr` naming before it is printed or shared. If its eventual destination changes when the apps go live, tag that final destination from its first scan.
+- **QR baseline treatment:** QR scans are outside the initial four-week baseline. If the QR launches during the period, treat QR as a new channel with its own channel start date and mini-baseline rather than folding it into the Shorts/search baseline.
+- **YouTube Shorts:** a live Short URL was located, but the currently published external description link could not be inspected through the available connected/public sources, so its UTM placement remains the only live placement still requiring owner confirmation.
 
 ## Baseline status
 
-Owner-operated Gate 1, mobile Clarity, and owner-exclusion checks are verified by owner report. Deployment is live. Gate 3's measurement contract and weekly GA4 YouTube policy are in place. However, live placement of controlled campaign UTMs is not yet fully verified across Shorts, QR, and campaign email. Therefore the official four-week baseline start should remain pending until the outbound-link placement gap is either corrected or explicitly accepted as a baseline limitation.
+Owner-operated Gate 1, mobile Clarity, and owner-exclusion checks are verified by owner report. Deployment is live. Gate 3's measurement contract and weekly GA4 YouTube policy are in place. QR and campaign-email placement are no longer baseline blockers because neither is currently contributing campaign traffic to the baseline.
+
+The remaining pre-baseline check is the live Short description link: confirm that the published link carries the canonical YouTube UTMs and correct it in YouTube Studio if it does not.
+
+Once that Short link is confirmed, record Phase 0 as complete, all three gates cleared, and set the official four-week clean baseline to **October 12, 2026 through November 8, 2026**.
 
 ## Baseline change-control rule
 
