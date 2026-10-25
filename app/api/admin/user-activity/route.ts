@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { UserRecord } from 'firebase-admin/auth';
-import type { DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
+import type { DocumentReference, DocumentSnapshot, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import type {
   ActivityPlatform,
   CompassConversationActivity,
+  CompassConversationResponse,
   UserActivityDetailResponse,
   UserActivityEvent,
   UserActivityListResponse,
@@ -18,6 +19,9 @@ export const maxDuration = 60;
 const headers = { 'Cache-Control': 'private, no-store', Vary: 'Authorization' };
 const MAX_USERS = 1000;
 const MAX_CONVERSATIONS = 5000;
+const MAX_CONVERSATION_MESSAGES = 200;
+const UID_PATTERN = /^[a-zA-Z0-9_-]{1,128}$/;
+const CONVERSATION_PATTERN = /^[a-zA-Z0-9_-]{1,128}$/;
 
 function toIso(value: unknown): string | null {
   const candidate = value && typeof value === 'object' && 'toDate' in value && typeof value.toDate === 'function'
@@ -38,6 +42,18 @@ function number(value: unknown): number {
 
 function platform(value: unknown): ActivityPlatform {
   return value === 'android' || value === 'ios' || value === 'web' ? value : 'unknown';
+}
+
+function validUid(uid: string) {
+  if (!UID_PATTERN.test(uid)) throw new Error('Invalid user ID.');
+}
+
+function validConversationId(conversationId: string) {
+  if (!CONVERSATION_PATTERN.test(conversationId)) throw new Error('Invalid conversation ID.');
+}
+
+function isCompassRoute(value: string | null) {
+  return value === '/mentor' || value === '/ai' || Boolean(value?.endsWith('/mentor'));
 }
 
 async function adminGate(request: NextRequest): Promise<NextResponse | null> {
@@ -158,15 +174,52 @@ async function listUsers(): Promise<UserActivityListResponse> {
   };
 }
 
+function mapEvent(document: QueryDocumentSnapshot): UserActivityEvent | null {
+  const data = document.data();
+  const validEventTypes = new Set<UserActivityEvent['type']>([
+    'account_created', 'login', 'screen_view', 'clarity_check_start', 'clarity_check_complete',
+    'purpose_check_start', 'purpose_check_complete', 'compass_enter', 'compass_message', 'compass_exit',
+  ]);
+  const rawType = string(data.type) as UserActivityEvent['type'] | null;
+  if (!rawType || !validEventTypes.has(rawType)) return null;
+  return {
+    id: document.id,
+    type: rawType,
+    at: toIso(data.createdAt),
+    platform: platform(data.platform),
+    sessionId: string(data.sessionId),
+    conversationId: string(data.conversationId),
+    durationMs: typeof data.durationMs === 'number' ? data.durationMs : null,
+    reason: string(data.reason),
+    route: string(data.route),
+    previousRoute: string(data.previousRoute),
+  };
+}
+
+async function clarityCompletion(uid: string, email: string | null): Promise<string | null> {
+  const db = firebaseAdmin.firestore();
+  const uidSnapshot = await db.collection('clarityCheckSubmissions').where('uid', '==', uid).limit(50).get();
+  let docs = uidSnapshot.docs;
+  if (!docs.length && email) {
+    const emailSnapshot = await db.collection('clarityCheckSubmissions').where('email', '==', email.trim().toLowerCase()).limit(50).get();
+    docs = emailSnapshot.docs;
+  }
+  return docs
+    .map(document => toIso(document.data().createdAt))
+    .filter((value): value is string => Boolean(value))
+    .sort()
+    .at(-1) || null;
+}
+
 async function detail(uid: string): Promise<UserActivityDetailResponse> {
-  if (!/^[a-zA-Z0-9_-]{1,128}$/.test(uid)) throw new Error('Invalid user ID.');
+  validUid(uid);
   const db = firebaseAdmin.firestore();
   const auth = firebaseAdmin.auth();
   const [user, profileDoc, summaryDoc, eventsSnapshot, conversationsSnapshot] = await Promise.all([
     auth.getUser(uid),
     db.collection('users').doc(uid).get(),
     db.collection('userActivitySummaries').doc(uid).get(),
-    db.collection('users').doc(uid).collection('activityEvents').orderBy('createdAt', 'desc').limit(100).get(),
+    db.collection('users').doc(uid).collection('activityEvents').orderBy('createdAt', 'desc').limit(200).get(),
     db.collection('users').doc(uid).collection('companionConversations').orderBy('updatedAt', 'desc').limit(MAX_CONVERSATIONS).get(),
   ]);
 
@@ -188,27 +241,91 @@ async function detail(uid: string): Promise<UserActivityDetailResponse> {
     };
   });
 
-  const validEventTypes = new Set<UserActivityEvent['type']>(['account_created', 'login', 'compass_enter', 'compass_message', 'compass_exit']);
-  const recentEvents: UserActivityEvent[] = eventsSnapshot.docs.flatMap(document => {
-    const data = document.data();
-    const rawType = string(data.type) as UserActivityEvent['type'] | null;
-    if (!rawType || !validEventTypes.has(rawType)) return [];
-    return [{
-      id: document.id,
-      type: rawType,
-      at: toIso(data.createdAt),
-      platform: platform(data.platform),
-      sessionId: string(data.sessionId),
-      conversationId: string(data.conversationId),
-      durationMs: typeof data.durationMs === 'number' ? data.durationMs : null,
-      reason: string(data.reason),
-    }];
-  });
+  const recentEvents = eventsSnapshot.docs
+    .map(mapEvent)
+    .filter((event): event is UserActivityEvent => Boolean(event));
+  const summaryData = summaryDoc.data() || {};
+  const profileData = profileDoc.data() || {};
+  const email = user.email || string(profileData.email);
+  const savedClarityCompletedAt = await clarityCompletion(uid, email || null);
+  const purposeProfile = profileData.purposeProfile && typeof profileData.purposeProfile === 'object'
+    ? profileData.purposeProfile as Record<string, unknown>
+    : null;
+  const savedPurposeCompletedAt = purposeProfile ? toIso(purposeProfile.completedAt) : null;
+
+  const clarityStartedAt = toIso(summaryData.lastClarityStartAt)
+    || recentEvents.find(event => event.type === 'clarity_check_start')?.at
+    || null;
+  const clarityTrackedCompleteAt = toIso(summaryData.lastClarityCompleteAt)
+    || recentEvents.find(event => event.type === 'clarity_check_complete')?.at
+    || null;
+  const purposeStartedAt = toIso(summaryData.lastPurposeStartAt)
+    || recentEvents.find(event => event.type === 'purpose_check_start')?.at
+    || null;
+  const purposeTrackedCompleteAt = toIso(summaryData.lastPurposeCompleteAt)
+    || recentEvents.find(event => event.type === 'purpose_check_complete')?.at
+    || null;
+
+  const chronological = [...recentEvents].sort((a, b) => String(a.at).localeCompare(String(b.at)));
+  const compassScreen = chronological.find(event => event.type === 'screen_view' && isCompassRoute(event.route));
+  const routeBeforeCompass = compassScreen?.previousRoute || null;
+  const routeAfterCompass = chronological.find(event =>
+    event.type === 'screen_view'
+    && isCompassRoute(event.previousRoute)
+    && !isCompassRoute(event.route)
+  )?.route || null;
 
   return {
     user: buildRow(user, profileDoc, summaryDoc, conversationAggregate),
+    journey: {
+      clarity: {
+        startedAt: clarityStartedAt,
+        completedAt: savedClarityCompletedAt || clarityTrackedCompleteAt,
+        startEvidence: clarityStartedAt ? 'tracked_event' : 'not_tracked',
+        completionEvidence: savedClarityCompletedAt ? 'saved_record' : clarityTrackedCompleteAt ? 'tracked_event' : 'none',
+      },
+      purpose: {
+        startedAt: purposeStartedAt,
+        completedAt: savedPurposeCompletedAt || purposeTrackedCompleteAt,
+        startEvidence: purposeStartedAt ? 'tracked_event' : 'not_tracked',
+        completionEvidence: savedPurposeCompletedAt ? 'saved_record' : purposeTrackedCompleteAt ? 'tracked_event' : 'none',
+      },
+      routeBeforeCompass,
+      routeAfterCompass,
+    },
     recentEvents,
     recentConversations: allConversations.slice(0, 50),
+  };
+}
+
+async function conversation(uid: string, conversationId: string): Promise<CompassConversationResponse> {
+  validUid(uid);
+  validConversationId(conversationId);
+  const db = firebaseAdmin.firestore();
+  const reference = db.collection('users').doc(uid).collection('companionConversations').doc(conversationId);
+  const conversationDoc = await reference.get();
+  if (!conversationDoc.exists) {
+    const error = new Error('Conversation not found.');
+    (error as Error & { code?: string }).code = 'conversation/not-found';
+    throw error;
+  }
+  const snapshot = await reference.collection('messages').orderBy('sequence', 'asc').limit(MAX_CONVERSATION_MESSAGES).get();
+  return {
+    uid,
+    conversationId,
+    messages: snapshot.docs.map(document => {
+      const data = document.data();
+      const lens = data.inferredLens;
+      return {
+        id: document.id,
+        role: data.role === 'assistant' ? 'assistant' as const : 'user' as const,
+        content: typeof data.content === 'string' ? data.content : '',
+        sequence: number(data.sequence),
+        createdAt: toIso(data.createdAt),
+        responseMode: string(data.responseMode),
+        inferredLens: lens === 'soul' || lens === 'systems' || lens === 'ai' ? lens : null,
+      };
+    }),
   };
 }
 
@@ -216,12 +333,18 @@ export async function GET(request: NextRequest) {
   const denied = await adminGate(request);
   if (denied) return denied;
   try {
-    const uid = new URL(request.url).searchParams.get('uid');
-    const payload = uid ? await detail(uid) : await listUsers();
+    const params = new URL(request.url).searchParams;
+    const uid = params.get('uid');
+    const conversationId = params.get('conversationId');
+    const payload = uid && conversationId
+      ? await conversation(uid, conversationId)
+      : uid
+        ? await detail(uid)
+        : await listUsers();
     return NextResponse.json(payload, { headers });
   } catch (error) {
     const code = (error as { code?: string }).code;
-    const status = code === 'auth/user-not-found' ? 404 : 503;
-    return NextResponse.json({ error: status === 404 ? 'User not found.' : 'User activity is unavailable. Please retry.' }, { status, headers });
+    const status = code === 'auth/user-not-found' || code === 'conversation/not-found' ? 404 : 503;
+    return NextResponse.json({ error: status === 404 ? 'User or conversation not found.' : 'User activity is unavailable. Please retry.' }, { status, headers });
   }
 }
