@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { onIdTokenChanged, type User } from 'firebase/auth';
+import { onIdTokenChanged, signOut, type User } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
 import { ACTIVITY_KINDS, type ActivityKind, type ActivityPage, type ActivityRow, type PurgePreview } from '@/lib/admin-activity/types';
 import styles from './metrics.module.css';
@@ -9,6 +9,11 @@ import styles from './metrics.module.css';
 const labels: Record<ActivityKind, string> = {
   accounts: 'Login accounts', profiles: 'Saved profiles', leads: 'Captured emails', clarity: 'Clarity Checks',
   registrations: 'Info-session signups', cohorts: 'Cohort signups', emails: 'Email queue / history',
+};
+const descriptions: Partial<Record<ActivityKind, string>> = {
+  accounts: 'Firebase Auth login accounts from both the website and mobile apps. This list alone does not prove where an account was created; use User Activity & Support for recorded Android, iOS, or web activity.',
+  leads: 'Captured emails are public lead-form records such as Clarity Check, info-session, contact, and workshop submissions. Mobile marketing consent is stored on the user profile rather than in this list.',
+  profiles: 'Saved profiles are retained user/profile records. A profile can exist even when a separate lead record does not.',
 };
 const button = 'rounded border px-3 py-2 disabled:opacity-50';
 
@@ -23,6 +28,7 @@ export default function LaunchActivity() {
   const [preview, setPreview] = useState<PurgePreview | null>(null);
   const [confirmation, setConfirmation] = useState('');
   const [acknowledged, setAcknowledged] = useState(false);
+  const [purgeMessage, setPurgeMessage] = useState('');
   const generation = useRef(0);
   const user = useRef<User | null>(null);
   const lock = useRef(false);
@@ -46,7 +52,7 @@ export default function LaunchActivity() {
     const unsubscribe = onIdTokenChanged(getFirebaseAuth(), async signedIn => {
       const version = ++generation.current;
       user.current = signedIn;
-      setAllowed(false); setRows([]); setCursor(null); setPreview(null); setConfirmation(''); setAcknowledged(false); setMessage('');
+      setAllowed(false); setRows([]); setCursor(null); setPreview(null); setConfirmation(''); setAcknowledged(false); setMessage(''); setPurgeMessage('');
       if (!signedIn) return;
       try {
         const token = await signedIn.getIdTokenResult();
@@ -61,12 +67,15 @@ export default function LaunchActivity() {
     return () => { active = false; invalidateRequests(); unsubscribe(); };
   }, []);
 
-  async function action(work: (signedIn: User, version: number) => Promise<void>) {
+  async function action(work: (signedIn: User, version: number) => Promise<void>, onError?: (message: string) => void) {
     if (!user.current || busy || lock.current) return;
     lock.current = true; setBusy(true); setMessage('');
     const version = generation.current;
     try { await work(user.current, version); }
-    catch (error) { if (version === generation.current) setMessage(error instanceof Error ? error.message : 'Operation failed.'); }
+    catch (error) {
+      const text = error instanceof Error ? error.message : 'Operation failed.';
+      if (version === generation.current) { setMessage(text); onError?.(text); }
+    }
     finally { lock.current = false; if (version === generation.current) setBusy(false); }
   }
 
@@ -76,28 +85,48 @@ export default function LaunchActivity() {
       if (more && cursor) params.set('cursor', cursor);
       const result = await request<ActivityPage>(signedIn, `?${params}`);
       if (version !== generation.current) return;
-      setKind(nextKind); setPreview(null); setConfirmation(''); setAcknowledged(false);
+      setKind(nextKind); setPreview(null); setConfirmation(''); setAcknowledged(false); setPurgeMessage('');
       setRows(previous => more ? [...new Map([...previous, ...result.rows].map(row => [row.id, row])).values()] : result.rows);
       setCursor(result.cursor);
     });
   }
   function inspect(row: ActivityRow) {
     void action(async (signedIn, version) => {
-      setPreview(null); setConfirmation(''); setAcknowledged(false);
+      setPreview(null); setConfirmation(''); setAcknowledged(false); setPurgeMessage('');
       const result = await request<PurgePreview>(signedIn, '', { action: 'preview', target: { kind: row.kind, id: row.id } });
       if (version === generation.current) setPreview(result);
     });
   }
   function purge() {
-    if (!preview || !acknowledged || confirmation !== preview.confirmation) return;
+    if (!preview) return;
+    setPurgeMessage('');
+    if (!acknowledged) {
+      setPurgeMessage('Check the verification box first. The purge has not run.');
+      return;
+    }
+    if (confirmation !== preview.confirmation) {
+      setPurgeMessage(`Type the exact confirmation phrase shown above: ${preview.confirmation}. Copy and paste is fine.`);
+      return;
+    }
     void action(async (signedIn, version) => {
       await request(signedIn, '', { action: 'purge', target: preview.target, fingerprint: preview.fingerprint, confirmation });
       if (version !== generation.current) return;
-      setPreview(null); setConfirmation(''); setAcknowledged(false); setRows([]); setCursor(null);
+      setPreview(null); setConfirmation(''); setAcknowledged(false); setPurgeMessage(''); setRows([]); setCursor(null);
       setMessage('Purge completed. Selected linked records and login were removed where present. Historical GA4/weekly totals are unchanged.');
       const page = await request<ActivityPage>(signedIn, `?kind=${kind}`);
       if (version === generation.current) { setRows(page.rows); setCursor(page.cursor); }
-    });
+    }, setPurgeMessage);
+  }
+  async function reauthenticate() {
+    if (busy) return;
+    setBusy(true); setPurgeMessage('Signing out so you can re-authenticate…');
+    try {
+      await signOut(getFirebaseAuth());
+      window.location.assign('/login?next=/admin/launch-metrics');
+    } catch {
+      setBusy(false);
+      setPurgeMessage('Unable to sign out automatically. Sign out manually, sign back in, and return to Launch Metrics.');
+    }
   }
 
   if (!allowed) return null;
@@ -108,7 +137,10 @@ export default function LaunchActivity() {
     <h2 id="activity-heading" className="text-2xl">People &amp; activity</h2>
     <p className="text-sm">Actual saved records, separate from GA4 event totals. Browse every retained page; repeated lead submissions may have been merged. An email queue row is a message, not another signup. Platform is not inferred when it was not recorded.</p>
     <div className="flex flex-wrap gap-2" aria-label="Activity categories">{ACTIVITY_KINDS.map(value =>
-      <button key={value} className={`${button} ${kind === value ? 'bg-[#4B4E6D] text-white' : ''}`} aria-pressed={kind === value} disabled={busy} onClick={() => load(value)}>{labels[value]}</button>)}</div>
+      <button key={value} className={`${button} ${kind === value ? 'bg-[#4B4E6D] text-white' : ''}`} aria-pressed={kind === value} disabled={busy} onClick={() => load(value)}>{labels[value]}</button>)}
+      <a className={`${button} bg-[#F5F7FA] font-medium`} href="/admin/user-activity">User Activity &amp; Support</a>
+    </div>
+    {descriptions[kind] ? <p className="rounded border bg-[#F5F7FA] p-3 text-sm">{descriptions[kind]}</p> : null}
     <div className="flex flex-wrap items-end gap-3">
       <label className="text-sm">Search loaded records<input className="mt-1 block rounded border p-2" type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Email, name, ID, source" /></label>
       <button className={button} disabled={busy} onClick={() => load(kind)}>Refresh this list</button>
@@ -135,10 +167,11 @@ export default function LaunchActivity() {
       <ul className="list-disc pl-5">{Object.entries(preview.counts).map(([name, count]) => <li key={name}>{name}: {count}</li>)}</ul>
       <details><summary className="cursor-pointer">Exact records and actions ({preview.records.length})</summary><ul className="max-h-60 overflow-auto break-all text-sm">{preview.records.map(record => <li key={record.path}>{record.action}: {record.path}</li>)}</ul></details>
       <p className="text-sm">This cannot be undone here. Purchase records are retained and de-linked; community posts become tombstones so other people’s replies remain. A minimal email suppression entry remains to prevent re-enrollment. Emails already in delivery cannot be recalled. GA4 events and weekly totals are not erased.</p>
-      <p className="text-sm">Permanent deletion requires a sign-in within the last five minutes. If prompted, sign out and back in before retrying.</p>
-      <label className="flex gap-2"><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} />I verified these are test/dummy records and want to permanently remove this person’s login and related records.</label>
-      <label className="block">Type <strong>{preview.confirmation}</strong><input className="mt-1 block w-full rounded border p-2" autoComplete="off" value={confirmation} disabled={busy} onChange={event => setConfirmation(event.target.value)} /></label>
-      <div className="flex gap-3"><button className={`${button} ${styles.purgeButton}`} disabled={busy || !acknowledged || confirmation !== preview.confirmation} onClick={purge}>Permanently purge</button><button className={button} disabled={busy} onClick={() => setPreview(null)}>Cancel</button></div>
+      <p className="text-sm">Permanent deletion requires a sign-in within the last five minutes. If your admin session is older, the purge will stop and tell you to re-authenticate.</p>
+      <label className="flex gap-2"><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => { setAcknowledged(event.target.checked); setPurgeMessage(''); }} />I verified these are test/dummy records and want to permanently remove this person’s login and related records.</label>
+      <label className="block">Type <strong>{preview.confirmation}</strong><input className="mt-1 block w-full rounded border p-2" autoComplete="off" value={confirmation} disabled={busy} onChange={event => { setConfirmation(event.target.value); setPurgeMessage(''); }} /></label>
+      {purgeMessage ? <div role="alert" className="rounded border border-red-700 bg-red-50 p-3 text-sm"><p>{purgeMessage}</p>{/sign out and sign in again|within five minutes/i.test(purgeMessage) ? <button className={`${button} mt-3 bg-white`} disabled={busy} onClick={() => void reauthenticate()}>Sign out &amp; sign in again</button> : null}</div> : null}
+      <div className="flex gap-3"><button className={`${button} ${styles.purgeButton}`} disabled={busy} onClick={purge}>Permanently purge</button><button className={button} disabled={busy} onClick={() => { setPreview(null); setPurgeMessage(''); }}>Cancel</button></div>
     </section> : null}
   </section>;
 }
