@@ -73,7 +73,7 @@ export default function LaunchMetricsClient() {
   const rows = state.rows;
   const cumulative = rows.reduce((sum, row) => addCounts(sum, row.counts), emptyCounts());
   return <main className={styles.dashboard}>
-    <a href="/">← iPurpose home</a>
+    <div className="flex flex-wrap gap-4"><a href="/">← iPurpose home</a><a className="underline" href="/admin/user-activity">User Activity &amp; Support →</a></div>
     <header><p className="text-sm uppercase tracking-widest">iPurpose · Administration</p><h1 className="mt-2 text-4xl font-italiana">Launch Metrics</h1></header>
     <LaunchActivity />
     {['checking', 'loading'].includes(state.status) && <p role="status">{state.status === 'checking' ? 'Checking administrator access…' : 'Loading weekly snapshots…'}</p>}

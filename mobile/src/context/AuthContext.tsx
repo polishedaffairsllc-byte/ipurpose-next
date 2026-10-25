@@ -12,6 +12,7 @@ import {
 import { auth } from '../lib/firebase';
 import { deleteIPurposeAccount, saveMarketingConsent } from '../lib/api';
 import { logLaunchEvent } from '../lib/analyticsEvents';
+import { logUserActivity } from '../lib/userActivity';
 
 interface AuthContextValue {
   user: User | null;
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try { await sendEmailVerification(credential.user); }
       catch { /* Account remains usable; Account offers resend/retry. */ }
       logLaunchEvent('sign_up');
+      await logUserActivity({ type: 'account_created' });
       if (marketingOptIn) await saveMarketingConsent();
     },
     deleteAccount: async (password) => {
@@ -56,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     signIn: async (email, password) => {
       await signInWithEmailAndPassword(auth, email.trim(), password);
+      await logUserActivity({ type: 'login' });
     },
     signOut: async () => {
       await firebaseSignOut(auth);

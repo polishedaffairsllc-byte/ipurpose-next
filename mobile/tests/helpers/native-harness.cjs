@@ -9,7 +9,7 @@ const { act, create } = testRequire('react-test-renderer');
 const ts = require('typescript');
 global.IS_REACT_ACT_ENVIRONMENT = true;
 function harness() {
- const cache = new Map(); const routes = []; const events = [];
+ const cache = new Map(); const routes = []; const events = []; const activityEvents = [];
  const native = { ...Object.fromEntries(['ActivityIndicator', 'KeyboardAvoidingView', 'Pressable', 'Text', 'TextInput', 'View', 'Modal', 'SafeAreaView'].map(s => [s, s])), ScrollView: React.forwardRef(function TestScrollView(props, ref) { React.useImperativeHandle(ref, () => ({ scrollTo() {} })); return React.createElement('ScrollView', props); }), Platform: { OS: 'ios' }, useWindowDimensions: () => ({ width: 320, height: 640, fontScale: 1 }), AppState: { addEventListener: () => ({ remove() {} }) }, StyleSheet: { create: s => s } };
  const Tabs = props => React.createElement('Tabs', props); Tabs.Screen = 'TabScreen';
  const mocks = { react: React, 'react/jsx-runtime': testRequire('react/jsx-runtime'), 'react-native': native, '@expo/vector-icons/Ionicons': 'Icon', 'react-native-safe-area-context': { SafeAreaView: 'SafeAreaView', useSafeAreaInsets: () => ({ bottom: 34 }) }, 'expo-router': { Tabs, useRouter: () => ({ push: route => routes.push(route) }), useFocusEffect: fn => React.useEffect(fn, [fn]) } };
@@ -21,10 +21,17 @@ function harness() {
   new Function('require', 'module', 'exports', 'fetch', output)(localRequire, module, module.exports, (...args) => (mocks.fetch || global.fetch)(...args)); return module.exports;
  }
  const tokens = load('theme.ts').visualEnvironments.depth;
- for (const prefix of ['../', '../../../']) { mocks[prefix + 'context/VisualEnvironmentContext'] = { useVisualEnvironment: () => ({ tokens }) }; mocks[prefix + 'lib/analyticsEvents'] = { logLaunchEvent: name => events.push(name) }; }
+ for (const prefix of ['../', '../../../']) {
+  mocks[prefix + 'context/VisualEnvironmentContext'] = { useVisualEnvironment: () => ({ tokens }) };
+  mocks[prefix + 'lib/analyticsEvents'] = { logLaunchEvent: name => events.push(name) };
+  mocks[prefix + 'lib/userActivity'] = {
+   createActivitySessionId: prefixName => `${prefixName || 'session'}_test`,
+   logUserActivity: async event => { activityEvents.push(event); },
+  };
+ }
  const state = { profile: null, identityType: null, loading: false, error: null, refresh: async () => {}, save: async () => {}, clear: async () => {} };
  for (const prefix of ['../', '../../../']) mocks[prefix + 'context/PurposeCheckContext'] = { usePurposeCheck: () => state };
- return { load, mocks, routes, events, state, native };
+ return { load, mocks, routes, events, activityEvents, state, native };
 }
 const text = node => typeof node === 'string' ? node : (node.children || []).map(text).join('');
 const button = (tree, label) => tree.root.findAllByType('Pressable').find(n => text(n) === label);
