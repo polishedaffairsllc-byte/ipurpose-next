@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { UserRecord } from 'firebase-admin/auth';
-import type { DocumentSnapshot } from 'firebase-admin/firestore';
+import type { DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
 import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import type {
   ActivityPlatform,
@@ -40,19 +40,19 @@ function platform(value: unknown): ActivityPlatform {
   return value === 'android' || value === 'ios' || value === 'web' ? value : 'unknown';
 }
 
-async function requireAdmin(request: NextRequest) {
+async function adminGate(request: NextRequest): Promise<NextResponse | null> {
   const token = /^Bearer (\S+)$/i.exec(request.headers.get('authorization') || '')?.[1];
-  if (!token) return { error: NextResponse.json({ error: 'Administrator sign-in is required.' }, { status: 401, headers }) };
+  if (!token) return NextResponse.json({ error: 'Administrator sign-in is required.' }, { status: 401, headers });
   const auth = firebaseAdmin.auth();
   try {
     const decoded = await auth.verifyIdToken(token, true);
     const actor = await auth.getUser(decoded.uid);
     if (decoded.admin !== true || actor.customClaims?.admin !== true || actor.disabled) {
-      return { error: NextResponse.json({ error: 'Administrator access is required.' }, { status: 403, headers }) };
+      return NextResponse.json({ error: 'Administrator access is required.' }, { status: 403, headers });
     }
-    return { auth };
+    return null;
   } catch {
-    return { error: NextResponse.json({ error: 'Sign in again to continue.' }, { status: 401, headers }) };
+    return NextResponse.json({ error: 'Sign in again to continue.' }, { status: 401, headers });
   }
 }
 
@@ -68,7 +68,7 @@ async function listAuthUsers(): Promise<{ users: UserRecord[]; truncated: boolea
   return { users, truncated: Boolean(pageToken) };
 }
 
-async function getMany(refs: FirebaseFirestore.DocumentReference[]): Promise<DocumentSnapshot[]> {
+async function getMany(refs: DocumentReference[]): Promise<DocumentSnapshot[]> {
   const db = firebaseAdmin.firestore();
   const output: DocumentSnapshot[] = [];
   for (let i = 0; i < refs.length; i += 100) {
@@ -167,11 +167,11 @@ async function detail(uid: string): Promise<UserActivityDetailResponse> {
     db.collection('users').doc(uid).get(),
     db.collection('userActivitySummaries').doc(uid).get(),
     db.collection('users').doc(uid).collection('activityEvents').orderBy('createdAt', 'desc').limit(100).get(),
-    db.collection('users').doc(uid).collection('companionConversations').orderBy('updatedAt', 'desc').limit(50).get(),
+    db.collection('users').doc(uid).collection('companionConversations').orderBy('updatedAt', 'desc').limit(MAX_CONVERSATIONS).get(),
   ]);
 
-  let conversationAggregate: ConversationAggregate = { count: 0, messages: 0, firstAt: null, lastAt: null };
-  const recentConversations: CompassConversationActivity[] = conversationsSnapshot.docs.map(document => {
+  const conversationAggregate: ConversationAggregate = { count: 0, messages: 0, firstAt: null, lastAt: null };
+  const allConversations: CompassConversationActivity[] = conversationsSnapshot.docs.map(document => {
     const data = document.data();
     const createdAt = toIso(data.createdAt);
     const updatedAt = toIso(data.updatedAt) || createdAt;
@@ -188,34 +188,33 @@ async function detail(uid: string): Promise<UserActivityDetailResponse> {
     };
   });
 
-  const recentEvents: UserActivityEvent[] = eventsSnapshot.docs.map(document => {
+  const validEventTypes = new Set<UserActivityEvent['type']>(['account_created', 'login', 'compass_enter', 'compass_message', 'compass_exit']);
+  const recentEvents: UserActivityEvent[] = eventsSnapshot.docs.flatMap(document => {
     const data = document.data();
-    const rawType = string(data.type);
-    const type: UserActivityEvent['type'] = rawType === 'account_created' || rawType === 'login' || rawType === 'compass_enter' || rawType === 'compass_message' || rawType === 'compass_exit'
-      ? rawType
-      : 'login';
-    return {
+    const rawType = string(data.type) as UserActivityEvent['type'] | null;
+    if (!rawType || !validEventTypes.has(rawType)) return [];
+    return [{
       id: document.id,
-      type,
+      type: rawType,
       at: toIso(data.createdAt),
       platform: platform(data.platform),
       sessionId: string(data.sessionId),
       conversationId: string(data.conversationId),
       durationMs: typeof data.durationMs === 'number' ? data.durationMs : null,
       reason: string(data.reason),
-    };
+    }];
   });
 
   return {
     user: buildRow(user, profileDoc, summaryDoc, conversationAggregate),
     recentEvents,
-    recentConversations,
+    recentConversations: allConversations.slice(0, 50),
   };
 }
 
 export async function GET(request: NextRequest) {
-  const gate = await requireAdmin(request);
-  if (gate.error) return gate.error;
+  const denied = await adminGate(request);
+  if (denied) return denied;
   try {
     const uid = new URL(request.url).searchParams.get('uid');
     const payload = uid ? await detail(uid) : await listUsers();
