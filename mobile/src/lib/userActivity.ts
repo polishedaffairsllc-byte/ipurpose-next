@@ -4,12 +4,26 @@ import { auth } from './firebase';
 const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ipurposesoul.com').replace(/\/$/, '');
 
 type UserActivityEvent = {
-  type: 'account_created' | 'login' | 'compass_enter' | 'compass_message' | 'compass_exit';
+  type:
+    | 'account_created'
+    | 'login'
+    | 'screen_view'
+    | 'clarity_check_start'
+    | 'clarity_check_complete'
+    | 'purpose_check_start'
+    | 'purpose_check_complete'
+    | 'compass_enter'
+    | 'compass_message'
+    | 'compass_exit';
   sessionId?: string;
   conversationId?: string;
   durationMs?: number;
   reason?: 'blur' | 'background' | 'unknown';
+  route?: string;
+  previousRoute?: string;
 };
+
+let lastTrackedRoute: string | undefined;
 
 function platform() {
   if (Platform.OS === 'android') return 'android';
@@ -36,6 +50,13 @@ export async function logUserActivity(event: UserActivityEvent): Promise<void> {
       body: JSON.stringify({ ...event, platform: platform() }),
     });
   } catch {
-    // Activity telemetry must never block account access or Compass use.
+    // Activity telemetry must never block account access, onboarding, or Compass use.
   }
+}
+
+export function trackScreenView(route: string) {
+  if (!route || route === lastTrackedRoute) return;
+  const previousRoute = lastTrackedRoute;
+  lastTrackedRoute = route;
+  void logUserActivity({ type: 'screen_view', route, ...(previousRoute ? { previousRoute } : {}) });
 }
