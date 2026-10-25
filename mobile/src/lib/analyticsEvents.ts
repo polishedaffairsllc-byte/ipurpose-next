@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import type { NativeEvent } from './analyticsCore';
-import { logUserActivity } from './userActivity';
+import { logUserActivity, trackScreenView as trackUserScreenView } from './userActivity';
 
 // Native Firebase owns first_open automatically. Never log it manually.
 // Auth continues to use the existing JS SDK; no native Auth migration is needed.
@@ -18,6 +18,11 @@ function initialize() {
 
 export function initializeLaunchAnalytics(): void {
   if (enabled()) void initialize().catch(() => {});
+}
+
+export function trackSupportScreenView(route: string): void {
+  if (!supportActivityEnabled()) return;
+  trackUserScreenView(route);
 }
 
 export function logLaunchEvent(name: NativeEvent): void {
