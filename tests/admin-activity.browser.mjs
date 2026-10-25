@@ -13,7 +13,7 @@ const compiled = await build({
   plugins: [{ name: 'synthetic-auth', setup(builder) {
     builder.onResolve({ filter: /^(firebase\/auth|@\/lib\/firebaseClient)$/ }, args => ({ path: args.path, namespace: 'fixture' }));
     builder.onLoad({ filter: /.*/, namespace: 'fixture' }, args => ({ contents: args.path === 'firebase/auth'
-      ? `export function onIdTokenChanged(auth, callback) { let active=true; window.fixtureSignOut=()=>callback(null); queueMicrotask(()=>{if(active) callback({getIdToken:async()=> 'synthetic-browser-token', getIdTokenResult:async()=>({claims:{admin:true}})});}); return ()=>{active=false;}; }`
+      ? `export function onIdTokenChanged(auth, callback) { let active=true; window.fixtureSignOut=()=>callback(null); queueMicrotask(()=>{if(active) callback({getIdToken:async()=> 'synthetic-browser-token', getIdTokenResult:async()=>({claims:{admin:true}})});}); return ()=>{active=false;}; } export async function signOut(){ window.fixtureSignOut(); }`
       : `export function getFirebaseAuth(){return {};}`, loader: 'js' }));
   } }],
 });
@@ -45,13 +45,17 @@ try {
   const page = await browser.newPage({ viewport: { width: 1200, height: 1000 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto(`http://127.0.0.1:${server.address().port}`);
+  const supportTab = page.getByRole('link', { name: 'User Activity & Support' });
+  assert.equal(await supportTab.getAttribute('href'), '/admin/user-activity');
+  await page.getByText(/Firebase Auth login accounts from both the website and mobile apps/).waitFor();
   await page.getByRole('button', { name: 'Preview purge for dummy@example.com' }).click();
   const deletion = page.getByRole('button', { name: 'Permanently purge', exact: true });
-  await deletion.waitFor(); assert.equal(await deletion.isDisabled(), true);
+  await deletion.waitFor(); assert.equal(await deletion.isEnabled(), true);
+  await deletion.click(); await page.getByText(/Check the verification box first/).waitFor(); assert.equal(purges, 0);
+  await page.getByRole('checkbox').check();
   await page.getByLabel('Type PURGE dummy@example.com').fill('PURGE wrong@example.com');
-  await page.getByRole('checkbox').check(); assert.equal(await deletion.isDisabled(), true);
+  await deletion.click(); await page.getByText(/Type the exact confirmation phrase shown above/).waitFor(); assert.equal(purges, 0);
   await page.getByLabel('Type PURGE dummy@example.com').fill('PURGE dummy@example.com');
-  assert.equal(await deletion.isEnabled(), true);
   await page.screenshot({ path: '/private/tmp/ipurpose-admin-activity-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: '/private/tmp/ipurpose-admin-activity-mobile.png', fullPage: true });
@@ -64,7 +68,7 @@ try {
   await page.evaluate(() => window.fixtureSignOut());
   await page.getByRole('heading', { name: 'People & activity' }).waitFor({ state: 'hidden' });
   assert.deepEqual(errors, []);
-  console.log('PASS: synthetic admin UI loads; typed confirmation + checkbox gate deletion; cancel performs no purge; confirmed purge performs exactly one; sign-out hides PII; zero page errors; desktop/mobile screenshots saved.');
+  console.log('PASS: synthetic admin UI exposes User Activity & Support; purge always gives validation feedback; cancel performs no purge; confirmed purge performs exactly one; sign-out hides PII; zero page errors; desktop/mobile screenshots saved.');
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));
