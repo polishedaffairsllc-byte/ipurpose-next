@@ -6,11 +6,32 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const EVENT_TYPES = new Set(['account_created', 'login', 'compass_enter', 'compass_message', 'compass_exit']);
+const EVENT_TYPES = new Set([
+  'account_created',
+  'login',
+  'screen_view',
+  'clarity_check_start',
+  'clarity_check_complete',
+  'purpose_check_start',
+  'purpose_check_complete',
+  'compass_enter',
+  'compass_message',
+  'compass_exit',
+]);
 const PLATFORMS = new Set(['android', 'ios', 'web', 'unknown']);
 const REASONS = new Set(['blur', 'background', 'unknown']);
 
-type ActivityEventType = 'account_created' | 'login' | 'compass_enter' | 'compass_message' | 'compass_exit';
+type ActivityEventType =
+  | 'account_created'
+  | 'login'
+  | 'screen_view'
+  | 'clarity_check_start'
+  | 'clarity_check_complete'
+  | 'purpose_check_start'
+  | 'purpose_check_complete'
+  | 'compass_enter'
+  | 'compass_message'
+  | 'compass_exit';
 type ActivityPlatform = 'android' | 'ios' | 'web' | 'unknown';
 
 type ActivityBody = {
@@ -20,6 +41,8 @@ type ActivityBody = {
   conversationId?: unknown;
   durationMs?: unknown;
   reason?: unknown;
+  route?: unknown;
+  previousRoute?: unknown;
 };
 
 function optionalIdentifier(value: unknown, max = 128): string | undefined {
@@ -28,6 +51,16 @@ function optionalIdentifier(value: unknown, max = 128): string | undefined {
   const trimmed = value.trim();
   if (!trimmed || trimmed.length > max || !/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
     throw new Error('Invalid activity identifier.');
+  }
+  return trimmed;
+}
+
+function optionalRoute(value: unknown): string | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  if (typeof value !== 'string') throw new Error('Invalid activity route.');
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('/') || trimmed.length > 240 || /[\r\n]/.test(trimmed)) {
+    throw new Error('Invalid activity route.');
   }
   return trimmed;
 }
@@ -55,6 +88,8 @@ export async function POST(request: NextRequest) {
       : 'unknown';
     const sessionId = optionalIdentifier(body?.sessionId);
     const conversationId = optionalIdentifier(body?.conversationId);
+    const route = optionalRoute(body?.route);
+    const previousRoute = optionalRoute(body?.previousRoute);
     const reason = typeof body?.reason === 'string' && REASONS.has(body.reason)
       ? body.reason
       : undefined;
@@ -79,6 +114,8 @@ export async function POST(request: NextRequest) {
     if (conversationId) event.conversationId = conversationId;
     if (durationMs !== undefined) event.durationMs = Math.round(durationMs);
     if (reason) event.reason = reason;
+    if (route) event.route = route;
+    if (previousRoute) event.previousRoute = previousRoute;
 
     const summary: Record<string, unknown> = {
       platform,
@@ -88,6 +125,11 @@ export async function POST(request: NextRequest) {
     };
     if (type === 'account_created') summary.accountCreatedEventAt = now;
     if (type === 'login') summary.lastLoginAt = now;
+    if (type === 'screen_view' && route) summary.lastRoute = route;
+    if (type === 'clarity_check_start') summary.lastClarityStartAt = now;
+    if (type === 'clarity_check_complete') summary.lastClarityCompleteAt = now;
+    if (type === 'purpose_check_start') summary.lastPurposeStartAt = now;
+    if (type === 'purpose_check_complete') summary.lastPurposeCompleteAt = now;
     if (type === 'compass_enter') {
       summary.lastCompassEnterAt = now;
       summary.compassSessionCount = FieldValue.increment(1);
