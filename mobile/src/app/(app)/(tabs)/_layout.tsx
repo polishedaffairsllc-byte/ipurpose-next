@@ -1,15 +1,22 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { purposeCopy } from '../../../lib/purposeCheckCopy';
 import { Text, useWindowDimensions } from 'react-native';
-import { Tabs } from 'expo-router';
+import { Tabs, usePathname } from 'expo-router';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
+import { trackScreenView } from '../../../lib/userActivity';
 import { theme } from '../../../theme';
 
 export default function TabsLayout() {
   const { tokens } = useVisualEnvironment();
   const insets = useSafeAreaInsets();
   const { fontScale } = useWindowDimensions();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    trackScreenView(pathname);
+  }, [pathname]);
 
   return (
     <Tabs
