@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef } from 'react';
 import { ArrowUpRight, Download, Mail } from 'lucide-react';
-import { trackEvent } from '@/lib/analytics';
+import { trackSDSNEvent } from '@/lib/partnerships/sdsn-analytics';
 import { SDSN_LABELS, type SDSNConfig } from '@/lib/partnerships/sdsn';
 import PresentationViewer, { type ViewerEvent } from './PresentationViewer';
 
@@ -28,7 +28,7 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
         recipient_id: config.slug, deck_variant: config.deckVariant, visit_number: number,
         ...(internal ? { traffic_type: 'internal', debug_mode: true } : {}),
       };
-      trackEvent('sdsn_page_view', pageParams);
+      trackSDSNEvent('sdsn_page_view', pageParams);
       if (internal) console.debug('[SDSN]', 'sdsn_page_view', JSON.stringify(pageParams));
     }
     if (name === 'sdsn_page_view') return;
@@ -36,7 +36,7 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
       ...params, recipient_id: config.slug, deck_variant: config.deckVariant,
       ...(visit.current.internal ? { traffic_type: 'internal', debug_mode: true } : {}),
     };
-    trackEvent(name, eventParams);
+    trackSDSNEvent(name, eventParams);
     if (visit.current.internal) console.debug('[SDSN]', name, JSON.stringify(eventParams));
   }, [config.slug, config.deckVariant]);
   useEffect(() => { emit('sdsn_page_view'); }, [emit]);

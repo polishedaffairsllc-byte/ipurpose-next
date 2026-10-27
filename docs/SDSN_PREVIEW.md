@@ -44,3 +44,9 @@ No sitemap, robots.txt, public navigation, authentication rules, database schema
 - Console confirmed page/start/slide/interaction/completion/download events and internal flags. Final-slide completion emitted after five seconds. Event payloads can be inspected by filtering `[SDSN]` in the browser console on `?preview=1` visits.
 - Downloaded PDF successfully. Contact address/subject and external target attributes checked against rendered link destinations. No email was sent.
 - Actual iOS Safari, reduced-motion OS behavior, and GA4 property-level ingestion/filter activation remain review checks; they are implemented or documented but not certified by desktop emulation.
+
+## Tracking correction
+
+SDSN events now wait for the existing GA4 config commands to be queued before calling the existing tracking helper, and explicitly use the project's deduplicated GA4 measurement IDs through `send_to`. This prevents initial page/slide events from depending on the Ads tag's default routing before GA4 is initialized. The existing owner/admin/QA disable flags are respected. `[SDSN delivery]` console messages distinguish queuing to the Google tag from property-level receipt; they are not proof of network delivery or GA4 ingestion.
+
+Regression checks: `node --import tsx --test tests/sdsn-analytics.node.ts tests/internal-analytics-exclusion.node.ts tests/launch-metrics.node.ts` (10 passed), TypeScript, and full CI-mode build passed. Google Analytics still needs a live DebugView receipt check. An active internal-traffic filter, browser privacy protection, or checking another property may hide debug activity; the code does not bypass those protections or change property settings.
