@@ -54,8 +54,8 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
       <p className="sdsn-subtitle">{config.sub}</p>
       <div className="sdsn-signature"><p>Renita Hamilton, MPS — Founder, iPurpose</p><p>Strategic Leadership · Social Impact · AI-Enabled Human Development</p></div>
     </div></section>
-    <section id="sdsn-presentation" className="sdsn-deck-section sdsn-container" aria-label="Partnership presentation">
-      <PresentationViewer slides={config.slides} onEvent={onViewerEvent} />
+    <section id="sdsn-presentation" className="sdsn-deck-section sdsn-container" aria-label={config.deckTitle}>
+      <PresentationViewer deckTitle={config.deckTitle} slides={config.slides} onEvent={onViewerEvent} />
     </section>
     <section className="sdsn-contact sdsn-container" aria-labelledby="sdsn-contact-title">
       <div className="sdsn-contact-copy"><span className="sdsn-contact-line" aria-hidden="true"/><h2 id="sdsn-contact-title">{SDSN_LABELS.contactHeading}</h2><p>A 30-minute conversation, no long-term commitment.</p></div>

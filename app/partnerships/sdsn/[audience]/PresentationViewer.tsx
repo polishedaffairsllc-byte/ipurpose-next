@@ -6,8 +6,8 @@ import type { PresentationSlide } from '@/lib/partnerships/sdsn';
 export type ViewerEvent = 'sdsn_deck_start' | 'sdsn_slide_view' | 'sdsn_deck_interaction' | 'sdsn_deck_complete';
 type EventParams = Record<string, string | number>;
 const normalSizes = '(max-width: 640px) calc(100vw - 24px), (max-width: 1376px) calc(100vw - 96px), 1280px';
-export default function PresentationViewer({ slides, onEvent }: {
-  slides: PresentationSlide[]; onEvent: (event: ViewerEvent, params?: EventParams) => void;
+export default function PresentationViewer({ slides, deckTitle, onEvent }: {
+  slides: PresentationSlide[]; deckTitle: string; onEvent: (event: ViewerEvent, params?: EventParams) => void;
 }) {
   const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(-1);
@@ -151,7 +151,7 @@ export default function PresentationViewer({ slides, onEvent }: {
     return () => clearTimeout(timer);
   }, [loaded, index, previous, reduced]);
 
-  return <div ref={root} tabIndex={-1} className={`sdsn-viewer${overlay ? ' sdsn-viewer-overlay' : ''}${fullscreen ? ' sdsn-is-fullscreen' : ''}`} role="region" aria-roledescription="carousel" aria-label="Partnership concept presentation">
+  return <div ref={root} tabIndex={-1} className={`sdsn-viewer${overlay ? ' sdsn-viewer-overlay' : ''}${fullscreen ? ' sdsn-is-fullscreen' : ''}`} role="region" aria-roledescription="carousel" aria-label={deckTitle}>
     <div className="sdsn-stage" onPointerDown={e => { if (e.pointerType === 'mouse') interact('pause'); }} onTouchStart={e => { touch.current = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY }; }} onTouchEnd={e => {
       if (!touch.current) return;
       const dx = e.changedTouches[0].clientX - touch.current.x;
@@ -177,10 +177,10 @@ export default function PresentationViewer({ slides, onEvent }: {
           <button type="button" className="sdsn-icon-button" aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} onClick={() => void toggleFullscreen()}>{fullscreen ? <Minimize size={21} aria-hidden="true"/> : <Expand size={21} aria-hidden="true"/>}</button>
         </div>
       </div>
-      <div className="sdsn-segments" role="group" aria-label="Choose a slide">{slides.map((item, i) => <button key={item.src} type="button" className={`sdsn-segment${viewed.includes(i) ? ' sdsn-viewed' : ''}${i === index ? ' sdsn-active' : ''}`} aria-label={`Go to slide ${i + 1}: ${item.alt}`} aria-current={i === index ? 'step' : undefined} onClick={() => go(i, 'progress-jump')}><span/></button>)}</div>
+      <div className="sdsn-segments" role="group" aria-label="Choose a slide">{slides.map((item, i) => <button key={item.src} type="button" className={`sdsn-segment${viewed.includes(i) ? ' sdsn-viewed' : ''}${i === index ? ' sdsn-active' : ''}`} aria-label={`Go to slide ${i + 1}: ${item.title}`} aria-current={i === index ? 'step' : undefined} onClick={() => go(i, 'progress-jump')}><span/></button>)}</div>
     </div>
-    {thumbnails ? <div id="sdsn-thumbnails" className="sdsn-thumbnails">{slides.map((item, i) => <button key={item.src} type="button" aria-label={`View slide ${i + 1}: ${item.alt}`} aria-current={i === index ? 'step' : undefined} onClick={() => go(i, 'thumbnail')}><img src={item.srcSet.split(' ')[0]} alt="" width={160} height={90} loading="lazy"/><span>{i + 1}</span></button>)}</div> : null}
+    {thumbnails ? <div id="sdsn-thumbnails" className="sdsn-thumbnails">{slides.map((item, i) => <button key={item.src} type="button" aria-label={`View slide ${i + 1}: ${item.title}`} aria-current={i === index ? 'step' : undefined} onClick={() => go(i, 'thumbnail')}><img src={item.srcSet.split(' ')[0]} alt="" width={160} height={90} loading="lazy"/><span>{i + 1}</span></button>)}</div> : null}
     <div className="sdsn-viewer-note"><span>{playing ? 'Playing at a reading pace' : 'Explore at your own pace'}</span><span className="sdsn-desktop-hint">← → Navigate <span aria-hidden="true">·</span> Space Play / pause <span aria-hidden="true">·</span> F Fullscreen</span><span className="sdsn-mobile-hint">Tap fullscreen for the best view</span></div>
-    <p className="sdsn-sr-only" aria-live={playing ? 'off' : 'polite'} aria-atomic="true">Slide {index + 1} of {slides.length}: {slide.alt}</p>
+    <p className="sdsn-sr-only" aria-live={playing ? 'off' : 'polite'} aria-atomic="true">Slide {index + 1} of {slides.length}: {slide.title}</p>
   </div>;
 }
