@@ -17,10 +17,36 @@ const titles = [
   'Guardrails: student support, privacy and trust', 'A 90-day path to launch', 'Selected sources',
 ];
 const dwellSeconds = [8, 14, 20, 14, 18, 20, 20, 18, 14, 20, 18, 20];
-const ghanaSlides = titles.map((alt, i) => {
-  const base = `/partnerships/sdsn/ghana-jh/slide-${String(i + 1).padStart(2, '0')}`;
-  return { src: `${base}.webp`, srcSet: `${base}-1280.webp 1280w, ${base}-1920.webp 1920w, ${base}.webp 2880w`, alt, dwellSeconds: dwellSeconds[i] };
-});
+// Original PNG SHA-256 hashes match Ghana for these five slides in both rebuilt decks.
+// Reuse the approved Ghana assets in place so their URLs and bytes remain unchanged.
+const sharedWithGhana = new Set([2, 4, 9, 10, 12]);
+function presentationSlides(slug: string, slideTitles: string[]) {
+  return slideTitles.map((alt, i) => {
+    const assetSlug = slug !== 'ghana-jh' && sharedWithGhana.has(i + 1) ? 'ghana-jh' : slug;
+    const base = `/partnerships/sdsn/${assetSlug}/slide-${String(i + 1).padStart(2, '0')}`;
+    return { src: `${base}.webp`, srcSet: `${base}-1280.webp 1280w, ${base}-1920.webp 1920w, ${base}.webp 2880w`, alt, dwellSeconds: dwellSeconds[i] };
+  });
+}
+const ghanaSlides = presentationSlides('ghana-jh', titles);
+function recipientTitles(overrides: Record<number, string>) {
+  return titles.map((title, i) => overrides[i + 1] ?? title);
+}
+const africaSlides = presentationSlides('africa-lm', recipientTitles({
+  1: 'Ghana Discovery Pilot with Africa Replication Pathway',
+  3: 'Why SDSN Youth Africa is the right regional partner',
+  5: 'The partnership ask',
+  6: 'Proposed 8-week iPurpose × SDSN Youth Africa Pilot — Ghana launch cohort',
+  7: 'What SDSN Youth Africa receives',
+  8: 'What we would ask of SDSN Youth Africa',
+}));
+const globalSlides = presentationSlides('global-partnership', recipientTitles({
+  1: 'Ghana Discovery Pilot & African Replication Partnership',
+  3: 'Why SDSN Youth is the right scaling partner',
+  5: 'The partnership ask',
+  6: 'Proposed 8-week iPurpose × SDSN Youth Pilot — Ghana launch cohort',
+  7: 'What SDSN Youth receives',
+  8: 'What we would ask of SDSN Youth',
+}));
 export const sdsnConfigs: Record<string, SDSNConfig> = {
   'ghana-jh': {
     slug: 'ghana-jh', enabled: true, deckVariant: 'ghana',
@@ -30,16 +56,18 @@ export const sdsnConfigs: Record<string, SDSNConfig> = {
     contactEmail: 'renita@ipurposesoul.com', mailtoSubject: 'iPurpose × SDSN Youth Ghana: exploratory conversation',
   },
   'africa-lm': {
-    slug: 'africa-lm', enabled: false, deckVariant: 'africa',
+    slug: 'africa-lm', enabled: true, deckVariant: 'africa',
     recipientName: 'Lara Mugala', recipientRole: 'Regional Focal Point, Africa',
-    h1: 'iPurpose × SDSN Youth Africa', sub: 'A Ghana-first pilot with an African replication pathway',
-    slides: [], contactEmail: 'renita@ipurposesoul.com', mailtoSubject: 'iPurpose × SDSN Youth Africa: exploratory conversation',
+    h1: 'iPurpose × SDSN Youth Africa', sub: 'A Ghana-first Discovery Pilot with an Africa replication pathway',
+    slides: africaSlides, pdfUrl: '/partnerships/sdsn/africa-lm/iPurpose_SDSN_Youth_Africa_Master.pdf',
+    contactEmail: 'renita@ipurposesoul.com', mailtoSubject: 'iPurpose × SDSN Youth Africa: exploratory conversation',
   },
   'global-partnership': {
-    slug: 'global-partnership', enabled: false, deckVariant: 'global',
+    slug: 'global-partnership', enabled: true, deckVariant: 'global',
     recipientName: 'SDSN Youth Global Partnerships', recipientRole: '',
-    h1: 'iPurpose × SDSN Youth', sub: 'A Ghana-first evidence-building pilot for broader replication',
-    slides: [], contactEmail: 'renita@ipurposesoul.com', mailtoSubject: 'iPurpose × SDSN Youth: exploratory conversation',
+    h1: 'iPurpose × SDSN Youth', sub: 'A Ghana-first Discovery Pilot and African replication partnership',
+    slides: globalSlides, pdfUrl: '/partnerships/sdsn/global-partnership/iPurpose_SDSN_Youth_Global_Partnership_Master.pdf',
+    contactEmail: 'renita@ipurposesoul.com', mailtoSubject: 'iPurpose × SDSN Youth: exploratory conversation',
   },
 };
 export function getSDSNConfig(slug: string) {

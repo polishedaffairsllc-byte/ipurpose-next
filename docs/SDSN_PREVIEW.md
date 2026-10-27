@@ -1,12 +1,12 @@
-# SDSN Ghana presentation preview
+# SDSN presentation previews
 
-Scope: Ghana (`/partnerships/sdsn/ghana-jh`) only. `africa-lm`, `global-partnership`, and unknown slugs return 404. There is one viewer and a typed recipient config in `lib/partnerships/sdsn.ts`. Keep the other variants disabled until Ghana is approved and their own assets are supplied.
+Scope: Ghana (`ghana-jh`), Africa (`africa-lm`), and Global (`global-partnership`) are enabled under `/partnerships/sdsn/`. Unknown slugs return 404. All three use one unchanged approved viewer/page template and a typed recipient config in `lib/partnerships/sdsn.ts`. Phase 2 is preview only: do not merge or deploy to production.
 
 ## Assets
 
 The supplied ZIP contains 12 original 2881 × 1620 PNGs. The supplied master PDF is 12 pages at 960.009 × 540 points with selectable text and vector artwork; its embedded raster objects are individual decorative/brand elements, not flattened low-resolution slide pages. We use the supplied PNG exports at 1280, 1920, and 2880px, WebP quality 90, without enlargement. The deck artwork is unchanged. All 36 responsive WebPs total 4,161,086 bytes (3.97 MiB); the PDF is 293,744 bytes. The browser loads a selected source for the current slide and preloads one next slide. Thumbnail requests occur only when opened. No Canva URLs remain.
 
-Regenerate with `node scripts/prepare-sdsn-slides.mjs /absolute/path/to/original/slides ghana-jh`. Sharp is already present in the Next.js lockfile. Ghana's 12 source slide hashes are unique. No Africa/Global deck was supplied, so cross-variant hash comparison and shared-slide extraction must wait for those sources; do not assume matching slide numbers mean identical artwork.
+Regenerate with `node scripts/prepare-sdsn-slides.mjs /absolute/path/to/original/slides ghana-jh`. Sharp is already present in the Next.js lockfile. Ghana's 12 source slide hashes are unique. The rebuilt Africa/Global source PNG hashes exactly match Ghana at slides 2, 4, 9, 10, and 12; those config entries reference the existing Ghana files directly, preserving Ghana's URLs and bytes. Slides 1, 3, 5, 6, 7, 8, and 11 are unique for each new recipient. Slide 11 shares a title, not its artwork. Pass the original Ghana PNG directory as the script's third argument to verify and skip identical sources during regeneration.
 
 ## Review and analytics
 
@@ -22,7 +22,7 @@ Events: `sdsn_page_view`, `sdsn_deck_start`, `sdsn_slide_view`, `sdsn_deck_inter
 
 Desktop starts automatic playback unless reduced motion is enabled or the document starts hidden. Mobile starts paused. Per-slide dwell seconds: 8, 14, 20, 14, 18, 20, 20, 18, 14, 20, 18, 20. All manual navigation pauses; the final slide never loops. Reduced motion disables automatic playback and transitions. Keyboard: arrows navigate, Space toggles playback, F toggles fullscreen, Escape exits. Focused buttons retain normal Space behavior. Fullscreen uses the native API and falls back to a fixed viewport overlay when unavailable/rejected, with focus containment and body scroll locking. Actual iOS Safari needs a device check; desktop emulation alone cannot certify that platform.
 
-The PDF download uses the supplied Ghana master; Africa/Global PDF links remain absent. The contact CTA is a mailto to the specified founder address with the approved prefilled subject. The wordmark and Visit iPurpose open the main site in a new tab.
+Each PDF download uses its matching supplied rebuilt master. Ghana's PDF remains unchanged; Africa and Global use their new `*_Master.pdf` files. The contact CTA is a mailto to the specified founder address with the approved prefilled subject. The wordmark and Visit iPurpose open the main site in a new tab.
 
 ## Changes outside the partnerships paths
 
@@ -54,3 +54,9 @@ Regression checks: `node --import tsx --test tests/sdsn-analytics.node.ts tests/
 ## Merge validation dependency repair
 
 The existing production dependency audit failed on both main and this branch. To clear that gate, the lockfile now resolves Next.js 16.4.3, MCP server/core 2.3.0, Zod 4.6.6, DOMPurify 3.4.17, and Firebase's existing Undici override 6.29.1. No audit rules or exceptions were broadened. The unchanged audit passes with its pre-existing exact gRPC exception (four affected package nodes); eight moderate findings remain informational. The ten MCP authentication/transport regressions pass with `node --conditions=react-server --import tsx --test tests/launch-metrics-mcp.node.ts`, and TypeScript passes.
+
+## Phase 2 implementation
+
+Africa and Global use the exact requested recipient copy, slide titles, contact subjects, and `deck_variant` values. The viewer, page template, CTA constants, CSS, and all Ghana files are unchanged. New original PNGs are 2881 × 1620; seven unique slides per recipient are converted to the same 1280/1920/2880px WebP pipeline at quality 90 without upscaling (21 new WebPs per recipient). Both rebuilt PDFs are 12-page vector/text masters.
+
+Phase 2 changes outside `/partnerships`: `lib/partnerships/sdsn.ts` recipient config/shared asset mapping; `scripts/prepare-sdsn-slides.mjs` optional SHA-256 reuse check; this document; and `tests/production-baseline.spec.ts`, which now verifies emitted module classes and actual theme CSS instead of requiring the former Next.js CSS class-name format. The security dependency repair above was already on the branch when Phase 2 began. No analytics property/filter settings were changed.
