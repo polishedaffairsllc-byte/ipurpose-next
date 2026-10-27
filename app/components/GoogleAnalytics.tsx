@@ -98,6 +98,8 @@ export default function GoogleAnalytics() {
             gtag('js', new Date());
             gtag('config', '${measurementId}', { 'anonymize_ip': true, 'allow_google_signals': false });
             ${secondaryIds.map(id => `gtag('config', '${id}', { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });`).join('\n')}
+            window.__ipurposeGA4Ready = true;
+            window.dispatchEvent(new Event('ipurpose:ga4-ready'));
           `,
         }}
       />

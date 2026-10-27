@@ -2,11 +2,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { CANONICAL_DOMAIN_CONFIG } from '@/lib/canonical';
-import { AuthContextProvider } from './context/AuthContext';
-import BackgroundLayer from "./components/BackgroundLayer";
-import InternalNavbar from "./components/InternalNavbar";
-import VideoBackground from "./components/VideoBackground";
-import PixelInitializer from "./components/PixelInitializer";
+import SiteChrome from './components/SiteChrome';
 import SiteStructuredData from "./components/SiteStructuredData";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 
@@ -50,16 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
         <SiteStructuredData />
-        <PixelInitializer />
         <GoogleAnalytics />
-        <div className="fixed inset-0 -z-40">
-          <VideoBackground src="/videos/water-reflection.mp4" />
-        </div>
-        <BackgroundLayer />
-        <AuthContextProvider>
-          <InternalNavbar />
-          {children}
-        </AuthContextProvider>
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );
