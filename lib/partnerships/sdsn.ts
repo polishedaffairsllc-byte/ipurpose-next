@@ -40,7 +40,7 @@ const africaSlides = presentationSlides('africa-lm', recipientTitles({
   8: 'What we would ask of SDSN Youth Africa',
 }));
 const globalSlides = presentationSlides('global-partnership', recipientTitles({
-  1: 'A Ghana-First Evidence-Building Partnership for Youth Clarity and Employability',
+  1: 'A Ghana-First Evidence-Building Partnership for Youth Agency and Employability',
   3: 'Why SDSN Youth is the right scaling partner',
   5: 'The partnership ask',
   6: 'Proposed 8-week iPurpose × SDSN Youth Pilot — Ghana launch cohort',
