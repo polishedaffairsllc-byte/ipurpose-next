@@ -32,7 +32,7 @@ The PDF download uses the supplied Ghana master; Africa/Global PDF links remain 
 - `scripts/prepare-sdsn-slides.mjs`: repeatable asset preparation.
 - This handoff document.
 
-No sitemap, robots.txt, public navigation, authentication rules, database schema, or production deployment was changed. All page styles and theme tokens are scoped under `.sdsn-page`.
+No sitemap, robots.txt, public navigation, authentication rules, or database schema was changed. All page styles and theme tokens are scoped under `.sdsn-page`.
 
 ## Verification performed
 
@@ -50,3 +50,7 @@ No sitemap, robots.txt, public navigation, authentication rules, database schema
 SDSN events now wait for the existing GA4 config commands to be queued before calling the existing tracking helper, and explicitly use the project's deduplicated GA4 measurement IDs through `send_to`. This prevents initial page/slide events from depending on the Ads tag's default routing before GA4 is initialized. The existing owner/admin/QA disable flags are respected. `[SDSN delivery]` console messages distinguish queuing to the Google tag from property-level receipt; they are not proof of network delivery or GA4 ingestion.
 
 Regression checks: `node --import tsx --test tests/sdsn-analytics.node.ts tests/internal-analytics-exclusion.node.ts tests/launch-metrics.node.ts` (10 passed), TypeScript, and full CI-mode build passed. Five fresh events were verified in iPurpose Web GA4 DebugView (property 525662576, stream G-FX51XM1DVS), including `recipient_id=ghana-jh`; the corresponding collection request returned HTTP 204. The owner confirmed tracking works. An active internal-traffic filter, browser privacy protection, or checking another property may hide debug activity; the code does not bypass those protections or change property settings.
+
+## Merge validation dependency repair
+
+The existing production dependency audit failed on both main and this branch. To clear that gate, the lockfile now resolves Next.js 16.4.3, MCP server/core 2.3.0, Zod 4.6.6, DOMPurify 3.4.17, and Firebase's existing Undici override 6.29.1. No audit rules or exceptions were broadened. The unchanged audit passes with its pre-existing exact gRPC exception (four affected package nodes); eight moderate findings remain informational. The ten MCP authentication/transport regressions pass with `node --conditions=react-server --import tsx --test tests/launch-metrics-mcp.node.ts`, and TypeScript passes.
