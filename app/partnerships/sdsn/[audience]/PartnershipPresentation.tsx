@@ -52,7 +52,7 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
       <p className="sdsn-eyebrow">Prepared for {config.recipientName}{config.recipientRole ? ` · ${config.recipientRole}` : ''}</p>
       <h1 id="sdsn-title">{config.h1}</h1>
       <p className="sdsn-subtitle">{config.sub}</p>
-      <div className="sdsn-signature"><p>Renita Hamilton, MPS — Founder, iPurpose</p><p>Strategic Leadership · Social Impact · AI-Enabled Human Development</p></div>
+      <div className="sdsn-signature"><p>Renita Hamilton, MPS — Founder &amp; CEO, iPurpose</p><p>Strategic Leadership · Social Impact · AI-Enabled Human Development</p></div>
     </div></section>
     <section id="sdsn-presentation" className="sdsn-deck-section sdsn-container" aria-label={config.deckTitle}>
       <PresentationViewer deckTitle={config.deckTitle} slides={config.slides} onEvent={onViewerEvent} />

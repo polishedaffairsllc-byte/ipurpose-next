@@ -45,7 +45,7 @@ export const sdsnConfigs: Record<string, SDSNConfig> = {
   },
   'global-partnership': {
     slug: 'global-partnership', enabled: true, deckVariant: 'global',
-    recipientName: 'SDSN Youth Global Partnerships', recipientRole: '',
+    recipientName: 'SDSN Youth Global Events & Partnerships Team', recipientRole: '',
     h1: 'iPurpose × SDSN Youth', sub: 'A Ghana-first pilot designed to generate evidence and learning for SDSN Youth',
     deckTitle: deckContent.global[0].title,
     slides: globalSlides, pdfUrl: '/partnerships/sdsn/global-partnership/iPurpose_SDSN_Youth_Global_Partnership_Master.pdf',
