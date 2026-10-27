@@ -32,7 +32,7 @@ function recipientTitles(overrides: Record<number, string>) {
   return titles.map((title, i) => overrides[i + 1] ?? title);
 }
 const africaSlides = presentationSlides('africa-lm', recipientTitles({
-  1: 'Ghana Discovery Pilot with Africa Replication Pathway',
+  1: 'From Ghana to Africa: A Regional Pilot Concept',
   3: 'Why SDSN Youth Africa is the right regional partner',
   5: 'The partnership ask',
   6: 'Proposed 8-week iPurpose × SDSN Youth Africa Pilot — Ghana launch cohort',
@@ -40,7 +40,7 @@ const africaSlides = presentationSlides('africa-lm', recipientTitles({
   8: 'What we would ask of SDSN Youth Africa',
 }));
 const globalSlides = presentationSlides('global-partnership', recipientTitles({
-  1: 'Ghana Discovery Pilot & African Replication Partnership',
+  1: 'An Evidence-Building Pilot for Youth Clarity and Employability',
   3: 'Why SDSN Youth is the right scaling partner',
   5: 'The partnership ask',
   6: 'Proposed 8-week iPurpose × SDSN Youth Pilot — Ghana launch cohort',
