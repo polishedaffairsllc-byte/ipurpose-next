@@ -11,6 +11,8 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
   const emit = useCallback((name: string, params: EventParams = {}) => {
     // Queue through the existing event helper even before the GA script is ready.
     window.dataLayer = window.dataLayer || [];
+    // Google's gtag queue expects an Arguments object.
+    // eslint-disable-next-line prefer-rest-params
     window.gtag = window.gtag || function (..._args: unknown[]) { window.dataLayer.push(arguments); };
     if (!visit.current) {
       let internal = new URLSearchParams(window.location.search).get('preview') === '1';
