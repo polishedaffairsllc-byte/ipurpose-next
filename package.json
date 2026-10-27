@@ -17,7 +17,7 @@
     "crawl:ui": "node scripts/crawl-ui.mjs",
     "crawl:ui:vercel": "BASE_URL=https://ipurpose-fix-api-params-and-public-routes.vercel.app node scripts/crawl-ui.mjs",
     "crawl:ui:local": "BASE_URL=http://localhost:3000 node scripts/crawl-ui.mjs",
-    "test:firestore-alignment": "node --import tsx --test tests/firestore-alignment.node.ts"
+    "test:firestore-alignment": "node --import tsx --test tests/firestore-alignment.node.ts tests/internal-analytics-exclusion.node.ts"
   },
   "engines": {
     "node": "24.x"
@@ -25,7 +25,6 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@modelcontextprotocol/server": "2.0.0",
-    "@vercel/blob": "2.8.2",
     "@vvo/tzdb": "^6.198.0",
     "canvg": "^4.0.3",
     "clsx": "^2.1.1",
