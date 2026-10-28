@@ -1,4 +1,5 @@
 import 'server-only';
+import { PROPOSALS } from '@/lib/outreach/registry';
 import { SignJWT, importPKCS8 } from 'jose';
 
 const API = 'https://analyticsdata.googleapis.com/v1beta';
@@ -178,4 +179,32 @@ export async function getGa4Dashboard(propertyHint?: string | null) {
     geography: { countries: countries.rows, cities: cities.rows },
     technology: { platforms: platforms.rows, devices: devices.rows },
   };
+}
+
+/** Read-only recovery. Discover registered dimensions before asking for optional event parameters. */
+export async function queryProposalHistory(date = '2026-10-28') {
+  const property = propertyName(process.env.GA4_PROPERTY_ID);
+  const token = await accessToken();
+  const response = await fetch(`${API}/${property}/metadata`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', signal: AbortSignal.timeout(12000) });
+  if (!response.ok) throw new Error(`GA4 metadata unavailable (${response.status}).`);
+  const metadata = await response.json() as { dimensions?: Array<{ apiName: string }> };
+  const supported = new Set(metadata.dimensions?.map(d => d.apiName));
+  const optional = ['recipient_id', 'deck_variant', 'traffic_type', 'slide_number', 'interaction_type', 'method'].map(name => `customEvent:${name}`).filter(name => supported.has(name));
+  const pathDimension = supported.has('pagePathPlusQueryString') ? 'pagePathPlusQueryString' : 'pagePath';
+  // GA4 limits a report to 9 dimensions; recover optional fields in two compatible reports if needed.
+  const dimensionNames = ['dateHourMinute', 'eventName', pathDimension, ...optional.slice(0, 6)];
+  const rows = await post(property, 'runReport', {
+    ...dated(date, date, ['eventCount'], dimensionNames, 10000),
+    dimensionFilter: { andGroup: { expressions: [
+      { filter: { fieldName: 'eventName', inListFilter: { values: [...new Set(PROPOSALS.flatMap(proposal => Object.keys(proposal.events)))] } } },
+      { filter: { fieldName: 'pagePath', inListFilter: { values: PROPOSALS.map(proposal => proposal.pagePath) } } },
+    ] } },
+    orderBys: [{ dimension: { dimensionName: 'dateHourMinute' } }],
+  }, token);
+  let timezone: string | null = null;
+  try {
+    const propertyResponse = await fetch(`https://analyticsadmin.googleapis.com/v1beta/${property}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', signal: AbortSignal.timeout(10000) });
+    if (propertyResponse.ok) timezone = (await propertyResponse.json() as { timeZone?: string }).timeZone || null;
+  } catch { /* Do not invent timezone if the Admin API cannot report it. */ }
+  return { property, date, timezone, dimensions: dimensionNames, rows, truncated: rows.length >= 10000 };
 }

@@ -84,13 +84,19 @@ export async function GET(request: Request) {
       return [kind, { rows: page.rows.slice(0, 10), moreAvailable: !!page.cursor }] as const;
     }));
 
-    const [ga4, countPairs, recentPairs] = await Promise.all([ga4Promise, countsPromise, recentPromise]);
+    const outreachPromise = (async () => {
+      const { readOutreach } = await import('@/lib/outreach/service');
+      const { getOutreachHistory, historyForFilters } = await import('@/lib/outreach/history');
+      return { ...await readOutreach(db, { window: '7d', includeInternal: false }), historical: historyForFilters(await getOutreachHistory(), { includeInternal: false }) };
+    })().catch(() => ({ available: false, error: 'Outreach activity unavailable.' }));
+    const [ga4, countPairs, recentPairs, outreach] = await Promise.all([ga4Promise, countsPromise, recentPromise, outreachPromise]);
     return Response.json({
       schemaVersion: 2,
       generatedAt: new Date().toISOString(),
       count: snapshots.length,
       snapshots,
       ga4,
+      outreach,
       activity: { totals: Object.fromEntries(countPairs), recent: Object.fromEntries(recentPairs) },
     }, { headers: responseHeaders });
   } catch {
