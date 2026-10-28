@@ -15,7 +15,7 @@ test('actual existing owner feed includes generic outreach in v2; no OAuth or sn
     if (id === '@/lib/admin-activity/service') return { createActivityService: () => ({ list: async () => ({ rows: [], cursor: null }) }) };
     if (id === '@/lib/launch-metrics/ga4Dashboard') return { getGa4Dashboard: async () => ({}) };
     if (id === '@/lib/outreach/service') return { readOutreach: async (database, filters) => { assert.equal(database, db); calls.push(filters); return outreach; } };
-    if (id === '@/lib/outreach/history') return { getOutreachHistory: async () => ({ available: true, rows: [] }) };
+    if (id === '@/lib/outreach/history') return { getOutreachHistory: async () => ({ available: true, rows: [] }), historyForFilters: (history, filters) => { assert.equal(filters.includeInternal, false); return history; } };
     throw new Error('Unexpected boundary ' + id);
   };
   new Function('require', 'module', 'exports', 'process', output)(load, mod, mod.exports, { env: { LAUNCH_METRICS_FEED_TOKEN: 'fixture-only-token' } });

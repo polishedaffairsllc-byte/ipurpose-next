@@ -86,8 +86,8 @@ export async function GET(request: Request) {
 
     const outreachPromise = (async () => {
       const { readOutreach } = await import('@/lib/outreach/service');
-      const { getOutreachHistory } = await import('@/lib/outreach/history');
-      return { ...await readOutreach(db, { window: '7d', includeInternal: false }), historical: await getOutreachHistory() };
+      const { getOutreachHistory, historyForFilters } = await import('@/lib/outreach/history');
+      return { ...await readOutreach(db, { window: '7d', includeInternal: false }), historical: historyForFilters(await getOutreachHistory(), { includeInternal: false }) };
     })().catch(() => ({ available: false, error: 'Outreach activity unavailable.' }));
     const [ga4, countPairs, recentPairs, outreach] = await Promise.all([ga4Promise, countsPromise, recentPromise, outreachPromise]);
     return Response.json({

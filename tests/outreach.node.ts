@@ -4,10 +4,10 @@ import { randomUUID } from 'node:crypto';
 import { Timestamp, type Firestore } from 'firebase-admin/firestore';
 import type { Auth } from 'firebase-admin/auth';
 import { outreachSchema, proposalMetadata, windowStart, type OutreachInput } from '../lib/outreach/model';
-import { PROPOSALS } from '../lib/outreach/registry';
+import { PROPOSALS, type Proposal } from '../lib/outreach/registry';
 import { ingestionHandler, outreachAdminHandler } from '../lib/outreach/http';
 import { storeOutreachEvent, readOutreach, cleanupOutreachEvents } from '../lib/outreach/service';
-import { sanitizeHistory } from '../lib/outreach/history';
+import { sanitizeHistory, historyForFilters } from '../lib/outreach/history';
 import { createOutreachLogger } from '../lib/outreach/client';
 const now = new Date('2026-10-28T16:00:00Z');
 function input(overrides: Partial<OutreachInput> = {}): OutreachInput {
@@ -92,6 +92,8 @@ test('New York day boundaries account for daylight saving; history does not fabr
   assert.equal(windowStart('today', new Date('2026-11-01T20:00:00Z')).toISOString(), '2026-11-01T04:00:00.000Z');
   assert.equal(windowStart('today', new Date('2026-03-08T20:00:00Z')).toISOString(), '2026-03-08T05:00:00.000Z');
   const history = sanitizeHistory({ property: 'properties/1', date: '2026-10-28', timezone: 'America/New_York', dimensions: [], truncated: false, rows: [{ dateHourMinute: '202610280917', eventName: 'sdsn_page_view', pagePathPlusQueryString: '/partnerships/sdsn/ghana-jh?email=private', eventCount: 2 }, { dateHourMinute: '202610280918', eventName: 'sdsn_slide_view', pagePathPlusQueryString: '/partnerships/sdsn/ghana-jh?preview=1', eventCount: 1 }] });
+  assert.equal(historyForFilters(history, { includeInternal: false }).rows.length, 0);
+  assert.equal(historyForFilters(history, { includeInternal: true }).rows.length, 2);
   assert.equal(history.rows[0].timestamp_precision, 'minute'); assert.equal(history.rows[0].localMinute, '2026-10-28T09:17'); assert.equal(history.rows[0].traffic_type, 'unknown'); assert.equal(history.rows[1].traffic_type, 'internal'); assert.equal(JSON.stringify(history).includes('private'), false);
 });
 test('client beacon failure falls back to keepalive; GA readiness is irrelevant and QA signals persist classification', () => {
@@ -107,4 +109,13 @@ test('client beacon failure falls back to keepalive; GA readiness is irrelevant 
     search = ''; local.set('ipurpose_qa_traffic', '1'); log('sdsn_pdf_download', {}); assert.equal(bodies[3].traffic_type, 'internal');
     log('purchase', {}); assert.equal(bodies.length, 4);
   } finally { globalThis.fetch = oldFetch; if (windowDescriptor) Object.defineProperty(globalThis, 'window', windowDescriptor); else Reflect.deleteProperty(globalThis, 'window'); if (navigatorDescriptor) Object.defineProperty(globalThis, 'navigator', navigatorDescriptor); }
+});
+
+test('another controlled proposal family reuses the same schema and metadata without SDSN event names', () => {
+  const fixture: Proposal = { id: 'controlled-test-brief', family: 'test-brief', organization: 'Test institution', label: 'Test brief', recipientId: 'test-recipient', deckVariant: 'brief', pagePath: '/controlled/test-brief', slideCount: 4, events: { brief_open: 'page_view', brief_overview: 'overview_download' } };
+  (PROPOSALS as Proposal[]).push(fixture);
+  try {
+    const event = outreachSchema.parse(input({ proposal_id: fixture.id, page_path: fixture.pagePath, source_event_name: 'brief_overview' }));
+    assert.deepEqual(proposalMetadata(event), { proposal_family: fixture.family, organization: fixture.organization, recipient_id: fixture.recipientId, deck_variant: fixture.deckVariant, event_type: 'overview_download' });
+  } finally { (PROPOSALS as Proposal[]).pop(); }
 });

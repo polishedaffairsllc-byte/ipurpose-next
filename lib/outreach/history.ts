@@ -42,3 +42,13 @@ export async function getOutreachHistory(): Promise<HistoryReport> {
   cached = { at: Date.now(), data };
   return data;
 }
+
+/** Apply the same external-only/proposal scope to historical details as to ledger reads. */
+export function historyForFilters(history: HistoryReport, filters: { includeInternal: boolean; proposalId?: string }): HistoryReport {
+  if (!history.available) return history;
+  return {
+    ...history,
+    rows: history.rows.filter(row => (filters.includeInternal || row.traffic_type === 'external') && (!filters.proposalId || row.proposal_id === filters.proposalId)),
+    limitation: history.limitation + (filters.includeInternal ? '' : ' Internal and unclassified historical details are hidden by the external-only filter.'),
+  };
+}
