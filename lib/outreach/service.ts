@@ -59,7 +59,9 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
   // Order by receipt time across visits; enforce the emitted sequence within each visit.
   // Keep actual server timestamps unchanged even when beacons arrive out of order.
   const visitRows = new Map<string, OutreachEvent[]>();
-  for (const row of rows) visitRows.set(row.session_id, [...(visitRows.get(row.session_id) || []), row]);
+  for (const row of rows) {
+    const group = visitRows.get(row.session_id) || []; group.push(row); visitRows.set(row.session_id, group);
+  }
   const order = new Map<string, number>();
   for (const group of visitRows.values()) {
     let last = 0;

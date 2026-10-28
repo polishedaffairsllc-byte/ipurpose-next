@@ -1,11 +1,14 @@
 // First-party delivery is independent of GA readiness/consent and never changes GA parameters.
-import { proposalByPath } from './registry';
+import { proposalByPath, type Proposal } from './registry';
 type Params = Record<string, string | number | boolean>;
-const KEYS = ['sdsn_internal_v1', 'ipurpose_internal_traffic', 'ipurpose_qa_traffic'];
-function internal(params: Params) {
+const KEYS = ['ipurpose_outreach_internal_v1', 'ipurpose_internal_traffic', 'ipurpose_qa_traffic'];
+function internal(params: Params, proposal: Proposal) {
   const query = new URLSearchParams(window.location.search);
-  if (params.traffic_type === 'internal' || params.debug_mode === true || query.get('preview') === '1' || query.get('ipurpose_qa') === '1' || query.get('utm_source')?.toLowerCase() === 'codex_qa') return true;
-  try { return KEYS.some(key => window.localStorage.getItem(key) === '1'); } catch { return false; }
+  if (params.traffic_type === 'internal' || params.debug_mode === true || query.get('preview') === '1' || query.get('ipurpose_qa') === '1' || query.get('utm_source')?.toLowerCase() === 'codex_qa') {
+    try { window.localStorage.setItem('ipurpose_outreach_internal_v1', '1'); } catch { /* Optional. */ }
+    return true;
+  }
+  try { return [...KEYS, ...(proposal.internalStorageKeys || [])].some(key => window.localStorage.getItem(key) === '1'); } catch { return false; }
 }
 export function createOutreachLogger() {
   let visit: { id: string; sequence: number; number: number; recipient: string } | undefined;
@@ -20,7 +23,7 @@ export function createOutreachLogger() {
       }
       const query = new URLSearchParams(window.location.search);
       const outreach = query.get('outreach');
-      const isInternal = internal(params);
+      const isInternal = internal(params, proposal);
       const body = {
         event_id: crypto.randomUUID(), session_id: visit.id, client_timestamp: new Date().toISOString(),
         proposal_id: proposal.id, source_event_name: name,
