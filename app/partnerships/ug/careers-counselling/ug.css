@@ -1,0 +1,3 @@
+/* UG-only additions; all viewer styling and colors come from the approved template. */
+.ug-page .sdsn-segments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+.ug-page .ug-resources { flex-wrap: wrap; }
