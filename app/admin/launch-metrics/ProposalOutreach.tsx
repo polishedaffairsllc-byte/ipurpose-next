@@ -67,7 +67,6 @@ export default function ProposalOutreach() {
   const epoch = useRef(0);
   const authEpoch = useRef(0);
   const container = useRef<HTMLDivElement>(null);
-  const visible = useRef(false);
   useEffect(() => {
     let active = true;
     const unsubscribe = onIdTokenChanged(getFirebaseAuth(), async signedIn => {
@@ -106,11 +105,14 @@ export default function ProposalOutreach() {
   useEffect(() => {
     if (!allowed) return;
     void load();
-    const observer = new IntersectionObserver(entries => { visible.current = entries[0]?.isIntersecting || false; });
-    if (container.current) observer.observe(container.current);
-    const timer = setInterval(() => { if (visible.current && !document.hidden) void load(); }, 30000);
+    const timer = setInterval(() => {
+      // Re-read geometry after filter changes/resizing instead of retaining a stale observer flag.
+      const bounds = container.current?.getBoundingClientRect();
+      if (!document.hidden && bounds && bounds.bottom > 0 && bounds.top < window.innerHeight
+        && bounds.right > 0 && bounds.left < window.innerWidth) void load();
+    }, 30000);
     const invalidate = () => { epoch.current += 1; };
-    return () => { invalidate(); clearInterval(timer); observer.disconnect(); };
+    return () => { invalidate(); clearInterval(timer); };
   }, [allowed, load]);
   if (!allowed) return null;
   return <div ref={container}><ProposalOutreachPanel data={data} filters={filters} onFilters={value => { setData(null); setFilters(value); }} refresh={() => void load()} busy={busy} error={error}/></div>;
