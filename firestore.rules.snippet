@@ -11,3 +11,7 @@ match /emailTrust/{record} { allow read, write: if false; }
 match /publicChallenges/{record} { allow read, write: if false; }
 match /publicThrottle/{record} { allow read, write: if false; }
 match /publicReplays/{record} { allow read, write: if false; }
+
+// Proposal outreach ledger and opaque link registry: server Admin SDK only.
+match /proposalOutreachEvents/{event} { allow read, write: if false; }
+match /proposalOutreachLinks/{link} { allow read, write: if false; }

@@ -1,3 +1,4 @@
+import { createOutreachLogger } from '@/lib/outreach/client';
 import { trackEvent } from '@/lib/analytics';
 import { getLaunchMeasurementIds } from '@/lib/launch-metrics/config';
 
@@ -10,6 +11,7 @@ const READY_EVENT = 'ipurpose:ga4-ready';
 
 /** Hold initial events until the existing GA4 config commands are queued. */
 export function createSDSNEventSender() {
+  const logOutreach = createOutreachLogger();
   let pending: Array<{ name: string; params: Params }> = [];
   let listening = false;
   const send = (name: string, params: Params) => {
@@ -32,6 +34,7 @@ export function createSDSNEventSender() {
   };
   return (name: string, params: Params) => {
     if (typeof window === 'undefined') return;
+    logOutreach(name, params);
     if (window.__ipurposeGA4Ready) { send(name, params); return; }
     // Bounded memory if GA4 is blocked, excluded, or unconfigured.
     if (pending.length < 256) pending.push({ name, params });

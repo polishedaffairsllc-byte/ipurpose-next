@@ -10,6 +10,7 @@ import { downloadWeeklyMetrics } from '@/lib/launch-metrics/exportCsv';
 import { LaunchMetricsChart, labels } from './LaunchMetricsChart';
 import styles from './metrics.module.css';
 import LaunchActivity from './LaunchActivity';
+import ProposalOutreach from './ProposalOutreach';
 
 type State = { status: 'checking' | 'denied' | 'loading' | 'ready' | 'error'; rows: WeeklyMetrics[]; message?: string };
 const messageOf = (error: unknown) => error instanceof Error ? error.message : 'Unable to load Launch Metrics.';
@@ -75,6 +76,7 @@ export default function LaunchMetricsClient() {
   return <main className={styles.dashboard}>
     <div className="flex flex-wrap gap-4"><a href="/">← iPurpose home</a><a className="underline" href="/admin/user-activity">User Activity &amp; Support →</a></div>
     <header><p className="text-sm uppercase tracking-widest">iPurpose · Administration</p><h1 className="mt-2 text-4xl font-italiana">Launch Metrics</h1></header>
+    <ProposalOutreach />
     <LaunchActivity />
     {['checking', 'loading'].includes(state.status) && <p role="status">{state.status === 'checking' ? 'Checking administrator access…' : 'Loading weekly snapshots…'}</p>}
     {state.status === 'denied' && <p>Administrator access is required. <a className="underline" href="/login?next=/admin/launch-metrics">Sign in</a> with an administrator account.</p>}
