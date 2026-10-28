@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import styles from './ProposalOutreach.module.css';
 import { onIdTokenChanged, type User } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
 import { eventLabel, OUTREACH_TIMEZONE, type OutreachFilters } from '@/lib/outreach/model';
@@ -17,14 +18,14 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
   const history = data?.historical;
   const historicalRows = history?.available ? history.rows.filter(row =>
     (!filters.proposalId || row.proposal_id === filters.proposalId) && (filters.includeInternal || row.traffic_type === 'external')) : [];
-  return <section className="min-w-0 space-y-5 rounded-xl border bg-white p-5" aria-labelledby="proposal-outreach-title">
+  return <section className={styles.panel} aria-labelledby="proposal-outreach-title">
     <header><h2 id="proposal-outreach-title" className="text-2xl font-semibold">Proposal &amp; Partnership Outreach</h2>
       <p className="mt-2 text-sm">Page opened means the proposal page loaded. It does not mean an email was opened. Visits are anonymous; route activity does not identify a person.</p>
       <p className="mt-1 text-sm">America/New_York · timestamps include seconds · selected period only · {data?.environment || 'current environment'}</p></header>
-    <div className="flex flex-wrap items-end gap-4">
+    <div className={styles.controls}>
       <label>Period<select className="mt-1 block rounded border p-2" value={filters.window} onChange={event => onFilters({ ...filters, window: event.target.value as OutreachFilters['window'] })}><option value="today">Today</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option></select></label>
       <label>Proposal / recipient<select className="mt-1 block max-w-full rounded border p-2" value={filters.proposalId || ''} onChange={event => onFilters({ ...filters, proposalId: event.target.value || undefined })}><option value="">All proposals</option>{PROPOSALS.map(proposal => <option key={proposal.id} value={proposal.id}>{proposal.label} — {proposal.recipientId}</option>)}</select></label>
-      <label className="flex items-center gap-2 py-2"><input type="checkbox" checked={filters.includeInternal} onChange={event => onFilters({ ...filters, includeInternal: event.target.checked })}/>Include internal / QA activity</label>
+      <label className={styles.check}><input type="checkbox" checked={filters.includeInternal} onChange={event => onFilters({ ...filters, includeInternal: event.target.checked })}/>Include internal / QA activity</label>
       <button className={button} disabled={busy} onClick={refresh}>{busy ? 'Refreshing…' : 'Refresh'}</button>
     </div>
     <p className="text-sm font-semibold">{filters.includeInternal ? 'External and internal / QA activity' : 'External activity only'}</p>
@@ -33,7 +34,7 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
     {data && <>
       <p className="text-sm">Updated {formatTime(data.generatedAt)} ET. Refreshes about every 30 seconds while this panel is visible.</p>
       {data.truncated && <p role="alert">The safety limit was reached. Counts and timelines are partial; choose a shorter period.</p>}
-      <div className="grid gap-4 xl:grid-cols-3">{data.proposals.map(proposal => <article className="min-w-0 rounded-lg border p-4" key={proposal.proposal_id}>
+      <div className={styles.cards}>{data.proposals.map(proposal => <article className="min-w-0 rounded-lg border p-4" key={proposal.proposal_id}>
         <h3 className="text-lg font-semibold">{proposal.label} — {proposal.recipient_id}</h3><p className="text-sm">{proposal.organization}</p><p className="my-2 font-semibold">{proposal.status}</p>
         <dl className="space-y-2 text-sm">{[
           ['First visit', formatTime(proposal.firstVisit)], ['Most recent activity', formatTime(proposal.mostRecentActivity)],
@@ -43,7 +44,7 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
         ].map(([label, value]) => <div className="flex flex-wrap justify-between gap-x-3" key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
       </article>)}</div>
       <div><h3 className="text-lg font-semibold">Activity timeline</h3><p className="text-sm">Server receipt time, oldest first; event sequence preserves order within a visit when delivery arrives out of order. Visit numbers are local to a browser and are not people counts.</p>
-        {!data.recentEvents.length ? <p className="mt-3">No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className="mt-3 max-h-[36rem] space-y-3 overflow-y-auto">{data.recentEvents.map(event => <li key={event.event_id} className="break-words border-l-2 pl-3 text-sm">
+        {!data.recentEvents.length ? <p className="mt-3">No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className={styles.timeline}>{data.recentEvents.map(event => <li key={event.event_id} className="break-words border-l-2 pl-3 text-sm">
           <time dateTime={event.timestamp}>{formatTime(event.timestamp)} ET</time> — <strong>{PROPOSALS.find(proposal => proposal.id === event.proposal_id)?.label}</strong> — {eventLabel(event)} — Visit {event.visit_number}
           <span className="block text-xs">{event.traffic_type} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{event.outreach_id ? ` · outreach ${event.outreach_id.slice(0, 8)}` : ''}</span>
         </li>)}</ol>}
@@ -51,7 +52,7 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
       <details><summary className="cursor-pointer font-semibold">GA4 historical recovery — October 28, 2026</summary>
         <p className="my-3 text-sm">{history?.limitation}</p>
         {history?.available && <p className="text-sm">{history.rows.length} recovered minute buckets. Unclassified history is hidden by default and appears with the internal / QA toggle; it is never counted as confirmed external activity. Historical rows are separate from ledger summaries.</p>}
-        {historicalRows.length ? <ol className="mt-3 max-h-80 space-y-3 overflow-y-auto">{historicalRows.map((event, index) => <li key={index} className="text-sm">{event.localMinute.replace('T', ' ')} {event.timezone || '(property timezone unavailable)'} — {event.recipient_id} — {eventLabel(event)} — count {event.count}<span className="block text-xs">GA4 historical · minute precision · {event.traffic_type}</span></li>)}</ol> : <p className="mt-2 text-sm">No reliably classified external historical rows available for this filter.</p>}
+        {historicalRows.length ? <ol className={styles.timeline}>{historicalRows.map((event, index) => <li key={index} className="text-sm">{event.localMinute.replace('T', ' ')} {event.timezone || '(property timezone unavailable)'} — {event.recipient_id} — {eventLabel(event)} — count {event.count}<span className="block text-xs">GA4 historical · minute precision · {event.traffic_type}</span></li>)}</ol> : <p className="mt-2 text-sm">No reliably classified external historical rows available for this filter.</p>}
       </details>
     </>}
   </section>;
