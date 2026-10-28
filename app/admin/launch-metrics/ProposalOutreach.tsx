@@ -65,20 +65,22 @@ export default function ProposalOutreach() {
   const [error, setError] = useState('');
   const user = useRef<User | null>(null);
   const epoch = useRef(0);
+  const authEpoch = useRef(0);
   const container = useRef<HTMLDivElement>(null);
   const visible = useRef(false);
   useEffect(() => {
     let active = true;
     const unsubscribe = onIdTokenChanged(getFirebaseAuth(), async signedIn => {
-      const version = ++epoch.current;
-      user.current = signedIn; setAllowed(false); setData(null); setError('');
+      const version = ++authEpoch.current;
+      ++epoch.current;
+      user.current = signedIn; setAllowed(false); setData(null); setBusy(false); setError('');
       if (!signedIn) return;
       try {
         const token = await signedIn.getIdTokenResult();
-        if (active && version === epoch.current) setAllowed(token.claims.admin === true);
+        if (active && version === authEpoch.current) setAllowed(token.claims.admin === true);
       } catch { /* Existing administrator sign-in messaging is rendered by the parent. */ }
     });
-    const invalidate = () => { epoch.current += 1; };
+    const invalidate = () => { epoch.current += 1; authEpoch.current += 1; };
     return () => { active = false; invalidate(); unsubscribe(); };
   }, []);
   const load = useCallback(async () => {
@@ -92,7 +94,10 @@ export default function ProposalOutreach() {
       if (filters.proposalId) params.set('proposal', filters.proposalId);
       const response = await fetch(`/api/admin/proposal-outreach?${params}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', credentials: 'omit', signal: AbortSignal.timeout(20000) });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Outreach activity unavailable.');
+      if (!response.ok) {
+        if (version === epoch.current && [401, 403].includes(response.status)) setData(null);
+        throw new Error(result.error || 'Outreach activity unavailable.');
+      }
       if (version === epoch.current) setData(result);
     } catch (failure) {
       if (version === epoch.current) setError(failure instanceof Error ? failure.message : 'Outreach activity unavailable.');
