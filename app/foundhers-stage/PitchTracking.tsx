@@ -50,5 +50,5 @@ export default function PitchTracking({ children }: { children: React.ReactNode 
     container.addEventListener('click', click);
     return () => { window.removeEventListener('ipurpose:ga4-ready', view); container.removeEventListener('click', click); };
   }, []);
-  return <div ref={root}>{children}</div>;
+  return <div ref={root} className="foundhers-shell">{children}</div>;
 }
