@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
+import GoogleAds from './components/GoogleAds';
 import { CANONICAL_DOMAIN_CONFIG } from '@/lib/canonical';
 import SiteChrome from './components/SiteChrome';
 import SiteStructuredData from "./components/SiteStructuredData";
@@ -23,26 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="antialiased">
       <head>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=AW-17993147612"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-ads-config"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'AW-17993147612', {
-                'allow_google_signals': true,
-                'allow_ad_personalization_signals': true
-              });
-            `,
-          }}
-        />
+        <GoogleAds />
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
         <SiteStructuredData />
