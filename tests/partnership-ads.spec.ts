@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { PathnameContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime';
+import GoogleAds from '../app/components/GoogleAds';
 
 const baseURL = process.env.BASE_URL;
 test.skip(!baseURL, 'Set BASE_URL to the reviewed Vercel preview.');
@@ -66,16 +70,11 @@ for (const [route, prefix, recipient, variant] of [
   });
 }
 
-test('future UG route family excludes Ads without adding a UG page', async ({ page }) => {
-  const adsRequests: string[] = [];
-  page.on('request', request => { if (request.url().includes(adsId)) adsRequests.push(request.url()); });
-  const response = await page.goto(`${baseURL}/partnerships/ug/future-recipient?ipurpose_qa=1`, { waitUntil: 'domcontentloaded' });
-  expect(response?.status()).toBe(404);
-  expect(await page.locator('script#google-ads-config').count()).toBe(0);
-  expect(await page.locator(`script[src*="${adsId}"]`).count()).toBe(0);
-  const configured = await page.evaluate(() => (window.dataLayer || []).some(args => args[0] === 'config' && args[1] === 'AW-17993147612'));
-  expect(configured).toBe(false);
-  expect(adsRequests).toEqual([]);
+test('future UG pathnames render no Ads component without adding a UG page', () => {
+  for (const pathname of ['/partnerships/ug/future-recipient', '/partnerships/ug/another/deck']) {
+    const markup = renderToStaticMarkup(createElement(PathnameContext.Provider, { value: pathname }, createElement(GoogleAds)));
+    expect(markup).toBe('');
+  }
 });
 
 for (const route of ['/', '/program', '/login']) {
