@@ -3,58 +3,80 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './ProposalOutreach.module.css';
 import { onIdTokenChanged, type User } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
-import { eventLabel, OUTREACH_TIMEZONE, type OutreachFilters } from '@/lib/outreach/model';
-import { PROPOSALS } from '@/lib/outreach/registry';
+import { eventLabel, OUTREACH_TIMEZONE, type OutreachFilters, type ProposalSummary } from '@/lib/outreach/model';
+import { PROPOSALS, type Proposal } from '@/lib/outreach/registry';
+import { activityFields, activityStatus, latestExternalInitiative } from '@/lib/outreach/activity';
 import type { OutreachReport } from '@/lib/outreach/service';
 import type { HistoryReport } from '@/lib/outreach/history';
 export type OutreachPanelData = OutreachReport & { historical: HistoryReport };
 const button = 'rounded border px-3 py-2 disabled:opacity-50';
+const selectionKey = 'ipurpose_outreach_initiative_v1';
 const formatTime = (value: string | null) => value ? new Intl.DateTimeFormat('en-US', { timeZone: OUTREACH_TIMEZONE, dateStyle: 'medium', timeStyle: 'medium' }).format(new Date(value)) : '—';
+
+function InitiativeActivityCard({ initiative, summary, data, onSelect, loading }: {
+  initiative: Proposal; summary?: ProposalSummary; data: OutreachPanelData | null; onSelect: (id: string) => void; loading: boolean;
+}) {
+  const history = data?.historical;
+  const engagement = history?.available ? history.engagement?.find(row => row.initiativeId === initiative.id) : undefined;
+  const historical = history?.available ? [...history.rows, ...(history.unclassifiedRows || [])].filter(row => row.proposal_id === initiative.id) : [];
+  const ga4Counts = historical.reduce<Record<string, number>>((counts, row) => { counts[row.event_type] = (counts[row.event_type] || 0) + row.count; return counts; }, {});
+  return <article className={styles.activityCard} data-testid="outreach-activity-card" aria-busy={loading}>
+    <label className={styles.selector}>Initiative<select aria-label="Outreach initiative" value={initiative.id} onChange={event => onSelect(event.target.value)}>
+      {PROPOSALS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
+    </select></label>
+    <div className={styles.cardBody}>
+      <h3 id="outreach-initiative-title">{initiative.label}</h3>
+      {initiative.organization && <p className={styles.organization}>{initiative.organization}</p>}
+      <p className={styles.status} aria-live="polite">{loading ? 'Loading activity…' : !data ? 'Activity unavailable' : activityStatus(summary, data.externalOnly === false)}</p>
+      <p className={styles.coverage}>First-party activity for the selected period. GA4 historical aggregates are shown separately.</p>
+      <dl className={styles.metrics}>{activityFields(initiative, summary, engagement).map(field => <div key={field.id}>
+        <dt>{field.label}</dt><dd>{!data ? '—' : field.kind === 'time' ? formatTime(field.value as string | null) : typeof field.value === 'boolean' ? field.value ? 'Yes' : 'No' : field.value ?? '—'}</dd>
+      </div>)}</dl>
+      {!!historical.length && <div className={styles.ga4Summary}>
+        <h4>GA4 historical events — aggregate / delayed</h4>
+        <p>{historical.some(row => row.traffic_type === 'unknown') ? 'Includes unclassified traffic; not confirmed external visits. ' : ''}Not added to first-party visits or metrics.</p>
+        <dl>{Object.entries(ga4Counts).map(([type, count]) => <div key={type}><dt>{eventLabel({ event_type: type })}</dt><dd>{count}</dd></div>)}</dl>
+      </div>}
+    </div>
+  </article>;
+}
 
 export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy, error }: {
   data: OutreachPanelData | null; filters: OutreachFilters; onFilters: (value: OutreachFilters) => void;
   refresh: () => void; busy: boolean; error: string;
 }) {
+  const [selectedId, setSelectedId] = useState<string | null>(() => {
+    try { const stored = sessionStorage.getItem(selectionKey); return PROPOSALS.some(item => item.id === stored) ? stored : null; } catch { return null; }
+  });
+  const initiative = PROPOSALS.find(item => item.id === selectedId) || PROPOSALS.find(item => item.id === latestExternalInitiative(data?.proposals || [], data?.externalOnly !== false, PROPOSALS, data?.historical.available ? data.historical.rows : [])) || PROPOSALS[0];
+  const select = (id: string) => { setSelectedId(id); try { sessionStorage.setItem(selectionKey, id); } catch { /* Session storage is optional. */ } };
   const history = data?.historical;
-  const historicalRows = history?.available ? history.rows.filter(row =>
-    (!filters.proposalId || row.proposal_id === filters.proposalId) && (filters.includeInternal || row.traffic_type === 'external')) : [];
+  const recent = data?.recentEvents.filter(event => event.proposal_id === initiative.id) || [];
+  const historicalRows = history?.available ? [...history.rows, ...(history.unclassifiedRows || [])].filter(row => row.proposal_id === initiative.id) : [];
   return <section className={styles.panel} aria-labelledby="proposal-outreach-title">
-    <header><h2 id="proposal-outreach-title" className="text-2xl font-semibold">Proposal &amp; Partnership Outreach</h2>
-      <p className="mt-2 text-sm">Page opened means the proposal page loaded. It does not mean an email was opened. Visits are anonymous; route activity does not identify a person.</p>
-      <p className="mt-1 text-sm">America/New_York · timestamps include seconds · selected period only · {data?.environment || 'current environment'}</p></header>
+    <header><h2 id="proposal-outreach-title" className="text-2xl font-semibold">Outreach / Proposal Activity</h2>
+      <p className="mt-2 text-sm">Page opened means a page load, not an email open. Visits are anonymous browser visits, not identified people. GA4 historical data may be aggregate and delayed.</p>
+      <p className="mt-1 text-sm">America/New_York · first-party timestamps include seconds · selected period only · {data?.environment || 'current environment'}</p></header>
     <div className={styles.controls}>
-      <label>Period<select className="mt-1 block rounded border p-2" value={filters.window} onChange={event => onFilters({ ...filters, window: event.target.value as OutreachFilters['window'] })}><option value="today">Today</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option></select></label>
-      <label>Proposal / recipient<select className="mt-1 block max-w-full rounded border p-2" value={filters.proposalId || ''} onChange={event => onFilters({ ...filters, proposalId: event.target.value || undefined })}><option value="">All proposals</option>{PROPOSALS.map(proposal => <option key={proposal.id} value={proposal.id}>{proposal.label} — {proposal.recipientId}</option>)}</select></label>
+      <label>Period<select value={filters.window} onChange={event => onFilters({ ...filters, window: event.target.value as OutreachFilters['window'] })}><option value="today">Today</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option></select></label>
       <label className={styles.check}><input type="checkbox" checked={filters.includeInternal} onChange={event => onFilters({ ...filters, includeInternal: event.target.checked })}/>Include internal / QA activity</label>
       <button className={button} disabled={busy} onClick={refresh}>{busy ? 'Refreshing…' : 'Refresh'}</button>
     </div>
     <p className="text-sm font-semibold">{filters.includeInternal ? 'External and internal / QA activity' : 'External activity only'}</p>
     {error && <p role="alert">{error}</p>}
-    {!data && !error && <p role="status">Loading proposal activity…</p>}
-    {data && <>
-      <p className="text-sm">Updated {formatTime(data.generatedAt)} ET. Refreshes about every 30 seconds while this panel is visible.</p>
-      {data.truncated && <p role="alert">The safety limit was reached. Counts and timelines are partial; choose a shorter period.</p>}
-      <div className={styles.cards}>{data.proposals.map(proposal => <article className="min-w-0 rounded-lg border p-4" key={proposal.proposal_id}>
-        <h3 className="text-lg font-semibold">{proposal.label} — {proposal.recipient_id}</h3><p className="text-sm">{proposal.organization}</p><p className="my-2 font-semibold">{proposal.status}</p>
-        <dl className="space-y-2 text-sm">{[
-          ['First visit', formatTime(proposal.firstVisit)], ['Most recent activity', formatTime(proposal.mostRecentActivity)],
-          [filters.includeInternal ? 'Visits' : 'External visits', proposal.visits], ['Highest slide reached', proposal.highestSlide || '—'],
-          ['Deck completed', proposal.completed ? 'Yes' : 'No'], ['PDF downloaded', proposal.pdfDownloaded ? 'Yes' : 'No'],
-          ['Visit iPurpose clicked', proposal.visitIpurposeClicked ? 'Yes' : 'No'], ['Contact clicked', proposal.contactClicked ? 'Yes' : 'No'],
-        ].map(([label, value]) => <div className="flex flex-wrap justify-between gap-x-3" key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
-      </article>)}</div>
-      <div><h3 className="text-lg font-semibold">Activity timeline</h3><p className="text-sm">Server receipt time, oldest first; event sequence preserves order within a visit when delivery arrives out of order. Visit numbers are local to a browser and are not people counts.</p>
-        {!data.recentEvents.length ? <p className="mt-3">No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className={styles.timeline}>{data.recentEvents.map(event => <li key={event.event_id} className="break-words border-l-2 pl-3 text-sm">
-          <time dateTime={event.timestamp}>{formatTime(event.timestamp)} ET</time> — <strong>{PROPOSALS.find(proposal => proposal.id === event.proposal_id)?.label}</strong> — {eventLabel(event)} — Visit {event.visit_number}
-          <span className="block text-xs">{event.traffic_type} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{event.outreach_id ? ` · outreach ${event.outreach_id.slice(0, 8)}` : ''}</span>
-        </li>)}</ol>}
-      </div>
-      <details><summary className="cursor-pointer font-semibold">GA4 historical recovery — October 28, 2026</summary>
-        <p className="my-3 text-sm">{history?.limitation}</p>
-        {history?.available && <p className="text-sm">{history.rows.length} recovered minute buckets. Unclassified history is hidden by default and appears with the internal / QA toggle; it is never counted as confirmed external activity. Historical rows are separate from ledger summaries.</p>}
-        {historicalRows.length ? <ol className={styles.timeline}>{historicalRows.map((event, index) => <li key={index} className="text-sm">{event.localMinute.replace('T', ' ')} {event.timezone || '(property timezone unavailable)'} — {event.recipient_id} — {eventLabel(event)} — count {event.count}<span className="block text-xs">GA4 historical · minute precision · {event.traffic_type}</span></li>)}</ol> : <p className="mt-2 text-sm">No reliably classified external historical rows available for this filter.</p>}
-      </details>
-    </>}
+    {data && <p className="text-sm">Updated {formatTime(data.generatedAt)} ET. Refreshes about every 30 seconds while this panel is visible.</p>}
+    {data?.truncated && <p role="alert">The safety limit was reached. Counts and timelines are partial; choose a shorter period.</p>}
+    <InitiativeActivityCard initiative={initiative} summary={data?.proposals.find(row => row.proposal_id === initiative.id)} data={data} onSelect={select} loading={!data && !error}/>
+    <div><h3 className="text-lg font-semibold">{initiative.label} activity timeline</h3><p className="text-sm">Server receipt time, oldest first; event sequence preserves order within an anonymous visit. Visit numbers are local to a browser, not people counts.</p>
+      <div className={styles.timelineSpace}>{!recent.length ? <p>No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className={styles.timeline}>{recent.map(event => <li key={event.event_id}>
+        <time dateTime={event.timestamp}>{formatTime(event.timestamp)} ET</time> — {eventLabel(event)} — Visit {event.visit_number}
+        <span>{event.traffic_type} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{event.outreach_id ? ' · outreach ' + event.outreach_id.slice(0, 8) : ''}</span>
+      </li>)}</ol>}</div>
+    </div>
+    <details><summary>GA4 historical activity for {initiative.label}</summary>
+      <p>{history?.limitation || 'GA4 data is aggregate and may be delayed; it does not identify individuals.'}</p>
+      <div className={styles.timelineSpace}>{historicalRows.length ? <ol className={styles.timeline}>{historicalRows.map((event, index) => <li key={index}>{event.localMinute.replace('T', ' ')} {event.timezone || '(property timezone unavailable)'} — {eventLabel(event)} — count {event.count}<span>GA4 historical · minute precision · {event.traffic_type}</span></li>)}</ol> : <p>No historical events reported for this initiative and period.</p>}</div>
+    </details>
   </section>;
 }
 export default function ProposalOutreach() {
@@ -104,7 +126,7 @@ export default function ProposalOutreach() {
   }, [allowed, filters]);
   useEffect(() => {
     if (!allowed) return;
-    void load();
+    const initial = setTimeout(() => { void load(); }, 0);
     const timer = setInterval(() => {
       // Re-read geometry after filter changes/resizing instead of retaining a stale observer flag.
       const bounds = container.current?.getBoundingClientRect();
@@ -112,7 +134,7 @@ export default function ProposalOutreach() {
         && bounds.right > 0 && bounds.left < window.innerWidth) void load();
     }, 30000);
     const invalidate = () => { epoch.current += 1; };
-    return () => { invalidate(); clearInterval(timer); };
+    return () => { invalidate(); clearTimeout(initial); clearInterval(timer); };
   }, [allowed, load]);
   if (!allowed) return null;
   return <div ref={container}><ProposalOutreachPanel data={data} filters={filters} onFilters={value => { setData(null); setFilters(value); }} refresh={() => void load()} busy={busy} error={error}/></div>;

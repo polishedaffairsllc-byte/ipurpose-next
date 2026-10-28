@@ -32,6 +32,7 @@ export function createOutreachLogger() {
         ...(type === 'slide_view' ? { slide_number: params.slide_number } : {}),
         ...(type === 'deck_interaction' ? { interaction_type: params.interaction_type } : {}),
         ...(type === 'contact_click' && params.method === 'mailto' ? { method: 'mailto' } : {}),
+        ...(type === 'cta_click' ? { cta_id: params.cta_id } : {}),
         ...(outreach && /^[A-Za-z0-9_-]{24,96}$/.test(outreach) ? { outreach_id: outreach } : {}),
       };
       const encoded = JSON.stringify(body);

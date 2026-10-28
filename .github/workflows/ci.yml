@@ -83,6 +83,9 @@ jobs:
       - name: Run attribution link tests
         run: node --test tests/attribution-links.test.mjs
 
+      - name: Run outreach initiative regressions
+        run: node --conditions=react-server --import tsx --test tests/outreach.node.ts tests/outreach-activity.node.ts tests/outreach-feed.test.cjs
+
       - name: Audit dependencies (fail on high vulnerabilities)
         run: |
           node --test tests/audit-production.test.mjs

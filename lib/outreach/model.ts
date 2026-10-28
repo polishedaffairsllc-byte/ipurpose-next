@@ -9,6 +9,7 @@ export const outreachSchema = z.object({
   slide_number: z.number().int().min(1).max(1000).optional(),
   interaction_type: z.enum(['prev', 'next', 'play', 'pause', 'fullscreen', 'tap', 'progress-jump', 'thumbnail']).optional(),
   method: z.literal('mailto').optional(), traffic_type: z.enum(['internal', 'external']), debug_mode: z.boolean(),
+  cta_id: z.string().max(80).optional(),
   outreach_id: z.string().regex(/^[A-Za-z0-9_-]{24,96}$/).optional(),
 }).strict().superRefine((event, context) => {
   const proposal = proposalById(event.proposal_id);
@@ -17,6 +18,7 @@ export const outreachSchema = z.object({
   if ((type === 'slide_view') !== (event.slide_number !== undefined) || (event.slide_number || 0) > (proposal?.slideCount || 0)) context.addIssue({ code: 'custom', message: 'Invalid slide event.' });
   if ((type === 'deck_interaction') !== (event.interaction_type !== undefined)) context.addIssue({ code: 'custom', message: 'Invalid interaction event.' });
   if (event.method !== undefined && type !== 'contact_click') context.addIssue({ code: 'custom', message: 'Invalid method.' });
+  if ((type === 'cta_click') !== (event.cta_id !== undefined) || (event.cta_id !== undefined && !Object.hasOwn(proposal?.ctas || {}, event.cta_id))) context.addIssue({ code: 'custom', message: 'Invalid controlled CTA.' });
 });
 export type OutreachInput = z.infer<typeof outreachSchema>;
 export function proposalMetadata(input: OutreachInput) {
@@ -33,6 +35,8 @@ export type ProposalSummary = {
   status: 'No external activity yet' | 'No activity yet' | 'Opened' | 'Engaged' | 'Completed';
   firstVisit: string | null; mostRecentActivity: string | null; visits: number; highestSlide: number;
   completed: boolean; pdfDownloaded: boolean; visitIpurposeClicked: boolean; contactClicked: boolean;
+  mostRecentExternalActivity?: string | null;
+  metricCounts?: { companionViews: number; compassClicks: number; clarityClicks: number; otherCtaClicks: number };
 };
 export function windowStart(window: OutreachWindow, now: Date) {
   if (window !== 'today') return new Date(now.getTime() - (window === '24h' ? 1 : 7) * 86400000);
@@ -54,18 +58,29 @@ export function summarize(events: OutreachEvent[], includeInternal: boolean): Pr
     const completed = has('deck_complete');
     return {
       proposal_id: proposal.id, proposal_family: proposal.family, organization: proposal.organization, recipient_id: proposal.recipientId, label: proposal.label,
-      status: completed ? 'Completed' : rows.some(event => ['deck_interaction', 'pdf_download', 'contact_click', 'visit_ipurpose_click', 'overview_download', 'video_click'].includes(event.event_type) || (event.slide_number || 0) > 1) ? 'Engaged' : rows.length ? 'Opened' : includeInternal ? 'No activity yet' : 'No external activity yet',
+      status: completed ? 'Completed' : rows.some(event => ['deck_interaction', 'pdf_download', 'contact_click', 'visit_ipurpose_click', 'overview_download', 'video_click', 'cta_click'].includes(event.event_type) || (event.slide_number || 0) > 1) ? 'Engaged' : rows.length ? 'Opened' : includeInternal ? 'No activity yet' : 'No external activity yet',
       firstVisit: opened.map(event => event.timestamp).sort()[0] || null,
       mostRecentActivity: rows.map(event => event.timestamp).sort().at(-1) || null,
       visits: new Set(opened.map(event => event.session_id)).size,
+      mostRecentExternalActivity: rows.filter(event => event.traffic_type === 'external').map(event => event.timestamp).sort().at(-1) || null,
+      ...(proposal.ctas ? { metricCounts: {
+        companionViews: opened.length,
+        compassClicks: rows.filter(event => event.cta_id && proposal.ctas?.[event.cta_id] === 'compassClicks').length,
+        clarityClicks: rows.filter(event => event.cta_id && proposal.ctas?.[event.cta_id] === 'clarityClicks').length,
+        otherCtaClicks: rows.filter(event => event.cta_id && proposal.ctas?.[event.cta_id] === 'otherCtaClicks').length,
+      } } : {}),
       highestSlide: Math.max(0, ...rows.map(event => event.slide_number || 0)), completed,
       pdfDownloaded: has('pdf_download'), visitIpurposeClicked: has('visit_ipurpose_click'), contactClicked: has('contact_click'),
     };
   });
 }
-export const eventLabel = (event: { event_type: string; slide_number?: number; interaction_type?: string }) => ({
-  page_view: 'Page opened', deck_start: 'Deck started', slide_view: `Slide ${event.slide_number} viewed`,
-  deck_interaction: `Deck interaction: ${event.interaction_type}`, deck_complete: 'Deck completed',
+export const eventLabel = (event: { event_type: string; slide_number?: number; interaction_type?: string; cta_id?: string; proposal_id?: string }) => {
+  const cta = proposalById(event.proposal_id || '')?.ctas?.[event.cta_id || ''];
+  return ({
+  page_view: 'Page opened', deck_start: 'Deck started', slide_view: event.slide_number ? `Slide ${event.slide_number} viewed` : 'Slide viewed',
+  deck_interaction: event.interaction_type ? `Deck interaction: ${event.interaction_type}` : 'Deck interaction', deck_complete: 'Deck completed',
   pdf_download: 'PDF downloaded', visit_ipurpose_click: 'Visit iPurpose clicked', contact_click: 'Contact clicked',
   overview_download: 'Overview downloaded', video_click: 'Video clicked',
+  cta_click: cta ? { compassClicks: 'Explore Compass clicked', clarityClicks: 'Clarity Check clicked', otherCtaClicks: 'Other CTA clicked' }[cta] : 'CTA clicked',
 }[event.event_type] || event.event_type);
+};

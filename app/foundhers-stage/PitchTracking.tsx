@@ -4,14 +4,17 @@ import { useEffect, useRef } from 'react';
 import { trackEvent } from '@/lib/analytics';
 import { getLaunchMeasurementIds } from '@/lib/launch-metrics/config';
 import { foundhersAttribution, FOUNDHERS_CAMPAIGN } from '@/lib/foundhers';
+import { createOutreachLogger } from '@/lib/outreach/client';
 
 /** Reuses the root GA loader. Native anchor navigation preserves its page-view behavior. */
 export default function PitchTracking({ children }: { children: React.ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const viewed = useRef(false);
+  const outreach = useRef<ReturnType<typeof createOutreachLogger> | null>(null);
   useEffect(() => {
     const container = root.current;
     if (!container) return;
+    const logOutreach = outreach.current ||= createOutreachLogger();
     let stored: string | null = null;
     try { stored = sessionStorage.getItem('ipurpose_utm'); } catch { /* storage is optional */ }
     const attribution = foundhersAttribution(window.location.search, stored);
@@ -34,11 +37,13 @@ export default function PitchTracking({ children }: { children: React.ReactNode 
     const view = () => {
       if (viewed.current || !ready() || excluded()) return;
       viewed.current = true;
+      logOutreach('foundhers_pitch_view', {});
       trackEvent('foundhers_pitch_view', { source_page: 'foundhers_stage', campaign: FOUNDHERS_CAMPAIGN, send_to: getLaunchMeasurementIds() });
     };
     const click = (event: MouseEvent) => {
       const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[data-cta-id]') : null;
       if (!link || !container.contains(link) || !ready() || excluded()) return;
+      logOutreach('foundhers_cta_click', { cta_id: link.dataset.ctaId || '' });
       trackEvent('foundhers_cta_click', {
         cta_id: link.dataset.ctaId, cta_label: link.textContent?.trim(), section: link.dataset.section,
         destination: new URL(link.href).pathname, campaign: FOUNDHERS_CAMPAIGN,

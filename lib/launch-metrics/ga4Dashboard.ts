@@ -8,7 +8,7 @@ const ANALYTICS_SCOPE = 'https://www.googleapis.com/auth/analytics.readonly';
 const TZ = 'America/New_York';
 
 type Row = Record<string, string | number | null>;
-type Report = { rows?: Array<{ dimensionValues?: Array<{ value?: string }>; metricValues?: Array<{ value?: string }> }>; dimensionHeaders?: Array<{ name?: string }>; metricHeaders?: Array<{ name?: string }> };
+type Report = { rows?: Array<{ dimensionValues?: Array<{ value?: string }>; metricValues?: Array<{ value?: string }> }>; dimensionHeaders?: Array<{ name?: string }>; metricHeaders?: Array<{ name?: string }>; metadata?: { timeZone?: string } };
 type Section = { rows: Row[]; available: boolean; error?: string };
 type ServiceAccount = { client_email: string; private_key: string };
 
@@ -73,7 +73,7 @@ function normalize(report: Report): Row[] {
   });
 }
 
-async function post(property: string, method: 'runReport' | 'runRealtimeReport', body: unknown, token: string) {
+async function postRaw(property: string, method: 'runReport' | 'runRealtimeReport', body: unknown, token: string) {
   const response = await fetch(`${API}/${property}:${method}`, {
     method: 'POST', cache: 'no-store', signal: AbortSignal.timeout(12000),
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -83,7 +83,10 @@ async function post(property: string, method: 'runReport' | 'runRealtimeReport',
     const detail = (await response.text().catch(() => '')).replace(/\s+/g, ' ').trim();
     throw new Error(`GA4 ${method} failed (${response.status})${detail ? `: ${detail.slice(0, 700)}` : ''}`);
   }
-  return normalize(await response.json() as Report);
+  return await response.json() as Report;
+}
+async function post(property: string, method: 'runReport' | 'runRealtimeReport', body: unknown, token: string) {
+  return normalize(await postRaw(property, method, body, token));
 }
 
 const metrics = (names: string[]) => names.map(name => ({ name }));
@@ -182,29 +185,39 @@ export async function getGa4Dashboard(propertyHint?: string | null) {
 }
 
 /** Read-only recovery. Discover registered dimensions before asking for optional event parameters. */
-export async function queryProposalHistory(date = '2026-10-28') {
+export async function queryProposalHistory(date = '7daysAgo', endDate = 'today') {
   const property = propertyName(process.env.GA4_PROPERTY_ID);
   const token = await accessToken();
   const response = await fetch(`${API}/${property}/metadata`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', signal: AbortSignal.timeout(12000) });
   if (!response.ok) throw new Error(`GA4 metadata unavailable (${response.status}).`);
   const metadata = await response.json() as { dimensions?: Array<{ apiName: string }> };
   const supported = new Set(metadata.dimensions?.map(d => d.apiName));
-  const optional = ['recipient_id', 'deck_variant', 'traffic_type', 'slide_number', 'interaction_type', 'method'].map(name => `customEvent:${name}`).filter(name => supported.has(name));
+  const optional = ['cta_id', 'traffic_type', 'slide_number', 'interaction_type', 'method', 'recipient_id', 'deck_variant'].map(name => `customEvent:${name}`).filter(name => supported.has(name));
   const pathDimension = supported.has('pagePathPlusQueryString') ? 'pagePathPlusQueryString' : 'pagePath';
   // GA4 limits a report to 9 dimensions; recover optional fields in two compatible reports if needed.
   const dimensionNames = ['dateHourMinute', 'eventName', pathDimension, ...optional.slice(0, 6)];
-  const rows = await post(property, 'runReport', {
-    ...dated(date, date, ['eventCount'], dimensionNames, 10000),
+  const reportPromise = postRaw(property, 'runReport', {
+    ...dated(date, endDate, ['eventCount'], dimensionNames, 10000),
     dimensionFilter: { andGroup: { expressions: [
       { filter: { fieldName: 'eventName', inListFilter: { values: [...new Set(PROPOSALS.flatMap(proposal => Object.keys(proposal.events)))] } } },
       { filter: { fieldName: 'pagePath', inListFilter: { values: PROPOSALS.map(proposal => proposal.pagePath) } } },
     ] } },
     orderBys: [{ dimension: { dimensionName: 'dateHourMinute' } }],
   }, token);
-  let timezone: string | null = null;
-  try {
-    const propertyResponse = await fetch(`https://analyticsadmin.googleapis.com/v1beta/${property}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', signal: AbortSignal.timeout(10000) });
-    if (propertyResponse.ok) timezone = (await propertyResponse.json() as { timeZone?: string }).timeZone || null;
-  } catch { /* Do not invent timezone if the Admin API cannot report it. */ }
-  return { property, date, timezone, dimensions: dimensionNames, rows, truncated: rows.length >= 10000 };
+  const engagementPromise = Promise.all(PROPOSALS.filter(initiative => initiative.campaign && initiative.source && initiative.medium).map(async initiative => {
+    try {
+      const rows = await post(property, 'runReport', {
+        ...dated(date, endDate, ['eventCount'], ['dateHourMinute', 'eventName'], 10000),
+        dimensionFilter: { andGroup: { expressions: [
+          ...[['sessionCampaignName', initiative.campaign], ['sessionSource', initiative.source], ['sessionMedium', initiative.medium]].map(([fieldName, value]) => ({ filter: { fieldName, stringFilter: { matchType: 'EXACT', value } } })),
+          { filter: { fieldName: 'eventName', inListFilter: { values: ['view_item', 'form_start', 'generate_lead', 'begin_checkout', 'clarity_check_start', 'clarity_check_complete', 'sign_up', 'engagement'] } } },
+          { notExpression: { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'EXACT', value: initiative.landingPath || initiative.pagePath } } } },
+        ] } },
+      }, token);
+      return { initiativeId: initiative.id, rows };
+    } catch { return { initiativeId: initiative.id, rows: [] }; }
+  }));
+  const [report, engagement] = await Promise.all([reportPromise, engagementPromise]);
+  const rows = normalize(report);
+  return { property, date, endDate, timezone: report.metadata?.timeZone || null, dimensions: dimensionNames, rows, engagement, truncated: rows.length >= 10000 };
 }
