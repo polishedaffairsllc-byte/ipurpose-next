@@ -2,11 +2,13 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { ArrowUpRight, Download, Mail } from 'lucide-react';
 import { trackSDSNEvent } from '@/lib/partnerships/sdsn-analytics';
-import { SDSN_LABELS, type SDSNConfig } from '@/lib/partnerships/sdsn';
+import { SDSN_LABELS } from '@/lib/partnerships/sdsn';
+import { partnershipEventName, type PartnershipConfig } from '@/lib/partnerships/presentation';
 import PresentationViewer, { type ViewerEvent } from './PresentationViewer';
 
 type EventParams = Record<string, string | number>;
-export default function PartnershipPresentation({ config }: { config: SDSNConfig }) {
+export default function PartnershipPresentation({ config }: { config: PartnershipConfig }) {
+  const prefix = config.analyticsPrefix ?? 'sdsn';
   const visit = useRef<{ internal: boolean; number: number } | null>(null);
   const emit = useCallback((name: string, params: EventParams = {}) => {
     // Queue through the existing event helper even before the GA script is ready.
@@ -20,7 +22,7 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
       try {
         if (internal) localStorage.setItem('sdsn_internal_v1', '1');
         internal = internal || localStorage.getItem('sdsn_internal_v1') === '1';
-        const key = `sdsn_visits_v1_${config.slug}`;
+        const key = `${prefix}_visits_v1_${config.slug}`;
         const stored = Number(localStorage.getItem(key));
         number = Number.isFinite(stored) && stored >= 0 ? Math.floor(stored) + 1 : 1;
         localStorage.setItem(key, String(number));
@@ -30,20 +32,22 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
         recipient_id: config.slug, deck_variant: config.deckVariant, visit_number: number,
         ...(internal ? { traffic_type: 'internal', debug_mode: true } : {}),
       };
-      trackSDSNEvent('sdsn_page_view', pageParams);
-      if (internal) console.debug('[SDSN]', 'sdsn_page_view', JSON.stringify(pageParams));
+      const pageEvent = partnershipEventName('sdsn_page_view', prefix);
+      trackSDSNEvent(pageEvent, pageParams);
+      if (internal) console.debug(`[${prefix.toUpperCase()}]`, pageEvent, JSON.stringify(pageParams));
     }
     if (name === 'sdsn_page_view') return;
     const eventParams = {
       ...params, recipient_id: config.slug, deck_variant: config.deckVariant,
       ...(visit.current.internal ? { traffic_type: 'internal', debug_mode: true } : {}),
     };
-    trackSDSNEvent(name, eventParams);
-    if (visit.current.internal) console.debug('[SDSN]', name, JSON.stringify(eventParams));
-  }, [config.slug, config.deckVariant]);
+    const eventName = partnershipEventName(name, prefix);
+    trackSDSNEvent(eventName, eventParams);
+    if (visit.current.internal) console.debug(`[${prefix.toUpperCase()}]`, eventName, JSON.stringify(eventParams));
+  }, [config.slug, config.deckVariant, prefix]);
   useEffect(() => { emit('sdsn_page_view'); }, [emit]);
   const onViewerEvent = useCallback((name: ViewerEvent, params?: EventParams) => emit(name, params), [emit]);
-  return <main className="sdsn-page min-h-screen">
+  return <main className={`sdsn-page min-h-screen${prefix === 'ug' ? ' ug-page' : ''}`}>
     <a className="sdsn-skip" href="#sdsn-presentation">Skip to presentation</a>
     <header className="sdsn-brand"><div className="sdsn-container">
       <a href="https://ipurposesoul.com" target="_blank" rel="noopener noreferrer" aria-label="Visit iPurpose (opens in a new tab)" onClick={() => emit('sdsn_visit_ipurpose_click')} className="sdsn-wordmark">iPurpose<span aria-hidden="true">.</span></a>
@@ -65,6 +69,10 @@ export default function PartnershipPresentation({ config }: { config: SDSNConfig
           <a href="https://ipurposesoul.com" target="_blank" rel="noopener noreferrer" onClick={() => emit('sdsn_visit_ipurpose_click')}>{SDSN_LABELS.secondary}<ArrowUpRight size={17} aria-hidden="true"/></a>
           {config.pdfUrl ? <a href={config.pdfUrl} download onClick={() => emit('sdsn_pdf_download')}>{SDSN_LABELS.tertiary}<Download size={17} aria-hidden="true"/></a> : null}
         </div>
+        {config.overviewUrl || config.videoUrl ? <div className="sdsn-secondary-actions ug-resources">
+          {config.overviewUrl ? <a href={config.overviewUrl} download onClick={() => emit('sdsn_overview_download')}>Download the one-page overview<Download size={17} aria-hidden="true"/></a> : null}
+          {config.videoUrl ? <a href={config.videoUrl} target="_blank" rel="noopener noreferrer" onClick={() => emit('sdsn_video_click')}>Watch the 2–3 minute walkthrough<ArrowUpRight size={17} aria-hidden="true"/></a> : null}
+        </div> : null}
       </div>
     </section>
     <footer className="sdsn-footer">© 2026 iPurpose. All rights reserved.</footer>

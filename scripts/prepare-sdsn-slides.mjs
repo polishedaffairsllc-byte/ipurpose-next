@@ -1,14 +1,18 @@
 // Usage: node scripts/prepare-sdsn-slides.mjs /absolute/path/to/slides recipient-slug [original-ghana-png-directory]
-// Input: the original 2881 x 1620 PNG exports, slide-01.png through slide-12.png.
+// Add --ug for the 8-slide UG deck; existing SDSN invocation is unchanged.
+// Input: original PNG exports, slide-01.png through slide-12.png (08 for UG).
 import sharp from 'sharp';
 import { mkdir, readdir, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
-const [input, slug = 'ghana-jh', ghanaInput] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const ug = args.includes('--ug');
+const [input, slug = 'ghana-jh', ghanaInput] = args.filter(arg => arg !== '--ug');
 if (!input || !/^[a-z0-9-]+$/.test(slug)) throw new Error('Provide a PNG directory and a safe recipient slug.');
 const files = (await readdir(input)).filter(file => /^slide-\d\d\.png$/.test(file)).sort();
-if (files.length !== 12) throw new Error('Expected all 12 original PNG slide exports.');
-const output = path.join('public/partnerships/sdsn', slug);
+const count = ug ? 8 : 12;
+if (files.length !== count || files.some((file, i) => file !== `slide-${String(i + 1).padStart(2, '0')}.png`)) throw new Error(`Expected all ${count} original PNG slide exports in order.`);
+const output = path.join('public/partnerships', ug ? 'ug' : 'sdsn', slug);
 await mkdir(output, { recursive: true });
 const shared = [];
 const unique = [];
