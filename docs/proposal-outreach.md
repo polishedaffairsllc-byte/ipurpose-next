@@ -8,6 +8,14 @@ Standalone infrastructure from main, first integrated with the three live SDSN p
 
 The SDSN event sender invokes the logger once before the existing GA readiness queue. GA event names, parameters, destinations, exclusion behavior and pending-event delivery remain unchanged. First-party failures cannot block GA or the presentation. The client uses a bounded sendBeacon JSON body, or a keepalive fetch when beacon is unavailable/rejected.
 
+The dashboard renders one **Outreach / Proposal Activity** card. Its initiative selector is local state, so switching does not refetch or reload the page. Explicit choices are kept in session storage; otherwise the most recent confirmed external activity determines the default, with registry order as the no-activity fallback. Internal and unclassified GA4 activity cannot determine that default. The card and timeline reserve a stable responsive height.
+
+Regression command: `node --conditions=react-server --import tsx --test tests/outreach.node.ts tests/outreach-activity.node.ts tests/outreach-feed.test.cjs`. The CI workflow runs these tests in addition to the existing launch-metrics gates.
+
+Entries can declare a `metrics` list and campaign/source/medium/landing-path metadata. Existing deck fields are reused; the Found(her)s Stage entry instead declares companion-page views, Compass clicks, Clarity Check clicks, other CTA clicks and attributable downstream engagement. All content uses the same renderer.
+
+Found(her)s Stage mirrors its existing `foundhers_pitch_view` and `foundhers_cta_click` interactions into the same first-party ledger. This adds no GA4 emission or initialization. Only controlled `cta_id` values are accepted, classified by the registry. Unknown IDs and arbitrary fields are rejected. The logger instance survives effect cleanup, preserving the anonymous visit and event sequence without duplicate views.
+
 ## Ledger schema
 
 Collection: `proposalOutreachEvents`. Document ID: `<production|preview>_<event UUID>` (atomic create deduplicates retries).
@@ -21,7 +29,7 @@ Stored fields only:
 - `proposal_id`, `proposal_family`, `organization`, `recipient_id`, `deck_variant`, `page_path`: controlled registry values
 - `event_type`: generic interaction type; `source_event_name`: original emitter/GA name
 - `visit_number`: existing browser-local visit number; `sequence`: per-visit event order
-- `slide_number`, `interaction_type`, `method`: only where applicable, strictly allowlisted
+- `slide_number`, `interaction_type`, `method`, `cta_id`: only where applicable, strictly allowlisted
 - `traffic_type`: internal/external; `debug_mode`: boolean
 - `environment`: server-derived production/preview, never supplied by the browser
 - optional `outreach_id`: SHA-256 ID of a registered opaque outreach record
@@ -42,7 +50,7 @@ The existing owner-only Launch Metrics v2 feed returns `outreach.proposals`, `ou
 
 First-party summaries cover the selected period, not lifetime totals. Visits are distinct anonymous page visits, not unique people. First visit means the earliest logged page-view event in that period. An opened page is not an opened email. UTC is retained; UI uses America/New_York with seconds. Sequence determines within-visit order when network receipt order differs; actual server receipt timestamps remain visible. More than 10,000 scanned events yields an explicit partial-results warning, never a silently complete summary.
 
-Historical October 28, 2026 GA4 recovery uses the existing read-only Data API credentials/client and registered dimensions discovered through metadata. The GA4 Admin API reads the property timezone where permitted. Historical rows are aggregate minute buckets, not invented event records/visit identities. Missing/unset traffic classification is unknown, hidden by default, and never called confirmed external activity. Historical rows remain separate from ledger summaries to prevent double counting. Processing delays, unsupported dimensions, timezone unavailability and query failures are reported. Cache lifetime is five minutes.
+Historical recovery uses the selected period, existing read-only Data API credentials/client and registered dimensions discovered through metadata. The Data API response supplies the property timezone. Rows remain aggregate minute buckets, not invented event records or visit identities. Missing/unset traffic classification is unknown and is shown separately with an explicit unclassified label; it is never counted as confirmed external activity. Historical rows are not added to ledger summaries. Downstream events are included only when GA4 reports the configured campaign, source and medium and the event occurred beyond the landing page. These are labeled campaign-attributed event counts, not people or purchases. Processing delays, unsupported dimensions, timezone unavailability and query failures remain explicit. Cache lifetime is five minutes.
 
 ## Opaque future outreach links
 

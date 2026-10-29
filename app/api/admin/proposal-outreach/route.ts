@@ -5,7 +5,8 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const GET = outreachAdminHandler(async () => {
   const { firebaseAdmin } = await import('@/lib/firebaseAdmin');
-  return { auth: firebaseAdmin.auth(), read: async filters => ({
-    ...await readOutreach(firebaseAdmin.firestore(), filters), historical: historyForFilters(await getOutreachHistory(), filters),
-  }) };
+  return { auth: firebaseAdmin.auth(), read: async filters => {
+    const [outreach, historical] = await Promise.all([readOutreach(firebaseAdmin.firestore(), filters), getOutreachHistory(filters)]);
+    return { ...outreach, historical: historyForFilters(historical, filters) };
+  } };
 });
