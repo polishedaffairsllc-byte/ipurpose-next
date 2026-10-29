@@ -30,7 +30,6 @@ export const ugConfig: PartnershipConfig = {
   mailtoSubject: 'iPurpose × University of Ghana: exploratory conversation',
 };
 
-// Deliberately fail closed for production and unconfigured production builds.
-export function isUGPreviewEnabled(environment = process.env.VERCEL_ENV, nodeEnvironment = process.env.NODE_ENV) {
-  return environment === 'preview' || (environment !== 'production' && nodeEnvironment === 'development');
+export function isUGPreviewEnabled(_environment = process.env.VERCEL_ENV, _nodeEnvironment = process.env.NODE_ENV) {
+  return ugConfig.enabled;
 }
