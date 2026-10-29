@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { PathnameContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime';
+import GoogleAds from '../app/components/GoogleAds';
 
 const baseURL = process.env.BASE_URL;
 test.skip(!baseURL, 'Set BASE_URL to the reviewed Vercel preview.');
@@ -35,11 +39,8 @@ for (const [route, prefix, recipient, variant] of [
     await page.getByRole('button', { name: 'Next slide', exact: true }).click();
     await expect(page.locator('.sdsn-counter strong')).toHaveText('02');
     await page.waitForFunction(event => (window.dataLayer || []).some(args => args[0] === 'event' && args[1] === event && args[2]?.slide_number === 2), `${prefix}_slide_view`);
-    // Keep the document visible through the real final-slide dwell, so Google's
-    // async tag has initialized before the visibility-triggered batch flush.
     await page.locator('.sdsn-segments button').last().click();
     await page.waitForFunction(event => (window.dataLayer || []).some(args => args[0] === 'event' && args[1] === event), `${prefix}_deck_complete`);
-    // Flush the real browser's collection batch on visibility change.
     const blank = await context.newPage();
     await blank.goto('about:blank');
     await blank.bringToFront();
@@ -66,6 +67,13 @@ for (const [route, prefix, recipient, variant] of [
     });
   });
 }
+
+test('other UG partnership pathnames render no Ads component', () => {
+  for (const pathname of ['/partnerships/ug/future-recipient', '/partnerships/ug/another/deck']) {
+    const markup = renderToStaticMarkup(createElement(PathnameContext.Provider, { value: pathname }, createElement(GoogleAds)));
+    expect(markup).toBe('');
+  }
+});
 
 for (const route of ['/', '/program', '/login']) {
   test(`${route}: normal site retains the original Ads tag/config`, async ({ page }) => {
