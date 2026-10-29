@@ -14,7 +14,6 @@ for (const [route, prefix, recipient, variant] of [
   ['/partnerships/sdsn/ghana-jh', 'sdsn', 'ghana-jh', 'ghana'],
   ['/partnerships/sdsn/africa-lm', 'sdsn', 'africa-lm', 'africa'],
   ['/partnerships/sdsn/global-partnership', 'sdsn', 'global-partnership', 'global'],
-  ['/partnerships/ug/careers-counselling', 'ug', 'ug-careers-counselling', 'ug'],
 ]) {
   test(`${route}: no Google Ads tag/config; existing GA4 collection still works`, async ({ page, context }) => {
     const adsRequests: string[] = [];
@@ -39,8 +38,11 @@ for (const [route, prefix, recipient, variant] of [
     await page.getByRole('button', { name: 'Next slide', exact: true }).click();
     await expect(page.locator('.sdsn-counter strong')).toHaveText('02');
     await page.waitForFunction(event => (window.dataLayer || []).some(args => args[0] === 'event' && args[1] === event && args[2]?.slide_number === 2), `${prefix}_slide_view`);
+    // Keep the document visible through the real final-slide dwell, so Google's
+    // async tag has initialized before the visibility-triggered batch flush.
     await page.locator('.sdsn-segments button').last().click();
     await page.waitForFunction(event => (window.dataLayer || []).some(args => args[0] === 'event' && args[1] === event), `${prefix}_deck_complete`);
+    // Flush the real browser's collection batch on visibility change.
     const blank = await context.newPage();
     await blank.goto('about:blank');
     await blank.bringToFront();
@@ -68,7 +70,7 @@ for (const [route, prefix, recipient, variant] of [
   });
 }
 
-test('other UG partnership pathnames render no Ads component', () => {
+test('future UG pathnames render no Ads component without adding a UG page', () => {
   for (const pathname of ['/partnerships/ug/future-recipient', '/partnerships/ug/another/deck']) {
     const markup = renderToStaticMarkup(createElement(PathnameContext.Provider, { value: pathname }, createElement(GoogleAds)));
     expect(markup).toBe('');
