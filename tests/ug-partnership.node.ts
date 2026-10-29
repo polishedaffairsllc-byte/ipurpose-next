@@ -5,11 +5,11 @@ import { partnershipEventName } from '../lib/partnerships/presentation';
 import { createSDSNEventSender } from '../lib/partnerships/sdsn-analytics';
 import { getLaunchMeasurementIds } from '../lib/launch-metrics/config';
 
-test('UG page is available in previews/development and fails closed in production', () => {
+test('UG page is available in preview, development and production', () => {
   assert.equal(isUGPreviewEnabled('preview', 'production'), true);
-  assert.equal(isUGPreviewEnabled('production', 'production'), false);
-  assert.equal(isUGPreviewEnabled('production', 'development'), false);
-  assert.equal(isUGPreviewEnabled('', 'production'), false);
+  assert.equal(isUGPreviewEnabled('production', 'production'), true);
+  assert.equal(isUGPreviewEnabled('production', 'development'), true);
+  assert.equal(isUGPreviewEnabled('', 'production'), true);
   assert.equal(isUGPreviewEnabled('development', 'development'), true);
 });
 
