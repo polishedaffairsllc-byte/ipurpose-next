@@ -21,7 +21,10 @@ function InitiativeActivityCard({ initiative, summary, data, onSelect, loading }
   const engagement = history?.available ? history.engagement?.find(row => row.initiativeId === initiative.id) : undefined;
   const historical = history?.available ? [...history.rows, ...(history.unclassifiedRows || [])].filter(row => row.proposal_id === initiative.id) : [];
   const ga4Counts = historical.reduce<Record<string, number>>((counts, row) => { counts[row.event_type] = (counts[row.event_type] || 0) + row.count; return counts; }, {});
-  const recipientNames = [...new Set((data?.recentEvents || []).filter(event => event.proposal_id === initiative.id).map(event => attributedRecipientLabel(initiative, event.recipient_key)).filter((name): name is string => Boolean(name)))];
+  const recipientNames = [...new Set([
+    ...(data?.recentEvents || []).filter(event => event.proposal_id === initiative.id).map(event => attributedRecipientLabel(initiative, event.recipient_key)),
+    ...historical.map(event => attributedRecipientLabel(initiative, event.recipient_key)),
+  ].filter((name): name is string => Boolean(name)))];
   return <article className={styles.activityCard} data-testid="outreach-activity-card" aria-busy={loading}>
     <label className={styles.selector}>Initiative<select aria-label="Outreach initiative" value={initiative.id} onChange={event => onSelect(event.target.value)}>
       {PROPOSALS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
@@ -81,7 +84,10 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
     </div>
     <details><summary>GA4 historical activity for {initiative.label}</summary>
       <p>{history?.limitation || 'GA4 data is aggregate and may be delayed; it does not identify individuals.'}</p>
-      <div className={styles.timelineSpace}>{historicalRows.length ? <ol className={styles.timeline}>{historicalRows.map((event, index) => <li key={index}>{event.localMinute.replace('T', ' ')} {event.timezone || '(property timezone unavailable)'} — {eventLabel(event)} — count {event.count}<span>GA4 historical · minute precision · {event.traffic_type}</span></li>)}</ol> : <p>No historical events reported for this initiative and period.</p>}</div>
+      <div className={styles.timelineSpace}>{historicalRows.length ? <ol className={styles.timeline}>{historicalRows.map((event, index) => {
+        const recipientName = attributedRecipientLabel(initiative, event.recipient_key);
+        return <li key={index}>{event.localMinute.replace('T', ' ')} {event.timezone || '(property timezone unavailable)'} — {eventLabel(event)} — count {event.count}{recipientName ? ` — ${recipientName}` : ''}<span>GA4 historical · minute precision · {event.traffic_type}{recipientName ? ' · personalized recipient link' : ''}</span></li>;
+      })}</ol> : <p>No historical events reported for this initiative and period.</p>}</div>
     </details>
   </section>;
 }
