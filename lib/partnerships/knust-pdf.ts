@@ -21,7 +21,7 @@ const slides: DeckSlide[] = [
     cards: [
       { title: 'UP TO 40', body: 'KNUST students, age 18+' },
       { title: '8 WEEKS', body: 'structured discovery pilot' },
-      { title: 'PILOT FEE', body: 'waived for initial evaluation' },
+      { title: 'PILOT TERMS', body: 'to be agreed with KNUST' },
     ],
     note: 'Prepared for KNUST Career Services Centre · Mrs. Selina Doe Angmor, Director',
   },
@@ -79,7 +79,7 @@ const slides: DeckSlide[] = [
       { title: 'Recruitment + orientation', body: 'Recruit the agreed adult cohort and help coordinate one short virtual or hybrid orientation.' },
       { title: 'Two learning touchpoints', body: 'Participate in midpoint and closeout reviews and advise on KNUST and Ghana relevance.' },
     ],
-    note: 'Initial 8-week pilot fee: WAIVED. Not requested: funding, procurement, exclusivity, endorsement or a long-term commitment before evidence is available.',
+    note: 'Pilot fee and implementation terms: to be agreed with KNUST. Any longer-term commitment would follow evidence from the pilot.',
   },
   {
     title: 'Guardrails: Career Services, privacy and trust',
@@ -175,9 +175,9 @@ export function buildKNUSTOnePagePdf() {
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7.8); doc.setTextColor(INK); doc.text(wrap(doc, text, 163), 22, y + 16, { lineHeightFactor: 1.35 });
   };
   section('WHY KNUST', 52, 'KNUST Career Services Centre already combines one-on-one career coaching and self-exploration around values, personality, strengths and aspirations with internships, job placement and industry pathways. KNUST is also expanding digital and responsible-AI readiness through initiatives including IBM SkillBuild, the EU/UNCDF Pact for Skills and 2026 Gemini training.', PURPLE);
-  section('PROPOSED PILOT', 98, 'Up to 40 adult KNUST students · 8 weeks · pilot fee waived. Week 0 baseline/consent; Weeks 1–2 Clarity + Purpose + Compass; Weeks 3–6 guidance and verified Ghana pathways; Weeks 7–8 action, retention and interviews; closeout readout with KCSC.', GREEN);
+  section('PROPOSED PILOT', 98, 'Up to 40 adult KNUST students · 8 weeks. Week 0 baseline/consent; Weeks 1–2 Clarity + Purpose + Compass; Weeks 3–6 guidance and verified Ghana pathways; Weeks 7–8 action, retention and interviews; closeout readout with KCSC.', GREEN);
   section('WHAT KNUST RECEIVES', 144, 'Full pilot access; a localized Ghana pathway starter layer; aggregated usage and participant feedback; and a concise evidence-based closeout report. iPurpose serves as a continuation layer, not a replacement for KCSC or professional career services.', GOLD);
-  section('WHAT WE ASK', 190, 'One KCSC liaison; support recruiting the agreed adult cohort; one short orientation; participation in midpoint and closeout learning reviews; and advice on KNUST and Ghana relevance. No funding, procurement, exclusivity or long-term commitment is requested for the initial evaluation.', CORAL);
+  section('WHAT WE ASK', 190, 'Pilot fee and implementation terms would be agreed with KNUST before launch. We ask for one KCSC liaison; support recruiting the agreed adult cohort; one short orientation; participation in midpoint and closeout learning reviews; and advice on KNUST and Ghana relevance.', CORAL);
   section('GUARDRAILS + NEXT STEP', 236, '18+ initial cohort; clear KCSC referral pathway; data minimization; aggregated institutional reporting; and pre-launch review of consent, cross-border processing and Ghana data-protection requirements. Suggested next step: a 30-minute exploratory conversation.', '#7B82A3');
   doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(NAVY); doc.textWithLink('View the private KNUST partnership page', 15, 287, { url: PAGE_URL });
   doc.textWithLink('renita@ipurposesoul.com', w - 15, 287, { url: 'mailto:renita@ipurposesoul.com', align: 'right' });
