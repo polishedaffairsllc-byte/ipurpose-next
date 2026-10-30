@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { test } from 'node:test';
 import { createOutreachLogger } from '../lib/outreach/client';
+import { sanitizeHistory } from '../lib/outreach/history';
 import { outreachSchema } from '../lib/outreach/model';
 import { proposalById } from '../lib/outreach/registry';
 
@@ -64,4 +65,17 @@ test('client maps a controlled utm_content value into recipient_key and drops un
     if (windowDescriptor) Object.defineProperty(globalThis, 'window', windowDescriptor); else Reflect.deleteProperty(globalThis, 'window');
     if (navigatorDescriptor) Object.defineProperty(globalThis, 'navigator', navigatorDescriptor); else Reflect.deleteProperty(globalThis, 'navigator');
   }
+});
+
+test('GA4 historical recovery retains only allowlisted personalized recipient tags', () => {
+  const report = sanitizeHistory({
+    property: 'properties/1', date: '2026-10-30', endDate: '2026-10-30', timezone: 'America/New_York', dimensions: [], truncated: false,
+    rows: [
+      { dateHourMinute: '202610301119', eventName: 'ug_page_view', pagePathPlusQueryString: '/partnerships/ug/careers-counselling?utm_source=university_of_ghana&utm_medium=email&utm_content=setordzie', eventCount: 1 },
+      { dateHourMinute: '202610301120', eventName: 'ug_page_view', pagePathPlusQueryString: '/partnerships/ug/careers-counselling?utm_source=university_of_ghana&utm_medium=email&utm_content=unknown_person', eventCount: 1 },
+    ],
+  });
+  assert.equal(report.rows[0].recipient_key, 'setordzie');
+  assert.equal(Object.hasOwn(report.rows[1], 'recipient_key'), false);
+  assert.equal(JSON.stringify(report).includes('unknown_person'), false);
 });
