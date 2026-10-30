@@ -14,6 +14,8 @@ export function sanitizeHistory(result: HistoryQuery) {
     const query = url.searchParams;
     const internal = traffic === 'internal' || query.get('preview') === '1' || query.get('ipurpose_qa') === '1' || query.get('utm_source')?.toLowerCase() === 'codex_qa';
     const trafficType = internal ? 'internal' : traffic === 'external' ? 'external' : 'unknown';
+    const recipientKey = query.get('utm_content');
+    const attributedRecipient = recipientKey && proposal.recipients && Object.hasOwn(proposal.recipients, recipientKey) ? recipientKey : undefined;
     // minute-level wall-clock value is deliberately NOT fabricated into an exact UTC timestamp.
     const minute = String(row.dateHourMinute);
     if (!/^\d{12}$/.test(minute)) return [];
@@ -25,6 +27,7 @@ export function sanitizeHistory(result: HistoryQuery) {
       timezone: result.timezone, proposal_id: proposal.id, proposal_family: proposal.family, organization: proposal.organization, recipient_id: proposal.recipientId,
       source_event_name: String(row.eventName), event_type: proposal.events[String(row.eventName)], deck_variant: proposal.deckVariant, page_path: url.pathname,
       traffic_type: trafficType, count: Number(row.eventCount) || 0,
+      ...(attributedRecipient ? { recipient_key: attributedRecipient } : {}),
       ...(Number.isInteger(slide) && slide >= 1 && slide <= 12 ? { slide_number: slide } : {}),
       ...(typeof interaction === 'string' && ['prev', 'next', 'pause', 'play', 'fullscreen', 'thumbnail', 'progress-jump', 'tap'].includes(interaction) ? { interaction_type: interaction } : {}),
       ...(typeof row['customEvent:cta_id'] === 'string' && Object.hasOwn(proposal.ctas || {}, row['customEvent:cta_id']) ? { cta_id: String(row['customEvent:cta_id']) } : {}),
@@ -41,7 +44,7 @@ export function sanitizeHistory(result: HistoryQuery) {
       });
       return { initiativeId: item.initiativeId, buckets, ...engagementTotals(buckets) };
     }),
-    limitation: 'GA4 rows are aggregate minute buckets, not individual visits. Missing or unset traffic_type cannot reliably separate outreach from QA and is labeled unknown. Historical rows are separate from first-party summaries to prevent double counting. GA4 processing may delay today’s data. No seconds, visit numbers or identities are inferred.',
+    limitation: 'GA4 rows are aggregate minute buckets, not individual visits. Missing or unset traffic_type cannot reliably separate outreach from QA and is labeled unknown. Historical rows are separate from first-party summaries to prevent double counting. GA4 processing may delay today’s data. No seconds, visit numbers or identities are inferred. Controlled recipient labels may be recovered from personalized link parameters when present.',
   };
 }
 function engagementTotals(buckets: Array<{ eventName: string; count: number }>) {
