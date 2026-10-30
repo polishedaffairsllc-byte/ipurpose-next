@@ -23,6 +23,8 @@ export function createOutreachLogger() {
       }
       const query = new URLSearchParams(window.location.search);
       const outreach = query.get('outreach');
+      const recipientKey = query.get('utm_content');
+      const attributedRecipient = recipientKey && proposal.recipients && Object.hasOwn(proposal.recipients, recipientKey) ? recipientKey : undefined;
       const isInternal = internal(params, proposal);
       const body = {
         event_id: crypto.randomUUID(), session_id: visit.id, client_timestamp: new Date().toISOString(),
@@ -33,6 +35,7 @@ export function createOutreachLogger() {
         ...(type === 'deck_interaction' ? { interaction_type: params.interaction_type } : {}),
         ...(type === 'contact_click' && params.method === 'mailto' ? { method: 'mailto' } : {}),
         ...(type === 'cta_click' ? { cta_id: params.cta_id } : {}),
+        ...(attributedRecipient ? { recipient_key: attributedRecipient } : {}),
         ...(outreach && /^[A-Za-z0-9_-]{24,96}$/.test(outreach) ? { outreach_id: outreach } : {}),
       };
       const encoded = JSON.stringify(body);
