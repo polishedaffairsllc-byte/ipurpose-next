@@ -47,7 +47,7 @@ export default function PartnershipPresentation({ config }: { config: Partnershi
   }, [config.slug, config.deckVariant, prefix]);
   useEffect(() => { emit('sdsn_page_view'); }, [emit]);
   const onViewerEvent = useCallback((name: ViewerEvent, params?: EventParams) => emit(name, params), [emit]);
-  return <main className={`sdsn-page min-h-screen${prefix === 'ug' ? ' ug-page' : ''}`}>
+  return <main className={`sdsn-page min-h-screen${prefix === 'ug' ? ' ug-page' : ''}${prefix === 'knust' ? ' knust-page' : ''}`}>
     <a className="sdsn-skip" href="#sdsn-presentation">Skip to presentation</a>
     <header className="sdsn-brand"><div className="sdsn-container">
       <a href="https://ipurposesoul.com" target="_blank" rel="noopener noreferrer" aria-label="Visit iPurpose (opens in a new tab)" onClick={() => emit('sdsn_visit_ipurpose_click')} className="sdsn-wordmark">iPurpose<span aria-hidden="true">.</span></a>
