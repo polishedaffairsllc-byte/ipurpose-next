@@ -9,6 +9,7 @@ export type Proposal = {
   campaign?: string; landingPath?: string; source?: string; medium?: string;
   metrics?: readonly OutreachMetric[];
   ctas?: Readonly<Record<string, 'compassClicks' | 'clarityClicks' | 'otherCtaClicks'>>;
+  recipients?: Readonly<Record<string, string>>;
 };
 const sdsnEvents = Object.fromEntries(EVENT_TYPES.filter(type => !['overview_download', 'video_click', 'cta_click'].includes(type)).map(type => [`sdsn_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
 const ugEvents = Object.fromEntries(EVENT_TYPES.filter(type => type !== 'cta_click').map(type => [`ug_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
@@ -17,7 +18,11 @@ export const PROPOSALS: readonly Proposal[] = [
   { id: 'sdsn-ghana-jh', family: 'sdsn', organization: 'SDSN Youth Ghana', label: 'Ghana', recipientId: 'ghana-jh', deckVariant: 'ghana', pagePath: '/partnerships/sdsn/ghana-jh', slideCount: 12, internalStorageKeys: ['sdsn_internal_v1'], events: sdsnEvents },
   { id: 'sdsn-africa-lm', family: 'sdsn', organization: 'SDSN Youth Africa', label: 'Africa', recipientId: 'africa-lm', deckVariant: 'africa', pagePath: '/partnerships/sdsn/africa-lm', slideCount: 12, internalStorageKeys: ['sdsn_internal_v1'], events: sdsnEvents },
   { id: 'sdsn-global-partnership', family: 'sdsn', organization: 'SDSN Youth', label: 'Global Partnership', recipientId: 'global-partnership', deckVariant: 'global', pagePath: '/partnerships/sdsn/global-partnership', slideCount: 12, internalStorageKeys: ['sdsn_internal_v1'], events: sdsnEvents },
-  { id: 'ug-careers-counselling', family: 'ug', organization: 'University of Ghana', label: 'University of Ghana', recipientId: 'ug-careers-counselling', deckVariant: 'ug', pagePath: '/partnerships/ug/careers-counselling', slideCount: 8, internalStorageKeys: ['sdsn_internal_v1'], events: ugEvents },
+  {
+    id: 'ug-careers-counselling', family: 'ug', organization: 'University of Ghana', label: 'University of Ghana', recipientId: 'ug-careers-counselling',
+    deckVariant: 'ug', pagePath: '/partnerships/ug/careers-counselling', slideCount: 8, internalStorageKeys: ['sdsn_internal_v1'], events: ugEvents,
+    recipients: { setordzie: 'Dr. Gladys Setordzie', ben_naimah: 'Rev. Dr. Bridget Ben-Naimah', paintsil: 'Edwina Paintsil' },
+  },
   {
     id: 'foundhers-stage', label: 'Found(her)s Stage', family: 'foundhers', organization: 'The Found(her)s Stage',
     recipientId: 'foundhers-stage', deckVariant: 'companion', slideCount: 0,
