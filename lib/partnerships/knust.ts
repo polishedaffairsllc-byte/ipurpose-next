@@ -23,8 +23,8 @@ export const knustConfig: PartnershipConfig = {
     const src = `/partnerships/knust/career-services/slides/${i + 1}`;
     return { src, srcSet: `${src} 1600w`, title, alt: title, dwellSeconds: dwellSeconds[i] };
   }),
-  pdfUrl: '/partnerships/knust/career-services/iPurpose_KNUST_Career_Services_Pilot_Concept.pdf',
-  overviewUrl: '/partnerships/knust/career-services/iPurpose_KNUST_Career_Services_One_Page_Overview.pdf',
+  pdfUrl: '/partnerships/knust/career-services/downloads/deck',
+  overviewUrl: '/partnerships/knust/career-services/downloads/one-page',
   contactEmail: 'renita@ipurposesoul.com',
   mailtoSubject: 'iPurpose × KNUST: exploratory conversation',
 };
