@@ -13,6 +13,7 @@ export type Proposal = {
 };
 const sdsnEvents = Object.fromEntries(EVENT_TYPES.filter(type => !['overview_download', 'video_click', 'cta_click'].includes(type)).map(type => [`sdsn_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
 const ugEvents = Object.fromEntries(EVENT_TYPES.filter(type => type !== 'cta_click').map(type => [`ug_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
+const knustEvents = Object.fromEntries(EVENT_TYPES.filter(type => type !== 'cta_click').map(type => [`knust_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
 export const DECK_METRICS: readonly OutreachMetric[] = ['highestSlide', 'completed', 'pdfDownloaded', 'visitIpurposeClicked', 'contactClicked'];
 export const PROPOSALS: readonly Proposal[] = [
   { id: 'sdsn-ghana-jh', family: 'sdsn', organization: 'SDSN Youth Ghana', label: 'Ghana', recipientId: 'ghana-jh', deckVariant: 'ghana', pagePath: '/partnerships/sdsn/ghana-jh', slideCount: 12, internalStorageKeys: ['sdsn_internal_v1'], events: sdsnEvents },
@@ -22,6 +23,12 @@ export const PROPOSALS: readonly Proposal[] = [
     id: 'ug-careers-counselling', family: 'ug', organization: 'University of Ghana', label: 'University of Ghana', recipientId: 'ug-careers-counselling',
     deckVariant: 'ug', pagePath: '/partnerships/ug/careers-counselling', slideCount: 8, internalStorageKeys: ['sdsn_internal_v1'], events: ugEvents,
     recipients: { setordzie: 'Dr. Gladys Setordzie', ben_naimah: 'Rev. Dr. Bridget Ben-Naimah', paintsil: 'Edwina Paintsil' },
+  },
+  {
+    id: 'knust-career-services', family: 'knust', organization: 'Kwame Nkrumah University of Science and Technology', label: 'KNUST', recipientId: 'knust-career-services',
+    deckVariant: 'knust', pagePath: '/partnerships/knust/career-services', landingPath: '/partnerships/knust/career-services', slideCount: 8,
+    internalStorageKeys: ['sdsn_internal_v1'], campaign: 'knust_career_services_2026', source: 'knust', medium: 'email', events: knustEvents,
+    recipients: { selina_angmor: 'Mrs. Selina Doe Angmor' },
   },
   {
     id: 'foundhers-stage', label: 'Found(her)s Stage', family: 'foundhers', organization: 'The Found(her)s Stage',
