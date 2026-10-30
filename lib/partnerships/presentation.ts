@@ -2,7 +2,7 @@ import type { SDSNConfig } from './sdsn';
 
 // Existing SDSN pages keep their defaults; other recipients reuse the same template.
 export type PartnershipConfig = SDSNConfig & {
-  analyticsPrefix?: 'ug';
+  analyticsPrefix?: 'ug' | 'knust';
   overviewUrl?: string;
   videoUrl?: string;
 };
