@@ -10,6 +10,7 @@ export const outreachSchema = z.object({
   interaction_type: z.enum(['prev', 'next', 'play', 'pause', 'fullscreen', 'tap', 'progress-jump', 'thumbnail']).optional(),
   method: z.literal('mailto').optional(), traffic_type: z.enum(['internal', 'external']), debug_mode: z.boolean(),
   cta_id: z.string().max(80).optional(),
+  recipient_key: z.string().max(80).optional(),
   outreach_id: z.string().regex(/^[A-Za-z0-9_-]{24,96}$/).optional(),
 }).strict().superRefine((event, context) => {
   const proposal = proposalById(event.proposal_id);
@@ -19,6 +20,7 @@ export const outreachSchema = z.object({
   if ((type === 'deck_interaction') !== (event.interaction_type !== undefined)) context.addIssue({ code: 'custom', message: 'Invalid interaction event.' });
   if (event.method !== undefined && type !== 'contact_click') context.addIssue({ code: 'custom', message: 'Invalid method.' });
   if ((type === 'cta_click') !== (event.cta_id !== undefined) || (event.cta_id !== undefined && !Object.hasOwn(proposal?.ctas || {}, event.cta_id))) context.addIssue({ code: 'custom', message: 'Invalid controlled CTA.' });
+  if (event.recipient_key !== undefined && !Object.hasOwn(proposal?.recipients || {}, event.recipient_key)) context.addIssue({ code: 'custom', message: 'Invalid controlled recipient.' });
 });
 export type OutreachInput = z.infer<typeof outreachSchema>;
 export function proposalMetadata(input: OutreachInput) {
