@@ -84,7 +84,7 @@ jobs:
         run: node --test tests/attribution-links.test.mjs
 
       - name: Run outreach initiative regressions
-        run: node --conditions=react-server --import tsx --test tests/outreach.node.ts tests/outreach-activity.node.ts tests/outreach-feed.test.cjs tests/outreach-recipient-attribution.node.ts
+        run: node --conditions=react-server --import tsx --test tests/outreach.node.ts tests/outreach-activity.node.ts tests/outreach-feed.test.cjs tests/outreach-recipient-attribution.node.ts tests/knust-partnership.node.ts
 
       - name: Audit dependencies (fail on high vulnerabilities)
         run: |
