@@ -20,8 +20,8 @@ export const knustConfig: PartnershipConfig = {
   sub: 'A discovery pilot to extend career support between Career Services touchpoints',
   deckTitle: titles[0],
   slides: titles.map((title, i) => {
-    const base = `/partnerships/knust/career-services/slide-${String(i + 1).padStart(2, '0')}`;
-    return { src: `${base}.webp`, srcSet: `${base}.webp 1920w`, title, alt: title, dwellSeconds: dwellSeconds[i] };
+    const src = `/partnerships/knust/career-services/slides/${i + 1}`;
+    return { src, srcSet: `${src} 1600w`, title, alt: title, dwellSeconds: dwellSeconds[i] };
   }),
   pdfUrl: '/partnerships/knust/career-services/iPurpose_KNUST_Career_Services_Pilot_Concept.pdf',
   overviewUrl: '/partnerships/knust/career-services/iPurpose_KNUST_Career_Services_One_Page_Overview.pdf',
