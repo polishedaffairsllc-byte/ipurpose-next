@@ -1,3 +1,3 @@
 /* KNUST uses the approved 8-slide university presentation layout. */
-.knust-page .sdsn-segments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-.knust-page .ug-resources { flex-wrap: wrap; }
+.sdsn-page .sdsn-segments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+.sdsn-page .ug-resources { flex-wrap: wrap; }
