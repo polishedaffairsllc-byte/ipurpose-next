@@ -12,6 +12,7 @@ export type OutreachPanelData = OutreachReport & { historical: HistoryReport };
 const button = 'rounded border px-3 py-2 disabled:opacity-50';
 const selectionKey = 'ipurpose_outreach_initiative_v1';
 const formatTime = (value: string | null) => value ? new Intl.DateTimeFormat('en-US', { timeZone: OUTREACH_TIMEZONE, dateStyle: 'medium', timeStyle: 'medium' }).format(new Date(value)) : '—';
+const attributedRecipientLabel = (initiative: Proposal, recipientKey?: string) => recipientKey ? initiative.recipients?.[recipientKey] || recipientKey : null;
 
 function InitiativeActivityCard({ initiative, summary, data, onSelect, loading }: {
   initiative: Proposal; summary?: ProposalSummary; data: OutreachPanelData | null; onSelect: (id: string) => void; loading: boolean;
@@ -20,6 +21,7 @@ function InitiativeActivityCard({ initiative, summary, data, onSelect, loading }
   const engagement = history?.available ? history.engagement?.find(row => row.initiativeId === initiative.id) : undefined;
   const historical = history?.available ? [...history.rows, ...(history.unclassifiedRows || [])].filter(row => row.proposal_id === initiative.id) : [];
   const ga4Counts = historical.reduce<Record<string, number>>((counts, row) => { counts[row.event_type] = (counts[row.event_type] || 0) + row.count; return counts; }, {});
+  const recipientNames = [...new Set((data?.recentEvents || []).filter(event => event.proposal_id === initiative.id).map(event => attributedRecipientLabel(initiative, event.recipient_key)).filter((name): name is string => Boolean(name)))];
   return <article className={styles.activityCard} data-testid="outreach-activity-card" aria-busy={loading}>
     <label className={styles.selector}>Initiative<select aria-label="Outreach initiative" value={initiative.id} onChange={event => onSelect(event.target.value)}>
       {PROPOSALS.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
@@ -29,6 +31,7 @@ function InitiativeActivityCard({ initiative, summary, data, onSelect, loading }
       {initiative.organization && <p className={styles.organization}>{initiative.organization}</p>}
       <p className={styles.status} aria-live="polite">{loading ? 'Loading activity…' : !data ? 'Activity unavailable' : activityStatus(summary, data.externalOnly === false)}</p>
       <p className={styles.coverage}>First-party activity for the selected period. GA4 historical aggregates are shown separately.</p>
+      {initiative.recipients && <p className={styles.coverage}><strong>Recipient link activity:</strong> {recipientNames.length ? recipientNames.join(', ') : 'No attributed recipient link activity yet.'}</p>}
       <dl className={styles.metrics}>{activityFields(initiative, summary, engagement).map(field => <div key={field.id}>
         <dt>{field.label}</dt><dd>{!data ? '—' : field.kind === 'time' ? formatTime(field.value as string | null) : typeof field.value === 'boolean' ? field.value ? 'Yes' : 'No' : field.value ?? '—'}</dd>
       </div>)}</dl>
@@ -55,7 +58,7 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
   const historicalRows = history?.available ? [...history.rows, ...(history.unclassifiedRows || [])].filter(row => row.proposal_id === initiative.id) : [];
   return <section className={styles.panel} aria-labelledby="proposal-outreach-title">
     <header><h2 id="proposal-outreach-title" className="text-2xl font-semibold">Outreach / Proposal Activity</h2>
-      <p className="mt-2 text-sm">Page opened means a page load, not an email open. Visits are anonymous browser visits, not identified people. GA4 historical data may be aggregate and delayed.</p>
+      <p className="mt-2 text-sm">Page opened means a page load, not an email open. Visits are anonymous browser visits unless a controlled personalized recipient link identifies which outreach link was used. GA4 historical data may be aggregate and delayed.</p>
       <p className="mt-1 text-sm">America/New_York · first-party timestamps include seconds · selected period only · {data?.environment || 'current environment'}</p></header>
     <div className={styles.controls}>
       <label>Period<select value={filters.window} onChange={event => onFilters({ ...filters, window: event.target.value as OutreachFilters['window'] })}><option value="today">Today</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option></select></label>
@@ -67,11 +70,14 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
     {data && <p className="text-sm">Updated {formatTime(data.generatedAt)} ET. Refreshes about every 30 seconds while this panel is visible.</p>}
     {data?.truncated && <p role="alert">The safety limit was reached. Counts and timelines are partial; choose a shorter period.</p>}
     <InitiativeActivityCard initiative={initiative} summary={data?.proposals.find(row => row.proposal_id === initiative.id)} data={data} onSelect={select} loading={!data && !error}/>
-    <div><h3 className="text-lg font-semibold">{initiative.label} activity timeline</h3><p className="text-sm">Server receipt time, oldest first; event sequence preserves order within an anonymous visit. Visit numbers are local to a browser, not people counts.</p>
-      <div className={styles.timelineSpace}>{!recent.length ? <p>No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className={styles.timeline}>{recent.map(event => <li key={event.event_id}>
-        <time dateTime={event.timestamp}>{formatTime(event.timestamp)} ET</time> — {eventLabel(event)} — Visit {event.visit_number}
-        <span>{event.traffic_type} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{event.outreach_id ? ' · outreach ' + event.outreach_id.slice(0, 8) : ''}</span>
-      </li>)}</ol>}</div>
+    <div><h3 className="text-lg font-semibold">{initiative.label} activity timeline</h3><p className="text-sm">Server receipt time, oldest first; event sequence preserves order within an anonymous visit. Visit numbers are local to a browser, not people counts. Recipient labels identify the personalized link used, not an email-open event.</p>
+      <div className={styles.timelineSpace}>{!recent.length ? <p>No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className={styles.timeline}>{recent.map(event => {
+        const recipientName = attributedRecipientLabel(initiative, event.recipient_key);
+        return <li key={event.event_id}>
+          <time dateTime={event.timestamp}>{formatTime(event.timestamp)} ET</time> — {eventLabel(event)} — Visit {event.visit_number}{recipientName ? ` — ${recipientName}` : ''}
+          <span>{event.traffic_type} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{recipientName ? ' · personalized recipient link' : ''}{event.outreach_id ? ' · outreach ' + event.outreach_id.slice(0, 8) : ''}</span>
+        </li>;
+      })}</ol>}</div>
     </div>
     <details><summary>GA4 historical activity for {initiative.label}</summary>
       <p>{history?.limitation || 'GA4 data is aggregate and may be delayed; it does not identify individuals.'}</p>
