@@ -1,3 +1,4 @@
+import { accountDeletionLock } from './accountDeletionLock';
 import type { firestore } from "firebase-admin";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
 
@@ -22,6 +23,7 @@ async function recursiveDeleteDocuments(
  * this function completes successfully.
  */
 export async function deleteAccountData(uid: string, email?: string, db: firestore.Firestore = firebaseAdmin.firestore()): Promise<void> {
+  await accountDeletionLock(db, uid).set({ startedAt: new Date() });
   const plan = getAccountDeletionPlan(uid, email);
 
   for (const target of plan.fieldQueries) {

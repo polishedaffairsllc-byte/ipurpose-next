@@ -1,5 +1,4 @@
-const CURRENT_MENTOR_MODEL = "gpt-4o-mini";
-const MODEL_ID_PATTERN = /^[a-zA-Z0-9._:-]+$/;
+export const CURRENT_MENTOR_MODEL = "gpt-4o-mini";
 
 export interface CompanionModelConfig {
   defaultModel: string;
@@ -15,26 +14,25 @@ export interface CompanionHistoryMessage {
   content: string;
 }
 
-function validModelId(value: string | undefined): value is string {
-  return Boolean(value && MODEL_ID_PATTERN.test(value));
-}
-
 export function getCompanionModelConfig(
   environment: Record<string, string | undefined> = process.env
 ): CompanionModelConfig {
   const configuredDefault = environment.IPURPOSE_MENTOR_MODEL;
-  const defaultModel = validModelId(configuredDefault)
-    ? configuredDefault
-    : CURRENT_MENTOR_MODEL;
+  if (configuredDefault && configuredDefault !== CURRENT_MENTOR_MODEL) {
+    throw new Error('Unsupported generation model configuration. Configure gpt-4o-mini.');
+  }
 
   const configuredAllowed = (environment.IPURPOSE_MENTOR_ALLOWED_MODELS || "")
     .split(",")
     .map((model) => model.trim())
-    .filter(validModelId);
+    .filter(Boolean);
+  if (configuredAllowed.some(model => model !== CURRENT_MENTOR_MODEL)) {
+    throw new Error('Unsupported generation model allowlist. Only gpt-4o-mini is approved.');
+  }
 
   return {
-    defaultModel,
-    allowedModels: new Set([CURRENT_MENTOR_MODEL, defaultModel, ...configuredAllowed]),
+    defaultModel: CURRENT_MENTOR_MODEL,
+    allowedModels: new Set([CURRENT_MENTOR_MODEL]),
     maxInputCharacters: 4_000,
     maxHistoryMessages: 24,
     maxHistoryCharacters: 24_000,
@@ -47,9 +45,10 @@ export function resolveCompanionModel(
   environment: Record<string, string | undefined> = process.env
 ): string {
   const config = getCompanionModelConfig(environment);
-  return requestedModel && config.allowedModels.has(requestedModel)
-    ? requestedModel
-    : config.defaultModel;
+  if (requestedModel !== undefined && !config.allowedModels.has(requestedModel)) {
+    throw new Error('Unsupported generation model request. Only gpt-4o-mini is approved.');
+  }
+  return config.defaultModel;
 }
 
 export function boundCompanionHistory(

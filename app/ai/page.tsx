@@ -7,6 +7,7 @@ import Card from "../components/Card";
 import SectionHeading from "../components/SectionHeading";
 import VideoBackground from "../components/VideoBackground";
 import AIClient from "./AIClient";
+import { AiPermissionGate } from "./AiPermissionGate";
 
 export default async function AIPage() {
   const cookieStore = await cookies();
@@ -91,7 +92,9 @@ export default async function AIPage() {
           </a>
         </Card>
 
-        <AIClient initialName={name} userId={decoded.uid} />
+        <AiPermissionGate>
+          <AIClient initialName={name} userId={decoded.uid} />
+        </AiPermissionGate>
         </div>
       </div>
     );
