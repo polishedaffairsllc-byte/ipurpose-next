@@ -1,0 +1,1084 @@
+[
+  {
+    "institution_id": "university-of-cape-coast",
+    "institution_name": "University of Cape Coast",
+    "seed_name": "University of Cape Coast",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 1,
+    "primary_office": "Counselling Centre",
+    "context": "The Counselling Centre describes support for students’ personal development and confidence.",
+    "rationale": "A small pilot could help students bring clearer goals and practical next-step questions to existing counselling conversations.",
+    "sources": [
+      {
+        "url": "https://counselling.ucc.edu.gh/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-cape-coast",
+    "proposal_id": "university-university-of-cape-coast",
+    "page_path": "/partnerships/universities/university-of-cape-coast",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "ghana-communication-technology-university",
+    "institution_name": "Ghana Communication Technology University",
+    "seed_name": "Ghana Communication Technology University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 2,
+    "primary_office": "Guidance and Counselling Unit",
+    "context": "GCTU’s Guidance and Counselling Unit provides advisory support to undergraduate and graduate students.",
+    "rationale": "Reflective prompts and a practical action plan could complement existing guidance as students explore how their interests connect with technology-related study and work.",
+    "sources": [
+      {
+        "url": "https://site.gctu.edu.gh/guidance-and-counseling-unit",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "ghana-communication-technology-university",
+    "proposal_id": "university-ghana-communication-technology-university",
+    "page_path": "/partnerships/universities/ghana-communication-technology-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-for-development-studies",
+    "institution_name": "University for Development Studies",
+    "seed_name": "University for Development Studies",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 3,
+    "primary_office": "University Counselling Directorate",
+    "context": "UDS describes counselling support alongside career planning, CV preparation and internship guidance.",
+    "rationale": "Students could connect self-understanding with the questions and preparation they bring to career-planning and internship conversations.",
+    "sources": [
+      {
+        "url": "https://www.uds.edu.gh/students/international/students-welfare",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-for-development-studies",
+    "proposal_id": "university-university-for-development-studies",
+    "page_path": "/partnerships/universities/university-for-development-studies",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-professional-studies-accra",
+    "institution_name": "University of Professional Studies, Accra",
+    "seed_name": "University of Professional Studies, Accra",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 4,
+    "primary_office": "Counselling Unit",
+    "context": "UPSA’s Counselling Unit describes support for academic and personal goals, including career counselling.",
+    "rationale": "A structured reflection-to-action routine could help students articulate their strengths and compare professional pathways before seeking further advice.",
+    "sources": [
+      {
+        "url": "https://upsa.edu.gh/students/counseling-unit/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-professional-studies-accra",
+    "proposal_id": "university-university-of-professional-studies-accra",
+    "page_path": "/partnerships/universities/university-of-professional-studies-accra",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "ashesi-university",
+    "institution_name": "Ashesi University",
+    "seed_name": "Ashesi University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 5,
+    "primary_office": "Career Services Office",
+    "context": "Ashesi’s Career Services Office describes personalized coaching, mentoring and employer engagement.",
+    "rationale": "The pilot could test preparation between advising touchpoints: students clarify their priorities, organize questions and return to their advisers with an actionable decision brief.",
+    "sources": [
+      {
+        "url": "https://ashesi.edu.gh/career-services/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "ashesi-university",
+    "proposal_id": "university-ashesi-university",
+    "page_path": "/partnerships/universities/ashesi-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-ghana",
+    "institution_name": "University of Ghana",
+    "seed_name": "University of Ghana",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 6,
+    "primary_office": "Careers and Counselling Directorate",
+    "context": "UG describes integrated career and counselling support for its university community.",
+    "rationale": "Retain the existing concept and attribution. Any follow-up must be reviewed separately; do not repeat initial outreach.",
+    "sources": [
+      {
+        "url": "https://www.ug.edu.gh/careers/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-ghana",
+    "proposal_id": "ug-careers-counselling",
+    "page_path": "/partnerships/ug/careers-counselling",
+    "already_contacted": true,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "kwame-nkrumah-university-of-science-and-technology",
+    "institution_name": "Kwame Nkrumah University of Science and Technology",
+    "seed_name": "Kwame Nkrumah University of Science and Technology",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 7,
+    "primary_office": "Career Services Centre",
+    "context": "KNUST’s official Career Services Centre staff listing identifies its career-support team.",
+    "rationale": "Retain the existing concept and attribution. Any follow-up must be reviewed separately; do not repeat initial outreach.",
+    "sources": [
+      {
+        "url": "https://www.knust.edu.gh/knust-career-services-centre/staff",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "kwame-nkrumah-university-of-science-and-technology",
+    "proposal_id": "knust-career-services",
+    "page_path": "/partnerships/knust/career-services",
+    "already_contacted": true,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-education-winneba",
+    "institution_name": "University of Education, Winneba",
+    "seed_name": "University of Education, Winneba",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 8,
+    "primary_office": "Counselling Centre",
+    "context": "UEW’s Counselling Centre describes academic, career and personal-development support.",
+    "rationale": "Students preparing to guide others could use a structured space to examine their own strengths, decision criteria and professional next steps.",
+    "sources": [
+      {
+        "url": "https://uew.edu.gh/uewcc",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-education-winneba",
+    "proposal_id": "university-university-of-education-winneba",
+    "page_path": "/partnerships/universities/university-of-education-winneba",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-mines-and-technology",
+    "institution_name": "University of Mines and Technology",
+    "seed_name": "University of Mines and Technology",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 9,
+    "primary_office": "Counselling and Student Support Unit",
+    "context": "UMaT’s student-support unit describes career assistance, emotional support and academic counselling.",
+    "rationale": "A proposed cohort could connect practical technical learning with individual career priorities and a concrete plan to discuss with existing advisers.",
+    "sources": [
+      {
+        "url": "https://cssu.umat.edu.gh/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-mines-and-technology",
+    "proposal_id": "university-university-of-mines-and-technology",
+    "page_path": "/partnerships/universities/university-of-mines-and-technology",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-health-and-allied-sciences",
+    "institution_name": "University of Health and Allied Sciences",
+    "seed_name": "University of Health and Allied Sciences",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 10,
+    "primary_office": "Office of Student Affairs",
+    "context": "UHAS’s Office of Student Affairs describes support for students’ university experience and coordinates student groups and activities.",
+    "rationale": "For adult students considering health-related pathways, the proposed work would focus on career reflection, confidence and planning, with professional and clinical guidance remaining with university staff.",
+    "sources": [
+      {
+        "url": "https://uhas.edu.gh/uhas/student-affairs",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-health-and-allied-sciences",
+    "proposal_id": "university-university-of-health-and-allied-sciences",
+    "page_path": "/partnerships/universities/university-of-health-and-allied-sciences",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-energy-and-natural-resources",
+    "institution_name": "University of Energy and Natural Resources",
+    "seed_name": "University of Energy and Natural Resources",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 11,
+    "primary_office": "Guidance and Counselling Centre",
+    "context": "UENR’s counselling centre describes academic, career, social and personal-development support.",
+    "rationale": "The concept could help students connect their interests in energy and natural-resource pathways with realistic questions, opportunities and next-step actions.",
+    "sources": [
+      {
+        "url": "https://uenr.edu.gh/wp/related-offices/guidance-and-counselling-centre/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-energy-and-natural-resources",
+    "proposal_id": "university-university-of-energy-and-natural-resources",
+    "page_path": "/partnerships/universities/university-of-energy-and-natural-resources",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-environment-and-sustainable-development",
+    "institution_name": "University of Environment and Sustainable Development",
+    "seed_name": "University of Environment and Sustainable Development",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 12,
+    "primary_office": "Office of the Dean of Students Affairs",
+    "context": "UESD’s student-affairs page describes welfare, leadership, entrepreneurial and career-skills support.",
+    "rationale": "Students could use the pilot to connect their development interests with individual priorities, responsible choices and an achievable action plan.",
+    "sources": [
+      {
+        "url": "https://www.uesd.edu.gh/dean-of-students-affairs/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-environment-and-sustainable-development",
+    "proposal_id": "university-university-of-environment-and-sustainable-development",
+    "page_path": "/partnerships/universities/university-of-environment-and-sustainable-development",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-media-arts-and-communication",
+    "institution_name": "University of Media, Arts and Communication",
+    "seed_name": "University of Media, Arts and Communication",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 13,
+    "primary_office": null,
+    "context": "UniMAC’s official website describes its focus on media, arts, communication and languages.",
+    "rationale": "A proposed creative-career cohort could explore how personal strengths and values inform portfolio priorities, opportunity choices and practical next steps.",
+    "sources": [
+      {
+        "url": "https://unimac.edu.gh/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-media-arts-and-communication",
+    "proposal_id": "university-university-of-media-arts-and-communication",
+    "page_path": "/partnerships/universities/university-of-media-arts-and-communication",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": []
+  },
+  {
+    "institution_id": "university-of-business-and-integrated-development-studies",
+    "institution_name": "University of Business and Integrated Development Studies",
+    "seed_name": "University of Business and Integrated Development Studies",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 14,
+    "primary_office": null,
+    "context": "UBIDS describes a mission connecting knowledge and research with business and development challenges.",
+    "rationale": "The pilot could provide a complementary space for students to translate broad development interests into personally meaningful career questions and structured action.",
+    "sources": [
+      {
+        "url": "https://ubids.edu.gh/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "university-of-business-and-integrated-development-studies",
+    "proposal_id": "university-university-of-business-and-integrated-development-studies",
+    "page_path": "/partnerships/universities/university-of-business-and-integrated-development-studies",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": []
+  },
+  {
+    "institution_id": "accra-technical-university",
+    "institution_name": "Accra Technical University",
+    "seed_name": "Accra Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 15,
+    "primary_office": "Guidance and Counselling Directorate",
+    "context": "ATU publishes guidance and counselling activity supporting students’ transition through campus life.",
+    "rationale": "Technical students could use a small discovery cohort to articulate their strengths and prepare more focused questions for career and industrial-experience conversations.",
+    "sources": [
+      {
+        "url": "https://atu.edu.gh/guidance-and-counselling-directorate-and-src-sensitise-students-on-campus-life-and-examination-malpractice-at-atu/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "accra-technical-university",
+    "proposal_id": "university-accra-technical-university",
+    "page_path": "/partnerships/universities/accra-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "kumasi-technical-university",
+    "institution_name": "Kumasi Technical University",
+    "seed_name": "Kumasi Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 16,
+    "primary_office": "Industrial Liaison Office",
+    "context": "KsTU’s Industrial Liaison Office describes coordination of practical industrial training and university-industry learning.",
+    "rationale": "The pilot could complement practical learning by helping students connect evidence of their skills with personal priorities and a realistic career-development plan.",
+    "sources": [
+      {
+        "url": "https://web.kstu.edu.gh/about-us/offices-and-directorates/industrial-liaison-office",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "kumasi-technical-university",
+    "proposal_id": "university-kumasi-technical-university",
+    "page_path": "/partnerships/universities/kumasi-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "takoradi-technical-university",
+    "institution_name": "Takoradi Technical University",
+    "seed_name": "Takoradi Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 17,
+    "primary_office": null,
+    "context": "TTU’s official student information and published framework include support for students’ career development.",
+    "rationale": "A proposed technical-student cohort could connect self-knowledge with the decisions students make about practical experience and the questions they bring to university advisers.",
+    "sources": [
+      {
+        "url": "https://ttu.edu.gh/students/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "takoradi-technical-university",
+    "proposal_id": "university-takoradi-technical-university",
+    "page_path": "/partnerships/universities/takoradi-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": []
+  },
+  {
+    "institution_id": "cape-coast-technical-university",
+    "institution_name": "Cape Coast Technical University",
+    "seed_name": "Cape Coast Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 18,
+    "primary_office": "Counselling Unit",
+    "context": "CCTU’s published student handbook describes academic counselling and student support.",
+    "rationale": "The concept could help students organize personal priorities and practical next steps while continuing to use the university’s academic and support structures.",
+    "sources": [
+      {
+        "url": "https://cctu.edu.gh/site/page.php?id=89721",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "cape-coast-technical-university",
+    "proposal_id": "university-cape-coast-technical-university",
+    "page_path": "/partnerships/universities/cape-coast-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "ho-technical-university",
+    "institution_name": "Ho Technical University",
+    "seed_name": "Ho Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 19,
+    "primary_office": "Directorate of Career Placement and Counselling",
+    "context": "HTU’s directorate describes career guidance, workplace preparation and student-employer engagement.",
+    "rationale": "A complementary pilot could test whether students arrive at existing career-development activities with clearer goals, stronger self-advocacy and a practical action plan.",
+    "sources": [
+      {
+        "url": "https://htu.edu.gh/directorate-of-career-placement-and-guidance/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "ho-technical-university",
+    "proposal_id": "university-ho-technical-university",
+    "page_path": "/partnerships/universities/ho-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "koforidua-technical-university",
+    "institution_name": "Koforidua Technical University",
+    "seed_name": "Koforidua Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 20,
+    "primary_office": "University Counselling Centre",
+    "context": "KTU’s University Counselling Centre describes personal development, well-being and support with academic and work-related questions.",
+    "rationale": "Students could explore how their individual strengths and preferences connect with technical career choices before using established guidance channels.",
+    "sources": [
+      {
+        "url": "https://www.ktu.edu.gh/about/counselling",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "koforidua-technical-university",
+    "proposal_id": "university-koforidua-technical-university",
+    "page_path": "/partnerships/universities/koforidua-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "sunyani-technical-university",
+    "institution_name": "Sunyani Technical University",
+    "seed_name": "Sunyani Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 21,
+    "primary_office": "Counselling Unit",
+    "context": "STU publishes counselling support and a practical attachment and internship framework.",
+    "rationale": "The proposed cohort could help students connect reflection with preparation for practical experience, adviser conversations and small next-step commitments.",
+    "sources": [
+      {
+        "url": "https://www.stu.edu.gh/about-us/other-administrative-offices/counselling-unit",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "sunyani-technical-university",
+    "proposal_id": "university-sunyani-technical-university",
+    "page_path": "/partnerships/universities/sunyani-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "tamale-technical-university",
+    "institution_name": "Tamale Technical University",
+    "seed_name": "Tamale Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 22,
+    "primary_office": "Guidance and Counselling Directorate",
+    "context": "TaTU’s guidance directorate describes academic, personal and career support for students.",
+    "rationale": "A small discovery pilot could connect whole-student reflection with technical-career preparation, without changing the university’s existing counselling or referral responsibilities.",
+    "sources": [
+      {
+        "url": "https://tatu.edu.gh/newsite/director/dr-agyei-sarpong/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "tamale-technical-university",
+    "proposal_id": "university-tamale-technical-university",
+    "page_path": "/partnerships/universities/tamale-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "bolgatanga-technical-university",
+    "institution_name": "Bolgatanga Technical University",
+    "seed_name": "Bolgatanga Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 23,
+    "primary_office": "Guidance and Counselling",
+    "context": "Bolgatanga Technical University publishes guidance and counselling information for its community.",
+    "rationale": "The proposed learning exercise could help adult students turn their interests and strengths into more focused career questions and achievable actions.",
+    "sources": [
+      {
+        "url": "https://bolgatu.edu.gh/guidance-and-counselling/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "bolgatanga-technical-university",
+    "proposal_id": "university-bolgatanga-technical-university",
+    "page_path": "/partnerships/universities/bolgatanga-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "dr-hilla-limann-technical-university",
+    "institution_name": "Dr Hilla Limann Technical University",
+    "seed_name": "Wa Technical University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 24,
+    "primary_office": null,
+    "context": "The university’s official site identifies Dr Hilla Limann Technical University in Wa and describes competency-based technical education.",
+    "rationale": "The pilot could provide a reflective complement to applied learning: students connect their technical strengths with personal goals and a plan for exploring opportunities.",
+    "sources": [
+      {
+        "url": "https://www.dhltu.edu.gh/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "dr-hilla-limann-technical-university",
+    "proposal_id": "university-dr-hilla-limann-technical-university",
+    "page_path": "/partnerships/universities/dr-hilla-limann-technical-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": [
+      "Seed name reconciled to the university’s current official name in Wa."
+    ]
+  },
+  {
+    "institution_id": "central-university",
+    "institution_name": "Central University",
+    "seed_name": "Central University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 25,
+    "primary_office": "Counselling and Career Services Centre",
+    "context": "Central University describes a centre combining guidance, career support and personal-development work.",
+    "rationale": "A structured clarity-to-action routine could be explored as preparation between established support touchpoints, with counsellors and career staff remaining central.",
+    "sources": [
+      {
+        "url": "https://central.edu.gh/couselling-career-service",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "central-university",
+    "proposal_id": "university-central-university",
+    "page_path": "/partnerships/universities/central-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "valley-view-university",
+    "institution_name": "Valley View University",
+    "seed_name": "Valley View University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 26,
+    "primary_office": "Counselling Centre",
+    "context": "VVU’s public directory identifies separate counselling and career-services leadership roles.",
+    "rationale": "The pilot could offer a complementary way to connect values, strengths and practical planning, while respecting university guidance and individual student choices.",
+    "sources": [
+      {
+        "url": "https://www.vvu.edu.gh/directory",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "valley-view-university",
+    "proposal_id": "university-valley-view-university",
+    "page_path": "/partnerships/universities/valley-view-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "academic-city-university",
+    "institution_name": "Academic City University",
+    "seed_name": "Academic City University",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 27,
+    "primary_office": "Career Services Office",
+    "context": "Academic City’s Career Services Office describes support for experiential learning and students’ career goals.",
+    "rationale": "A proposed cohort could prepare students to connect what they learn through experience with clearer personal priorities and questions for career advisers.",
+    "sources": [
+      {
+        "url": "https://acity.edu.gh/student-life/career-services/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "academic-city-university",
+    "proposal_id": "university-academic-city-university",
+    "page_path": "/partnerships/universities/academic-city-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "lancaster-university-ghana",
+    "institution_name": "Lancaster University Ghana",
+    "seed_name": "Lancaster University Ghana",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 28,
+    "primary_office": null,
+    "context": "Lancaster University Ghana’s official site describes its Ghana campus and current student pathways.",
+    "rationale": "The concept could help adult students connect their degree choices with individual career criteria and practical plans, with local advisers shaping the context.",
+    "sources": [
+      {
+        "url": "https://lancaster.edu.gh/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "lancaster-university-ghana",
+    "proposal_id": "university-lancaster-university-ghana",
+    "page_path": "/partnerships/universities/lancaster-university-ghana",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": []
+  },
+  {
+    "institution_id": "presbyterian-university-ghana",
+    "institution_name": "Presbyterian University, Ghana",
+    "seed_name": "Presbyterian University, Ghana",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 29,
+    "primary_office": null,
+    "context": "PUG’s official pages describe its academic community, student resources and continuing programme development.",
+    "rationale": "A discovery pilot could offer space for students to connect self-understanding with their study and career decisions, then bring a focused plan to existing university support.",
+    "sources": [
+      {
+        "url": "https://www.presbyuniversity.edu.gh/site/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "presbyterian-university-ghana",
+    "proposal_id": "university-presbyterian-university-ghana",
+    "page_path": "/partnerships/universities/presbyterian-university-ghana",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": []
+  },
+  {
+    "institution_id": "methodist-university-ghana",
+    "institution_name": "Methodist University Ghana",
+    "seed_name": "Methodist University Ghana",
+    "country": "Ghana",
+    "group": "Ghana",
+    "priority": 30,
+    "primary_office": null,
+    "context": "Methodist University Ghana describes guidance and counselling study that includes career-development counselling.",
+    "rationale": "The proposed cohort could explore how a values-aware reflection and action-planning routine complements university advisers; the responsible office would be confirmed before discussion.",
+    "sources": [
+      {
+        "url": "https://mug.edu.gh/ma-guidance-counselling/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "methodist-university-ghana",
+    "proposal_id": "university-methodist-university-ghana",
+    "page_path": "/partnerships/universities/methodist-university-ghana",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "confirm_responsible_office"
+    ],
+    "notes": []
+  },
+  {
+    "institution_id": "clark-atlanta-university",
+    "institution_name": "Clark Atlanta University",
+    "seed_name": "Clark Atlanta University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 31,
+    "primary_office": "Career and Professional Development Office",
+    "context": "CAU describes career-oriented programming, individual guidance and exposure to professional opportunities.",
+    "rationale": "Students could prepare a personal decision brief that connects their strengths and priorities with the questions they bring to career and graduate-study conversations.",
+    "sources": [
+      {
+        "url": "https://www.cau.edu/student-life/career-professional-development/your-career-and-professional-development-team",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "clark-atlanta-university",
+    "proposal_id": "university-clark-atlanta-university",
+    "page_path": "/partnerships/universities/clark-atlanta-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "spelman-college",
+    "institution_name": "Spelman College",
+    "seed_name": "Spelman College",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 32,
+    "primary_office": "Career Planning and Development",
+    "context": "Spelman describes individual career counselling, professional-development activities and networking support.",
+    "rationale": "A pilot could help students practice articulating their strengths and decision criteria before using existing advising and professional-development opportunities.",
+    "sources": [
+      {
+        "url": "https://www.spelman.edu/career-planning-and-development/index.html",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "spelman-college",
+    "proposal_id": "university-spelman-college",
+    "page_path": "/partnerships/universities/spelman-college",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "morehouse-college",
+    "institution_name": "Morehouse College",
+    "seed_name": "Morehouse College",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 33,
+    "primary_office": "Career Development and Engagement",
+    "context": "Morehouse describes career preparation and support for students considering professional and postgraduate pathways.",
+    "rationale": "A structured reflection-to-action routine could help students prepare for mentoring, career conversations and opportunity decisions with a clearer personal plan.",
+    "sources": [
+      {
+        "url": "https://careerdevelopment.morehouse.edu/staff/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "morehouse-college",
+    "proposal_id": "university-morehouse-college",
+    "page_path": "/partnerships/universities/morehouse-college",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "morris-brown-college",
+    "institution_name": "Morris Brown College",
+    "seed_name": "Morris Brown College",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 34,
+    "primary_office": "Community Standards and Career Development",
+    "context": "Morris Brown’s student-affairs pages describe student-success coaching alongside career-development support.",
+    "rationale": "The pilot could offer an additional structure for connecting confidence, priorities and career questions with the existing coaching and support available to students.",
+    "sources": [
+      {
+        "url": "https://morrisbrown.edu/office-of-enrollment-management-student-affairs/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "morris-brown-college",
+    "proposal_id": "university-morris-brown-college",
+    "page_path": "/partnerships/universities/morris-brown-college",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "albany-state-university",
+    "institution_name": "Albany State University",
+    "seed_name": "Albany State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 35,
+    "primary_office": "Office of Career Services",
+    "context": "Albany State’s Office of Career Services describes career exploration, professional development and preparation for work, further study and entrepreneurship.",
+    "rationale": "A small first-year or returning-student cohort could explore how reflection and a practical action plan complement existing student-success and career services.",
+    "sources": [
+      {
+        "url": "https://www.asurams.edu/enrollment-management/office-of-career-services/index.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "albany-state-university",
+    "proposal_id": "university-albany-state-university",
+    "page_path": "/partnerships/universities/albany-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "fort-valley-state-university",
+    "institution_name": "Fort Valley State University",
+    "seed_name": "Fort Valley State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 36,
+    "primary_office": "Office of Civic Engagement and Career Development",
+    "context": "FVSU publishes civic-engagement and career-development resources for students.",
+    "rationale": "The proposed cohort could help students connect community interests, personal strengths and professional goals into a plan they can discuss with university staff.",
+    "sources": [
+      {
+        "url": "https://www.fvsu.edu/students/contact-the-office-of-career-and-professional-development",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "fort-valley-state-university",
+    "proposal_id": "university-fort-valley-state-university",
+    "page_path": "/partnerships/universities/fort-valley-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "savannah-state-university",
+    "institution_name": "Savannah State University",
+    "seed_name": "Savannah State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 37,
+    "primary_office": "Career Services and Leadership Development Center",
+    "context": "SSU describes a centre connecting career exploration, personal and leadership development, and professional preparation.",
+    "rationale": "The pilot could provide a practical bridge between individual reflection and the questions students bring to university-led career, leadership and opportunity conversations.",
+    "sources": [
+      {
+        "url": "https://savannahstate.edu/career-services/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "savannah-state-university",
+    "proposal_id": "university-savannah-state-university",
+    "page_path": "/partnerships/universities/savannah-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "paine-college",
+    "institution_name": "Paine College",
+    "seed_name": "Paine College",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 38,
+    "primary_office": "Office of Career Services",
+    "context": "Paine describes career counselling, personal-development opportunities and preparation for professional pathways.",
+    "rationale": "Students could use a small discovery cohort to clarify their priorities and prepare focused questions and next-step plans for established career support.",
+    "sources": [
+      {
+        "url": "https://paine.edu/student-success/student-support/career-services/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "paine-college",
+    "proposal_id": "university-paine-college",
+    "page_path": "/partnerships/universities/paine-college",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "alabama-state-university",
+    "institution_name": "Alabama State University",
+    "seed_name": "Alabama State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 39,
+    "primary_office": "Office of Career Services",
+    "context": "Alabama State describes career coaching, job-search preparation and resources for professional and further-study choices.",
+    "rationale": "A proposed reflection-to-action routine could help students define decision criteria and bring a clearer personal brief to career coaching.",
+    "sources": [
+      {
+        "url": "https://www.alasu.edu/student-affairs/career-services/about.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "alabama-state-university",
+    "proposal_id": "university-alabama-state-university",
+    "page_path": "/partnerships/universities/alabama-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "tuskegee-university",
+    "institution_name": "Tuskegee University",
+    "seed_name": "Tuskegee University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 40,
+    "primary_office": "Career Center",
+    "context": "Tuskegee’s official career centre describes support for students’ professional development and career pathways.",
+    "rationale": "The pilot could help students connect personal strengths and interests with questions about applied experience, professional options and achievable next steps.",
+    "sources": [
+      {
+        "url": "https://www.tuskegee.edu/career-center/",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "tuskegee-university",
+    "proposal_id": "university-tuskegee-university",
+    "page_path": "/partnerships/universities/tuskegee-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  },
+  {
+    "institution_id": "tennessee-state-university",
+    "institution_name": "Tennessee State University",
+    "seed_name": "Tennessee State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 41,
+    "primary_office": "Career Development Center",
+    "context": "TSU publishes career-development resources and contacts supporting students’ professional pathways.",
+    "rationale": "The proposed cohort could help students organize their strengths, decision criteria and opportunity questions before meeting existing career and student-success staff.",
+    "sources": [
+      {
+        "url": "https://www.tnstate.edu/careers/contact.aspx",
+        "label": "Official university source",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "tennessee-state-university",
+    "proposal_id": "university-tennessee-state-university",
+    "page_path": "/partnerships/universities/tennessee-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": []
+  }
+]

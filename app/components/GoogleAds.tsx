@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 export default function GoogleAds() {
   const pathname = usePathname();
+  if (pathname.startsWith('/partnerships/universities/')) return null;
   if (pathname === '/foundhers-stage' || pathname.startsWith('/partnerships/sdsn/') || pathname.startsWith('/partnerships/ug/')) return null;
 
   return <>

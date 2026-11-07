@@ -19,7 +19,7 @@ export function createOutreachLogger() {
       const type = proposal.events[name];
       const recipient = proposal.id;
       if (!visit || type === 'page_view' || visit.recipient !== recipient) {
-        visit = { id: crypto.randomUUID(), sequence: 0, number: Number(params.visit_number) || 1, recipient };
+        visit = { id: proposal.family === 'university' && typeof params.session_id === 'string' && /^[0-9a-f-]{36}$/.test(params.session_id) ? params.session_id : crypto.randomUUID(), sequence: 0, number: Number(params.visit_number) || 1, recipient };
       }
       const query = new URLSearchParams(window.location.search);
       const outreach = query.get('outreach');
@@ -27,14 +27,15 @@ export function createOutreachLogger() {
       const attributedRecipient = recipientKey && proposal.recipients && Object.hasOwn(proposal.recipients, recipientKey) ? recipientKey : undefined;
       const isInternal = internal(params, proposal);
       const body = {
-        event_id: crypto.randomUUID(), session_id: visit.id, client_timestamp: new Date().toISOString(),
+        event_id: proposal.family === 'university' && typeof params.event_id === 'string' && /^[0-9a-f-]{36}$/.test(params.event_id) ? params.event_id : crypto.randomUUID(), session_id: visit.id, client_timestamp: new Date().toISOString(),
         proposal_id: proposal.id, source_event_name: name,
-        page_path: window.location.pathname, visit_number: visit.number, sequence: ++visit.sequence,
+        page_path: window.location.pathname, visit_number: visit.number, sequence: proposal.family === 'university' && Number.isInteger(params.sequence) && Number(params.sequence) >= 1 ? Number(params.sequence) : ++visit.sequence,
         traffic_type: isInternal ? 'internal' : 'external', debug_mode: params.debug_mode === true,
         ...(type === 'slide_view' ? { slide_number: params.slide_number } : {}),
         ...(type === 'deck_interaction' ? { interaction_type: params.interaction_type } : {}),
         ...(type === 'contact_click' && params.method === 'mailto' ? { method: 'mailto' } : {}),
         ...(type === 'cta_click' ? { cta_id: params.cta_id } : {}),
+        ...(proposal.family === 'university' ? { ...(params.section_id ? { section_id: params.section_id } : {}), ...(params.destination_id ? { destination_id: params.destination_id } : {}), interaction_qualified: params.interaction_qualified === true } : {}),
         ...(attributedRecipient ? { recipient_key: attributedRecipient } : {}),
         ...(outreach && /^[A-Za-z0-9_-]{24,96}$/.test(outreach) ? { outreach_id: outreach } : {}),
       };

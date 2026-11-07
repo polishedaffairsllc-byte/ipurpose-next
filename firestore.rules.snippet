@@ -15,3 +15,6 @@ match /publicReplays/{record} { allow read, write: if false; }
 // Proposal outreach ledger and opaque link registry: server Admin SDK only.
 match /proposalOutreachEvents/{event} { allow read, write: if false; }
 match /proposalOutreachLinks/{link} { allow read, write: if false; }
+
+// Private university review contacts; access only through verified administrator APIs.
+match /proposalOutreachContacts/{contact} { allow read, write: if false; }

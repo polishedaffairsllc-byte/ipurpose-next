@@ -1,4 +1,6 @@
 import 'server-only';
+import { resolveUniversityLink, CONTACT_COLLECTION } from '@/lib/universities/links';
+import { proposalById } from './registry';
 import { createHash } from 'node:crypto';
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { outreachSchema, proposalMetadata, OUTREACH_RETENTION_DAYS, OUTREACH_TIMEZONE, summarize, windowStart, type OutreachEvent, type OutreachFilters, type OutreachInput } from './model';
@@ -14,7 +16,13 @@ export async function storeOutreachEvent(db: Firestore, input: OutreachInput, en
   // Only explicitly registered opaque tokens are retained; arbitrary query text never enters the ledger.
   const { outreach_id: token, ...event } = parsed;
   let outreachId: string | undefined;
-  if (token) {
+  let attributed: { attributed_recipient_id: string; institution_id: string; campaign_id: string } | undefined;
+  if (proposalById(event.proposal_id)?.family === 'university') {
+    const link = token && await resolveUniversityLink(db, token);
+    if (!link || link.institution.proposal_id !== event.proposal_id) throw new Error('Invalid university outreach link.');
+    outreachId = link.hash; attributed = { attributed_recipient_id: link.contactId, institution_id: link.institution.institution_id, campaign_id: link.campaignId };
+  }
+  if (token && !attributed) {
     const id = createHash('sha256').update(token).digest('hex');
     const link = await db.collection(OUTREACH_LINKS_COLLECTION).doc(id).get();
     const data = link.data();
@@ -22,7 +30,7 @@ export async function storeOutreachEvent(db: Firestore, input: OutreachInput, en
   }
   const document = db.collection(OUTREACH_COLLECTION).doc(`${environment}_${event.event_id}`);
   try {
-    await document.create({ ...event, ...proposalMetadata(event), ...(outreachId ? { outreach_id: outreachId } : {}), environment, timestamp: FieldValue.serverTimestamp() });
+    await document.create({ ...event, ...proposalMetadata(event), ...attributed, ...(outreachId ? { outreach_id: outreachId } : {}), environment, timestamp: FieldValue.serverTimestamp() });
     return { duplicate: false };
   } catch (error) {
     if ((error as { code?: number }).code === 6) return { duplicate: true };
@@ -47,14 +55,15 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
   const rows: OutreachEvent[] = [];
   for (const doc of snapshot.docs.slice(0, MAX_ROWS)) {
     const data = doc.data();
-    const { timestamp, environment: storedEnvironment, proposal_family: _family, organization: _organization, recipient_id: _recipient, deck_variant: _variant, event_type: _type, ...raw } = data;
+    const { timestamp, environment: storedEnvironment, proposal_family: _family, organization: _organization, recipient_id: _recipient, deck_variant: _variant, event_type: _type, attributed_recipient_id, institution_id, campaign_id, ...raw } = data;
     const parsed = outreachSchema.safeParse(raw);
     // Stored outreach_id is a SHA-256 record ID, also valid under the opaque-ID allowlist.
     if (!parsed.success || storedEnvironment !== environment || !(timestamp instanceof Timestamp)) continue;
     if (timestamp.toMillis() > now.getTime()) continue;
     if (!filters.includeInternal && parsed.data.traffic_type !== 'external') continue;
     if (filters.proposalId && parsed.data.proposal_id !== filters.proposalId) continue;
-    rows.push({ ...parsed.data, ...proposalMetadata(parsed.data), timestamp: timestamp.toDate().toISOString(), environment, source: 'first-party', timestamp_precision: 'exact' });
+    if (filters.recipientId && attributed_recipient_id !== filters.recipientId) continue;
+    rows.push({ ...parsed.data, ...proposalMetadata(parsed.data), ...(typeof attributed_recipient_id === 'string' ? { attributed_recipient_id } : {}), ...(typeof institution_id === 'string' ? { institution_id } : {}), ...(typeof campaign_id === 'string' ? { campaign_id } : {}), timestamp: timestamp.toDate().toISOString(), environment, source: 'first-party', timestamp_precision: 'exact' });
   }
   // Order by receipt time across visits; enforce the emitted sequence within each visit.
   // Keep actual server timestamps unchanged even when beacons arrive out of order.
@@ -70,7 +79,13 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
     }
   }
   rows.sort((a, b) => order.get(a.event_id)! - order.get(b.event_id)! || a.session_id.localeCompare(b.session_id) || a.sequence - b.sequence);
+  const recipientOptions: Record<string, { label: string; institution_id: string }> = {};
+  try {
+    const contacts = await db.collection(CONTACT_COLLECTION).where('environment', '==', environment).limit(250).get();
+    for (const doc of contacts.docs) { const contact = doc.data(); if (contact.contact_status !== 'qa_only' && typeof contact.institution_id === 'string') recipientOptions[doc.id] = { label: contact.recipient_name || contact.primary_office || 'Unassigned contact', institution_id: contact.institution_id }; }
+  } catch { /* Existing metrics remain readable if optional contact lookup is unavailable. */ }
   return {
+    recipientOptions,
     generatedAt: now.toISOString(), timezone: OUTREACH_TIMEZONE, externalOnly: !filters.includeInternal,
     environment, window: filters.window, periodStart: start.toISOString(), periodEnd: now.toISOString(),
     proposals: summarize(rows, filters.includeInternal).filter(row => !filters.proposalId || row.proposal_id === filters.proposalId),
