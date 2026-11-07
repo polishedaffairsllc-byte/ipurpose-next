@@ -12,6 +12,7 @@ export const universityEvents = {
 } as const;
 export function universityDestinations(item: Institution): Record<string, string> {
   return {
+    ipurpose: 'https://ipurposesoul.com',
     conversation: `mailto:renita@ipurposesoul.com?subject=${encodeURIComponent(`Exploratory student clarity pilot — ${item.institution_name}`)}`,
     ...Object.fromEntries(item.sources.map((source, i) => [`source-${i}`, source.url])),
   };

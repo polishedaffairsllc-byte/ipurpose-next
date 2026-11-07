@@ -65,6 +65,8 @@ test('schema requires controlled university link/section/destination and preserv
   assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_section_view',section_id:'pilot'}).success,true);
   assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_external_link_click',destination_id:'source-0'}).success,true);
   assert.equal(Object.hasOwn(universityDestinations(institution),'https://evil.example'),false);
+  assert.equal(universityDestinations(institution).ipurpose,'https://ipurposesoul.com');
+  assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_external_link_click',destination_id:'ipurpose'}).success,true);
   assert.equal(outreachFilters(new Request('https://example.com?recipient='+randomUUID())).recipientId?.length,36);
 });
 test('scanner classification does not claim human reading; anonymous sessions are bounded and contain no identity',()=>{

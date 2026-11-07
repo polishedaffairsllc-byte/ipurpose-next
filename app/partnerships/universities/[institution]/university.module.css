@@ -5,3 +5,5 @@
 @media(max-width:1024px){.pathway{grid-template-columns:repeat(3,minmax(0,1fr));}.brand{padding:22px 36px;}.container{padding:0 36px;}.hero{padding-top:60px;}.cards{gap:12px;}.cards article{padding:22px;}}
 @media(max-width:650px){.container{padding:0 20px;}.brand{padding:18px 20px;}.brand p{display:none;}.hero{padding:44px 0;}.lead{font-size:18px;}.section{padding:40px 0;}.cards,.pathway,.weeks{grid-template-columns:1fr;}.primary{width:100%;font-size:14px;padding:17px 20px;}.sectionNav{font-size:12px;gap:10px 20px;}.invitation{padding:28px 22px;}.page{font-size:16px;}.page h1{font-size:2.35rem;}.page h2{font-size:1.8rem;}}
 @media(prefers-reduced-motion:reduce){.page *{scroll-behavior:auto!important;transition:none!important;}}
+
+.siteLink {text-decoration:underline;text-underline-offset:3px;} .brand .siteLink {text-decoration:none;} .bottom .siteLink:focus-visible {outline-color:white;}
