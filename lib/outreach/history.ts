@@ -2,7 +2,7 @@ import 'server-only';
 import { queryProposalHistory } from '@/lib/launch-metrics/ga4Dashboard';
 import { proposalByPath } from './registry';
 import { activityMinute } from './activity';
-import { windowStart, type OutreachFilters } from './model';
+import { DEFAULT_OUTREACH_WINDOW, windowStart, type OutreachFilters } from './model';
 type HistoryQuery = Omit<Awaited<ReturnType<typeof queryProposalHistory>>, 'endDate' | 'engagement'> & Partial<Pick<Awaited<ReturnType<typeof queryProposalHistory>>, 'endDate' | 'engagement'>>;
 export function sanitizeHistory(result: HistoryQuery) {
   const rows = result.rows.flatMap(row => {
@@ -54,7 +54,7 @@ function engagementTotals(buckets: Array<{ eventName: string; count: number }>) 
 }
 const cache = new Map<string, { at: number; data: HistoryReport }>();
 export type HistoryReport = (ReturnType<typeof sanitizeHistory> & { unclassifiedRows?: ReturnType<typeof sanitizeHistory>['rows'] }) | { available: false; date: string; rows: []; limitation: string };
-export async function getOutreachHistory(filters: Pick<OutreachFilters, 'window'> = { window: '7d' }): Promise<HistoryReport> {
+export async function getOutreachHistory(filters: Pick<OutreachFilters, 'window'> = { window: DEFAULT_OUTREACH_WINDOW }): Promise<HistoryReport> {
   const now = new Date();
   const date = activityMinute(windowStart(filters.window, now), 'America/New_York').slice(0, 10);
   const endDate = activityMinute(now, 'America/New_York').slice(0, 10);
