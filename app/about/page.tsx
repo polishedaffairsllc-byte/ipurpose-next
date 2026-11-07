@@ -189,10 +189,7 @@ export default function AboutPage() {
             </p>
             <div className="clear-both"></div>
           </div>
-          <div className="space-y-4 border-t border-lavenderViolet/10 pt-6">
-            <h3 className="text-2xl font-marcellus text-warmCharcoal">
-              Beyond iPurpose
-            </h3>
+          <div className="space-y-4">
             <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '35px' }}>
               Explore Renita&apos;s broader work in leadership, education, entrepreneurship, public service, and speaking through her professional website.
             </p>
