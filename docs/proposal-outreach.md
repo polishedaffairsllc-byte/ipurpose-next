@@ -42,9 +42,9 @@ No name, email, IP, account ID, referrer, full URL query, user agent, GA client 
 
 Preview/QA query markers, persistent SDSN/internal/QA browser keys, debug activity and existing owner/admin Firebase sessions classify as internal. The server also checks existing owner/admin session claims/profile flags without retaining identity. Test visits should use `?preview=1`. A deliberately unmarked anonymous test cannot be distinguished from an anonymous recipient. Preview and production ledgers are strictly separated in read responses even when they use the same Firestore project.
 
-`GET /api/admin/proposal-outreach` requires a verified, non-revoked Firebase ID token and current, enabled administrator claims, matching existing admin authorization. Filters: `window=today|24h|7d`, optional registered `proposal`, `includeInternal=1` (default false). Responses are private/no-store and contain no account data. UI refreshes about every 30 seconds only when the panel is visible and the document is foregrounded. Requests after sign-out/filter changes cannot populate stale privileged state.
+`GET /api/admin/proposal-outreach` requires a verified, non-revoked Firebase ID token and current, enabled administrator claims, matching existing admin authorization. Filters: `window=today|24h|7d|30d|90d|180d`, optional registered `proposal`, `includeInternal=1` (default false). Responses are private/no-store and contain no account data. UI refreshes about every 30 seconds only when the panel is visible and the document is foregrounded. Requests after sign-out/filter changes cannot populate stale privileged state.
 
-The existing owner-only Launch Metrics v2 feed returns `outreach.proposals`, `outreach.recentEvents`, timestamps, timezone, externalOnly, environment, period and historical recovery. Existing get_launch_metrics returns the response unchanged; OAuth and owner protection are untouched. Legacy non-v2 snapshot responses remain compatible. Default feed window is seven days, external only, current deployment environment.
+The existing owner-only Launch Metrics v2 feed returns `outreach.proposals`, `outreach.recentEvents`, timestamps, timezone, externalOnly, environment, period and historical recovery. Existing get_launch_metrics returns the response unchanged; OAuth and owner protection are untouched. Legacy non-v2 snapshot responses remain compatible. The dashboard and default feed window are 30 days, external only, current deployment environment.
 
 ## Summaries / precision
 
@@ -60,7 +60,7 @@ Historical recovery uses the selected period, existing read-only Data API creden
 
 Both new collections are server-only. Apply the deny-all blocks in `firestore.rules.snippet` within the project's authoritative Firestore rules; never deploy that partial snippet as the full ruleset. Direct anonymous/client SDK access must be denied. Admin SDK routes enforce the authorizations above. No client Firestore access is used.
 
-Each successful ingestion schedules a bounded after-response sweep of up to 200 events older than 180 days by server timestamp. All read windows are at most seven days, so expired events cannot be displayed. For low-traffic periods/backlogs, an operator should run daily (and after a long idle period):
+Each successful ingestion schedules a bounded after-response sweep of up to 200 events older than 180 days by server timestamp. All read windows are at most 180 days, so expired events cannot be displayed. For low-traffic periods/backlogs, an operator should run daily (and after a long idle period):
 
 `node --conditions=react-server --import tsx scripts/outreach-maintenance.ts cleanup`
 

@@ -30,7 +30,18 @@ export function proposalMetadata(input: OutreachInput) {
 export type OutreachEvent = OutreachInput & ReturnType<typeof proposalMetadata> & {
   timestamp: string; environment: 'production' | 'preview'; source: 'first-party'; timestamp_precision: 'exact';
 };
-export type OutreachWindow = 'today' | '24h' | '7d';
+export const OUTREACH_PERIODS = [
+  { value: 'today', label: 'Today' },
+  { value: '24h', label: 'Last 24 hours' },
+  { value: '7d', label: 'Last 7 days' },
+  { value: '30d', label: 'Last 30 days' },
+  { value: '90d', label: 'Last 90 days' },
+  { value: '180d', label: 'Last 180 days' },
+] as const;
+export type OutreachWindow = typeof OUTREACH_PERIODS[number]['value'];
+export const DEFAULT_OUTREACH_WINDOW: OutreachWindow = '30d';
+const windowDays = { '24h': 1, '7d': 7, '30d': 30, '90d': 90, '180d': OUTREACH_RETENTION_DAYS };
+export const isOutreachWindow = (value: string): value is OutreachWindow => OUTREACH_PERIODS.some(period => period.value === value);
 export type OutreachFilters = { window: OutreachWindow; proposalId?: string; includeInternal: boolean };
 export type ProposalSummary = {
   proposal_id: string; proposal_family: string; organization: string; recipient_id: string; label: string;
@@ -41,7 +52,7 @@ export type ProposalSummary = {
   metricCounts?: { companionViews: number; compassClicks: number; clarityClicks: number; otherCtaClicks: number };
 };
 export function windowStart(window: OutreachWindow, now: Date) {
-  if (window !== 'today') return new Date(now.getTime() - (window === '24h' ? 1 : 7) * 86400000);
+  if (window !== 'today') return new Date(now.getTime() - windowDays[window] * 86400000);
   const date = new Intl.DateTimeFormat('en-CA', { timeZone: OUTREACH_TIMEZONE, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
   const midnight = new Date(`${date}T00:00:00Z`);
   const offset = (at: Date) => {

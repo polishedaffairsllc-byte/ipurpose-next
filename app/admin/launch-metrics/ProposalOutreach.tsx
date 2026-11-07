@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './ProposalOutreach.module.css';
 import { onIdTokenChanged, type User } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
-import { eventLabel, OUTREACH_TIMEZONE, type OutreachFilters, type ProposalSummary } from '@/lib/outreach/model';
+import { eventLabel, OUTREACH_TIMEZONE, OUTREACH_PERIODS, DEFAULT_OUTREACH_WINDOW, type OutreachFilters, type ProposalSummary } from '@/lib/outreach/model';
 import { PROPOSALS, type Proposal } from '@/lib/outreach/registry';
 import { activityFields, activityStatus, latestExternalInitiative } from '@/lib/outreach/activity';
 import type { OutreachReport } from '@/lib/outreach/service';
@@ -64,7 +64,7 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
       <p className="mt-2 text-sm">Page opened means a page load, not an email open. Visits are anonymous browser visits unless a controlled personalized recipient link identifies which outreach link was used. GA4 historical data may be aggregate and delayed.</p>
       <p className="mt-1 text-sm">America/New_York · first-party timestamps include seconds · selected period only · {data?.environment || 'current environment'}</p></header>
     <div className={styles.controls}>
-      <label>Period<select value={filters.window} onChange={event => onFilters({ ...filters, window: event.target.value as OutreachFilters['window'] })}><option value="today">Today</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option></select></label>
+      <label>Period<select value={filters.window} onChange={event => onFilters({ ...filters, window: event.target.value as OutreachFilters['window'] })}>{OUTREACH_PERIODS.map(period => <option key={period.value} value={period.value}>{period.label}</option>)}</select></label>
       <label className={styles.check}><input type="checkbox" checked={filters.includeInternal} onChange={event => onFilters({ ...filters, includeInternal: event.target.checked })}/>Include internal / QA activity</label>
       <button className={button} disabled={busy} onClick={refresh}>{busy ? 'Refreshing…' : 'Refresh'}</button>
     </div>
@@ -94,7 +94,7 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
 export default function ProposalOutreach() {
   const [allowed, setAllowed] = useState(false);
   const [data, setData] = useState<OutreachPanelData | null>(null);
-  const [filters, setFilters] = useState<OutreachFilters>({ window: '7d', includeInternal: false });
+  const [filters, setFilters] = useState<OutreachFilters>({ window: DEFAULT_OUTREACH_WINDOW, includeInternal: false });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const user = useRef<User | null>(null);

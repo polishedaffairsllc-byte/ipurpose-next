@@ -18,8 +18,8 @@ function event(id: string, type: OutreachEvent['event_type'], overrides: Partial
     traffic_type: 'external', debug_mode: false, environment: 'production', source: 'first-party', timestamp_precision: 'exact', ...overrides };
 }
 
-test('registry includes all four initiatives and exact Foundhers campaign metadata', () => {
-  assert.deepEqual(PROPOSALS.map(item => item.label), ['Ghana', 'Africa', 'Global Partnership', 'Found(her)s Stage']);
+test('registry preserves existing initiatives and exact Foundhers campaign metadata', () => {
+  for (const label of ['Ghana', 'Africa', 'Global Partnership', 'University of Ghana', 'KNUST', 'Found(her)s Stage']) assert.ok(PROPOSALS.some(item => item.label === label));
   const foundhers = PROPOSALS.find(item => item.id === 'foundhers-stage')!;
   assert.deepEqual([foundhers.family, foundhers.campaign, foundhers.landingPath, foundhers.source, foundhers.medium], ['foundhers', 'foundhers_2026', '/foundhers-stage', 'foundhers_stage', 'pitch_deck']);
 });
@@ -37,10 +37,10 @@ test('existing deck fields and metrics are preserved; companion card omits inapp
   assert.equal(deck.find(row => row.id === 'highestSlide')?.value, 9);
   assert.equal(deck.find(row => row.id === 'visits')?.value, 3);
   assert.equal(deck.find(row => row.id === 'completed')?.value, true);
-  const companion = activityFields(PROPOSALS[3]);
+  const companion = activityFields(PROPOSALS.find(item => item.id === 'foundhers-stage')!);
   assert.deepEqual(companion.map(row => row.id), ['firstVisit', 'mostRecentActivity', 'visits', 'companionViews', 'compassClicks', 'clarityClicks', 'otherCtaClicks']);
-  assert.equal(activityFields(PROPOSALS[3], undefined, { initiativeId: 'foundhers-stage', count: 2, events: { begin_checkout: 2 } }).at(-1)?.value, 2);
-  assert.equal(activityFields(PROPOSALS[3], undefined, { initiativeId: 'foundhers-stage', count: 0, events: {} }).some(row => row.id === 'downstreamEngagement'), false);
+  assert.equal(activityFields(PROPOSALS.find(item => item.id === 'foundhers-stage')!, undefined, { initiativeId: 'foundhers-stage', count: 2, events: { begin_checkout: 2 } }).at(-1)?.value, 2);
+  assert.equal(activityFields(PROPOSALS.find(item => item.id === 'foundhers-stage')!, undefined, { initiativeId: 'foundhers-stage', count: 0, events: {} }).some(row => row.id === 'downstreamEngagement'), false);
   assert.deepEqual(activityFields({ ...PROPOSALS[0], id: 'future-page', events: { future_view: 'page_view' } }).map(row => row.id), ['firstVisit', 'mostRecentActivity', 'visits']);
 });
 test('Foundhers interaction categories aggregate existing controlled CTA IDs without inventing visits or deck metrics', () => {

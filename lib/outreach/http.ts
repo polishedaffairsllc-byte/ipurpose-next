@@ -1,5 +1,5 @@
 import type { Auth } from 'firebase-admin/auth';
-import { outreachSchema, type OutreachInput, type OutreachFilters } from './model';
+import { outreachSchema, DEFAULT_OUTREACH_WINDOW, isOutreachWindow, type OutreachInput, type OutreachFilters } from './model';
 
 import { proposalById } from './registry';
 
@@ -45,13 +45,13 @@ export function ingestionHandler(store: (data: OutreachInput, request: Request) 
 }
 export function outreachFilters(request: Request): OutreachFilters {
   const params = new URL(request.url).searchParams;
-  const window = params.get('window') || '7d';
-  if (!['today', '24h', '7d'].includes(window)) throw new RequestError(400, 'Invalid time range.');
+  const window = params.get('window') || DEFAULT_OUTREACH_WINDOW;
+  if (!isOutreachWindow(window)) throw new RequestError(400, 'Invalid time range.');
   const proposalId = params.get('proposal');
   if (proposalId && !proposalById(proposalId)) throw new RequestError(400, 'Invalid proposal.');
   const internal = params.get('includeInternal');
   if (internal && !['0', '1'].includes(internal)) throw new RequestError(400, 'Invalid activity filter.');
-  return { window: window as OutreachFilters['window'], ...(proposalId ? { proposalId } : {}), includeInternal: internal === '1' };
+  return { window, ...(proposalId ? { proposalId } : {}), includeInternal: internal === '1' };
 }
 export function outreachAdminHandler(load: () => Promise<{ auth: Auth; read: (filters: OutreachFilters) => Promise<unknown> }>) {
   return async (request: Request) => {
