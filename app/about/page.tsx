@@ -189,6 +189,21 @@ export default function AboutPage() {
             </p>
             <div className="clear-both"></div>
           </div>
+          <div className="space-y-4 border-t border-lavenderViolet/10 pt-6">
+            <h3 className="text-2xl font-marcellus text-warmCharcoal">
+              Beyond iPurpose
+            </h3>
+            <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '35px' }}>
+              Explore Renita&apos;s broader work in leadership, education, entrepreneurship, public service, and speaking through her professional website.
+            </p>
+            <a
+              href="https://mshmltn.com/"
+              className="inline-block font-marcellus font-bold text-lavenderViolet underline underline-offset-4 hover:text-warmCharcoal transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lavenderViolet"
+              style={{ fontSize: '35px' }}
+            >
+              Visit MsHmltn.com
+            </a>
+          </div>
         </section>
 
         {/* Next Steps */}
