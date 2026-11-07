@@ -82,7 +82,7 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
   const recipientOptions: Record<string, { label: string; institution_id: string }> = {};
   try {
     const contacts = await db.collection(CONTACT_COLLECTION).where('environment', '==', environment).limit(250).get();
-    for (const doc of contacts.docs) { const contact = doc.data(); if (contact.contact_status !== 'qa_only' && typeof contact.institution_id === 'string') recipientOptions[doc.id] = { label: contact.recipient_name || contact.primary_office || 'Unassigned contact', institution_id: contact.institution_id }; }
+    for (const doc of contacts.docs) { const contact = doc.data(); if ((contact.contact_status !== 'qa_only' || (filters.includeInternal && environment === 'preview')) && typeof contact.institution_id === 'string') recipientOptions[doc.id] = { label: contact.recipient_name || contact.primary_office || 'Unassigned contact', institution_id: contact.institution_id }; }
   } catch { /* Existing metrics remain readable if optional contact lookup is unavailable. */ }
   return {
     recipientOptions,

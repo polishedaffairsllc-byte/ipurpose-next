@@ -27,7 +27,7 @@ export async function universityReview(db: Firestore, origin: string) {
         outreach_token: token, outreach_id: token ? tokenHash(token) : null, preview_url: previewUrl, live_url: null,
         email_subject: draft.subject, email_body: draft.body, email_kind: draft.kind,
         review_status: 'awaiting_user_approval', sent_status: institution.already_contacted ? 'already_contacted' : 'unsent', sent_at: null, follow_up_due_at: null,
-        analytics_status: institution.already_contacted ? 'existing_tracking_preserved' : token ? 'preview_link_ready_for_qa' : 'pending_private_link',
+        analytics_status: institution.already_contacted ? 'existing_tracking_preserved' : token ? c.analytics_status === 'preview_verified' ? 'preview_verified' : 'preview_link_ready_for_qa' : 'pending_private_link',
         notes: [...institution.notes, ...(Array.isArray(c.notes) ? c.notes : []), ...(institution.already_contacted ? ['No duplicate initial outreach. Existing sent date and recipient link must be reconciled before any follow-up.'] : [])],
       };
     });
