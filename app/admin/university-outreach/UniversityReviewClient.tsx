@@ -28,6 +28,7 @@ export default function UniversityReviewClient() {
     <a className="underline" href="/admin/launch-metrics">Proposal activity dashboard</a>
     {error && <p role="status" className="my-6">{error}</p>}
     {data && <>
+      <p className="my-4">Tracking and attribution: Link activity may include internal previews, forwarding and security scans. It identifies the link used; it does not establish that a named recipient read a presentation.</p>
       <p className="my-4">{data.counts.institutions} active institutions · {data.counts.new} new targets · {data.counts.already_contacted} already contacted · {data.counts.archived} archived</p>
       <label className="block">Institution<select aria-label="Review institution" className="my-2 block w-full rounded border p-3" value={selected} onChange={event => setSelected(event.target.value)}>{data.rows.map(item => <option key={item.institution_id} value={item.institution_id}>{item.institution_name}{item.already_contacted ? ' — already contacted' : ''}</option>)}</select></label>
       <button className="my-4 rounded border px-4 py-3" onClick={() => { const url = URL.createObjectURL(new Blob([reviewCsv(data.rows)], { type: 'text/csv;charset=utf-8' })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'university-outreach-private-review.csv'; anchor.click(); URL.revokeObjectURL(url); }}>Export private review queue CSV</button>

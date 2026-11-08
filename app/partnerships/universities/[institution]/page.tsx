@@ -28,7 +28,7 @@ export default async function UniversityProposal({ params, searchParams }: { par
       <UniversityPresentation institution={institution} token={token} sessionId={sessionId} visitNumber={visitNumber} contactId={link.contactId} outreachId={link.hash} slides={slides}/>
     </section>
     <section className="sdsn-contact sdsn-container" aria-labelledby="university-invitation"><div className="sdsn-contact-copy"><span className="sdsn-contact-line" aria-hidden="true"/><h2 id="university-invitation">Invitation to explore</h2><p>{deck.slides[7].paragraphs[0]}</p></div><div className="sdsn-actions"><a className="sdsn-primary" href={`/p/${token}/go/conversation`} data-proposal-destination="conversation">Request a conversation</a><div className="sdsn-secondary-actions"><a href={`/p/${token}/download`} data-proposal-destination="pdf" download={deck.pdf_filename}>Download PDF</a></div></div></section>
-    <div className="sdsn-container"><p className={styles.notice}>Discussion draft · No institutional endorsement or agreed partnership is implied. Link activity may include previews, forwarding and security scans; it does not establish that a named recipient read this presentation.</p></div>
+    <div className="sdsn-container"><p className={styles.notice}>iPurpose | University Partnership Proposal — Prepared for Discussion</p></div>
     <footer className="sdsn-footer">© 2026 iPurpose · Concept for discussion</footer>
   </main>;
 }
