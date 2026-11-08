@@ -55,8 +55,9 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
     try { const stored = sessionStorage.getItem(selectionKey); return PROPOSALS.some(item => item.id === stored) ? stored : null; } catch { return null; }
   });
   const initiative = PROPOSALS.find(item => item.id === selectedId) || PROPOSALS.find(item => item.id === latestExternalInitiative(data?.proposals || [], data?.externalOnly !== false, PROPOSALS, data?.historical.available ? data.historical.rows : [])) || PROPOSALS[0];
-  const select = (id: string) => { setSelectedId(id); try { sessionStorage.setItem(selectionKey, id); } catch { /* Session storage is optional. */ } };
-  const history = data?.historical;
+  const select = (id: string) => { if (filters.recipientId) onFilters({ ...filters, recipientId: undefined }); setSelectedId(id); try { sessionStorage.setItem(selectionKey, id); } catch { /* Session storage is optional. */ } };
+  const history = filters.recipientId ? undefined : data?.historical;
+  const recipients = Object.entries(data?.recipientOptions || {}).filter(([, contact]) => contact.institution_id === initiative.institutionId);
   const recent = data?.recentEvents.filter(event => event.proposal_id === initiative.id) || [];
   const historicalRows = history?.available ? [...history.rows, ...(history.unclassifiedRows || [])].filter(row => row.proposal_id === initiative.id) : [];
   return <section className={styles.panel} aria-labelledby="proposal-outreach-title">
@@ -72,13 +73,20 @@ export function ProposalOutreachPanel({ data, filters, onFilters, refresh, busy,
     {error && <p role="alert">{error}</p>}
     {data && <p className="text-sm">Updated {formatTime(data.generatedAt)} ET. Refreshes about every 30 seconds while this panel is visible.</p>}
     {data?.truncated && <p role="alert">The safety limit was reached. Counts and timelines are partial; choose a shorter period.</p>}
-    <InitiativeActivityCard initiative={initiative} summary={data?.proposals.find(row => row.proposal_id === initiative.id)} data={data} onSelect={select} loading={!data && !error}/>
+    {initiative.family === 'university' && <label className={styles.selector}>Recipient link<select aria-label="Outreach recipient" value={filters.recipientId || ''} onChange={event => onFilters({ ...filters, recipientId: event.target.value || undefined })}><option value="">All recipient links for this institution</option>{recipients.map(([id, contact]) => <option key={id} value={id}>{contact.label}</option>)}</select></label>}
+    <div className="flex flex-wrap gap-3"><button className={button} disabled={!data || !recent.length} onClick={() => {
+      const cell = (value: unknown) => '"' + String(value ?? '').replace(/^[=+@-]/, value => "'" + value).replaceAll('"', '""') + '"';
+      const fields = ['timestamp', 'proposal_id', 'attributed_recipient_id', 'source_event_name', 'event_type', 'traffic_type', 'traffic_classification', 'session_id', 'visit_number', 'sequence', 'section_id', 'destination_id', 'source_slide_number', 'source_format'] as const;
+      const csv = [fields.join(','), ...recent.map(event => fields.map(field => cell(event[field])).join(','))].join('\r\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const link = document.createElement('a'); link.href = url; link.download = 'proposal-activity.csv'; link.click(); URL.revokeObjectURL(url);
+    }}>Export selected activity CSV</button>{initiative.family === 'university' && <a className={button} href="/admin/university-outreach">Review university drafts</a>}</div>
+    <InitiativeActivityCard initiative={initiative} summary={data?.proposals.find(row => row.proposal_id === initiative.id)} data={filters.recipientId && data ? { ...data, historical: { available: false, date: '', rows: [], limitation: 'GA4 aggregates cannot identify a recipient token. See first-party activity above.' } } : data} onSelect={select} loading={!data && !error}/>
     <div><h3 className="text-lg font-semibold">{initiative.label} activity timeline</h3><p className="text-sm">Server receipt time, oldest first; event sequence preserves order within an anonymous visit. Visit numbers are local to a browser, not people counts. Recipient labels identify the personalized link used, not an email-open event.</p>
       <div className={styles.timelineSpace}>{!recent.length ? <p>No {filters.includeInternal ? '' : 'external '}activity recorded in this period.</p> : <ol className={styles.timeline}>{recent.map(event => {
-        const recipientName = attributedRecipientLabel(initiative, event.recipient_key);
+        const recipientName = (event.attributed_recipient_id ? data?.recipientOptions?.[event.attributed_recipient_id]?.label : null) || attributedRecipientLabel(initiative, event.recipient_key);
         return <li key={event.event_id}>
           <time dateTime={event.timestamp}>{formatTime(event.timestamp)} ET</time> — {eventLabel(event)} — Visit {event.visit_number}{recipientName ? ` — ${recipientName}` : ''}
-          <span>{event.traffic_type} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{recipientName ? ' · personalized recipient link' : ''}{event.outreach_id ? ' · outreach ' + event.outreach_id.slice(0, 8) : ''}</span>
+          <span>{event.traffic_type}{event.traffic_classification ? ` · ${event.traffic_classification}` : ''} · first-party · exact · sequence {event.sequence} · anonymous visit {event.session_id.slice(0, 8)}{recipientName ? ' · personalized recipient link' : ''}{event.outreach_id ? ' · outreach ' + event.outreach_id.slice(0, 8) : ''}</span>
         </li>;
       })}</ol>}</div>
     </div>
@@ -125,6 +133,7 @@ export default function ProposalOutreach() {
       const token = await signedIn.getIdToken();
       const params = new URLSearchParams({ window: filters.window, includeInternal: filters.includeInternal ? '1' : '0' });
       if (filters.proposalId) params.set('proposal', filters.proposalId);
+      if (filters.recipientId) params.set('recipient', filters.recipientId);
       const response = await fetch(`/api/admin/proposal-outreach?${params}`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', credentials: 'omit', signal: AbortSignal.timeout(20000) });
       const result = await response.json();
       if (!response.ok) {

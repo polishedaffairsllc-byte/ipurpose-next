@@ -49,9 +49,11 @@ export function outreachFilters(request: Request): OutreachFilters {
   if (!isOutreachWindow(window)) throw new RequestError(400, 'Invalid time range.');
   const proposalId = params.get('proposal');
   if (proposalId && !proposalById(proposalId)) throw new RequestError(400, 'Invalid proposal.');
+  const recipientId = params.get('recipient');
+  if (recipientId && !/^[0-9a-f-]{36}$/.test(recipientId)) throw new RequestError(400, 'Invalid recipient.');
   const internal = params.get('includeInternal');
   if (internal && !['0', '1'].includes(internal)) throw new RequestError(400, 'Invalid activity filter.');
-  return { window, ...(proposalId ? { proposalId } : {}), includeInternal: internal === '1' };
+  return { window, ...(proposalId ? { proposalId } : {}), ...(recipientId ? { recipientId } : {}), includeInternal: internal === '1' };
 }
 export function outreachAdminHandler(load: () => Promise<{ auth: Auth; read: (filters: OutreachFilters) => Promise<unknown> }>) {
   return async (request: Request) => {

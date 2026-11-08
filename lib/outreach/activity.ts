@@ -35,6 +35,14 @@ export function activityFields(initiative: Proposal, summary?: ProposalSummary, 
   const deckEvents = { highestSlide: 'slide_view', completed: 'deck_complete', pdfDownloaded: 'pdf_download', visitIpurposeClicked: 'visit_ipurpose_click', contactClicked: 'contact_click' };
   const configured = initiative.metrics || DECK_METRICS.filter(metric => Object.values(initiative.events).some(type => type === deckEvents[metric as keyof typeof deckEvents]));
   const metricValues: Record<OutreachMetric, ActivityField> = {
+    rawAccesses: { id: 'rawAccesses', label: 'Raw link accesses', value: summary?.universityMetrics?.rawAccesses ?? 0 },
+    pageLoads: { id: 'pageLoads', label: 'Page loads (including repeats)', value: summary?.universityMetrics?.pageLoads ?? 0 },
+    uniqueSessions: { id: 'uniqueSessions', label: 'Unique anonymous sessions', value: summary?.universityMetrics?.uniqueSessions ?? 0 },
+    repeatVisits: { id: 'repeatVisits', label: 'Return visits', value: summary?.universityMetrics?.repeatVisits ?? 0 },
+    qualifiedVisits: { id: 'qualifiedVisits', label: 'Visits with observed interaction', value: summary?.universityMetrics?.qualifiedVisits ?? 0 },
+    sectionEngagement: { id: 'sectionEngagement', label: 'Section observations', value: summary?.universityMetrics?.sectionEngagement ?? 0 },
+    meetingRequests: { id: 'meetingRequests', label: 'Conversation email clicks', value: summary?.universityMetrics?.meetingRequests ?? 0 },
+    externalLinkClicks: { id: 'externalLinkClicks', label: 'Website / founder / source clicks', value: summary?.universityMetrics?.externalLinkClicks ?? 0 },
     highestSlide: { id: 'highestSlide', label: 'Highest slide reached', value: summary?.highestSlide || null },
     completed: { id: 'completed', label: 'Deck completed', value: summary?.completed ?? false },
     pdfDownloaded: { id: 'pdfDownloaded', label: 'PDF downloaded', value: summary?.pdfDownloaded ?? false },
@@ -49,12 +57,18 @@ export function activityFields(initiative: Proposal, summary?: ProposalSummary, 
   return [
     { id: 'firstVisit', label: 'First visit', value: summary?.firstVisit ?? null, kind: 'time' },
     { id: 'mostRecentActivity', label: 'Most recent activity', value: summary?.mostRecentActivity ?? null, kind: 'time' },
+    ...(initiative.family === 'university' ? [{ id: 'lastVisit', label: 'Last page visit', value: summary?.universityMetrics?.lastVisit ?? null, kind: 'time' as const }] : []),
     { id: 'visits', label: 'Visits', value: summary?.visits ?? 0 },
     ...configured.filter(metric => metric !== 'downstreamEngagement' || !!engagement?.count).map(metric => metricValues[metric]),
   ];
 }
 
 export function activityStatus(summary?: ProposalSummary, includeInternal = false): string {
+  if (summary?.universityMetrics) {
+    if (summary.universityMetrics.qualifiedVisits) return 'Interactive activity observed';
+    if (summary.universityMetrics.pageLoads) return 'Page loaded — visitor type unconfirmed';
+    if (summary.universityMetrics.rawAccesses) return 'Link accessed — visitor type unconfirmed';
+  }
   if (!summary?.mostRecentActivity) return includeInternal ? 'No activity yet' : 'No external activity yet';
   if (summary.contactClicked) return 'Contact initiated';
   if (summary.completed) return 'Deck completed';
