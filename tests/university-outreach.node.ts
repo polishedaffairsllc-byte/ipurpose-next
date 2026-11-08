@@ -4,13 +4,14 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { Timestamp, type Firestore } from 'firebase-admin/firestore';
 import { institutions, newInstitutions, activeInstitutions, archivedInstitutionIds, universityEvents, universityDestinations } from '../lib/universities/institutions';
-import { seedReviewContact, resolveUniversityLink, tokenHash, anonymousVisit, trafficClassification, universityPreviewEnabled, type ReviewContact } from '../lib/universities/links';
+import { seedReviewContact, resolveUniversityLink, tokenHash, anonymousVisit, trafficClassification, universityPreviewEnabled, universityInternalRequest, type ReviewContact } from '../lib/universities/links';
 import { draftUniversityEmail, reviewCsv } from '../lib/universities/drafts';
 import { universityReview } from '../lib/universities/review';
 import { outreachSchema, summarize, type OutreachInput } from '../lib/outreach/model';
 import { storeOutreachEvent, readOutreach } from '../lib/outreach/service';
 import { privatePresentation, PRESENTATION_COLLECTION, PRESENTATION_VERSION } from '../lib/universities/presentations';
 import { outreachFilters } from '../lib/outreach/http';
+import { PUBLICATION_COLLECTION, presentationFingerprint } from '../lib/universities/publication';
 const institution = activeInstitutions.find(item=>!item.already_contacted)!;
 function memoryDb() {
   const docs = new Map<string, Record<string, unknown>>();
@@ -84,8 +85,9 @@ test('admin review creates unsent drafts with the private presentation and both 
   assert.equal([...docs].some(([key])=>key.startsWith('emailTasks/')),false);
   assert.match(reviewCsv([{email_body:'=formula'}]),/"'=formula"/);
 });
-test('new route and chrome boundaries preserve existing deck assets and reject production publication',()=>{
-  const page=readFileSync('app/partnerships/universities/[institution]/page.tsx','utf8');assert.match(page,/if \(!universityPreviewEnabled\(\)\) notFound/);assert.match(page,/if \(!token\) notFound/);assert.match(page,/privatePresentation/);assert.match(page,/UniversityPresentation/);assert.match(page,/Download PDF/);assert.doesNotMatch(page,/one.page overview|\b(?:pricing|waivers?)\b/i);
+test('recipient routes retain token and approved-content checks while admin review stays preview-only',()=>{
+  const page=readFileSync('app/partnerships/universities/[institution]/page.tsx','utf8');assert.match(page,/if \(!token\) notFound/);assert.match(page,/resolveUniversityLink/);assert.match(page,/privatePresentation/);assert.match(page,/UniversityPresentation/);assert.match(page,/Download PDF/);assert.doesNotMatch(page,/one.page overview|\b(?:pricing|waivers?)\b/i);
+  assert.match(readFileSync('lib/universities/review.ts','utf8'),/if \(!universityPreviewEnabled\(\)\) throw/);
   for(const file of ['app/components/SiteChrome.tsx','app/components/GoogleAds.tsx'])assert.ok(readFileSync(file,'utf8').includes("pathname.startsWith('/partnerships/universities/')"));
   assert.equal(Object.keys(universityEvents).length,12);assert.equal(summarize([],false).find(i=>i.proposal_id===institution.proposal_id)?.visits,0);
 });
@@ -110,7 +112,7 @@ test('private presentation data is recipient-scoped, preview-scoped and complete
  assert.equal((await privatePresentation(db,linkA))?.slides.length,8);assert.equal(await privatePresentation(db,linkB),null);
  record.slides.pop();assert.equal(await privatePresentation(db,linkA),null);
  const route=readFileSync('app/p/[token]/asset/[file]/route.ts','utf8'),download=readFileSync('app/p/[token]/download/route.ts','utf8');
- for(const source of [route,download]){assert.match(source,/universityPreviewEnabled/);assert.match(source,/resolveUniversityLink/);assert.match(source,/privatePresentation/);assert.match(source,/PRIVATE_ASSET_HEADERS/);}
+ for(const source of [route,download]){assert.match(source,/resolveUniversityLink/);assert.match(source,/privatePresentation/);assert.match(source,/PRIVATE_ASSET_HEADERS/);}
 });
 
 // Supplemental entries are additive: retain the entire approved original roster byte-for-byte.
@@ -150,4 +152,34 @@ test('all private email drafts retain full stable preview links and rich-text li
  const review=await universityReview(db,'https://ipurposesoul.com');const rows=review.rows.filter(r=>!r.already_contacted);assert.equal(rows.length,39);
  for(const row of rows){assert.equal(row.email_preview_url,universityEmailPreviewUrl(row.outreach_token!));assert.equal(new URL(row.email_preview_url!).origin,UNIVERSITY_EMAIL_PREVIEW_ORIGIN);assert.ok(row.email_body.includes(row.email_preview_url!));assert.ok(!row.email_body.includes('https://ipurposesoul.com/p/'));const parts=universityEmailParts(row.email_body);assert.equal(parts.map(p=>p.text).join(''),row.email_body);assert.ok(parts.some(p=>p.href===row.email_preview_url));assert.ok(parts.some(p=>p.text==='iPurpose'&&p.href==='https://ipurposesoul.com'));assert.ok(parts.some(p=>p.text==='Renita Hamilton'&&p.href==='https://www.mshmltn.com'));}
  assert.throws(()=>universityEmailPreviewUrl('invalid'));const html=universityEmailHtml('<script>alert(1)</script> iPurpose');assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));assert.ok(html.includes('href="https://ipurposesoul.com"'));
+});
+
+test('production requires a separately approved original token and pins its exact recipient presentation',async()=>{
+ const {db,docs}=memoryDb();const a=contact(),b=contact();await seedReviewContact(db,a);await seedReviewContact(db,b);
+ const original=[...docs.entries()].find(([key,row])=>key.startsWith('proposalOutreachLinks/')&&row.contact_id===a.contact_id)!;
+ const token=String(original[1].review_token),hash=tokenHash(token);
+ const record={institution_id:institution.institution_id,contact_id:a.contact_id,environment:'preview',content_version:PRESENTATION_VERSION,review_status:'awaiting_user_approval',slides:Array.from({length:8},(_,i)=>({number:i+1,title:`Slide ${i+1}`,body:'Approved copy',paragraphs:['Approved copy']})),assets:{'presentation.pdf':{id:'approved-asset',sha256:'a'.repeat(64),bytes:10,content_type:'application/pdf'}}};
+ docs.set(`${PRESENTATION_COLLECTION}/preview_${a.contact_id}`,record);
+ const approval={environment:'production',enabled:true,review_status:'approved_for_recipient_access',approvedAt:Timestamp.now(),expiresAt:Timestamp.fromMillis(Date.now()+86400000),institution_id:institution.institution_id,contact_id:a.contact_id,proposal_id:institution.proposal_id,campaign_id:original[1].campaign_id,presentation_id:`preview_${a.contact_id}`,presentation_sha256:presentationFingerprint(record)};
+ const before=process.env.VERCEL_ENV;process.env.VERCEL_ENV='production';
+ try{
+  assert.equal(await resolveUniversityLink(db,token),null);
+  assert.equal(universityInternalRequest(new Request('https://ipurposesoul.com/p/'+token)),false);assert.equal(universityInternalRequest(new Request('https://ipurposesoul.com/p/'+token+'?preview=1')),true);
+  docs.set(`${PUBLICATION_COLLECTION}/${hash}`,approval);
+  const link=(await resolveUniversityLink(db,token))!;assert.ok(link);assert.equal(link.token,token);assert.equal((await privatePresentation(db,link))?.slides.length,8);
+  const other=String([...docs.values()].find(row=>row.contact_id===b.contact_id&&row.review_token)?.review_token);assert.equal(await resolveUniversityLink(db,other),null);
+  for(const patch of [{enabled:false},{environment:'preview'},{review_status:'awaiting_user_approval'},{contact_id:b.contact_id},{institution_id:'another-institution'},{proposal_id:'another-proposal'},{campaign_id:'another-campaign'},{presentation_id:`preview_${b.contact_id}`},{presentation_sha256:'bad'},{approvedAt:null},{expiresAt:Timestamp.fromMillis(Date.now()-1)}]){
+   docs.set(`${PUBLICATION_COLLECTION}/${hash}`,{...approval,...patch});assert.equal(await resolveUniversityLink(db,token),null);
+  }
+  docs.set(`${PUBLICATION_COLLECTION}/${hash}`,approval);
+  original[1].enabled=false;assert.equal(await resolveUniversityLink(db,token),null);original[1].enabled=true;
+  const expires=original[1].expiresAt;original[1].expiresAt=Timestamp.fromMillis(Date.now()-1);assert.equal(await resolveUniversityLink(db,token),null);original[1].expiresAt=expires;
+  record.slides[0].body='Unapproved revision';assert.equal(await privatePresentation(db,link),null);record.slides[0].body='Approved copy';
+  record.assets['presentation.pdf'].sha256='b'.repeat(64);assert.equal(await privatePresentation(db,link),null);
+  await assert.rejects(()=>universityReview(db,'https://ipurposesoul.com'));await assert.rejects(()=>seedReviewContact(db,contact()));
+  await storeOutreachEvent(db,input(token,{traffic_type:'external',debug_mode:false}),'production');
+  const stored=[...docs.entries()].find(([key])=>key.startsWith('proposalOutreachEvents/production_'))![1];assert.equal(stored.outreach_id,hash);assert.equal(stored.traffic_type,'external');assert.equal(stored.attributed_recipient_id,a.contact_id);assert.ok(!JSON.stringify(stored).includes(token));
+ }finally{if(before===undefined)delete process.env.VERCEL_ENV;else process.env.VERCEL_ENV=before;}
+ assert.equal(presentationFingerprint({b:2,a:[1,{d:4,c:3}]}),presentationFingerprint({a:[1,{c:3,d:4}],b:2}));
+ const ga=readFileSync('app/components/GoogleAnalytics.tsx','utf8');assert.match(ga,/pathname\?\.startsWith\('\/partnerships\/universities\/'\)/);assert.match(ga,/page_location: window\.location\.origin \+ window\.location\.pathname, page_referrer: ''/);
 });

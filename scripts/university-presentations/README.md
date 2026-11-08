@@ -15,7 +15,13 @@ The reconciled copy and contact input are private operator files, never source-c
 
 `proposalOutreachPresentations` and `proposalOutreachAssets` are private presentation storage, not a second event ledger. Analytics continue through the existing `proposalOutreachEvents`, ingestion API, owner dashboard and generic MCP response. SDSN/UG/KNUST event names and configuration remain unchanged.
 
-The capability-gated viewer, image and PDF routes fail closed in production. Revoked, expired, wrong-institution or wrong-recipient links cannot load the new presentation. No release or sending command is provided.
+The capability-gated viewer, image and PDF routes fail closed in production unless a separate, matching `proposalOutreachPublications` approval exists for the original token hash. Revoked, expired, wrong-institution or wrong-recipient links cannot load the presentation. Admin review and review seeding remain preview-only.
+
+## Explicit production approval for original scheduled links (issue #101)
+
+`publish-approved.ts` accepts a **private, untracked** manifest with `approval_reference: "owner-approved-issue-101"` and exactly 39 `links` containing `institution_id` and `original_url`. Default operation validates only. After explicit owner approval, `--publish` creates approval records atomically; it never changes original link/contact/deck/asset records, token values, expirations or Gmail. Run with the existing Firebase environment, `--conditions=react-server --import tsx`. Do not put the input or private QA report in GitHub.
+
+The utility verifies all 25 assets per eight-slide presentation by hash and confirms anonymous Firestore access is denied. Approval pins the complete presentation and asset manifest by SHA-256. Later content changes fail closed until separately reviewed. Disabling either the original link or its publication revokes production access; the earlier expiration always applies. The scheduled-mail selection is independent of the private active/archived review roster, so approving an original scheduled historical link does not reactivate other archival outreach or publish the supplemental HBCU batch.
 
 ## Supplemental nine-HBCU batch
 
