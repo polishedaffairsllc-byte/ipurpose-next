@@ -16,3 +16,9 @@ The reconciled copy and contact input are private operator files, never source-c
 `proposalOutreachPresentations` and `proposalOutreachAssets` are private presentation storage, not a second event ledger. Analytics continue through the existing `proposalOutreachEvents`, ingestion API, owner dashboard and generic MCP response. SDSN/UG/KNUST event names and configuration remain unchanged.
 
 The capability-gated viewer, image and PDF routes fail closed in production. Revoked, expired, wrong-institution or wrong-recipient links cannot load the new presentation. No release or sending command is provided.
+
+## Supplemental nine-HBCU batch
+
+Append the nine approved institutions without removing or modifying any of the original 41 registry entries. `author-supplemental.mjs` uses the same native reference helpers and accommodates the supplied longer copy without changing `authorDeck` output. The import and local-review tools accept a unique selected batch rather than requiring all 39 records. Seed/reuse only those selected unsent contacts and links; never rotate unrelated tokens or import earlier decks. Preserve the original 11 HBCUs and all Ghana records pending final reconciliation.
+
+Final campaign reconciliation keeps all 50 historical registry entries, with nine specified Ghana institutions excluded from the active queue. The active roster is 41 institutions: 39 new (19 Ghana, 20 HBCUs), plus already-contacted UG/KNUST. Archived decks, contacts, tokens and analytics remain available privately for historical reference.

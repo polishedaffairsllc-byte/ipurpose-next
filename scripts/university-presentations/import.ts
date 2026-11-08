@@ -10,7 +10,7 @@ async function main(){
  if(!universityPreviewEnabled())throw new Error('Preview-only import.');
  const [source,directory]=process.argv.slice(2);if(!source||!directory)throw new Error('Supply private reconciled JSON and asset directory.');
  const master=JSON.parse(await readFile(source,'utf8'));const rows=master.institutions.filter((r:{already_contacted:boolean})=>!r.already_contacted);
- if(rows.length!==39||new Set(rows.map((r:{institution_id:string})=>r.institution_id)).size!==39)throw new Error('Expected exactly39 new institutions.');
+ if(!rows.length||rows.length>newInstitutions.length||new Set(rows.map((r:{institution_id:string})=>r.institution_id)).size!==rows.length)throw new Error('Expected a bounded, unique selection of new institutions.');
  const {firebaseAdmin}=await import('@/lib/firebaseAdmin');const db=firebaseAdmin.firestore();
  const project=process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,key=process.env.NEXT_PUBLIC_FIREBASE_API_KEY;if(!project||!key)throw new Error('Security preflight configuration missing.');
  for(const collection of [CONTACT_COLLECTION,ASSET_COLLECTION,PRESENTATION_COLLECTION]){
@@ -26,6 +26,8 @@ async function main(){
   if(files.length!==25||row.slides.length!==8)throw new Error('Incomplete presentation package.');
   for(const file of files){const bytes=await readFile(path.join(directory,row.institution_id,file));if(bytes.length>900000)throw new Error('Private asset exceeds the bounded document limit.');const sha256=createHash('sha256').update(bytes).digest('hex'),id=`preview_${sha256}`;assets[file]={id,sha256,bytes:bytes.length,content_type:file.endsWith('.pdf')?'application/pdf':'image/webp'};bytesById.set(id,bytes);}
   const deck:UniversityPresentation={institution_id:row.institution_id,contact_id:row.contact_id,environment:'preview',content_version:PRESENTATION_VERSION,prepared_for:row.prepared_for,source_sha256:master.source_sha256,review_status:'awaiting_user_approval',slides:row.slides,assets,pdf_filename:`iPurpose_${row.institution_id}_Partnership_Concept.pdf`};
+  if(typeof row.draft_context==='string')deck.draft_context=row.draft_context;
+  if(typeof row.draft_rationale==='string')deck.draft_rationale=row.draft_rationale;
   prepared.push({row,deck,bytesById});
  }
  const uploaded=new Set<string>();

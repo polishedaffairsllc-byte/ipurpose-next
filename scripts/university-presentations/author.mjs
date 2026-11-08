@@ -7,6 +7,7 @@ export const LINKS=[
  {slide:2,destination:'founder',label:'WHO BUILT IT — Renita Hamilton, MPS, Founder & CEO (opens in a new tab)',box:[57,445,1166,204]},
 ];
 const C={indigo:'#4B4E6D',lavender:'#9C88FF',peach:'#FCC4B7',sage:'#88B04B',gold:'#E6C87C',mist:'#F5F7FA',white:'#FFFFFF',border:'#DADDE5'};
+export { C, shape, txt, card, footer };
 function shape(s,name,x,y,w,h,fill,geometry='rect',stroke='none'){return s.shapes.add({name,geometry,position:{left:x,top:y,width:w,height:h},fill,line:{fill:stroke,width:stroke==='none'?0:1,style:'solid'},...(geometry==='roundRect'?{borderRadius:12}: {})});}
 function txt(s,name,text,x,y,w,h,size=24,color=C.indigo,bold=false,serif=false){const t=shape(s,name,x,y,w,h,'none','textbox');t.text=text;t.text.style={typeface:serif?'DejaVu Serif':'Carlito',fontSize:size,color,bold,wrap:'square',autoFit:'none',verticalAlignment:'top',insets:0};return t;}
 function card(s,name,x,y,w,h,accent=C.lavender,fill=C.white){shape(s,name,x,y,w,h,fill,'roundRect',C.border);shape(s,name+'-accent',x,y+12,8,h-24,accent);}

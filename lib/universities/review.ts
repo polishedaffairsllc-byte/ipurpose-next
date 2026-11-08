@@ -1,6 +1,6 @@
 import 'server-only';
 import type { Firestore } from 'firebase-admin/firestore';
-import { institutions } from './institutions';
+import { institutions, activeInstitutions, isArchivedInstitution } from './institutions';
 import { CONTACT_COLLECTION, LINK_COLLECTION, tokenHash, universityPreviewEnabled } from './links';
 import { PRESENTATION_COLLECTION, PRESENTATION_VERSION, type UniversityPresentation } from './presentations';
 import { draftUniversityEmail } from './drafts';
@@ -21,7 +21,7 @@ export async function universityReview(db: Firestore, origin: string) {
       const previewUrl = token ? `${origin}/p/${token}?preview=1` : institution.already_contacted ? `${origin}${institution.page_path}?preview=1` : null;
       const name = typeof c.recipient_name === 'string' ? c.recipient_name : null;
       const presentation = presentations.docs.map(doc => doc.data() as UniversityPresentation).find(deck => deck.contact_id === c.contact_id && deck.institution_id === institution.institution_id && deck.content_version === PRESENTATION_VERSION && deck.review_status === 'awaiting_user_approval') || null;
-      const draft = draftUniversityEmail(institution, name, institution.already_contacted ? null : previewUrl, presentation ? { addressee: typeof c.display_addressee === 'string' ? c.display_addressee.replace(/^the /,'') : presentation.prepared_for, context: presentation.slides[2].paragraphs[0], rationale: presentation.slides[2].paragraphs[1].replace(/^Partnership rationale: /,'') } : undefined);
+      const draft = draftUniversityEmail(institution, name, institution.already_contacted ? null : previewUrl, presentation ? { addressee: typeof c.display_addressee === 'string' ? c.display_addressee.replace(/^the /,'') : presentation.prepared_for, context: presentation.draft_context || presentation.slides[2].paragraphs[0], rationale: presentation.draft_rationale || presentation.slides[2].paragraphs[1].replace(/^Partnership rationale: /,'') } : undefined);
       return {
         ...institution, state: typeof c.state === 'string' ? c.state : null, presentation_copy: presentation?.slides || null, pdf_url: token && presentation ? `${origin}/p/${token}/download` : null, presentation_version: presentation?.content_version || null, named_role_verified: c.named_role_verified === true, email_evidence: typeof c.email_evidence === 'string' ? c.email_evidence : null, contact_id: c.contact_id || null, recipient_name: name,
         recipient_email: typeof c.recipient_email === 'string' ? c.recipient_email : null, primary_office: typeof c.primary_office === 'string' ? c.primary_office : institution.primary_office,
@@ -35,6 +35,6 @@ export async function universityReview(db: Firestore, origin: string) {
       };
     });
   });
-  return { generated_at: new Date().toISOString(), environment: 'preview', approval_gate: 'Each institution page and matching email require separate explicit user approval. No sending, scheduling or production publication is enabled here.', counts: { institutions: institutions.length, new: institutions.filter(i => !i.already_contacted).length, already_contacted: institutions.filter(i => i.already_contacted).length }, rows };
+  return { generated_at: new Date().toISOString(), environment: 'preview', approval_gate: 'Each institution page and matching email require separate explicit user approval. No sending, scheduling or production publication is enabled here.', counts: { institutions: activeInstitutions.length, new: activeInstitutions.filter(i => !i.already_contacted).length, already_contacted: activeInstitutions.filter(i => i.already_contacted).length, archived: institutions.length-activeInstitutions.length, historical_total: institutions.length }, rows: rows.filter(row => !isArchivedInstitution(row.institution_id)), archived_rows: rows.filter(row => isArchivedInstitution(row.institution_id)).map(row => ({...row, campaign_status:'excluded_from_active_outreach' as const})) };
 }
 export type UniversityReview = Awaited<ReturnType<typeof universityReview>>;

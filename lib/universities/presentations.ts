@@ -10,6 +10,7 @@ export type UniversityPresentation = {
   slides: { number: number; title: string; body: string; paragraphs: string[] }[];
   assets: Record<string, { id: string; sha256: string; bytes: number; content_type: string }>;
   pdf_filename: string;
+  draft_context?: string; draft_rationale?: string;
 };
 export async function privatePresentation(db: Firestore, link: UniversityLink): Promise<UniversityPresentation | null> {
   const data = (await db.collection(PRESENTATION_COLLECTION).doc(`preview_${link.contactId}`).get()).data();

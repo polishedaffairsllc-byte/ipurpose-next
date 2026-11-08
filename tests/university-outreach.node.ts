@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { Timestamp, type Firestore } from 'firebase-admin/firestore';
-import { institutions, newInstitutions, universityEvents, universityDestinations } from '../lib/universities/institutions';
+import { institutions, newInstitutions, activeInstitutions, archivedInstitutionIds, universityEvents, universityDestinations } from '../lib/universities/institutions';
 import { seedReviewContact, resolveUniversityLink, tokenHash, anonymousVisit, trafficClassification, universityPreviewEnabled, type ReviewContact } from '../lib/universities/links';
 import { draftUniversityEmail, reviewCsv } from '../lib/universities/drafts';
 import { universityReview } from '../lib/universities/review';
@@ -11,7 +11,7 @@ import { outreachSchema, summarize, type OutreachInput } from '../lib/outreach/m
 import { storeOutreachEvent, readOutreach } from '../lib/outreach/service';
 import { privatePresentation, PRESENTATION_COLLECTION, PRESENTATION_VERSION } from '../lib/universities/presentations';
 import { outreachFilters } from '../lib/outreach/http';
-const institution = newInstitutions[0];
+const institution = activeInstitutions.find(item=>!item.already_contacted)!;
 function memoryDb() {
   const docs = new Map<string, Record<string, unknown>>();
   function ref(collection: string, id: string) { const key = `${collection}/${id}`; return { key, id,
@@ -27,9 +27,9 @@ function memoryDb() {
 }
 function contact(overrides: Partial<ReviewContact> = {}): ReviewContact { return { contact_id: randomUUID(), institution_id: institution.institution_id, recipient_name: null, recipient_email: null, primary_office: institution.primary_office, verified_source_url: institution.sources[0].url, source_checked_at: '2026-11-07', contact_status: 'needs_research', notes: [], ...overrides }; }
 function input(token: string, overrides: Partial<OutreachInput> = {}): OutreachInput { return { event_id: randomUUID(), session_id: randomUUID(), proposal_id: institution.proposal_id, source_event_name: 'proposal_page_view', page_path: institution.page_path, client_timestamp: new Date().toISOString(), sequence: 1, visit_number: 1, traffic_type: 'internal', debug_mode: true, outreach_id: token, ...overrides }; }
-test('41 reconciled public records contain 39 new proposals, two existing contacted routes and no private contacts', () => {
-  assert.equal(institutions.length, 41); assert.equal(newInstitutions.length,39); assert.equal(institutions.filter(i=>i.country==='Ghana').length,30);
-  assert.equal(institutions.filter(i=>i.already_contacted).length,2); assert.equal(new Set(institutions.map(i=>i.proposal_id)).size,41);
+test('50 additive public records contain 48 new proposals, two existing contacted routes and no private contacts', () => {
+  assert.equal(institutions.length, 50); assert.equal(newInstitutions.length,48); assert.equal(institutions.filter(i=>i.country==='Ghana').length,30);
+  assert.equal(institutions.filter(i=>i.already_contacted).length,2); assert.equal(new Set(institutions.map(i=>i.proposal_id)).size,50);
   assert.equal(institutions.find(i=>i.seed_name==='Wa Technical University')?.institution_name,'Dr Hilla Limann Technical University');
   for(const row of institutions) { assert.equal(row.review_status,'awaiting_user_approval'); assert.equal(Object.hasOwn(row,'recipient_email'),false); for(const source of row.sources) assert.match(source.url,/^https:\/\//); }
   for(const row of newInstitutions) { const text=JSON.stringify(row); assert.doesNotMatch(text,/\b(?:fees?|pricing|waivers?|free|complimentary|subsidized|PDFs?)\b/i); }
@@ -58,7 +58,7 @@ test('shared ledger derives recipient identity server-side, deduplicates outboun
   const summary=report.proposals.find(row=>row.proposal_id===institution.proposal_id)!;assert.equal(summary.visits,1);assert.equal(summary.universityMetrics?.rawAccesses,1);assert.equal(summary.universityMetrics?.uniqueSessions,1);assert.equal(summary.universityMetrics?.qualifiedVisits,1);assert.equal(summary.universityMetrics?.meetingRequests,1);
   const stored=JSON.stringify([...docs.entries()].filter(([key])=>key.startsWith('proposalOutreachEvents/')));assert.equal(stored.includes(tokenA),false);assert.equal(stored.includes('recipient_email'),false);
   assert.equal((await readOutreach(db,{window:'30d',includeInternal:false},'preview')).recentEvents.length,0);
-  await assert.rejects(()=>storeOutreachEvent(db,input(tokenA,{proposal_id:newInstitutions[1].proposal_id,page_path:newInstitutions[1].page_path}),'preview'));
+  await assert.rejects(()=>storeOutreachEvent(db,input(tokenA,{proposal_id:newInstitutions.find(i=>i.institution_id!==institution.institution_id)!.proposal_id,page_path:newInstitutions.find(i=>i.institution_id!==institution.institution_id)!.page_path}),'preview'));
 });
 test('schema requires controlled university link/section/destination and preserves strict existing events',()=>{
   const base=input('x'.repeat(43));assert.equal(outreachSchema.safeParse(base).success,true);
@@ -111,4 +111,22 @@ test('private presentation data is recipient-scoped, preview-scoped and complete
  record.slides.pop();assert.equal(await privatePresentation(db,linkA),null);
  const route=readFileSync('app/p/[token]/asset/[file]/route.ts','utf8'),download=readFileSync('app/p/[token]/download/route.ts','utf8');
  for(const source of [route,download]){assert.match(source,/universityPreviewEnabled/);assert.match(source,/resolveUniversityLink/);assert.match(source,/privatePresentation/);assert.match(source,/PRIVATE_ASSET_HEADERS/);}
+});
+
+// Supplemental entries are additive: retain the entire approved original roster byte-for-byte.
+test('nine supplemental HBCUs retain all original records and receive separate private proposal identities',()=>{
+ const ids=['north-carolina-a-t-state-university','howard-university','florida-a-m-university','xavier-university-of-louisiana','north-carolina-central-university','hampton-university','jackson-state-university','virginia-state-university','southern-university-and-a-m-college'];
+ assert.deepEqual(institutions.slice(41).map(i=>i.institution_id),ids);
+ assert.equal(institutions.filter(i=>i.group==='HBCU').length,20);
+ assert.equal(institutions.filter(i=>i.country==='Ghana').length,30);
+ assert.equal(new Set(institutions.map(i=>i.page_path)).size,50);
+ for(const id of ids){const row=institutions.find(i=>i.institution_id===id)!;assert.equal(row.already_contacted,false);assert.equal(row.publication_status,'preview_only');assert.equal(row.proposal_id,'university-'+id);}
+});
+
+test('replacement reconciliation archives nine Ghana records without deleting their registry/history mappings',async()=>{
+ assert.equal(activeInstitutions.length,41);assert.equal(activeInstitutions.filter(i=>i.country==='Ghana').length,21);assert.equal(activeInstitutions.filter(i=>i.group==='HBCU').length,20);
+ assert.equal(activeInstitutions.filter(i=>!i.already_contacted&&i.country==='Ghana').length,19);
+ const {db}=memoryDb();const review=await universityReview(db,'https://preview.example');assert.equal(review.archived_rows.length,9);assert.equal(review.counts.historical_total,50);
+ assert.deepEqual(new Set(review.archived_rows.map(i=>i.institution_id)),new Set(archivedInstitutionIds));
+ for(const row of review.archived_rows){assert.ok(institutions.some(i=>i.institution_id===row.institution_id));assert.equal(row.campaign_status,'excluded_from_active_outreach');assert.ok(!review.rows.some(i=>i.institution_id===row.institution_id));}
 });

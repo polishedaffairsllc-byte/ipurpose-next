@@ -7,7 +7,7 @@ import { reviewCsv } from '@/lib/universities/drafts';
 export default function UniversityReviewClient() {
   const [data, setData] = useState<UniversityReview | null>(null);
   const [error, setError] = useState('Administrator sign-in is required.');
-  const [selected, setSelected] = useState('university-of-cape-coast');
+  const [selected, setSelected] = useState('north-carolina-a-t-state-university');
   useEffect(() => {
     let epoch = 0;
     const unsubscribe = onIdTokenChanged(getFirebaseAuth(), async user => {
@@ -28,7 +28,7 @@ export default function UniversityReviewClient() {
     <a className="underline" href="/admin/launch-metrics">Proposal activity dashboard</a>
     {error && <p role="status" className="my-6">{error}</p>}
     {data && <>
-      <p className="my-4">{data.counts.institutions} institutions · {data.counts.new} new targets · {data.counts.already_contacted} already contacted</p>
+      <p className="my-4">{data.counts.institutions} active institutions · {data.counts.new} new targets · {data.counts.already_contacted} already contacted · {data.counts.archived} archived</p>
       <label className="block">Institution<select aria-label="Review institution" className="my-2 block w-full rounded border p-3" value={selected} onChange={event => setSelected(event.target.value)}>{data.rows.map(item => <option key={item.institution_id} value={item.institution_id}>{item.institution_name}{item.already_contacted ? ' — already contacted' : ''}</option>)}</select></label>
       <button className="my-4 rounded border px-4 py-3" onClick={() => { const url = URL.createObjectURL(new Blob([reviewCsv(data.rows)], { type: 'text/csv;charset=utf-8' })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'university-outreach-private-review.csv'; anchor.click(); URL.revokeObjectURL(url); }}>Export private review queue CSV</button>
       {row && <article className="my-5 rounded-2xl bg-white p-6 shadow-sm">
@@ -44,6 +44,7 @@ export default function UniversityReviewClient() {
         <h3 className="mt-6 font-semibold">{row.already_contacted ? 'Optional follow-up draft — prior outreach log required' : 'Email draft — unsent'}</h3>
         <p className="my-3 font-semibold">Subject: {row.email_subject}</p><pre className="whitespace-pre-wrap break-words font-sans leading-relaxed">{row.email_body}</pre>
       </article>}
+      <details className="my-8"><summary className="cursor-pointer font-semibold">Archived — excluded from active outreach ({data.archived_rows.length})</summary><p className="my-3">Presentations and history are preserved for reference. These institutions are excluded from the active queue and its CSV export.</p><ul className="list-disc pl-5">{data.archived_rows.map(item=><li key={item.institution_id} className="my-3">{item.institution_name} · excluded from active outreach{item.preview_url && <> · <a className="underline" href={item.preview_url} target="_blank" rel="noopener noreferrer">Private historical presentation</a></>}{item.pdf_url && <> · <a className="underline" href={item.pdf_url} download>Archived PDF</a></>}</li>)}</ul></details>
     </>}
   </main>;
 }

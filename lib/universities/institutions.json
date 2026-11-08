@@ -1080,5 +1080,275 @@
     "publication_status": "preview_only",
     "needs_research": [],
     "notes": []
+  },
+  {
+    "institution_id": "north-carolina-a-t-state-university",
+    "institution_name": "North Carolina A&T State University",
+    "seed_name": "North Carolina A&T State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 42,
+    "primary_office": "Executive Director for Career Services",
+    "context": "North Carolina A&T State University already offers student-facing support involving career counseling, employer relationships, experiential learning and student-success planning. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could connect technical and disciplinary strengths with a personal definition of meaningful work. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://www.ncat.edu/provost/career-services/ocs-staff.php",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "north-carolina-a-t-state-university",
+    "proposal_id": "university-north-carolina-a-t-state-university",
+    "page_path": "/partnerships/universities/north-carolina-a-t-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "howard-university",
+    "institution_name": "Howard University",
+    "seed_name": "Howard University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 43,
+    "primary_office": "Director, Center for Career and Professional Success",
+    "context": "Howard University already offers student-facing support involving career preparation, professional exploration and the breadth of pathways available across Howard’s disciplines. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could connect personal purpose and professional choices without prescribing a single definition of success. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://howard.edu/centers-institutes",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "howard-university",
+    "proposal_id": "university-howard-university",
+    "page_path": "/partnerships/universities/howard-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "florida-a-m-university",
+    "institution_name": "Florida A&M University",
+    "seed_name": "Florida A&M University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 44,
+    "primary_office": "Director, Career and Professional Development Center",
+    "context": "Florida A&M University already offers student-facing support involving career coaching, internships, alumni and employer connections, and early professional preparation. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could help students articulate the value of their experiences and select the next experience intentionally. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://cpdcenter.famu.edu/meet-our-team/",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "florida-a-m-university",
+    "proposal_id": "university-florida-a-m-university",
+    "page_path": "/partnerships/universities/florida-a-m-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "xavier-university-of-louisiana",
+    "institution_name": "Xavier University of Louisiana",
+    "seed_name": "Xavier University of Louisiana",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 45,
+    "primary_office": "Assistant Provost for Student Professional Development",
+    "context": "Xavier University of Louisiana already offers student-facing support involving career advising, pre-professional experience and student preparation for opportunities beyond graduation. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could connect service, academic ambitions and professional decisions with students’ own values. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://www.xula.edu/ocs/career-services-our-team.html",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "xavier-university-of-louisiana",
+    "proposal_id": "university-xavier-university-of-louisiana",
+    "page_path": "/partnerships/universities/xavier-university-of-louisiana",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "north-carolina-central-university",
+    "institution_name": "North Carolina Central University",
+    "seed_name": "North Carolina Central University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 46,
+    "primary_office": "Executive Director of Career and Student Success",
+    "context": "North Carolina Central University already offers student-facing support involving the integration of career and student-success support. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could bring academic persistence, personal agency and career exploration into one coherent student-owned plan. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://www.nccu.edu/dsa/meet-executive-team",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "north-carolina-central-university",
+    "proposal_id": "university-north-carolina-central-university",
+    "page_path": "/partnerships/universities/north-carolina-central-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "hampton-university",
+    "institution_name": "Hampton University",
+    "seed_name": "Hampton University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 47,
+    "primary_office": "Career Center",
+    "context": "Hampton University already offers student-facing support involving career assessment, internships, cooperative education, professional workshops and graduate-school exploration. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could help students connect what they learn through internships and co-ops to long-term direction. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://home.hamptonu.edu/career/",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "hampton-university",
+    "proposal_id": "university-hampton-university",
+    "page_path": "/partnerships/universities/hampton-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "jackson-state-university",
+    "institution_name": "Jackson State University",
+    "seed_name": "Jackson State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 48,
+    "primary_office": "Executive Director, Career Services Center",
+    "context": "Jackson State University already offers student-facing support involving career coaching, professional-development seminars, internships and interview preparation. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could help students define a meaningful career direction before choosing which job-search tools to use. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://www.jsums.edu/careers/about-us/",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "jackson-state-university",
+    "proposal_id": "university-jackson-state-university",
+    "page_path": "/partnerships/universities/jackson-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "virginia-state-university",
+    "institution_name": "Virginia State University",
+    "seed_name": "Virginia State University",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 49,
+    "primary_office": "Executive Director, Career Services",
+    "context": "Virginia State University already offers student-facing support involving career services within a wider student-support ecosystem. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could help students connect strengths, academic momentum and professional options. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://www.vsu.edu/ace/student-support-services.php",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "virginia-state-university",
+    "proposal_id": "university-virginia-state-university",
+    "page_path": "/partnerships/universities/virginia-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
+  },
+  {
+    "institution_id": "southern-university-and-a-m-college",
+    "institution_name": "Southern University and A&M College",
+    "seed_name": "Southern University and A&M College",
+    "country": "United States",
+    "group": "HBCU",
+    "priority": 50,
+    "primary_office": "Executive Director, Career Services Center",
+    "context": "Southern University and A&M College already offers student-facing support involving early career exploration, a four-year career plan, employer connections and career-development workshops. The opportunity is not to replace that work; it is to help students arrive better prepared to use it.",
+    "rationale": "A proposed iPurpose cohort could help students build a personal rationale behind their four-year career-planning choices. The university would decide whether this approach fits its students, calendar, existing services and educational priorities.",
+    "sources": [
+      {
+        "url": "https://www.subr.edu/page/2026-fall-career-fair",
+        "label": "Official source supplied in approved supplemental copy",
+        "checked_at": "2026-11-07"
+      }
+    ],
+    "page_slug": "southern-university-and-a-m-college",
+    "proposal_id": "university-southern-university-and-a-m-college",
+    "page_path": "/partnerships/universities/southern-university-and-a-m-college",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [
+      "Reconfirm role and delivery immediately before outreach."
+    ],
+    "notes": [
+      "Supplemental nine-HBCU assignment; original institutions retained."
+    ]
   }
 ]
