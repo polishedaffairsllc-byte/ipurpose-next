@@ -28,6 +28,11 @@ async function main(){
   const deck:UniversityPresentation={institution_id:row.institution_id,contact_id:row.contact_id,environment:'preview',content_version:PRESENTATION_VERSION,prepared_for:row.prepared_for,source_sha256:master.source_sha256,review_status:'awaiting_user_approval',slides:row.slides,assets,pdf_filename:`iPurpose_${row.institution_id}_Partnership_Concept.pdf`};
   if(typeof row.draft_context==='string')deck.draft_context=row.draft_context;
   if(typeof row.draft_rationale==='string')deck.draft_rationale=row.draft_rationale;
+  if(row.conversation_box!==undefined){
+   const box=row.conversation_box;
+   if(!Array.isArray(box)||box.length!==4||!box.every((n:unknown)=>typeof n==='number'&&Number.isFinite(n))||box[0]<0||box[1]<0||box[2]<=0||box[3]<=0||box[0]+box[2]>1280||box[1]+box[3]>720)throw new Error('Invalid conversation hotspot.');
+   deck.conversation_box=box as [number,number,number,number];
+  }
   prepared.push({row,deck,bytesById});
  }
  const uploaded=new Set<string>();

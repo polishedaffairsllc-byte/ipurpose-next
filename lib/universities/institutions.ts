@@ -1,4 +1,5 @@
 import records from './institutions.json';
+import { universityConversation } from './conversation';
 export type Institution = typeof records[number];
 export const institutions: readonly Institution[] = records;
 /** Preserve historical institutions and their identifiers, but omit these from active outreach. */
@@ -23,7 +24,9 @@ export const universityEvents = {
 export function universityDestinations(item: Institution): Record<string, string> {
   return {
     ipurpose: 'https://ipurposesoul.com', founder: 'https://www.mshmltn.com',
-    conversation: `mailto:renita@ipurposesoul.com?subject=${encodeURIComponent(`Exploratory student clarity pilot — ${item.institution_name}`)}`,
+    conversation: !item.already_contacted && !isArchivedInstitution(item.institution_id)
+      ? universityConversation(item.institution_name).href
+      : `mailto:renita@ipurposesoul.com?subject=${encodeURIComponent(`Exploratory student clarity pilot — ${item.institution_name}`)}`,
     ...Object.fromEntries(item.sources.map((source, i) => [`source-${i}`, source.url])),
   };
 }

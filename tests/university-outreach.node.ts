@@ -130,3 +130,16 @@ test('replacement reconciliation archives nine Ghana records without deleting th
  assert.deepEqual(new Set(review.archived_rows.map(i=>i.institution_id)),new Set(archivedInstitutionIds));
  for(const row of review.archived_rows){assert.ok(institutions.some(i=>i.institution_id===row.institution_id));assert.equal(row.campaign_status,'excluded_from_active_outreach');assert.ok(!review.rows.some(i=>i.institution_id===row.institution_id));}
 });
+
+test('all 39 active conversation destinations preserve the approved mailto copy and archived destinations remain unchanged', async()=>{
+ const {universityConversation,UNIVERSITY_PARTNERSHIPS_EMAIL}=await import('../lib/universities/conversation');
+ const active=activeInstitutions.filter(i=>!i.already_contacted);assert.equal(active.length,39);
+ for(const row of active){
+  const approved=universityConversation(row.institution_name),href=universityDestinations(row).conversation,url=new URL(href);
+  assert.equal(url.protocol,'mailto:');assert.equal(url.pathname,'partnerships@ipurposesoul.com');assert.equal(UNIVERSITY_PARTNERSHIPS_EMAIL,url.pathname);
+  assert.equal(url.searchParams.get('subject'),`iPurpose Partnership Conversation — ${row.institution_name}`);
+  assert.equal(url.searchParams.get('body'),`Dear Ms. Hamilton,\r\n\r\nThank you for sharing the iPurpose partnership proposal with ${row.institution_name}.\r\n\r\nI am interested in exploring how the iPurpose approach to student development, personal clarity, and career readiness might align with our institution's priorities.\r\n\r\nI would welcome an introductory conversation to learn more about the proposed eight-week pilot, potential areas of collaboration, and next steps.\r\n\r\nPlease let me know your availability for an initial discussion.\r\n\r\nBest regards,`);
+  assert.deepEqual([...url.searchParams.keys()],['subject','body']);assert.equal(href,approved.href);assert.ok(!/[\r\n]/.test(href));assert.match(href,/%0D%0A/);
+ }
+ for(const row of institutions.filter(i=>archivedInstitutionIds.includes(i.institution_id as typeof archivedInstitutionIds[number])||i.already_contacted)){const url=new URL(universityDestinations(row).conversation);assert.equal(url.pathname,'renita@ipurposesoul.com');assert.equal(url.searchParams.get('body'),null);}
+});
