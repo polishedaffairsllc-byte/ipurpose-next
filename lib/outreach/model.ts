@@ -9,6 +9,7 @@ export const outreachSchema = z.object({
   slide_number: z.number().int().min(1).max(1000).optional(),
   interaction_type: z.enum(['prev', 'next', 'play', 'pause', 'fullscreen', 'tap', 'progress-jump', 'thumbnail']).optional(),
   method: z.literal('mailto').optional(), traffic_type: z.enum(['internal', 'external']), debug_mode: z.boolean(),
+  source_slide_number: z.number().int().min(1).max(8).optional(), source_format: z.enum(['web', 'pdf']).optional(),
   section_id: z.string().max(60).optional(), destination_id: z.string().max(60).optional(),
   interaction_qualified: z.boolean().optional(), traffic_classification: z.enum(['internal', 'likely_automated', 'unclassified', 'interactive']).optional(),
   cta_id: z.string().max(80).optional(),
@@ -17,6 +18,7 @@ export const outreachSchema = z.object({
 }).strict().superRefine((event, context) => {
   const proposal = proposalById(event.proposal_id);
   const type = proposal?.events[event.source_event_name];
+  if ((event.source_slide_number !== undefined || event.source_format !== undefined) && (proposal?.family !== 'university' || !['external_link_click', 'meeting_request_click', 'pdf_download'].includes(type || '') || (event.source_slide_number || 0) > (proposal?.slideCount || 0))) context.addIssue({ code: 'custom', message: 'Invalid slide placement.' });
   if (event.sequence === 0 && type !== 'link_access') context.addIssue({ code: 'custom', message: 'Invalid event sequence.' });
   if (proposal?.family === 'university' && !event.outreach_id) context.addIssue({ code: 'custom', message: 'An outreach link is required.' });
   if (event.section_id !== undefined && (type !== 'section_view' || !proposal?.sections?.includes(event.section_id))) context.addIssue({ code: 'custom', message: 'Invalid section.' });
@@ -109,10 +111,10 @@ export function summarize(events: OutreachEvent[], includeInternal: boolean): Pr
     };
   });
 }
-export const eventLabel = (event: { event_type: string; slide_number?: number; interaction_type?: string; cta_id?: string; proposal_id?: string; section_id?: string }) => {
+export const eventLabel = (event: { destination_id?: string; source_slide_number?: number; event_type: string; slide_number?: number; interaction_type?: string; cta_id?: string; proposal_id?: string; section_id?: string }) => {
   const cta = proposalById(event.proposal_id || '')?.ctas?.[event.cta_id || ''];
   return ({
-  link_access: 'Link accessed (not proof of a human visit)', section_view: `Section observed: ${event.section_id || ''}`, return_visit: 'Return visit recorded', external_link_click: 'External source link clicked', meeting_request_click: 'Conversation link clicked (not proof of an email)',
+  link_access: 'Link accessed (not proof of a human visit)', section_view: `Section observed: ${event.section_id || ''}`, return_visit: 'Return visit recorded', external_link_click: `${event.destination_id === 'founder' ? 'MsHmltn' : event.destination_id === 'ipurpose' ? 'iPurpose' : 'External source'} link clicked${event.source_slide_number ? ` · Slide ${event.source_slide_number}` : ''}`, meeting_request_click: 'Conversation link clicked (not proof of an email)',
   page_view: 'Page opened', deck_start: 'Deck started', slide_view: event.slide_number ? `Slide ${event.slide_number} viewed` : 'Slide viewed',
   deck_interaction: event.interaction_type ? `Deck interaction: ${event.interaction_type}` : 'Deck interaction', deck_complete: 'Deck completed',
   pdf_download: 'PDF downloaded', visit_ipurpose_click: 'Visit iPurpose clicked', contact_click: 'Contact clicked',

@@ -18,3 +18,7 @@ match /proposalOutreachLinks/{link} { allow read, write: if false; }
 
 // Private university review contacts; access only through verified administrator APIs.
 match /proposalOutreachContacts/{contact} { allow read, write: if false; }
+
+// Private draft presentation manifests and bounded, content-addressed assets.
+match /proposalOutreachPresentations/{presentation} { allow read, write: if false; }
+match /proposalOutreachAssets/{asset} { allow read, write: if false; }

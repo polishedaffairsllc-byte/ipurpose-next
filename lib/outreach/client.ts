@@ -35,7 +35,7 @@ export function createOutreachLogger() {
         ...(type === 'deck_interaction' ? { interaction_type: params.interaction_type } : {}),
         ...(type === 'contact_click' && params.method === 'mailto' ? { method: 'mailto' } : {}),
         ...(type === 'cta_click' ? { cta_id: params.cta_id } : {}),
-        ...(proposal.family === 'university' ? { ...(params.section_id ? { section_id: params.section_id } : {}), ...(params.destination_id ? { destination_id: params.destination_id } : {}), interaction_qualified: params.interaction_qualified === true } : {}),
+        ...(proposal.family === 'university' ? { ...(params.source_slide_number ? { source_slide_number: params.source_slide_number } : {}), ...(params.source_format ? { source_format: params.source_format } : {}), ...(params.section_id ? { section_id: params.section_id } : {}), ...(params.destination_id ? { destination_id: params.destination_id } : {}), interaction_qualified: params.interaction_qualified === true } : {}),
         ...(attributedRecipient ? { recipient_key: attributedRecipient } : {}),
         ...(outreach && /^[A-Za-z0-9_-]{24,96}$/.test(outreach) ? { outreach_id: outreach } : {}),
       };

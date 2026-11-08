@@ -32,13 +32,15 @@ export default function UniversityReviewClient() {
       <label className="block">Institution<select aria-label="Review institution" className="my-2 block w-full rounded border p-3" value={selected} onChange={event => setSelected(event.target.value)}>{data.rows.map(item => <option key={item.institution_id} value={item.institution_id}>{item.institution_name}{item.already_contacted ? ' — already contacted' : ''}</option>)}</select></label>
       <button className="my-4 rounded border px-4 py-3" onClick={() => { const url = URL.createObjectURL(new Blob([reviewCsv(data.rows)], { type: 'text/csv;charset=utf-8' })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'university-outreach-private-review.csv'; anchor.click(); URL.revokeObjectURL(url); }}>Export private review queue CSV</button>
       {row && <article className="my-5 rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold">{row.institution_name}</h2><p className="my-3">{row.review_status} · {row.sent_status}</p>
+        <h2 className="text-2xl font-semibold">{row.institution_name}</h2><p>{row.country}{row.state ? ` · ${row.state}` : ''}</p><p className="my-3">{row.review_status} · {row.sent_status}</p>
         <p>{row.context}</p><p className="my-3">{row.rationale}</p>
         <h3 className="mt-6 font-semibold">Contact verification</h3><p>{row.recipient_name || 'Named contact not verified'} · {row.recipient_email || 'Work email not verified'}</p><p>{row.primary_office || 'Responsible office needs confirmation'} · {row.contact_status}</p>
         <a className="break-all underline" href={row.verified_source_url} target="_blank" rel="noopener noreferrer">Verification source</a><p>Checked {row.source_checked_at}</p>
         {row.notes.length > 0 && <ul className="my-4 list-disc pl-5">{row.notes.map((note, i) => <li key={i}>{String(note)}</li>)}</ul>}
         {row.preview_url && <a className="my-5 inline-block rounded bg-deepIndigo px-4 py-3 text-white" href={row.preview_url} target="_blank" rel="noopener noreferrer">Open private proposal preview</a>}
-        <p>{row.analytics_status}</p>
+        <p>{row.analytics_status}</p><p className="my-3 break-all text-sm">Tracking identifier: {row.outreach_id || 'Existing outreach preserved'}</p>
+        {row.pdf_url && <a className="my-3 block underline" href={row.pdf_url} download>Download complete eight-slide PDF</a>}
+        {row.presentation_copy && <details className="my-5"><summary className="cursor-pointer font-semibold">Full eight-slide copy</summary>{row.presentation_copy.map(slide=><section key={slide.number} className="my-4 border-t pt-4"><h3 className="font-semibold">Slide {slide.number} — {slide.title}</h3><p className="my-3 whitespace-pre-wrap leading-relaxed">{slide.body}</p></section>)}</details>}
         <h3 className="mt-6 font-semibold">{row.already_contacted ? 'Optional follow-up draft — prior outreach log required' : 'Email draft — unsent'}</h3>
         <p className="my-3 font-semibold">Subject: {row.email_subject}</p><pre className="whitespace-pre-wrap break-words font-sans leading-relaxed">{row.email_body}</pre>
       </article>}

@@ -9,6 +9,7 @@ import { draftUniversityEmail, reviewCsv } from '../lib/universities/drafts';
 import { universityReview } from '../lib/universities/review';
 import { outreachSchema, summarize, type OutreachInput } from '../lib/outreach/model';
 import { storeOutreachEvent, readOutreach } from '../lib/outreach/service';
+import { privatePresentation, PRESENTATION_COLLECTION, PRESENTATION_VERSION } from '../lib/universities/presentations';
 import { outreachFilters } from '../lib/outreach/http';
 const institution = newInstitutions[0];
 function memoryDb() {
@@ -75,16 +76,39 @@ test('scanner classification does not claim human reading; anonymous sessions ar
   assert.equal(trafficClassification(new Request('https://example.com'),false),'unclassified');assert.equal(trafficClassification(new Request('https://example.com'),false,true),'interactive');assert.equal(trafficClassification(new Request('https://example.com'),true,true),'internal');
   const first=anonymousVisit(undefined);assert.equal(first.number,1);assert.deepEqual(anonymousVisit(Buffer.from(JSON.stringify(first)).toString('base64url')),{id:first.id,number:2});assert.equal(anonymousVisit('bad').number,1);
 });
-test('admin review creates one-link draft artifacts only; existing institutions never receive duplicate initial drafts',async()=>{
+test('admin review creates unsent drafts with the private presentation and both canonical websites; existing institutions never receive duplicate initial drafts',async()=>{
   const {db,docs}=memoryDb();await seedReviewContact(db,contact());const review=await universityReview(db,'https://preview.example');assert.equal(review.rows.length,41);assert.equal(review.counts.new,39);
   const first=review.rows[0];assert.match(first.preview_url!,/^https:\/\/preview.example\/p\/[\w-]{43}\?preview=1$/);assert.equal(first.sent_status,'unsent');assert.equal(first.live_url,null);assert.equal(first.review_status,'awaiting_user_approval');
-  for(const row of newInstitutions){const draft=draftUniversityEmail(row,null,'https://preview.example/p/'+'x'.repeat(43));assert.doesNotMatch(draft.body,/\b(?:fees?|pricing|waivers?|free|complimentary|subsidized|PDFs?)\b/i);assert.equal((draft.body.match(/https:\/\//g)||[]).length,1);}
+  for(const row of newInstitutions){const draft=draftUniversityEmail(row,null,'https://preview.example/p/'+'x'.repeat(43));assert.doesNotMatch(draft.body,/\b(?:fees?|pricing|waivers?|free|complimentary|subsidized|PDFs?)\b/i);assert.equal((draft.body.match(/https:\/\//g)||[]).length,3);assert.match(draft.body,/https:\/\/ipurposesoul.com/);assert.match(draft.body,/https:\/\/www.mshmltn.com/);}
   const existing=review.rows.filter(i=>i.already_contacted);assert.equal(existing.length,2);assert.ok(existing.every(i=>i.email_kind==='follow_up_review_only'&&i.outreach_token===null&&i.sent_status==='already_contacted'));
   assert.equal([...docs].some(([key])=>key.startsWith('emailTasks/')),false);
   assert.match(reviewCsv([{email_body:'=formula'}]),/"'=formula"/);
 });
 test('new route and chrome boundaries preserve existing deck assets and reject production publication',()=>{
-  const page=readFileSync('app/partnerships/universities/[institution]/page.tsx','utf8');assert.match(page,/if \(!universityPreviewEnabled\(\)\) notFound/);assert.match(page,/if \(!token\) notFound/);assert.match(page,/adult students/);assert.doesNotMatch(page,/\.pdf|\b(?:download|fees?|waivers?)\b/i);
+  const page=readFileSync('app/partnerships/universities/[institution]/page.tsx','utf8');assert.match(page,/if \(!universityPreviewEnabled\(\)\) notFound/);assert.match(page,/if \(!token\) notFound/);assert.match(page,/privatePresentation/);assert.match(page,/UniversityPresentation/);assert.match(page,/Download PDF/);assert.doesNotMatch(page,/one.page overview|\b(?:pricing|waivers?)\b/i);
   for(const file of ['app/components/SiteChrome.tsx','app/components/GoogleAds.tsx'])assert.ok(readFileSync(file,'utf8').includes("pathname.startsWith('/partnerships/universities/')"));
-  assert.equal(Object.keys(universityEvents).length,7);assert.equal(summarize([],false).find(i=>i.proposal_id===institution.proposal_id)?.visits,0);
+  assert.equal(Object.keys(universityEvents).length,12);assert.equal(summarize([],false).find(i=>i.proposal_id===institution.proposal_id)?.visits,0);
+});
+
+test('eight-slide event progression, PDF and outbound placement use the generic ledger without weakening existing families',()=>{
+ const base=input('x'.repeat(43));
+ for(const number of [1,8])assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_slide_view',slide_number:number}).success,true);
+ assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_slide_view',slide_number:9}).success,false);
+ for(const destination of ['ipurpose','founder'])for(const slide of [1,2])assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_external_link_click',destination_id:destination,source_slide_number:slide,source_format:'web'}).success,true);
+ assert.equal(outreachSchema.safeParse({...base,source_event_name:'proposal_pdf_download',source_slide_number:8,source_format:'web'}).success,true);
+ assert.equal(outreachSchema.safeParse({...base,source_slide_number:1}).success,false);
+ assert.equal(outreachSchema.safeParse({...base,proposal_id:'sdsn-ghana-jh',page_path:'/partnerships/sdsn/ghana-jh',source_event_name:'sdsn_pdf_download',source_slide_number:1,source_format:'web'}).success,false);
+ assert.equal(universityDestinations(institution).founder,'https://www.mshmltn.com');
+});
+test('private presentation data is recipient-scoped, preview-scoped and complete before a viewer can load',async()=>{
+ const {db,docs}=memoryDb();const a=contact(),b=contact();await seedReviewContact(db,a);await seedReviewContact(db,b);
+ const tokenFor=(id:string)=>String([...docs.values()].find(row=>row.contact_id===id&&row.review_token)?.review_token);
+ const linkA=(await resolveUniversityLink(db,tokenFor(a.contact_id)))!,linkB=(await resolveUniversityLink(db,tokenFor(b.contact_id)))!;
+ assert.equal(await privatePresentation(db,linkA),null);
+ const record={institution_id:institution.institution_id,contact_id:a.contact_id,environment:'preview',content_version:PRESENTATION_VERSION,review_status:'awaiting_user_approval',slides:Array.from({length:8},(_,i)=>({number:i+1,title:`Slide ${i+1}`,body:'Approved copy',paragraphs:['Approved copy']})),assets:{}};
+ docs.set(`${PRESENTATION_COLLECTION}/preview_${a.contact_id}`,record);
+ assert.equal((await privatePresentation(db,linkA))?.slides.length,8);assert.equal(await privatePresentation(db,linkB),null);
+ record.slides.pop();assert.equal(await privatePresentation(db,linkA),null);
+ const route=readFileSync('app/p/[token]/asset/[file]/route.ts','utf8'),download=readFileSync('app/p/[token]/download/route.ts','utf8');
+ for(const source of [route,download]){assert.match(source,/universityPreviewEnabled/);assert.match(source,/resolveUniversityLink/);assert.match(source,/privatePresentation/);assert.match(source,/PRIVATE_ASSET_HEADERS/);}
 });

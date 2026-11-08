@@ -2,12 +2,14 @@ import 'server-only';
 import type { Firestore } from 'firebase-admin/firestore';
 import { institutions } from './institutions';
 import { CONTACT_COLLECTION, LINK_COLLECTION, tokenHash, universityPreviewEnabled } from './links';
+import { PRESENTATION_COLLECTION, PRESENTATION_VERSION, type UniversityPresentation } from './presentations';
 import { draftUniversityEmail } from './drafts';
 export async function universityReview(db: Firestore, origin: string) {
   if (!universityPreviewEnabled()) throw new Error('University review is preview-only.');
-  const [contacts, links] = await Promise.all([
+  const [contacts, links, presentations] = await Promise.all([
     db.collection(CONTACT_COLLECTION).where('environment', '==', 'preview').limit(250).get(),
     db.collection(LINK_COLLECTION).where('environment', '==', 'preview').limit(250).get(),
+    db.collection(PRESENTATION_COLLECTION).where('environment', '==', 'preview').limit(250).get(),
   ]);
   const rows = institutions.flatMap(institution => {
     const matching = contacts.docs.filter(doc => doc.data().institution_id === institution.institution_id && doc.data().contact_status !== 'qa_only');
@@ -18,9 +20,10 @@ export async function universityReview(db: Firestore, origin: string) {
       const token = typeof link?.review_token === 'string' ? link.review_token : null;
       const previewUrl = token ? `${origin}/p/${token}?preview=1` : institution.already_contacted ? `${origin}${institution.page_path}?preview=1` : null;
       const name = typeof c.recipient_name === 'string' ? c.recipient_name : null;
-      const draft = draftUniversityEmail(institution, name, institution.already_contacted ? null : previewUrl);
+      const presentation = presentations.docs.map(doc => doc.data() as UniversityPresentation).find(deck => deck.contact_id === c.contact_id && deck.institution_id === institution.institution_id && deck.content_version === PRESENTATION_VERSION && deck.review_status === 'awaiting_user_approval') || null;
+      const draft = draftUniversityEmail(institution, name, institution.already_contacted ? null : previewUrl, presentation ? { addressee: typeof c.display_addressee === 'string' ? c.display_addressee.replace(/^the /,'') : presentation.prepared_for, context: presentation.slides[2].paragraphs[0], rationale: presentation.slides[2].paragraphs[1].replace(/^Partnership rationale: /,'') } : undefined);
       return {
-        ...institution, contact_id: c.contact_id || null, recipient_name: name,
+        ...institution, state: typeof c.state === 'string' ? c.state : null, presentation_copy: presentation?.slides || null, pdf_url: token && presentation ? `${origin}/p/${token}/download` : null, presentation_version: presentation?.content_version || null, named_role_verified: c.named_role_verified === true, email_evidence: typeof c.email_evidence === 'string' ? c.email_evidence : null, contact_id: c.contact_id || null, recipient_name: name,
         recipient_email: typeof c.recipient_email === 'string' ? c.recipient_email : null, primary_office: typeof c.primary_office === 'string' ? c.primary_office : institution.primary_office,
         verified_source_url: typeof c.verified_source_url === 'string' ? c.verified_source_url : institution.sources[0].url,
         source_checked_at: typeof c.source_checked_at === 'string' ? c.source_checked_at : '2026-11-07', contact_status: typeof c.contact_status === 'string' ? c.contact_status : (institution.already_contacted ? 'existing_outreach_log_required' : 'needs_research'),
