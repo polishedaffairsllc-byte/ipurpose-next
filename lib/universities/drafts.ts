@@ -13,7 +13,7 @@ export function draftUniversityEmail(institution: Institution, recipientName: st
     kind: 'initial_review_only' as const,
   };
 }
-export const reviewExportFields = ['institution_id', 'state', 'contact_status', 'pdf_url', 'presentation_version', 'country', 'institution_name', 'primary_office', 'recipient_name', 'recipient_email', 'verified_source_url', 'source_checked_at', 'page_slug', 'outreach_token', 'preview_url', 'live_url', 'email_subject', 'email_body', 'review_status', 'sent_status', 'sent_at', 'follow_up_due_at', 'analytics_status', 'notes'] as const;
+export const reviewExportFields = ['institution_id', 'state', 'contact_status', 'pdf_url', 'presentation_version', 'country', 'institution_name', 'primary_office', 'recipient_name', 'recipient_email', 'verified_source_url', 'source_checked_at', 'page_slug', 'outreach_token', 'preview_url', 'email_preview_url', 'live_url', 'email_subject', 'email_body', 'review_status', 'sent_status', 'sent_at', 'follow_up_due_at', 'analytics_status', 'notes'] as const;
 export function reviewCsv(rows: readonly Record<string, unknown>[]) {
   const cell = (value: unknown) => '"' + String(Array.isArray(value) ? value.join('; ') : value ?? '').replace(/^[=+@-]/, match => "'" + match).replaceAll('"', '""') + '"';
   return [reviewExportFields.join(','), ...rows.map(row => reviewExportFields.map(field => cell(row[field])).join(','))].join('\r\n');
