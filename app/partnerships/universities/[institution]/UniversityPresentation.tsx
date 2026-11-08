@@ -6,14 +6,14 @@ import type { Institution } from '@/lib/universities/institutions';
 import type { PresentationSlide } from '@/lib/partnerships/sdsn';
 import styles from './university.module.css';
 import { universityConversation } from '@/lib/universities/conversation';
-type Props = { institution: Institution; token: string; sessionId: string; visitNumber: number; contactId: string; outreachId: string; slides: PresentationSlide[]; conversationBox?: [number, number, number, number] };
+type Props = { institution: Institution; token: string; sessionId: string; visitNumber: number; contactId: string; outreachId: string; slides: PresentationSlide[]; internal: boolean; conversationBox?: [number, number, number, number] };
 const placements = [
   { slide: 1, destination: 'ipurpose', label: 'Visit iPurpose (opens in a new tab)', box: [66,40,310,66] },
   { slide: 1, destination: 'founder', label: 'Visit Renita Hamilton (opens in a new tab)', box: [66,628,245,34] },
   { slide: 2, destination: 'ipurpose', label: 'Visit iPurpose (opens in a new tab)', box: [57,40,600,68] },
   { slide: 2, destination: 'founder', label: 'WHO BUILT IT — Renita Hamilton, MPS, Founder & CEO (opens in a new tab)', box: [57,445,1166,204] },
 ] as const;
-export default function UniversityPresentation({ institution, token, sessionId, visitNumber, contactId, outreachId, slides, conversationBox }: Props) {
+export default function UniversityPresentation({ institution, token, sessionId, visitNumber, contactId, outreachId, slides, internal, conversationBox }: Props) {
   const currentSlide = useRef(1);
   const state = useRef<{ send: ReturnType<typeof createSDSNEventSender>; sequence: number; number: number; interacted: boolean; page: boolean } | null>(null);
   const emit = useCallback((name: string, params: Record<string, string | number | boolean> = {}) => {
@@ -23,15 +23,15 @@ export default function UniversityPresentation({ institution, token, sessionId, 
     if (!t.page) {
       t.page = true;
       try { const key=`university_visits_v1_${outreachId}`, previous=Number(localStorage.getItem(key)||0); t.number=Math.max(visitNumber,Number.isSafeInteger(previous)&&previous<999999?previous+1:1); localStorage.setItem(key,String(t.number)); } catch { /* Optional storage. */ }
-      const base = { institution_id: institution.institution_id, proposal_id: institution.proposal_id, recipient_id: contactId, deck_variant: 'university-presentation', session_id: sessionId, visit_number: t.number, outreach_id: outreachId, traffic_type: 'internal', debug_mode: true };
+      const base = { institution_id: institution.institution_id, proposal_id: institution.proposal_id, recipient_id: contactId, deck_variant: 'university-presentation', session_id: sessionId, visit_number: t.number, outreach_id: outreachId, traffic_type: internal ? 'internal' : 'external', debug_mode: internal };
       t.send('proposal_page_view', { ...base, sequence: ++t.sequence });
       if (t.number>1) t.send('proposal_return_visit', { ...base, sequence: ++t.sequence });
     }
     if (name === 'proposal_page_view') return;
     t.send(name, { institution_id: institution.institution_id, proposal_id: institution.proposal_id, recipient_id: contactId,
       deck_variant: 'university-presentation', session_id: sessionId, visit_number: t.number, sequence: ++t.sequence, outreach_id: outreachId,
-      traffic_type: 'internal', debug_mode: true, interaction_qualified: t.interacted, ...params });
-  }, [institution, sessionId, visitNumber, contactId, outreachId]);
+      traffic_type: internal ? 'internal' : 'external', debug_mode: internal, interaction_qualified: t.interacted, ...params });
+  }, [institution, sessionId, visitNumber, contactId, outreachId, internal]);
   useEffect(() => {
     if (!state.current?.page) emit('proposal_page_view');
     const observeInput=(event: Event)=>{if(event.isTrusted&&!document.hidden&&state.current)state.current.interacted=true;};

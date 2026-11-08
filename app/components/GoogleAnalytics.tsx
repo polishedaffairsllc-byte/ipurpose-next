@@ -84,6 +84,10 @@ export default function GoogleAnalytics() {
 
   const destinations = getLaunchMeasurementIds();
   const secondaryIds = destinations.filter(id => id !== measurementId);
+  // Capability tokens grant private proposal access; never include them in GA page URLs.
+  const privateProposalLocation = pathname?.startsWith('/partnerships/universities/')
+    ? ", page_location: window.location.origin + window.location.pathname, page_referrer: ''"
+    : '';
 
   return (
     <>
@@ -96,8 +100,8 @@ export default function GoogleAnalytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${measurementId}', { 'anonymize_ip': true, 'allow_google_signals': false });
-            ${secondaryIds.map(id => `gtag('config', '${id}', { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });`).join('\n')}
+            gtag('config', '${measurementId}', { 'anonymize_ip': true, 'allow_google_signals': false${privateProposalLocation} });
+            ${secondaryIds.map(id => `gtag('config', '${id}', { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false${privateProposalLocation} });`).join('\n')}
             window.__ipurposeGA4Ready = true;
             window.dispatchEvent(new Event('ipurpose:ga4-ready'));
           `,

@@ -1,11 +1,10 @@
 import type { NextRequest } from 'next/server';
-import { resolveUniversityLink, universityPreviewEnabled } from '@/lib/universities/links';
+import { resolveUniversityLink } from '@/lib/universities/links';
 import { ASSET_COLLECTION, PRIVATE_ASSET_HEADERS, privatePresentation } from '@/lib/universities/presentations';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export async function GET(_request: NextRequest, context: { params: Promise<{ token: string; file: string }> }) {
   const unavailable = () => new Response(null, { status: 404, headers: PRIVATE_ASSET_HEADERS });
-  if (!universityPreviewEnabled()) return unavailable();
   const { token, file } = await context.params;
   if (!/^slide-0[1-8](?:-(?:1280|1920))?\.webp$/.test(file)) return unavailable();
   const { firebaseAdmin } = await import('@/lib/firebaseAdmin'); const db = firebaseAdmin.firestore();

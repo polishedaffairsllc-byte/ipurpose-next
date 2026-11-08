@@ -1,6 +1,7 @@
 import 'server-only';
 import type { Firestore } from 'firebase-admin/firestore';
-import type { UniversityLink } from './links';
+import { universityPreviewEnabled, type UniversityLink } from './links';
+import { presentationFingerprint } from './publication';
 export const PRESENTATION_COLLECTION = 'proposalOutreachPresentations';
 export const ASSET_COLLECTION = 'proposalOutreachAssets';
 export const PRESENTATION_VERSION = 'reconciled-2026-11-07';
@@ -14,8 +15,10 @@ export type UniversityPresentation = {
   conversation_box?: [number, number, number, number];
 };
 export async function privatePresentation(db: Firestore, link: UniversityLink): Promise<UniversityPresentation | null> {
+  if (!universityPreviewEnabled() && !link.publication) return null;
   const data = (await db.collection(PRESENTATION_COLLECTION).doc(`preview_${link.contactId}`).get()).data();
   if (!data || data.environment !== 'preview' || data.institution_id !== link.institution.institution_id || data.contact_id !== link.contactId || data.content_version !== PRESENTATION_VERSION || data.review_status !== 'awaiting_user_approval' || !Array.isArray(data.slides) || data.slides.length !== 8 || data.slides.some((s,i) => s.number !== i+1) || !data.assets) return null;
+  if (link.publication && (link.publication.presentation_id !== `preview_${link.contactId}` || presentationFingerprint(data) !== link.publication.presentation_sha256)) return null;
   return data as UniversityPresentation;
 }
 export const PRIVATE_ASSET_HEADERS = { 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex, nofollow, noarchive', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff' };
