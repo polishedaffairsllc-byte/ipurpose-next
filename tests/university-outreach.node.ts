@@ -143,3 +143,11 @@ test('all 39 active conversation destinations preserve the approved mailto copy 
  }
  for(const row of institutions.filter(i=>archivedInstitutionIds.includes(i.institution_id as typeof archivedInstitutionIds[number])||i.already_contacted)){const url=new URL(universityDestinations(row).conversation);assert.equal(url.pathname,'renita@ipurposesoul.com');assert.equal(url.searchParams.get('body'),null);}
 });
+
+test('all private email drafts retain full stable preview links and rich-text links preserve approved copy',async()=>{
+ const {universityEmailPreviewUrl,UNIVERSITY_EMAIL_PREVIEW_ORIGIN,universityEmailParts,universityEmailHtml}=await import('../lib/universities/email-links');
+ const {db}=memoryDb();for(const row of activeInstitutions.filter(i=>!i.already_contacted))await seedReviewContact(db,contact({institution_id:row.institution_id,primary_office:row.primary_office,verified_source_url:row.sources[0].url}));
+ const review=await universityReview(db,'https://ipurposesoul.com');const rows=review.rows.filter(r=>!r.already_contacted);assert.equal(rows.length,39);
+ for(const row of rows){assert.equal(row.email_preview_url,universityEmailPreviewUrl(row.outreach_token!));assert.equal(new URL(row.email_preview_url!).origin,UNIVERSITY_EMAIL_PREVIEW_ORIGIN);assert.ok(row.email_body.includes(row.email_preview_url!));assert.ok(!row.email_body.includes('https://ipurposesoul.com/p/'));const parts=universityEmailParts(row.email_body);assert.equal(parts.map(p=>p.text).join(''),row.email_body);assert.ok(parts.some(p=>p.href===row.email_preview_url));assert.ok(parts.some(p=>p.text==='iPurpose'&&p.href==='https://ipurposesoul.com'));assert.ok(parts.some(p=>p.text==='Renita Hamilton'&&p.href==='https://www.mshmltn.com'));}
+ assert.throws(()=>universityEmailPreviewUrl('invalid'));const html=universityEmailHtml('<script>alert(1)</script> iPurpose');assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));assert.ok(html.includes('href="https://ipurposesoul.com"'));
+});
