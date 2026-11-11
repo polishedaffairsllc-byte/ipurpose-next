@@ -44,6 +44,9 @@ export type OutreachEvent = OutreachInput & ReturnType<typeof proposalMetadata> 
   attributed_recipient_id?: string; institution_id?: string; campaign_id?: string;
   timestamp: string; environment: 'production' | 'preview'; source: 'first-party'; timestamp_precision: 'exact';
 };
+export function isExternalOutreachEvent(event: Pick<OutreachInput, 'traffic_type' | 'traffic_classification'>) {
+  return event.traffic_type === 'external' && event.traffic_classification !== 'likely_automated' && event.traffic_classification !== 'internal';
+}
 export const OUTREACH_PERIODS = [
   { value: 'today', label: 'Today' },
   { value: '24h', label: 'Last 24 hours' },
@@ -82,13 +85,14 @@ export function summarize(events: OutreachEvent[], includeInternal: boolean): Pr
   return PROPOSALS.map(proposal => {
     const rows = events.filter(event => event.proposal_id === proposal.id);
     const opened = rows.filter(event => event.event_type === 'page_view');
+    const activity = rows.filter(event => event.event_type !== 'link_access');
     const has = (type: OutreachEventType) => rows.some(event => event.event_type === type);
     const completed = has('deck_complete');
     return {
       proposal_id: proposal.id, proposal_family: proposal.family, organization: proposal.organization, recipient_id: proposal.recipientId, label: proposal.label,
-      status: completed ? 'Completed' : rows.some(event => ['deck_interaction', 'pdf_download', 'contact_click', 'visit_ipurpose_click', 'overview_download', 'video_click', 'cta_click'].includes(event.event_type) || (event.slide_number || 0) > 1) ? 'Engaged' : rows.length ? 'Opened' : includeInternal ? 'No activity yet' : 'No external activity yet',
+      status: completed ? 'Completed' : rows.some(event => ['deck_interaction', 'pdf_download', 'contact_click', 'visit_ipurpose_click', 'overview_download', 'video_click', 'cta_click'].includes(event.event_type) || (event.slide_number || 0) > 1) ? 'Engaged' : activity.length ? 'Opened' : includeInternal ? 'No activity yet' : 'No external activity yet',
       firstVisit: opened.map(event => event.timestamp).sort()[0] || null,
-      mostRecentActivity: rows.map(event => event.timestamp).sort().at(-1) || null,
+      mostRecentActivity: activity.map(event => event.timestamp).sort().at(-1) || null,
       visits: proposal.family === 'university' ? opened.length : new Set(opened.map(event => event.session_id)).size,
       ...(proposal.family === 'university' ? { universityMetrics: {
         lastVisit: opened.map(event => event.timestamp).sort().at(-1) || null,
@@ -99,7 +103,7 @@ export function summarize(events: OutreachEvent[], includeInternal: boolean): Pr
         meetingRequests: rows.filter(event => event.event_type === 'meeting_request_click').length,
         externalLinkClicks: rows.filter(event => event.event_type === 'external_link_click').length,
       } } : {}),
-      mostRecentExternalActivity: rows.filter(event => event.traffic_type === 'external').map(event => event.timestamp).sort().at(-1) || null,
+      mostRecentExternalActivity: activity.filter(isExternalOutreachEvent).map(event => event.timestamp).sort().at(-1) || null,
       ...(proposal.ctas ? { metricCounts: {
         companionViews: opened.length,
         compassClicks: rows.filter(event => event.cta_id && proposal.ctas?.[event.cta_id] === 'compassClicks').length,

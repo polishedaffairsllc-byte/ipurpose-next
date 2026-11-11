@@ -3,11 +3,18 @@ import { resolveUniversityLink, CONTACT_COLLECTION } from '@/lib/universities/li
 import { proposalById } from './registry';
 import { createHash } from 'node:crypto';
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
-import { outreachSchema, proposalMetadata, OUTREACH_RETENTION_DAYS, OUTREACH_TIMEZONE, summarize, windowStart, type OutreachEvent, type OutreachFilters, type OutreachInput } from './model';
+import { isExternalOutreachEvent, outreachSchema, proposalMetadata, OUTREACH_RETENTION_DAYS, OUTREACH_TIMEZONE, summarize, windowStart, type OutreachEvent, type OutreachFilters, type OutreachInput } from './model';
 
 export const OUTREACH_COLLECTION = 'proposalOutreachEvents';
 export const OUTREACH_LINKS_COLLECTION = 'proposalOutreachLinks';
 const MAX_ROWS = 10000;
+// The Nov. 8, 2026 production smoke test ran before SDSN recognized prefetch traffic.
+// Match its exact proposal/session pairs so unrelated traffic in the same minute is preserved.
+const productionSmokeTestSessions = new Map([
+  ['sdsn-ghana-jh', '744ffb6d-6736-4904-9dc4-7b054f162507'],
+  ['sdsn-africa-lm', 'b4f1ba6f-bfe3-4cca-abb2-33881a30f3c3'],
+  ['sdsn-global-partnership', '7f2f3927-9872-41ea-9883-a44d4124276b'],
+]);
 export function outreachEnvironment(): 'preview' | 'production' {
   return process.env.VERCEL_ENV === 'production' ? 'production' : 'preview';
 }
@@ -60,7 +67,8 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
     // Stored outreach_id is a SHA-256 record ID, also valid under the opaque-ID allowlist.
     if (!parsed.success || storedEnvironment !== environment || !(timestamp instanceof Timestamp)) continue;
     if (timestamp.toMillis() > now.getTime()) continue;
-    if (!filters.includeInternal && parsed.data.traffic_type !== 'external') continue;
+    if (environment === 'production' && productionSmokeTestSessions.get(parsed.data.proposal_id) === parsed.data.session_id) parsed.data.traffic_type = 'internal';
+    if (!filters.includeInternal && !isExternalOutreachEvent(parsed.data)) continue;
     if (filters.proposalId && parsed.data.proposal_id !== filters.proposalId) continue;
     if (filters.recipientId && attributed_recipient_id !== filters.recipientId) continue;
     rows.push({ ...parsed.data, ...proposalMetadata(parsed.data), ...(typeof attributed_recipient_id === 'string' ? { attributed_recipient_id } : {}), ...(typeof institution_id === 'string' ? { institution_id } : {}), ...(typeof campaign_id === 'string' ? { campaign_id } : {}), timestamp: timestamp.toDate().toISOString(), environment, source: 'first-party', timestamp_precision: 'exact' });
@@ -90,7 +98,7 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
     environment, window: filters.window, periodStart: start.toISOString(), periodEnd: now.toISOString(),
     proposals: summarize(rows, filters.includeInternal).filter(row => !filters.proposalId || row.proposal_id === filters.proposalId),
     recentEvents: rows, truncated: snapshot.size > MAX_ROWS, retentionDays: OUTREACH_RETENTION_DAYS,
-    coverage: 'First-party ledger since installation. Page opened means a page load, not an email open. Visits are anonymous browser visits, not identified people. Summaries cover the selected period and environment only.',
+    coverage: 'First-party ledger since installation. The external view excludes likely automated traffic. Raw link accesses are recorded separately from page loads and visits. Page opened means a page load, not an email open. Visits are anonymous browser visits, not identified people. Summaries cover the selected period and environment only.',
   };
 }
 export type OutreachReport = Awaited<ReturnType<typeof readOutreach>>;
