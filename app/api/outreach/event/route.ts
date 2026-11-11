@@ -19,6 +19,8 @@ export const POST = ingestionHandler(async (event, request) => {
   if (proposalById(event.proposal_id)?.family === 'university') {
     if (universityEnvironment() === 'preview') event.traffic_type = 'internal';
     event.traffic_classification = trafficClassification(request, event.traffic_type === 'internal', event.interaction_qualified);
+  } else if (trafficClassification(request, event.traffic_type === 'internal') === 'likely_automated') {
+    event.traffic_type = 'internal';
   }
   await storeOutreachEvent(firebaseAdmin.firestore(), event);
   // Bounded, opportunistic 180-day retention sweep after response; never blocks presentation delivery.

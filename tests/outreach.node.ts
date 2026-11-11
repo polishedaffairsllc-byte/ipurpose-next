@@ -74,6 +74,53 @@ test('registered opaque links are proposal-scoped; arbitrary or expired tokens a
   docs.set(`proposalOutreachLinks/${hash}`, { enabled: true, proposal_id: 'sdsn-ghana-jh', expiresAt: Timestamp.fromMillis(Date.now() + 10000) });
   await storeOutreachEvent(db, input({ outreach_id: token }), 'preview'); assert.equal([...docs.values()].at(-1)?.outreach_id, hash);
 });
+test('the recorded SDSN smoke-test visit is internal without suppressing other sessions', async () => {
+  const { db } = fakeDb();
+  const smokeTest = input({ session_id: '744ffb6d-6736-4904-9dc4-7b054f162507' });
+  const unrelatedVisit = input();
+  await storeOutreachEvent(db, smokeTest, 'production');
+  await storeOutreachEvent(db, unrelatedVisit, 'production');
+
+  const external = await readOutreach(db, { window: 'today', includeInternal: false }, 'production', now);
+  assert.deepEqual(external.recentEvents.map(event => event.event_id), [unrelatedVisit.event_id]);
+  assert.equal(external.proposals[0].visits, 1);
+  const diagnostics = await readOutreach(db, { window: 'today', includeInternal: true }, 'production', now);
+  assert.equal(diagnostics.recentEvents.find(event => event.event_id === smokeTest.event_id)?.traffic_type, 'internal');
+});
+test('external reports omit recorded automated visits and do not turn raw link access into an open', async () => {
+  const { db, docs } = fakeDb();
+  const [reviewed, visited] = PROPOSALS.filter(proposal => proposal.family === 'university');
+  const record = (proposal: Proposal, overrides: Partial<OutreachInput>) => {
+    const event = input({ proposal_id: proposal.id, page_path: proposal.pagePath, outreach_id: 'a'.repeat(64), source_event_name: 'proposal_page_view', ...overrides });
+    docs.set(`proposalOutreachEvents/production_${event.event_id}`, {
+      ...event, ...proposalMetadata(event), environment: 'production', timestamp: Timestamp.fromDate(now),
+    });
+  };
+  const automatedSession = randomUUID();
+  record(reviewed, { session_id: automatedSession, traffic_classification: 'likely_automated' });
+  record(reviewed, { session_id: automatedSession, traffic_classification: 'likely_automated', source_event_name: 'proposal_deck_complete', sequence: 2, interaction_qualified: true });
+  record(reviewed, { source_event_name: 'proposal_link_access', sequence: 0, traffic_classification: 'unclassified' });
+  record(visited, { traffic_classification: 'unclassified' });
+
+  const report = await readOutreach(db, { window: 'today', includeInternal: false }, 'production', now);
+  assert.deepEqual(report.recentEvents.map(event => [event.proposal_id, event.event_type]).sort(), [[reviewed.id, 'link_access'], [visited.id, 'page_view']].sort());
+  const reviewedSummary = report.proposals.find(row => row.proposal_id === reviewed.id)!;
+  assert.equal(reviewedSummary.status, 'No external activity yet');
+  assert.equal(reviewedSummary.visits, 0);
+  assert.equal(reviewedSummary.completed, false);
+  assert.equal(reviewedSummary.firstVisit, null);
+  assert.equal(reviewedSummary.mostRecentActivity, null);
+  assert.equal(reviewedSummary.mostRecentExternalActivity, null);
+  assert.equal(reviewedSummary.universityMetrics?.rawAccesses, 1);
+  const visitedSummary = report.proposals.find(row => row.proposal_id === visited.id)!;
+  assert.equal(visitedSummary.status, 'Opened');
+  assert.equal(visitedSummary.visits, 1);
+  assert.equal(visitedSummary.mostRecentExternalActivity, now.toISOString());
+
+  const diagnostics = await readOutreach(db, { window: 'today', includeInternal: true, proposalId: reviewed.id }, 'production', now);
+  assert.equal(diagnostics.recentEvents.length, 3);
+  assert.equal(diagnostics.proposals[0].mostRecentExternalActivity, null);
+});
 test('admin endpoint rejects missing, invalid, revoked, disabled and non-admin access; filters are validated', async () => {
   let loads = 0; let actor = { customClaims: { admin: true }, disabled: false }; let claim = true;
   const auth = { async verifyIdToken(token: string, revoked: boolean) { assert.equal(revoked, true); if (token === 'bad') throw new Error(); return { uid: 'private-user', admin: claim }; }, async getUser() { return actor; } } as unknown as Auth;
