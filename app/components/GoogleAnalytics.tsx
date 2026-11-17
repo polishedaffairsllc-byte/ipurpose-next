@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 import { getLaunchMeasurementIds } from '@/lib/launch-metrics/config';
+import { useUTMParams } from '@/lib/hooks/useUTMParams';
 
 const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const INTERNAL_BROWSER_KEY = 'ipurpose_internal_traffic';
@@ -27,6 +28,9 @@ function isOwnerOrAdminProfile(profile: any) {
 }
 
 export default function GoogleAnalytics() {
+  // Capture first-touch campaign parameters on entry, before navigation clears the query string.
+  // Previously the hook only ran on the final results page, losing homepage campaign UTMs.
+  useUTMParams();
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin') ?? false;
   const [isExcludedBrowser, setIsExcludedBrowser] = useState(false);
