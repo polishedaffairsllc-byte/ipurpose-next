@@ -110,7 +110,7 @@ export default function StarterPackLanding() {
               {loading ? 'Starting checkout…' : 'Purchase Now – $27'}
             </button>
             <p className="text-sm text-warmCharcoal/50 font-marcellus">
-              No credit card required upfront. Cancel anytime.
+              One-time purchase. No recurring subscription.
             </p>
           </div>
 
