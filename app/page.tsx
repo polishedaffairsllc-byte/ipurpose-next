@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from 'next/link';
 import VideoBackground from './components/VideoBackground';
-import SplashVideoModal from './components/SplashVideoModal';
 import PublicHeader from './components/PublicHeader';
 import Footer from './components/Footer';
 
@@ -35,7 +34,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-    <SplashVideoModal />
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />
         <PublicHeader />
@@ -45,14 +43,22 @@ export default function Home() {
               <div style={{ lineHeight: '1', marginBottom: 'clamp(1.875rem, 5vw, 3.75rem)' }}>
                 iPurpose<span style={{ fontSize: '0.4em', verticalAlign: 'super' }}>™</span>
               </div>
-              <div className="text-h2">Helping people orient themselves in a changing world.</div>
+              <div className="text-h2">Find the next step your business actually needs.</div>
             </h1>
             <p className="text-h3 leading-relaxed mt-4 sm:mt-5 md:mt-6 lg:mt-8 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
-              iPurpose helps thoughtful, capable people who feel disconnected, tired, or unclear.
+              iPurpose helps creators and small-business owners turn uncertain priorities into clearer decisions.
             </p>
             <p className="text-h3 leading-relaxed mt-3 sm:mt-4 md:mt-5 lg:mt-6 mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 4px 16px rgba(0,0,0,0.4)' }}>
-              Let's reconnect you to what matters and build it with clarity.
+              Start with a free Clarity Check to identify whether you need direction, better systems, or more intentional use of AI.
             </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <Link href="/clarity-check-quiz" className="inline-flex items-center justify-center rounded-full bg-lavenderViolet px-8 py-4 font-marcellus text-lg font-semibold text-white shadow-lg transition-opacity hover:opacity-90">
+                Start the Free Clarity Check
+              </Link>
+              <Link href="/clarity-check" className="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 font-marcellus text-base font-medium text-white transition-opacity hover:opacity-80">
+                Learn How It Works
+              </Link>
+            </div>
           </div>
         </div>
         <div className="relative w-full bg-black/20 backdrop-blur-sm px-4 sm:px-6 lg:px-12" style={{ zIndex: 10, paddingTop: '0.0045rem', paddingBottom: '6rem' }}>
@@ -65,7 +71,7 @@ export default function Home() {
             <div className="mb-12 sm:mb-16">
               <div className="relative p-8 sm:p-10 rounded-2xl backdrop-blur-sm border-2 border-white/40 text-center" style={{ backgroundColor: 'rgba(156, 136, 255, 0.15)' }}>
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white/20 px-4 py-1 rounded-full text-xs sm:text-sm font-marcellus text-white">
-                  MOST POPULAR
+                  FREE STARTING POINT
                 </div>
                 <h3 className="text-h2 mb-3 !text-white" style={{ color: '#FFFFFF' }}>Clarity Check</h3>
                 <p className="text-body !text-white mb-2 font-marcellus" style={{ color: '#FFFFFF', opacity: 0.9 }}>
