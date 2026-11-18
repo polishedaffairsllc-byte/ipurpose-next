@@ -53,7 +53,7 @@ jobs:
           set -euo pipefail
           checks="$(gh api "repos/$GH_REPO/commits/$RELEASE_SHA/check-runs" --paginate --jq '.check_runs[] | [.name,.status,.conclusion] | @tsv')"
           for name in 'Verify Secrets & Repository Safety' 'Firestore alignment regression tests' 'Install, Lint, Type Check, Build & Test' 'Verify Repository & Type Safety'; do
-            matches="$(printf '%s\\n' "$checks" | awk -F '\\t' -v name="$name" '$1==name && $2=="completed" && $3=="success" {n++} END {print n+0}')"
+            matches="$(printf '%s\n' "$checks" | awk -F '\t' -v name="$name" '$1==name && $2=="completed" && $3=="success" {n++} END {print n+0}')"
             if [ "$matches" -lt 1 ]; then
               echo "Required successful check missing: $name"
               exit 1
