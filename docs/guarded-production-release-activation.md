@@ -1,25 +1,33 @@
-# Guarded production release activation checklist
+# Single-path production release controls
 
-Status: **NOT ENABLED for autonomous deployment.** This PR only introduces a manual release workflow and must not be merged before the repository administrator verifies controls.
+**Status: pending repository administrator configuration.** This document is the source of truth for activation.
 
-## Evidence (2026-11-18)
-- Level 2 draft pilot PR #122 passed all five required checks; it was not merged or deployed.
-- Vercel project: `ipurpose-next` (`prj_dZRAfBhuw8HbTm4PiC5xnPHojz9M`), team `team_DxF0PzBzqRY4ya3khEQIC91h`.
-- Vercel production deployment history and rollback candidates exist.
-- GitHub rulesets API returned no visible rulesets; branch protection inspection returned HTTP 403 (integration lacks access).
-- Existing `ci.yml` includes a `main` deploy job with `amondnet/vercel-action@v20`; determine whether this and Vercel Git integration cause duplicate deployment attempts.
+## Architecture
+Codex branch → pull request → GitHub required checks and human approval → protected `main` → **existing Vercel Git integration** → production domain. There must be no competing GitHub Actions production deployment job.
 
-## Required administrator verification before merge
-1. Require all CI checks on `main` and a non-bypassable human review for sensitive changes; prohibit force pushes.
-2. Create/configure the GitHub Actions `production` environment with required human reviewers and restrict deployment branches to `main`. Merely naming an environment in YAML does **not** configure protection.
-3. Confirm `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are scoped appropriately and not exposed to untrusted PRs.
-4. Confirm whether Vercel Git integration already deploys `main` to production. Consolidate duplicate release paths.
-5. Ensure required check results belong to the exact approved commit SHA. The scaffold workflow currently checks only main HEAD identity, not check-run conclusions.
-6. Test a release in a safe preview environment, smoke-check production after a separately approved release, and rehearse rollback.
-7. Define an explicit low-risk change allowlist. Require human release authorization for identity/auth, privacy/consent, payments, user data, infrastructure, secrets, and database migrations.
+Vercel project `ipurpose-next` is linked to GitHub `polishedaffairsllc-byte/ipurpose-next`. Vercel production history contains successful `main` releases and rollback candidates. GitHub branch metadata returned `protected: false` on 2026-11-18; rulesets list was empty.
 
-## Workflow behavior
-`guarded-production-release.yml` is **manual only** (`workflow_dispatch`), requires an exact 40-character main HEAD SHA, and references a GitHub `production` environment. It cannot itself establish reviewer protections. It uses explicit Vercel `--prod` flags. Do not run it before checks and environment configuration are verified.
+## Changes prepared in PR #124
+- Removed the newly introduced duplicate manual Vercel deployment workflow.
+- Added a scheduled read-only homepage availability monitor; GitHub Actions failures should be surfaced by the existing alert process.
+- Existing `.github/workflows/ci.yml` already has an optional-token `Deploy to Vercel` job on `main`. **Remove that job in this PR before merging** to eliminate the older competing deployment path, after confirming Vercel Git production branch is `main`.
 
-## Future autonomous release
-After the above gates are demonstrably enforced, replace manual dispatch with a narrowly scoped post-merge, required-check-verified release mechanism and automated health/rollback checks. Do not use a broad `push` trigger as a substitute for release authorization.
+## Repository administrator action required
+1. Open `https://github.com/polishedaffairsllc-byte/ipurpose-next/settings/branches` (or repository Rules → Rulesets).
+2. Protect `main`: require PRs, at least one human approval, dismiss stale approvals, require up-to-date branches and these exact passing checks:
+   - `Verify Secrets & Repository Safety`
+   - `Firestore alignment regression tests`
+   - `Install, Lint, Type Check, Build & Test`
+   - `Verify Repository & Type Safety`
+   - `Tests, types, lint and unsigned mobile exports`
+3. Prevent force pushes and deletion; limit bypasses and direct pushes.
+4. Confirm the protection is enforced with a non-admin test and that the repository plan supports the configured protections.
+5. Verify Vercel's production branch is `main`, with Git integration enabled and preview deployments on PRs.
+6. Confirm Vercel's deployment protection and fork authorization settings; test a safe preview and rehearse rollback.
+7. Merge this PR only after CI passes, review is complete, and release controls are enforced.
+
+## Bounded autonomy
+Codex may autonomously create branches, implement changes, run tests, and open PRs. Sensitive changes (auth, consent/privacy, payments, user data, database migrations, secrets, infrastructure) require human review. A merge is a production release event, not an unrestricted bot operation.
+
+## Operational response
+The monitor runs twice hourly and checks only HTTP availability, not business transactions. A failed check requires diagnosis and, if caused by a recent deployment, an authorized Vercel rollback. This monitor does not automatically roll back or guarantee functional correctness.
