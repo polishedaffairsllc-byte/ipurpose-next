@@ -20,12 +20,8 @@ The editing files reference Italiana, Marcellus and Source Sans 3; they are unav
 
 Slides also shift under font fallback: in independent PPTX rendering, slide 6 header wraps into the gold rule and slide 7's Plan Completion card is cramped/overlapped. The supplied PDFs render correctly. **Codex must make editable files portable under approved font fallback OR clearly separate fixed PDF distribution copies from environment-sensitive editable masters.** Never distribute font binaries. Confirm actual document counts, readability and PowerPoint card/title clearances on the target office environment.
 
-## Ghana charter reconciliation — small remaining content edits
-The one-page summary now carries decision, 1–2 pathways, one verified source, reason, first action/date/support, obstacle/response, optional AI note and next step. The original proposed UG charter also expects:
-- participant strengths or needs/constraints explicitly present on the final summary (currently only in worksheets),
-- an action **within 14 days**, and
-- a clear human help/referral contact approved by UG, beyond generic support.
-Add condensed appropriate fields or record a founder-approved exception. No partner content or student data without approval; existing fee-waived scope unchanged.
+## Institution-neutral curriculum: optional refinements, not Ghana-specific blockers
+The one-page summary already includes decisions, pathways, sources, rationale, actions, obstacles, optional AI use and follow-up. Consider adding general-purpose participant strengths or constraints and a named support/referral option, with an adaptable near-term action window (for example, 14 days). These are **optional educational copy/design improvements for Claude**, not requirements tied to Ghana and not blockers for Codex's internal packaging. No institution-specific contact or program name is needed in the core product. The University of Ghana is only a prospect with preliminary email interest, and the preexisting fee-waived offer is a single bounded exception to iPurpose's **paid-first** policy.
 
 ## Other Phase 1 acceptance gates
 - PDF fields absent: export genuine tested fillable PDFs if contracted/specified, or accurately label current PDFs *printable* and provide Word-editable versions. Do **not** advertise them as digitally fillable yet.
@@ -37,7 +33,7 @@ Add condensed appropriate fields or record a founder-approved exception. No part
 
 ## Owners and outcome
 Claude: editable canonical copy/design and any content correction, without external send.
-ChatGPT: Ghana/claims/content QA.
+ChatGPT: institution-neutral curriculum, claims and content QA.
 Codex: isolated v0.1 packaging, format fallback, real form/accessibility tests, syntax/visual QA, synthetic walkthrough, P0/P1/P2 findings.
 Founder: design/font/contact scope approvals and later external release.
 
