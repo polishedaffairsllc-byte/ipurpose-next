@@ -1,0 +1,35 @@
+name: Production availability monitor
+
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-availability-monitor
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Check public production availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify production homepage responds
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            status="$(curl -L -sS --max-time 20 -o /dev/null -w '%{http_code}' https://ipurposesoul.com/ || true)"
+            if [[ "$status" =~ ^2[0-9][0-9]$ ]]; then
+              echo "Production homepage healthy (HTTP $status)"
+              exit 0
+            fi
+            echo "Attempt $attempt: HTTP $status"
+            sleep 10
+          done
+          echo "::error::Production homepage availability check failed"
+          exit 1
