@@ -21,6 +21,9 @@ jobs:
   verify:
     name: Verify release source
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: read
     outputs:
       sha: ${{ steps.source.outputs.sha }}
     steps:
@@ -40,6 +43,23 @@ jobs:
           ACTUAL_SHA="$(git rev-parse HEAD)"
           test "$ACTUAL_SHA" = "$EXPECTED_SHA" || { echo "Main moved or SHA mismatch"; exit 1; }
           echo "sha=$ACTUAL_SHA" >> "$GITHUB_OUTPUT"
+      - name: Require successful checks for exact main commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ steps.source.outputs.sha }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          checks="$(gh api "repos/$GH_REPO/commits/$RELEASE_SHA/check-runs" --paginate --jq '.check_runs[] | [.name,.status,.conclusion] | @tsv')"
+          for name in 'Verify Secrets & Repository Safety' 'Firestore alignment regression tests' 'Install, Lint, Type Check, Build & Test' 'Verify Repository & Type Safety'; do
+            matches="$(printf '%s\\n' "$checks" | awk -F '\\t' -v name="$name" '$1==name && $2=="completed" && $3=="success" {n++} END {print n+0}')"
+            if [ "$matches" -lt 1 ]; then
+              echo "Required successful check missing: $name"
+              exit 1
+            fi
+          done
+          echo 'Required checks succeeded on exact release SHA'
 
   release:
     name: Deploy approved main commit to production
@@ -75,3 +95,16 @@ jobs:
           npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
           npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
           npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+      - name: Production homepage smoke check
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --location --silent --show-error --max-time 20 https://ipurposesoul.com/ --output /dev/null; then
+              echo 'Production homepage responded successfully'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'Production smoke check failed; manual rollback required'
+          exit 1
