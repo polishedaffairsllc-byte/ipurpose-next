@@ -7,6 +7,7 @@ import { emitLaunchEvent } from '@/lib/launch-metrics/events';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PublicHeader from '../components/PublicHeader';
 import Footer from '../components/Footer';
+import { ClarityAnswerProgress } from '@/src/components/ClarityAnswerProgress';
 
 const C = {
   indigo: '#4B4E6D',
@@ -496,6 +497,10 @@ export default function ClarityCheckQuizPage() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            <ClarityAnswerProgress
+              answeredCount={Object.keys(responses).length + Object.keys(identityResponses).length}
+              totalCount={questions.length + identityQuestions.length}
+            />
             {error && <div className="cc-error">{error}</div>}
 
             {/* State Questions */}
