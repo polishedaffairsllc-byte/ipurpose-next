@@ -41,7 +41,7 @@ function trustedShell() {
   const marker = '        run: |\n';
   const index = source.indexOf(marker);
   assert.notEqual(index, -1, 'trusted workflow must contain a shell run block');
-  const lines = source.slice(index + marker.length).split('\n');
+  const lines = source.slice(index + marker.length).split('\n').filter((line, i, all) => i < all.findIndex(candidate => /^      - name:/.test(candidate)));
   return lines.filter(line => line.trim() !== '').map(line => {
     assert.ok(line.startsWith('          '), 'unexpected shell indentation');
     return line.slice(10);
@@ -73,4 +73,16 @@ test('actual trusted controller shell rejects disabled and emergency-stop states
     assert.match(result.stdout, new RegExp(reason));
     assert.doesNotMatch(result.stdout + result.stderr, /Cannot inspect PR|curl:/);
   }
+});
+
+test('trusted classifier is executed only after eligibility checks and without release privileges', () => {
+  assert.match(source, /ref: main/);
+  assert.match(source, /persist-credentials: false/);
+  assert.match(source, /node scripts\/level2a-trusted-classify\.mjs/);
+  assert.ok(source.indexOf('node scripts/level2a-trusted-classify.mjs') > source.indexOf('RELEASE NOT AUTHORIZED'));
+  const classifier = readFileSync('scripts/level2a-trusted-classify.mjs', 'utf8');
+  assert.match(classifier, /classifyLevel2A\(files/);
+  assert.match(classifier, /fresh\.head\?\.sha !== pr\.head\.sha/);
+  assert.match(classifier, /RELEASE NOT AUTHORIZED/);
+  assert.doesNotMatch(classifier, /\/merge|deployments\/|actions\/workflows\/.*dispatches/);
 });
