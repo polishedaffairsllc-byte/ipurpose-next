@@ -3,7 +3,7 @@ name: Trusted autonomous low-risk release controller
 # Trusted default-branch workflow only. Never checks out PR code.
 on:
   workflow_run:
-    workflows: ['Level 2A release authority boundary']
+    workflows: ['Level 2A release authority boundary', 'CI', 'CI - verify secrets and typecheck', 'Purpose and trust refinement gates', 'Level 2A deployment path audit']
     types: [completed]
   workflow_dispatch:
     inputs:
