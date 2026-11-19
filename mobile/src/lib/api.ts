@@ -191,6 +191,23 @@ export async function deletePurposeResults(): Promise<void> {
  await readJson(await authorizedFetch('/api/ai/purpose', { method: 'DELETE' }));
 }
 
+// Must match lib/signup/disclosure.ts. This acknowledges the legacy signup
+// disclosure only; it never grants the separate versioned OpenAI permission.
+const SIGNUP_AI_VERSION = 'compass-openai-2026-10-12';
+
+export async function getSignupAdmission(): Promise<boolean> {
+  const response = await authorizedFetch('/api/auth/complete-signup', { method: 'GET' }, true);
+  return (await readJson<{ completed: boolean }>(response)).completed;
+}
+export async function acknowledgeSignupDisclosure(): Promise<void> {
+  const response = await authorizedFetch('/api/auth/complete-signup', {
+    method: 'POST',
+    body: JSON.stringify({ granted: true, version: SIGNUP_AI_VERSION }),
+  }, true);
+  const result = await readJson<{ completed: boolean }>(response);
+  if (!result.completed) throw new Error('Account setup is incomplete. Please try again.');
+}
+
 export async function refreshEmailStatus(): Promise<boolean> {
   const response = await authorizedFetch('/api/auth/email-status', { method: 'POST' }, true);
   return (await readJson<{ emailVerified: boolean }>(response)).emailVerified;
