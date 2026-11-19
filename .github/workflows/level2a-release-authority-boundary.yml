@@ -1,0 +1,20 @@
+name: Level 2A release authority boundary
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  release-authority-boundary:
+    name: Level 2A release authority boundary regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test tests/level2a-release-authority-boundary.test.mjs
