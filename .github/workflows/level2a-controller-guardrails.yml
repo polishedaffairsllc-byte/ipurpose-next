@@ -5,12 +5,16 @@ on:
     paths:
       - '.github/workflows/level2a-trusted-eligibility.yml'
       - 'tests/level2a-controller-guardrails.test.mjs'
+      - 'tests/level2a-risk-classifier.test.mjs'
+      - 'scripts/level2a-risk-classifier.mjs'
       - '.github/workflows/level2a-controller-guardrails.yml'
   push:
     branches: [main]
     paths:
       - '.github/workflows/level2a-trusted-eligibility.yml'
       - 'tests/level2a-controller-guardrails.test.mjs'
+      - 'tests/level2a-risk-classifier.test.mjs'
+      - 'scripts/level2a-risk-classifier.mjs'
       - '.github/workflows/level2a-controller-guardrails.yml'
 
 permissions:
@@ -27,4 +31,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node --test tests/level2a-controller-guardrails.test.mjs
+      - run: node --test tests/level2a-controller-guardrails.test.mjs tests/level2a-risk-classifier.test.mjs
