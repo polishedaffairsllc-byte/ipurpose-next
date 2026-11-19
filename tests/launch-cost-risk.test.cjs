@@ -81,11 +81,31 @@ test('OpenAI transient errors make one upstream attempt and the configured timeo
   }
 });
 
+function grantedAiConsent() {
+  const db = {};
+  class CompanionSafetyError extends Error {}
+  return {
+    '@/lib/firebaseAdmin': { firebaseAdmin: { firestore: () => db } },
+    '@/lib/ai/companionSafety': {
+      CompanionSafetyError,
+      requireAiConsent: async database => { assert.equal(database, db); },
+    },
+  };
+}
+
 function compass({ authenticated = true, rate = { allowed: true }, record = async () => {}, saveFails = false } = {}) {
   const events = [];
   class ConversationError extends Error {}
   const route = load('app/api/ai/route.ts', {
+    'node:crypto': require('node:crypto'),
     'next/server': { NextResponse: Response },
+    ...grantedAiConsent(),
+    '@/lib/ai/compassRequests': {
+      requestFingerprint: () => 'synthetic-request-fingerprint',
+      reserveCompassRequest: async () => null,
+      failCompassRequest: async () => {},
+    },
+    '@/lib/ai/contentSafety': { COMPASS_SAFETY_PROMPT: 'synthetic safety prompt', requireSafeContent: async () => {} },
     '@/lib/ai/prompts/ipurposeMentorPrompts': { getSystemPrompt: () => 'system', inferLensFromMessage: () => 'soul' },
     '@/lib/apiEntitlementHelper': { requireAuthenticated: async () => authenticated
       ? { uid: 'user-a' } : { error: Response.json({ error: 'Unauthorized' }, { status: 401 }) } },
@@ -100,7 +120,11 @@ function compass({ authenticated = true, rate = { allowed: true }, record = asyn
     '@/lib/ai/companionConversations': {
       CompanionConversationError: ConversationError,
       getCompanionHistory: async () => [],
-      saveCompanionTurn: async () => { events.push('save'); if (saveFails) throw new Error('save failed'); return 'conversation-a'; },
+      saveCompanionTurnWithMessage: async () => {
+        events.push('save');
+        if (saveFails) throw new Error('save failed');
+        return { conversationId: 'conversation-a', assistantMessageId: 'reply-a' };
+      },
     },
     '@/lib/ai/companionContext': { getCompanionContext: async () => ({}) },
     '@/lib/ai/companionContextFormatter': { formatCompanionContext: () => 'private context' },
@@ -142,6 +166,7 @@ test('legacy raw stream forwards a finite abort deadline to its single provider 
   let calls = 0;
   let signal;
   const route = load('app/api/ai/stream/route.ts', {
+    ...grantedAiConsent(),
     '@/lib/apiEntitlementHelper': { requireBasicPaid: async () => ({ uid: 'paid-user' }) },
     '@/app/api/gpt/utils/openai-client': { OPENAI_CONFIG: { TIMEOUT_MS: 10 } },
     '@/lib/ai/companionModelConfig': { getCompanionModelConfig: () => ({ maxInputCharacters: 4000, maxOutputTokens: 1024 }), resolveCompanionModel: () => 'gpt-4o-mini' },

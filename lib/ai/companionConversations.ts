@@ -1,4 +1,7 @@
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { accountDeletionLock } from '@/lib/accountDeletionLock';
+import { AI_CONSENT_VERSION, CompanionSafetyError } from './companionSafety';
+import { compassRequestRef } from './compassRequests';
 import {
   boundCompanionHistory,
   getCompanionModelConfig,
@@ -145,7 +148,12 @@ export async function saveCompanionTurn(options: {
   assistantMessage: string;
   model: string;
   inferredLens?: "soul" | "systems" | "ai";
+  requestId?: string;
 }): Promise<string> {
+  return (await saveCompanionTurnWithMessage(options)).conversationId;
+}
+
+export async function saveCompanionTurnWithMessage(options: Parameters<typeof saveCompanionTurn>[0]): Promise<{ conversationId: string; assistantMessageId: string }> {
   const { uid, responseMode: mode, userMessage, assistantMessage, model, inferredLens } = options;
   if (options.conversationId) requireValidConversationId(options.conversationId);
 
@@ -158,10 +166,26 @@ export async function saveCompanionTurn(options: {
     ? collection.doc(options.conversationId)
     : collection.doc();
 
+  const userMessageRef = reference.collection("messages").doc();
+  const assistantMessageRef = reference.collection("messages").doc();
   await firebaseAdmin.firestore().runTransaction(async (transaction) => {
-    const existing = await transaction.get(reference);
+    const [existing, profile, deleting] = await Promise.all([
+      transaction.get(reference),
+      transaction.get(firebaseAdmin.firestore().collection('users').doc(uid)),
+      transaction.get(accountDeletionLock(firebaseAdmin.firestore(), uid)),
+    ]);
+    if (!profile.exists || deleting.exists) throw new CompanionConversationError('Your account is unavailable. Please sign in again.', 409);
     if (options.conversationId && !existing.exists) {
       throw new CompanionConversationError("Conversation not found", 404);
+    }
+    const requestRef = options.requestId ? compassRequestRef(firebaseAdmin.firestore(), uid, options.requestId) : null;
+    if (requestRef) {
+      const [request, permission] = await Promise.all([
+        transaction.get(requestRef),
+        transaction.get(firebaseAdmin.firestore().collection('users').doc(uid).collection('consents').doc('compassAi')),
+      ]);
+      if (request.data()?.status !== 'pending') throw new CompanionSafetyError('The message request is no longer pending.', 409);
+      if (permission.data()?.granted !== true || permission.data()?.version !== AI_CONSENT_VERSION) throw new CompanionSafetyError('AI permission was withdrawn. Your draft is kept.', 403);
     }
 
     const current = existing.exists ? (existing.data() as UnknownRecord) : {};
@@ -170,8 +194,6 @@ export async function saveCompanionTurn(options: {
     const assistantSequence = currentCount + 2;
     const now = firebaseAdmin.firestore.Timestamp.now();
     const assistantCreatedAt = firebaseAdmin.firestore.Timestamp.fromMillis(now.toMillis() + 1);
-    const userMessageRef = reference.collection("messages").doc();
-    const assistantMessageRef = reference.collection("messages").doc();
 
     transaction.set(reference, {
       title: typeof current.title === "string" ? current.title : titleFromMessage(userMessage),
@@ -199,7 +221,13 @@ export async function saveCompanionTurn(options: {
       model,
       ...(inferredLens ? { inferredLens } : {}),
     });
+    if (requestRef) transaction.set(requestRef, {
+      status: 'completed', finishedAt: new Date(), reply: {
+        response: assistantMessage, conversationId: reference.id, assistantMessageId: assistantMessageRef.id,
+        responseMode: mode, model, ...(inferredLens ? { inferredLens } : {}),
+      },
+    }, { merge: true });
   });
 
-  return reference.id;
+  return { conversationId: reference.id, assistantMessageId: assistantMessageRef.id };
 }

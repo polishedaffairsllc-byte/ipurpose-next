@@ -8,6 +8,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { gptClient } from '@/lib/gptClient';
 import type { GPTDomain } from '../api/gpt/types';
+import { AiPermissionGate } from '../ai/AiPermissionGate';
+import { useAuth } from '../context/AuthContext';
 
 interface Message {
   id: string;
@@ -31,7 +33,12 @@ interface GPTChatProps {
   hideEmptyState?: boolean;
 }
 
-export default function GPTChat({
+export default function GPTChat(props: GPTChatProps) {
+  const { user } = useAuth();
+  return <AiPermissionGate key={user?.uid}><GPTChatContent {...props} /></AiPermissionGate>;
+}
+
+function GPTChatContent({
   domain,
   title,
   placeholder = 'Type your message...',
