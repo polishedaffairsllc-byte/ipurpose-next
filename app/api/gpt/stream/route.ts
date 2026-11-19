@@ -12,6 +12,7 @@ import { getUserContext } from '../utils/context';
 import { compilePrompt } from '../prompt-engine/compiler';
 import { logInteraction } from '../utils/firestore';
 import { callGPTStream, validatePromptLength } from '../utils/gpt-core';
+import { CompanionSafetyError, requireAiConsent } from '@/lib/ai/companionSafety';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -31,6 +32,7 @@ export async function POST(request: NextRequest) {
 
     const decodedToken = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const userId = decodedToken.uid;
+    await requireAiConsent(firebaseAdmin.firestore(), userId);
 
     // 2. Parse request
     const body = await request.json();
@@ -141,6 +143,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
+    if (error instanceof CompanionSafetyError) return Response.json({ error: error.message }, { status: error.status });
     console.error('Streaming error:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
