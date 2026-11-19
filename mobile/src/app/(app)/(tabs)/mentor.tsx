@@ -16,10 +16,11 @@ import {
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BrandHeader } from '../../../components/BrandHeader';
+import { AiDataSharingControls } from '../../../components/AiDataSharingControls';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
-import { getConversation, getConversations, sendMentorMessage } from '../../../lib/api';
+import { createCompassRequestId, getAiConsent, getConversation, getConversations, sendMentorMessage } from '../../../lib/api';
 import { createActivitySessionId, logUserActivity } from '../../../lib/userActivity';
 import type { CompanionMessage, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
@@ -45,6 +46,20 @@ export default function MentorScreen() {
   const [error, setError] = useState<string | null>(null);
   const listRef = useRef<FlatList<CompanionMessage>>(null);
   const compassSession = useRef<{ id: string; startedAt: number } | null>(null);
+  const pendingDraft = useRef<{ requestId: string; message: string; conversationId?: string } | null>(null);
+  const [consentGranted, setConsentGranted] = useState(false);
+  const [consentLoading, setConsentLoading] = useState(true);
+
+  // Recheck on every visit so withdrawal on another screen/device fails closed.
+  useFocusEffect(useCallback(() => {
+    let active = true;
+    setConsentLoading(true);
+    getAiConsent()
+      .then(permission => { if (active) setConsentGranted(permission.granted); })
+      .catch(() => { if (active) setConsentGranted(false); })
+      .finally(() => { if (active) setConsentLoading(false); });
+    return () => { active = false; };
+  }, []));
 
   useFocusEffect(useCallback(() => {
     const startSession = () => {
@@ -124,15 +139,25 @@ export default function MentorScreen() {
     setConversationId(null);
     setMessages([]);
     setInput('');
+    pendingDraft.current = null;
     setError(null);
   }
 
   async function send() {
     const text = input.trim();
-    if (!text || sending) return;
+    if (!text || sending || !consentGranted) return;
 
+    const existing = pendingDraft.current;
+    const currentConversationId = conversationId || undefined;
+    const requestId = existing?.message === text && existing.conversationId === currentConversationId
+      ? existing.requestId
+      : createCompassRequestId();
+    // Preserve the ID across a failed/uncertain response so the backend cannot
+    // generate a duplicate provider response when the user retries the same draft.
+    pendingDraft.current = { requestId, message: text, conversationId: currentConversationId };
+    const localMessageId = `local-user-${requestId}`;
     const localUserMessage: CompanionMessage = {
-      id: `local-user-${Date.now()}`,
+      id: localMessageId,
       role: 'user',
       content: text,
       responseMode: 'balanced',
@@ -140,7 +165,7 @@ export default function MentorScreen() {
       createdAt: new Date().toISOString(),
     };
 
-    setMessages((current) => [...current, localUserMessage]);
+    setMessages((current) => [...current.filter(item => item.id !== localMessageId), localUserMessage]);
     setInput('');
     setSending(true);
     setError(null);
@@ -148,12 +173,13 @@ export default function MentorScreen() {
     try {
       const result = await sendMentorMessage({
         message: text,
-        conversationId: conversationId || undefined,
+        requestId,
+        conversationId: currentConversationId,
         responseMode: 'balanced',
       });
 
       const localAssistantMessage: CompanionMessage = {
-        id: `local-assistant-${Date.now()}`,
+        id: `local-assistant-${requestId}`,
         role: 'assistant',
         content: result.response,
         responseMode: result.responseMode,
@@ -162,6 +188,7 @@ export default function MentorScreen() {
         inferredLens: result.inferredLens,
       };
 
+      pendingDraft.current = null;
       setConversationId(result.conversationId);
       setMessages((current) => [...current, localAssistantMessage]);
       void logUserActivity({
@@ -169,13 +196,17 @@ export default function MentorScreen() {
         sessionId: compassSession.current?.id,
         conversationId: result.conversationId,
       });
-      setConversations(await getConversations());
-
+      // A failed refresh must not misrepresent a successful, persisted reply.
+      const updatedConversations = await getConversations().catch(() => null);
+      if (updatedConversations) setConversations(updatedConversations);
       requestAnimationFrame(() => {
         listRef.current?.scrollToEnd({ animated: true });
       });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Compass could not respond. Please try again.');
+      setMessages(current => current.filter(item => item.id !== localMessageId));
+      setInput(current => current.trim() ? current : text);
+      setError(caught instanceof Error ? caught.message : 'Compass could not respond. Your draft was restored.');
+      // Keep pendingDraft to reuse the ID if this exact message is submitted again.
     } finally {
       setSending(false);
     }
@@ -302,6 +333,13 @@ export default function MentorScreen() {
             </View>
           ) : null}
 
+          {consentLoading ? (
+            <View style={styles.consentLoading}><ActivityIndicator accessibilityLabel="Checking AI permission" color={tokens.accentStrong} /></View>
+          ) : !consentGranted ? (
+            <AiDataSharingControls onChange={setConsentGranted} />
+          ) : null}
+
+          {consentGranted && !consentLoading ? (
           <View style={[styles.composer, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
             <TextInput
               value={input}
@@ -337,6 +375,7 @@ export default function MentorScreen() {
               )}
             </Pressable>
           </View>
+          ) : null}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -485,6 +524,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
   },
+  consentLoading: { paddingVertical: 12, alignItems: 'center' },
   composer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
