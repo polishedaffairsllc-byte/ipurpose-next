@@ -83,3 +83,17 @@ jobs:
           ' >/dev/null || deny "PR SHA changed during inspection"
           echo "::notice::Eligibility rehearsal PASSED for ${head}; RELEASE NOT AUTHORIZED."
           # Deliberately no write token, approval, merge, or deployment step.
+
+      - name: Check candidate with independently versioned trusted classifier (NO RELEASE)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Execute trusted risk classifier
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          LEVEL2A_ENABLED: ${{ vars.LEVEL2A_ENABLED }}
+          LEVEL2A_EMERGENCY_STOP: ${{ vars.LEVEL2A_EMERGENCY_STOP }}
+        run: node scripts/level2a-trusted-classify.mjs
