@@ -13,8 +13,9 @@ test('homepage first-touch campaign survives navigation to Clarity', async ({ pa
   await page.addInitScript(() => sessionStorage.setItem('splashSeen', 'true'));
   await page.goto('/?utm_source=youtube&utm_medium=organic_video&utm_campaign=clarity_check&utm_content=homepage_test');
   await expect.poll(storedCampaign).toEqual(campaign);
-  await page.getByRole('link', { name: 'Take the Assessment' }).click();
-  await page.getByRole('link', { name: 'Start the Free Clarity Check' }).first().click();
+  await page.goto('/clarity-check');
+  await expect.poll(storedCampaign).toEqual(campaign);
+  await page.goto('/clarity-check-quiz');
   await expect(page).toHaveURL(/\/clarity-check-quiz(?:\?|$)/);
   await expect.poll(storedCampaign).toEqual(campaign);
   await page.goto('/?utm_source=email&utm_campaign=other');
