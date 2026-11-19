@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from 'next/link';
+import HomepageCampaignAttribution from './components/HomepageCampaignAttribution';
 import VideoBackground from './components/VideoBackground';
 import SplashVideoModal from './components/SplashVideoModal';
 import PublicHeader from './components/PublicHeader';
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+    <HomepageCampaignAttribution />
     <SplashVideoModal />
     <div className="relative w-full bg-white">
         <VideoBackground src="/videos/water-reflection.mp4" poster="" />
