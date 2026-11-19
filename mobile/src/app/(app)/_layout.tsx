@@ -15,7 +15,7 @@ export default function AuthenticatedLayout() {
   const [admissionState, setAdmissionState] = useState<{ uid: string; status: 'checking' | 'required' | 'complete' | 'error' } | null>(null);
   const [checkVersion, setCheckVersion] = useState(0);
   // Never reuse a previous user's approval during an account switch.
-  const admission = admissionState?.uid === user?.uid ? admissionState.status : 'checking';
+  const admission = admissionState && admissionState.uid === user?.uid ? admissionState.status : 'checking';
 
   useEffect(() => {
     let active = true;
