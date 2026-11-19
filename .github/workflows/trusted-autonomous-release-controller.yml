@@ -1,0 +1,63 @@
+name: Trusted autonomous low-risk release controller
+
+# Trusted default-branch workflow only. Never checks out PR code.
+on:
+  workflow_run:
+    workflows: ['Level 2A release authority boundary', 'CI', 'CI - verify secrets and typecheck', 'Purpose and trust refinement gates', 'Level 2A deployment path audit']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number for a controlled test or release'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+
+concurrency:
+  group: trusted-level2a-production-release
+  cancel-in-progress: false
+
+jobs:
+  controlled-release:
+    if: >-
+      ${{ vars.LEVEL2A_ENABLED == 'true' &&
+          vars.LEVEL2A_EMERGENCY_STOP == 'false' &&
+          (github.event_name == 'workflow_dispatch' ||
+           (github.event.workflow_run.conclusion == 'success' &&
+            github.event.workflow_run.event == 'pull_request' &&
+            github.event.workflow_run.pull_requests[0].number != null)) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout trusted controller from protected default branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Mint separately managed short-lived release identity
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.LEVEL2A_RELEASE_APP_ID }}
+          private-key: ${{ secrets.LEVEL2A_RELEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ipurpose-next
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Validate immutable low-risk PR and merge only when authorized
+        env:
+          RELEASE_APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_number || github.event.workflow_run.pull_requests[0].number }}
+          LEVEL2A_ENABLED: ${{ vars.LEVEL2A_ENABLED }}
+          LEVEL2A_EMERGENCY_STOP: ${{ vars.LEVEL2A_EMERGENCY_STOP }}
+          LEVEL2A_EXECUTE: ${{ vars.LEVEL2A_EXECUTE }}
+        run: node scripts/level2a-release-entry.mjs

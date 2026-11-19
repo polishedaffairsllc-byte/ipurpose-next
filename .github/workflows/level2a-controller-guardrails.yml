@@ -1,0 +1,36 @@
+name: Level 2A controller guardrail regressions
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/level2a-trusted-eligibility.yml'
+      - 'tests/level2a-controller-guardrails.test.mjs'
+      - 'tests/level2a-risk-classifier.test.mjs'
+      - 'scripts/level2a-risk-classifier.mjs'
+      - 'scripts/level2a-trusted-classify.mjs'
+      - '.github/workflows/level2a-controller-guardrails.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/level2a-trusted-eligibility.yml'
+      - 'tests/level2a-controller-guardrails.test.mjs'
+      - 'tests/level2a-risk-classifier.test.mjs'
+      - 'scripts/level2a-risk-classifier.mjs'
+      - 'scripts/level2a-trusted-classify.mjs'
+      - '.github/workflows/level2a-controller-guardrails.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  guardrail-regressions:
+    name: Level 2A default-off regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test tests/level2a-controller-guardrails.test.mjs tests/level2a-risk-classifier.test.mjs
