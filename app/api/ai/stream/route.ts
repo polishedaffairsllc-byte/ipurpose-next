@@ -1,5 +1,7 @@
 import { requireBasicPaid } from "@/lib/apiEntitlementHelper";
 import { OPENAI_CONFIG } from "@/app/api/gpt/utils/openai-client";
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { CompanionSafetyError, requireAiConsent } from '@/lib/ai/companionSafety';
 import {
   getCompanionModelConfig,
   resolveCompanionModel,
@@ -9,6 +11,7 @@ export async function POST(request: Request) {
   try {
     const entitlement = await requireBasicPaid();
     if (entitlement.error) return entitlement.error;
+    await requireAiConsent(firebaseAdmin.firestore(), entitlement.uid);
 
     const { prompt, model: requestedModel } = await request.json();
     const config = getCompanionModelConfig();
@@ -44,6 +47,7 @@ export async function POST(request: Request) {
       return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
     }
 
+    await requireAiConsent(firebaseAdmin.firestore(), entitlement.uid);
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       signal: AbortSignal.timeout(OPENAI_CONFIG.TIMEOUT_MS),
@@ -55,6 +59,7 @@ export async function POST(request: Request) {
         model,
         messages: [{ role: "user", content: prompt }],
         stream: true,
+        store: false,
         temperature: 0.9,
         max_tokens: config.maxOutputTokens,
       }),
@@ -98,6 +103,7 @@ export async function POST(request: Request) {
 
     return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
   } catch (e) {
+    if (e instanceof CompanionSafetyError) return Response.json({ error: e.message }, { status: e.status });
     const errorMessage = (e as { message?: string })?.message || "Server error";
     return new Response(String(errorMessage), { status: 500 });
   }

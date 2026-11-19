@@ -33,6 +33,11 @@ jobs:
         run: npx eslint .
       - name: Purpose, identity, spam and server regressions
         run: node --import tsx --test tests/trust.node.ts tests/trust-api.test.cjs tests/clarity-lifecycle.node.ts tests/clarity-email-adapter.test.cjs tests/purpose.node.ts tests/purpose-api.test.cjs tests/account-deletion.node.ts tests/onboarding.node.ts tests/launch-metrics.node.ts tests/admin-activity.test.cjs tests/launch-cost-risk.test.cjs
+      - name: Signup, AI consent and Compass protocol regressions
+        run: >-
+          node --import tsx --test
+          tests/api-safety.test.cjs tests/apple-review-access.test.cjs tests/compass-requests.test.cjs
+          tests/compass-v2-integration.test.cjs tests/content-safety.test.cjs tests/run-companion-safety.test.cjs
       - name: Install mobile dependencies
         working-directory: mobile
         run: npm ci --ignore-scripts

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import { AiPermissionGate } from './AiPermissionGate';
 import { ResponseMode, getLocalResponseMode, setLocalResponseMode, saveUserResponseMode } from "@/lib/ai/responseModePersistence";
 
 interface ChatMessage {
@@ -20,7 +21,11 @@ interface ConversationSummary {
   updatedAt: string;
 }
 
-export default function AIClient({ initialName, userId }: { initialName?: string; userId?: string }) {
+export default function AIClient(props: { initialName?: string; userId?: string }) {
+  return <AiPermissionGate key={props.userId}><AIClientContent {...props} /></AiPermissionGate>;
+}
+
+function AIClientContent({ initialName, userId }: { initialName?: string; userId?: string }) {
   const [responseMode, setResponseModeState] = useState<ResponseMode>("balanced");
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);

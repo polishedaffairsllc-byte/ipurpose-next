@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { deleteAccountData, isRecentAuthentication } from "@/lib/accountDeletion";
 import { getRequestBearerAuth } from "@/lib/firebase/requestAuth";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { accountDeletionLock } from '@/lib/accountDeletionLock';
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export async function DELETE() {
     const authUser = await firebaseAdmin.auth().getUser(bearerAuth.uid);
     await deleteAccountData(bearerAuth.uid, authUser.email);
     await firebaseAdmin.auth().deleteUser(bearerAuth.uid);
+    await accountDeletionLock(firebaseAdmin.firestore(), bearerAuth.uid).delete().catch(() => {});
 
     return NextResponse.json(
       { success: true },
