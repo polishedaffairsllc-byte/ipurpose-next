@@ -1,6 +1,6 @@
 # Phase 0 — Operational Verification Log
 
-Date: 2026-10-11 (America/New_York)
+Historical record for October 11, 2026 (America/New_York).
 
 ## Deployment
 
@@ -18,7 +18,7 @@ The iPurpose owner reported personally completing the following live checks on 2
 - full mobile Clarity Check start and completion fired successfully;
 - owner-exclusion coverage was verified on both phone and computer.
 
-These items are recorded as **owner-verified**, not independently re-performed by the repository automation.
+The owner verified these items on October 11.
 
 ## Gate 3 baseline reporting policy
 
@@ -39,10 +39,6 @@ Performed 2026-10-11 before the four-week baseline was formally logged.
 
 Owner-operated Gate 1, mobile Clarity, and owner-exclusion checks are verified by owner report. Deployment is live. Gate 3's measurement contract and weekly GA4 YouTube policy are in place. QR and campaign-email placement are no longer baseline blockers because neither is currently contributing campaign traffic to the baseline.
 
-The remaining pre-baseline check is the live Short description link: confirm that the published link carries the canonical YouTube UTMs and correct it in YouTube Studio if it does not.
+The October 11 log left the published Short’s use of canonical YouTube UTMs pending. October 12 through November 8, 2026 was the proposed four-week window, contingent on that confirmation. The October 11 evidence does not establish when the baseline began or whether it was completed.
 
-Once that Short link is confirmed, record Phase 0 as complete, all three gates cleared, and set the official four-week clean baseline to **October 12, 2026 through November 8, 2026**.
-
-## Baseline change-control rule
-
-During the official four-week baseline, do not change the Clarity Check, CTAs, or tracking setup without the owner's explicit approval.
+The proposed change-control rule for that baseline required owner approval for changes to the Clarity Check, calls to action, or tracking during the measurement window.
