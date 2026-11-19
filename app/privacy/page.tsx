@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <main className="text-body" style={{ padding: 32, maxWidth: 800, margin: "0 auto", lineHeight: 1.8 }}>
         <h1 className="text-h2">Privacy Policy — iPurpose</h1>
 
-        <p><strong>Effective date: October 25, 2026</strong></p>
+        <p><strong>Effective date: November 17, 2026</strong></p>
 
         <h2>Information we collect</h2>
         <p>
@@ -50,6 +50,13 @@ export default function PrivacyPage() {
         </p>
 
         <p>{"Service providers supporting these features include Firebase for authentication and data storage, our hosting provider for requests, our email delivery provider for service communications, and our AI service provider for Compass responses. We provide information to these providers as needed to perform those services. We do not sell Purpose answers, reflections, Compass conversation history or email verification information."}</p>
+
+        <h2>OpenAI and AI data sharing</h2>
+        <p>Compass uses OpenAI to generate replies and check content safety. Before an AI request, the app names OpenAI, describes the information shared, and asks for explicit permission. Creating an account does not enable OpenAI sharing. You can decline and use the other features, or withdraw permission in Account under Compass AI &amp; privacy.</p>
+        <p>When you send an AI message after allowing sharing, our server sends your message, relevant conversation history, and relevant saved context to OpenAI. Context can include your display name, timezone, Clarity scores and results, identity or archetype information, Purpose results and direction, priorities or focus areas, check-ins, saved reflections, and relevant Lab and session information. We collect these details from information you enter, choices you make, assessments you complete, and your saved activity. We use them to personalize the reply and maintain context. Free text may contain personal information you choose to include.</p>
+        <p>We send requests from our server using an encrypted HTTPS connection. We require service providers that receive personal data to provide the same or equal protection described in this policy, including confidentiality, security safeguards, and processing limited to the service they provide. OpenAI processes API customer data under its applicable services agreement and data processing addendum. These terms require processing on customer instructions, confidentiality, appropriate security measures, and assistance with privacy requests.</p>
+        <p>OpenAI states that API inputs and outputs are not used for model training by default unless the customer opts in. Standard API abuse-monitoring logs may retain content for up to 30 days, or longer where legally required. We do not claim zero data retention. Our chat-generation requests disable optional response storage. See <a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI API data controls</a> and the <a href="https://openai.com/policies/data-processing-addendum/">OpenAI data processing addendum</a>.</p>
+        <p>Withdrawing permission stops new AI requests. It does not erase prior conversations or information already processed by OpenAI. You can delete your account in Account or contact us for a privacy or deletion request. AI response reports are saved for authorized iPurpose review and are not sent to OpenAI. <a href="/ai-data-sharing">Read the full AI data-sharing disclosure</a>.</p>
 
         <h2>Data retention</h2>
         <p>

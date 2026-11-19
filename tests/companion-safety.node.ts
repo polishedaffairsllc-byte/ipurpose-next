@@ -1,0 +1,48 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { FakeFirestore } from './fakes/firestore';
+import { AI_CONSENT_VERSION, readAiConsent, requireAiConsent, saveAiReport, writeAiConsent } from '../lib/ai/companionSafety';
+
+test('consent is explicit, current, account-bound and revocable', async () => {
+  const db = new FakeFirestore(); const store = db.asFirestore();
+  db.documents.set('users/a', {});
+  assert.equal((await readAiConsent(store, 'a')).granted, false);
+  await assert.rejects(requireAiConsent(store, 'a'), { status: 403 });
+  await assert.rejects(writeAiConsent(store, 'a', { granted: true, version: 'old' }), { status: 400 });
+  await assert.rejects(writeAiConsent(store, 'a', { granted: 'true', version: AI_CONSENT_VERSION }), { status: 400 });
+  await writeAiConsent(store, 'a', { uid: 'b', granted: true, version: AI_CONSENT_VERSION });
+  await requireAiConsent(store, 'a');
+  await assert.rejects(requireAiConsent(store, 'b'), { status: 403 });
+  assert.match(db.documents.get('users/a/consents/compassAi')!.notice, /OpenAI/);
+  await writeAiConsent(store, 'a', { granted: false, version: AI_CONSENT_VERSION });
+  await assert.rejects(requireAiConsent(store, 'a'), { status: 403 });
+  db.documents.set('users/a/consents/compassAi', { granted: true, version: 'old' });
+  await assert.rejects(requireAiConsent(store, 'a'), { status: 403 });
+  db.failReads = true;
+  await assert.rejects(requireAiConsent(store, 'a'));
+});
+test('report ownership, assistant role, canonical content, retries and deletion', async () => {
+  const db = new FakeFirestore(); const store = db.asFirestore();
+  db.documents.set('users/a', {});
+  db.documents.set('users/a', {});
+  db.documents.set('users/a/companionConversations/chat', {});
+  db.documents.set('users/a/companionConversations/chat/messages/reply', { role: 'assistant', content: 'Canonical response' });
+  db.documents.set('users/a/companionConversations/chat/messages/question', { role: 'user', content: 'User text' });
+  const input = { conversationId: 'chat', messageId: 'reply', reason: 'unsafe', details: 'Concern', response: 'Forged', uid: 'b' };
+  await assert.rejects(saveAiReport(store, 'b', input), { status: 404 });
+  await assert.rejects(saveAiReport(store, 'a', { ...input, messageId: 'question' }), { status: 404 });
+  await assert.rejects(saveAiReport(store, 'a', { ...input, conversationId: '../b' }), { status: 400 });
+  await assert.rejects(saveAiReport(store, 'a', { ...input, details: 'x'.repeat(1001) }), { status: 400 });
+  const saved = await saveAiReport(store, 'a', input);
+  const retry = await saveAiReport(store, 'a', { ...input, details: 'Retry' });
+  assert.equal(saved.reportId, retry.reportId);
+  const reports = [...db.documents].filter(([path]) => path.includes('/companionReports/'));
+  assert.equal(reports.length, 1);
+  assert.equal(reports[0][1].response, 'Canonical response');
+  assert.equal(reports[0][1].uid, 'a');
+  assert.equal(reports[0][1].details, 'Concern');
+  assert.equal(reports[0][1].status, 'pending');
+  await writeAiConsent(store, 'a', { granted: true, version: AI_CONSENT_VERSION });
+  await db.recursiveDelete(db.collection('users').doc('a'));
+  assert.equal(db.documents.size, 0);
+});

@@ -3,6 +3,7 @@ type Data = Record<string, any>; // Firestore's DocumentData boundary in this in
 export class FakeFirestore {
   documents = new Map<string, Data>();
   failReads = false;
+  nextId = 0;
   private tail: Promise<unknown> = Promise.resolve();
   asFirestore() { return this as unknown as Firestore; }
   collectionGroup(name: string) { return new FakeQuery(this, name, [], Infinity, true); }
@@ -31,6 +32,7 @@ class FakeSnapshot {
 export class FakeRef {
   constructor(public db: FakeFirestore, public path: string) {}
   get id() { return this.path.split('/').at(-1)!; }
+  collection(name: string) { return new FakeQuery(this.db, `${this.path}/${name}`); }
   async get() { if (this.db.failReads) throw new Error('read failed'); return new FakeSnapshot(this, this.db.documents.get(this.path)); }
   async set(data: Data, options?: { merge?: boolean }) {
     return this.db.runTransaction(async tx => { tx.set(this, data, options); });
@@ -39,7 +41,7 @@ export class FakeRef {
 }
 class FakeQuery {
   constructor(public db: FakeFirestore, public name: string, public filters: [string, unknown][] = [], public cap = Infinity, public group = false) {}
-  doc(id = 'random-test-document') { return new FakeRef(this.db, `${this.name}/${id}`); }
+  doc(id = `test-${++this.db.nextId}`) { return new FakeRef(this.db, `${this.name}/${id}`); }
   where(field: string, _operator: string, value: unknown) { return new FakeQuery(this.db, this.name, [...this.filters, [field, value]], this.cap, this.group); }
   limit(cap: number) { return new FakeQuery(this.db, this.name, this.filters, cap, this.group); }
   snapshot(map: Map<string, Data>) {
