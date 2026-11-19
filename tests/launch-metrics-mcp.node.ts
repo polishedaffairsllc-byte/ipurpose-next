@@ -210,6 +210,16 @@ test('network/parse/credential-echo errors never log or return secrets', async t
   assert.deepEqual(logs, []);
 });
 
+test('existing MCP tool forwards the generic outreach object without losing timestamps or proposal metadata', async () => {
+  const outreach = { timezone: 'America/New_York', externalOnly: true,
+    proposals: [{ proposal_id: 'sdsn-ghana-jh', proposal_family: 'sdsn', visits: 1 }],
+    recentEvents: [{ proposal_id: 'sdsn-ghana-jh', event_type: 'page_view', source_event_name: 'sdsn_page_view', timestamp: '2026-10-28T13:17:04Z', traffic_type: 'external', visit_number: 1 }],
+  };
+  const result = await getLaunchMetrics(async () => Response.json({ count: 0, snapshots: [], outreach }));
+  assert.ok('structuredContent' in result);
+  assert.deepEqual((result.structuredContent as Record<string, unknown>).outreach, outreach);
+});
+
 test('missing configuration fails closed; metadata exposes only public OAuth configuration', async () => {
   assert.deepEqual(oauthConfig(), config);
   const metadata = await protectedResourceMetadata().json();

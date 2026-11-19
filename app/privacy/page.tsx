@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <main className="text-body" style={{ padding: 32, maxWidth: 800, margin: "0 auto", lineHeight: 1.8 }}>
         <h1 className="text-h2">Privacy Policy — iPurpose</h1>
 
-        <p><strong>Effective date: October 5, 2026</strong></p>
+        <p><strong>Effective date: October 25, 2026</strong></p>
 
         <h2>Information we collect</h2>
         <p>
@@ -40,6 +40,7 @@ export default function PrivacyPage() {
         <p>{"We do not use your information for third-party advertising or tracking across other websites. If you explicitly opt in, we may send you our own marketing communications, subject to email verification and your opt-out choices."}</p>
 
         <p>{"We use saved Purpose information to show your ongoing profile and personalize Compass. When you use Compass, relevant saved Purpose context, including a reflection you explicitly chose to save, may be sent to our AI service provider to generate a response."}</p>
+        <p>{"Saved Compass conversation history is part of your account data. Authorized iPurpose administrators may access saved conversation history when reasonably necessary to provide support, troubleshoot a reported product problem, investigate safety or security concerns, or perform an authorized product investigation. We do not use this access for third-party advertising, and conversation content is not displayed by default in the general activity dashboard; an administrator must deliberately open a specific conversation."}</p>
         <p>{"Email verification establishes whether someone can receive mail at an address. It is separate from checks intended to protect public forms against bots or spam. An unusual-looking name or email address does not by itself mean a submission is invalid, and verification does not guarantee that a submission is legitimate."}</p>
         <p>{"Unverified users can still sign in and use their available features, including Clarity results, Purpose and Compass. Verification and requested results emails are service communications. Confirming an email address does not subscribe you to marketing. Marketing requires a separate explicit opt-in, a verified reachable address and compliance with your opt-out choices. We do not send marketing merely because you entered or confirmed an address."}</p>
 
@@ -48,7 +49,7 @@ export default function PrivacyPage() {
           We do not sell your personal information. We may share limited information with service providers (such as hosting and database providers) only as necessary to operate the platform.
         </p>
 
-        <p>{"Service providers supporting these features include Firebase for authentication and data storage, our hosting provider for requests, our email delivery provider for service communications, and our AI service provider for Compass responses. We provide information to these providers as needed to perform those services. We do not sell Purpose answers, reflections or email verification information."}</p>
+        <p>{"Service providers supporting these features include Firebase for authentication and data storage, our hosting provider for requests, our email delivery provider for service communications, and our AI service provider for Compass responses. We provide information to these providers as needed to perform those services. We do not sell Purpose answers, reflections, Compass conversation history or email verification information."}</p>
 
         <h2>Data retention</h2>
         <p>

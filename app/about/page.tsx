@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 import PublicHeader from "../components/PublicHeader";
 import Footer from "../components/Footer";
+import FounderWebsiteLink from "./FounderWebsiteLink";
 
 export const metadata: Metadata = {
   title: "About iPurpose — Built for Clarity, Structure, and Sustainable Progress",
@@ -188,6 +189,12 @@ export default function AboutPage() {
               She created iPurpose from the belief — and lived experience — that people should not have to choose between meaning and practicality. Her work helps individuals build lives and work that reflect who they are, while remaining structured, ethical, and sustainable in the real world.
             </p>
             <div className="clear-both"></div>
+          </div>
+          <div className="space-y-4">
+            <p className="text-warmCharcoal/75 leading-relaxed" style={{ fontSize: '35px' }}>
+              Explore Renita&apos;s broader work in leadership, education, entrepreneurship, public service, and speaking through her professional website.
+            </p>
+            <FounderWebsiteLink />
           </div>
         </section>
 

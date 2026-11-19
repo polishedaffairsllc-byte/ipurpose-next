@@ -1,12 +1,8 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
+import GoogleAds from './components/GoogleAds';
 import { CANONICAL_DOMAIN_CONFIG } from '@/lib/canonical';
-import { AuthContextProvider } from './context/AuthContext';
-import BackgroundLayer from "./components/BackgroundLayer";
-import InternalNavbar from "./components/InternalNavbar";
-import VideoBackground from "./components/VideoBackground";
-import PixelInitializer from "./components/PixelInitializer";
+import SiteChrome from './components/SiteChrome';
 import SiteStructuredData from "./components/SiteStructuredData";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 
@@ -27,39 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="antialiased">
       <head>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=AW-17993147612"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-ads-config"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'AW-17993147612', {
-                'allow_google_signals': true,
-                'allow_ad_personalization_signals': true
-              });
-            `,
-          }}
-        />
+        <GoogleAds />
       </head>
       <body className="min-h-screen font-marcellus text-warmCharcoal text-3xl">
         <SiteStructuredData />
-        <PixelInitializer />
         <GoogleAnalytics />
-        <div className="fixed inset-0 -z-40">
-          <VideoBackground src="/videos/water-reflection.mp4" />
-        </div>
-        <BackgroundLayer />
-        <AuthContextProvider>
-          <InternalNavbar />
-          {children}
-        </AuthContextProvider>
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

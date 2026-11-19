@@ -4,6 +4,7 @@ import { purposeCopy } from '../../../lib/purposeCheckCopy';
 import { Text, useWindowDimensions } from 'react-native';
 import { Tabs } from 'expo-router';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
+import { trackSupportScreenView } from '../../../lib/analyticsEvents';
 import { theme } from '../../../theme';
 
 export default function TabsLayout() {
@@ -35,6 +36,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
+        listeners={{ focus: () => trackSupportScreenView('/') }}
         options={{
           title: 'Home',
           tabBarIcon: ({ color, size, focused }) => (
@@ -49,6 +51,7 @@ export default function TabsLayout() {
 
       <Tabs.Screen
         name="clarity-check"
+        listeners={{ focus: () => trackSupportScreenView('/clarity-check') }}
         options={{
           title: 'Clarity Check',
           tabBarIcon: ({ color, size, focused }) => (
@@ -61,10 +64,15 @@ export default function TabsLayout() {
         }}
       />
 
-      <Tabs.Screen name="purpose" options={{ title: purposeCopy.tab, tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'leaf' : 'leaf-outline'} color={color} size={size}/> }}/>
+      <Tabs.Screen
+        name="purpose"
+        listeners={{ focus: () => trackSupportScreenView('/purpose') }}
+        options={{ title: purposeCopy.tab, tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'leaf' : 'leaf-outline'} color={color} size={size}/> }}
+      />
 
       <Tabs.Screen
         name="mentor"
+        listeners={{ focus: () => trackSupportScreenView('/mentor') }}
         options={{
           title: 'Compass',
           tabBarActiveTintColor: tokens.accentStrong,
@@ -80,6 +88,7 @@ export default function TabsLayout() {
 
       <Tabs.Screen
         name="account"
+        listeners={{ focus: () => trackSupportScreenView('/account') }}
         options={{
           title: 'Account',
           tabBarIcon: ({ color, size, focused }) => (

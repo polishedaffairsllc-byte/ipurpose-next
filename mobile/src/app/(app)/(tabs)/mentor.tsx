@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   ActivityIndicator,
+  AppState,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -12,13 +13,14 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { getConversation, getConversations, sendMentorMessage } from '../../../lib/api';
+import { createActivitySessionId, logUserActivity } from '../../../lib/userActivity';
 import type { CompanionMessage, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
 
@@ -42,6 +44,37 @@ export default function MentorScreen() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const listRef = useRef<FlatList<CompanionMessage>>(null);
+  const compassSession = useRef<{ id: string; startedAt: number } | null>(null);
+
+  useFocusEffect(useCallback(() => {
+    const startSession = () => {
+      if (compassSession.current) return;
+      const session = { id: createActivitySessionId('compass'), startedAt: Date.now() };
+      compassSession.current = session;
+      void logUserActivity({ type: 'compass_enter', sessionId: session.id });
+    };
+    const endSession = (reason: 'blur' | 'background') => {
+      const session = compassSession.current;
+      if (!session) return;
+      compassSession.current = null;
+      void logUserActivity({
+        type: 'compass_exit',
+        sessionId: session.id,
+        durationMs: Math.max(0, Date.now() - session.startedAt),
+        reason,
+      });
+    };
+
+    startSession();
+    const subscription = AppState.addEventListener('change', state => {
+      if (state === 'active') startSession();
+      else endSession('background');
+    });
+    return () => {
+      subscription.remove();
+      endSession('blur');
+    };
+  }, []));
 
   const loadConversation = useCallback(async (id: string) => {
     setLoadingHistory(true);
@@ -131,6 +164,11 @@ export default function MentorScreen() {
 
       setConversationId(result.conversationId);
       setMessages((current) => [...current, localAssistantMessage]);
+      void logUserActivity({
+        type: 'compass_message',
+        sessionId: compassSession.current?.id,
+        conversationId: result.conversationId,
+      });
       setConversations(await getConversations());
 
       requestAnimationFrame(() => {
