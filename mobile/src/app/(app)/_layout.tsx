@@ -12,19 +12,22 @@ export default function AuthenticatedLayout() {
   const { user, loading: authLoading, signOut } = useAuth();
   const { onboarding, loading: onboardingLoading, error, refresh } = useOnboarding();
   const segments = useSegments();
-  const [admission, setAdmission] = useState<'checking' | 'required' | 'complete' | 'error'>('checking');
+  const [admissionState, setAdmissionState] = useState<{ uid: string; status: 'checking' | 'required' | 'complete' | 'error' } | null>(null);
   const [checkVersion, setCheckVersion] = useState(0);
+  // Never reuse a previous user's approval during an account switch.
+  const admission = admissionState?.uid === user?.uid ? admissionState.status : 'checking';
 
   useEffect(() => {
     let active = true;
     if (!user?.uid) {
-      setAdmission('checking');
+      setAdmissionState(null);
       return () => { active = false; };
     }
-    setAdmission('checking');
+    const uid = user.uid;
+    setAdmissionState({ uid, status: 'checking' });
     getSignupAdmission()
-      .then(completed => { if (active) setAdmission(completed ? 'complete' : 'required'); })
-      .catch(() => { if (active) setAdmission('error'); });
+      .then(completed => { if (active) setAdmissionState({ uid, status: completed ? 'complete' : 'required' }); })
+      .catch(() => { if (active) setAdmissionState({ uid, status: 'error' }); });
     return () => { active = false; };
   }, [user?.uid, checkVersion]);
 
@@ -32,7 +35,7 @@ export default function AuthenticatedLayout() {
     await acknowledgeSignupDisclosure();
     // The first onboarding fetch may have been blocked before admission.
     await refresh();
-    setAdmission('complete');
+    if (user?.uid) setAdmissionState({ uid: user.uid, status: 'complete' });
   }
 
 
