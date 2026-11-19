@@ -1,45 +1,27 @@
 # Single-path production release controls
 
-**Status: pending repository administrator configuration.** This document is the source of truth for activation.
+**Status: branch protection verified; unattended release remains disabled pending enforcement tests and trusted controller integration.**
 
 ## Architecture
-Codex branch → pull request → GitHub required checks and human approval → protected `main` → **existing Vercel Git integration** → production domain. There must be no competing GitHub Actions production deployment job.
+Codex branch → pull request → GitHub required checks + independently trusted risk-based authorization → protected `main` → **existing Vercel Git integration** → production domain. There must be no competing GitHub Actions production deployment job.
 
-Vercel project `ipurpose-next` is linked to GitHub `polishedaffairsllc-byte/ipurpose-next`. Vercel production history contains successful `main` releases and rollback candidates. GitHub branch metadata returned `protected: false` on 2026-11-18; rulesets list was empty. Rechecked during Level 2A implementation: still `protected: false`, and no rulesets. This is a **hard activation blocker**; do not enable unattended merges or deployments. Vercel's connected project was verified, but Git production-branch configuration has not been independently confirmed.
+Vercel project `ipurpose-next` is linked to GitHub `polishedaffairsllc-byte/ipurpose-next`. GitHub ruleset #27598298 is active and `main` reports `protected: true`. Vercel's Git-based production deployment is from `main` and carries the public-domain aliases; a separate CLI production-targeted deployment carries none. Vercel's project production-branch setting has not been independently exposed by the connected project response.
 
 ## Changes prepared in PR #124
 - Removed the newly introduced duplicate manual Vercel deployment workflow.
 - Added a scheduled read-only homepage availability monitor; GitHub Actions failures should be surfaced by the existing alert process.
 - The PR branch removes the optional-token `Deploy to Vercel` job from `.github/workflows/ci.yml`, eliminating that competing deployment path **if and when this PR is merged**. Do not merge until Vercel Git production branch `main` is independently verified.
 
-## Repository administrator action required
-1. Open `https://github.com/polishedaffairsllc-byte/ipurpose-next/settings/branches` (or repository Rules → Rulesets).
-2. Protect `main`: require PRs, at least one human approval, dismiss stale approvals, require up-to-date branches and these exact passing checks:
-   - `Verify Secrets & Repository Safety`
-   - `Firestore alignment regression tests`
-   - `Install, Lint, Type Check, Build & Test`
-   - `Verify Repository & Type Safety`
-   - `Tests, types, lint and unsigned mobile exports`
-3. Prevent force pushes and deletion; limit bypasses and direct pushes.
-4. Confirm the protection is enforced with a non-admin test and that the repository plan supports the configured protections.
-5. Verify Vercel's production branch is `main`, with Git integration enabled and preview deployments on PRs.
-6. Confirm Vercel's deployment protection and fork authorization settings; test a safe preview and rehearse rollback.
-7. Merge this PR only after CI passes, review is complete, and release controls are enforced.
+## Remaining release-activation acceptance tests
+1. Run a safe, non-admin negative test proving a direct push to `main` is rejected; do not force-push or disrupt production.\n2. Verify Vercel project Git production branch configuration and audit all CLI production deployment/promotion credentials.\n3. Confirm preview deployment and production protection settings, perform non-public smoke and rollback rehearsal.\n4. Implement trusted release controller on protected code, bound to exact PR head SHA, required checks, independently verified risk and an emergency-stop control.\n5. Prove failed-check, stale-SHA, unknown-change, kill-switch and credential-bypass cases are blocked.\n6. Confirm logs, alerts and operational rollback ownership; activate only after all gates pass.
 
 ## Bounded autonomy
-Codex may autonomously create branches, implement changes, run tests, and open PRs. Sensitive changes (auth, consent/privacy, payments, user data, database migrations, secrets, infrastructure) require human review. A merge is a production release event, not an unrestricted bot operation.
+Codex may autonomously create branches, implement changes, run tests, and open PRs. Sensitive changes (auth, consent/privacy, payments, user data, database migrations, secrets, infrastructure) require stronger independent authorization or founder approval. Founder authorized self-approval for routine changes only after trusted release gates are verified. A merge is a production release event, not an unrestricted bot operation.
 
 ## Operational response
 The monitor runs twice hourly and checks only HTTP availability, not business transactions. A failed check requires diagnosis and, if caused by a recent deployment, an authorized Vercel rollback. This monitor does not automatically roll back or guarantee functional correctness.
 
-## Level 2A verification status
-- Confirmed: Vercel team project is GitHub-linked to this repository; latest deployment record reports READY and production target.
-- Confirmed: this PR removes the duplicate CI deployment job on its branch, but main still contains it until merge.
-- Not confirmed: enforced protected main, required-check rules, Vercel Git production branch, negative authorization tests, rollback rehearsal.
-- Release automation remains **disabled**. A successful CI run does not override the blockers above.
-
-
-## Verification update — November 18, 2026 (after ruleset activation)
+## Level 2A verification status\n- Confirmed: protected `main` with strict five-check ruleset, no bypass actors; Vercel Git-sourced public production deployment from `main`.\n- Confirmed: draft PR #124 removes competing CI deployment job on its branch; it remains on `main` until this PR merges.\n- Not confirmed: non-admin negative test, complete CLI/promotion authority, safe rollback rehearsal, trusted release controller and live kill switch.\n- Release automation remains **disabled**.\n\n## Verification update — November 18, 2026 (after ruleset activation)
 - GitHub ruleset #27598298 (`iPurpose Production Protection`) exists, is active, and targets `~DEFAULT_BRANCH` (currently `main`). The branch API reports `protected: true`.
 - The ruleset requires PRs, strict up-to-date status checks from GitHub Actions for the five named CI checks, blocks non-fast-forward pushes and deletions, has no bypass actors, and requires zero approving reviews.
 - All five required CI checks passed on the latest commit of this draft PR (`b875ccf4abf90e48898e32d011b80790d481f72d`).
