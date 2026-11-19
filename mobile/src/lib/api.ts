@@ -142,8 +142,37 @@ export async function updateCompanionTimezone(timezone: string): Promise<Compani
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }
-export async function sendMentorMessage(options: { message: string; conversationId?: string; responseMode?: ResponseMode }): Promise<MentorResponse> {
-  const response = await authorizedFetch('/api/ai', { method: 'POST', body: JSON.stringify({ message: options.message, responseMode: options.responseMode || 'balanced', ...(options.conversationId ? { conversationId: options.conversationId } : {}) }) });
+export interface AiConsentState {
+  granted: boolean;
+  version: string;
+  notice: string;
+  provider: string;
+  protocolVersion: number;
+}
+
+/** The server defines the current provider, disclosure and version. Never hardcode a grant. */
+export async function getAiConsent(): Promise<AiConsentState> {
+  return readJson<AiConsentState>(await authorizedFetch('/api/ai/consent', { method: 'GET' }));
+}
+export async function setAiConsent(granted: boolean, version: string): Promise<AiConsentState> {
+  return readJson<AiConsentState>(await authorizedFetch('/api/ai/consent', {
+    method: 'POST', body: JSON.stringify({ granted, version }),
+  }));
+}
+
+/** A stable identifier must be reused when an uncertain request is retried. */
+export function createCompassRequestId(): string {
+  return createClarityRequestId();
+}
+export async function sendMentorMessage(options: { message: string; requestId: string; conversationId?: string; responseMode?: ResponseMode }): Promise<MentorResponse> {
+  const response = await authorizedFetch('/api/ai/v2', {
+    method: 'POST',
+    body: JSON.stringify({
+      message: options.message, requestId: options.requestId,
+      responseMode: options.responseMode || 'balanced',
+      ...(options.conversationId ? { conversationId: options.conversationId } : {}),
+    }),
+  });
   return readJson<MentorResponse>(response);
 }
 
