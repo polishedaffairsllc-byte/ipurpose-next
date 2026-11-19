@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     const requestedModel = typeof body.model === "string" ? body.model : undefined;
     const modelConfig = getCompanionModelConfig();
     if (body.model !== undefined && (typeof body.model !== 'string' || !modelConfig.allowedModels.has(body.model))) {
-      return NextResponse.json({ error: 'Unsupported generation model. Only gpt-4o-mini is approved.' }, { status: 400 });
+      return NextResponse.json({ error: 'Unsupported generation model.' }, { status: 400 });
     }
     const model = resolveCompanionModel(requestedModel);
 
@@ -127,6 +127,7 @@ export async function POST(request: NextRequest) {
       messages,
       temperature: 0.8,
       max_tokens: modelConfig.maxOutputTokens,
+      store: false,
     });
 
     const assistantMessage =

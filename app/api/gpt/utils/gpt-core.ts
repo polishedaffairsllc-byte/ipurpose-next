@@ -4,6 +4,8 @@
  */
 
 import OpenAI from 'openai';
+import { firebaseAdmin } from '@/lib/firebaseAdmin';
+import { CompanionSafetyError, requireAiConsent } from '@/lib/ai/companionSafety';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { getOpenAI, OPENAI_CONFIG, validateOpenAIKey } from './openai-client';
 import { checkRateLimit, recordRequest } from './rate-limiter';
@@ -30,6 +32,7 @@ export interface GPTCallResult {
  * Call OpenAI API with compiled prompt
  */
 export async function callGPT(options: GPTCallOptions): Promise<GPTCallResult> {
+  await requireAiConsent(firebaseAdmin.firestore(), options.userId);
   // 1. Validate API key
   if (!validateOpenAIKey()) {
     throw new Error('OpenAI API key not configured');
@@ -64,12 +67,14 @@ export async function callGPT(options: GPTCallOptions): Promise<GPTCallResult> {
   try {
     // 5. Make OpenAI API call
     const openai = getOpenAI();
+    await requireAiConsent(firebaseAdmin.firestore(), options.userId);
     const completion = await openai.chat.completions.create({
       model,
       messages,
       temperature,
       max_tokens: maxTokens,
       stream: false, // Non-streaming for this function
+      store: false,
     });
 
     const choice = completion.choices[0];
@@ -87,6 +92,7 @@ export async function callGPT(options: GPTCallOptions): Promise<GPTCallResult> {
       finishReason: choice.finish_reason || 'stop',
     };
   } catch (error) {
+    if (error instanceof CompanionSafetyError) throw error;
     console.error('OpenAI API call failed:', error);
     
     // Handle specific OpenAI errors
@@ -112,6 +118,7 @@ export async function callGPT(options: GPTCallOptions): Promise<GPTCallResult> {
 export async function* callGPTStream(
   options: GPTCallOptions
 ): AsyncGenerator<string, GPTCallResult, undefined> {
+  await requireAiConsent(firebaseAdmin.firestore(), options.userId);
   // 1. Validate API key
   if (!validateOpenAIKey()) {
     throw new Error('OpenAI API key not configured');
@@ -146,12 +153,14 @@ export async function* callGPTStream(
   try {
     // 5. Make streaming OpenAI API call
     const openai = getOpenAI();
+    await requireAiConsent(firebaseAdmin.firestore(), options.userId);
     const stream = await openai.chat.completions.create({
       model,
       messages,
       temperature,
       max_tokens: maxTokens,
       stream: true,
+      store: false,
     });
 
     let fullContent = '';

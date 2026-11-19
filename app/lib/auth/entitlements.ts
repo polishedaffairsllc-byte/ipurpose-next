@@ -76,6 +76,7 @@ export const PUBLIC_ROUTES = [
   '/info-session',
   '/contact',
   '/privacy',
+  '/ai-data-sharing',
   '/delete-account',
   '/terms',
   '/google-review',

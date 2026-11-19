@@ -1,6 +1,6 @@
-import { accountDeletionLock } from './accountDeletionLock';
 import type { firestore } from "firebase-admin";
 import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { accountDeletionLock } from './accountDeletionLock';
 
 import { getAccountDeletionPlan } from './accountDeletionPlan';
 export { getAccountDeletionPlan, isRecentAuthentication, ACCOUNT_DIRECT_DOCUMENT_COLLECTIONS, ACCOUNT_UID_QUERY_COLLECTIONS, ACCOUNT_USER_ID_QUERY_COLLECTIONS } from './accountDeletionPlan';

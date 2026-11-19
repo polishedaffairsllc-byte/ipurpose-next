@@ -1,7 +1,7 @@
 import { accountDeletionLock } from '../accountDeletionLock';
 import type { Firestore } from 'firebase-admin/firestore';
 
-export const AI_CONSENT_VERSION = 'compass-openai-2026-10-12';
+export const AI_CONSENT_VERSION = 'compass-openai-2026-11-17';
 export const AI_CONSENT_NOTICE = 'Compass uses OpenAI to generate responses and check content safety. Your messages, relevant conversation history, and saved profile and journey information (name, timezone, Clarity and Purpose results, priorities, check-ins, reflections and Lab/session context) are sent to OpenAI. You can decline and use the other app features, or withdraw permission in Account. Withdrawal stops new requests; it does not erase earlier conversations or information already sent. Other iPurpose AI tools, where available, also require this permission to send the text and saved context you use with them to OpenAI. See the Privacy Policy for details.';
 export const REPORT_REASONS = ['unsafe', 'offensive', 'inaccurate', 'other'] as const;
 const ID = /^[A-Za-z0-9_-]{1,128}$/;

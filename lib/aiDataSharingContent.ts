@@ -1,4 +1,4 @@
-// Unpublished owner-approved AI Data Sharing copy.
+// Public disclosure linked from the installed mobile app.
 export const aiDataSharingContent = [
   {
     "kind": "h1",
@@ -10,7 +10,7 @@ export const aiDataSharingContent = [
   },
   {
     "kind": "paragraph",
-    "content": "When you create an iPurpose account, you are asked to affirmatively consent to the AI-related data sharing described here."
+    "content": "Before your first Compass message is sent, the app identifies OpenAI, describes the information shared, and asks you to choose Allow and Send. Account setup alone does not enable sharing with OpenAI. You can decline and use the other app features."
   },
   {
     "kind": "h2",

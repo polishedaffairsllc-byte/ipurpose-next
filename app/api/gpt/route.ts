@@ -10,6 +10,7 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { sanitizeInput, validatePrompt, isValidDomain, getProductionRateLimiter, logSecurityEvent } from '@/lib/security';
 import type { GPTRequest, GPTResponse, GPTDomain } from './types';
 import { routeToHandler } from './router';
+import { CompanionSafetyError, requireAiConsent } from '@/lib/ai/companionSafety';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
 
     const decodedToken = await firebaseAdmin.auth().verifySessionCookie(session, true);
     const userId = decodedToken.uid;
+    await requireAiConsent(firebaseAdmin.firestore(), userId);
 
     // 3. Parse request body
     const body = await request.json();
@@ -106,6 +108,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response);
 
   } catch (error) {
+    if (error instanceof CompanionSafetyError) return NextResponse.json({ error: error.message }, { status: error.status });
     console.error('GPT API Error:', error);
     
     return NextResponse.json(

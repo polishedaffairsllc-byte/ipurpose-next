@@ -16,10 +16,10 @@ export async function requireCompletedSignup(db: Firestore, user: UserRecord) {
   if (!consent?.signupCompletedAt) throw new CompanionSafetyError('Finish account setup and save AI permission before continuing.', 409);
 }
 
-/** Atomic profile + versioned grant + completion; no OpenAI/Stripe/email call. */
+/** Complete installed-app signup without treating its generic checkbox as OpenAI permission. */
 export async function completeSignup(db: Firestore, user: UserRecord, input: unknown, verifyIdentity: () => Promise<UserRecord>) {
   const body = input as { granted?: unknown; version?: unknown } | null;
-  if (body?.granted !== true || body.version !== SIGNUP_AI_VERSION || SIGNUP_AI_VERSION !== AI_CONSENT_VERSION) {
+  if (body?.granted !== true || body.version !== SIGNUP_AI_VERSION) {
     throw new CompanionSafetyError(SIGNUP_AI_ERROR, 400);
   }
   const parent = db.collection('users').doc(user.uid);
@@ -38,7 +38,11 @@ export async function completeSignup(db: Firestore, user: UserRecord, input: unk
     const now = new Date();
     tx.set(parent, { ...(profile.exists ? {} : { createdAt: now }),
       email: (user.email || '').trim().toLowerCase(), updatedAt: now }, { merge: true });
-    tx.set(permission, { granted: true, version: AI_CONSENT_VERSION, provider: 'OpenAI',
+    // The installed binary supplies this legacy signup version. Only its separate
+    // OpenAI disclosure and Allow and Send control may grant the current version.
+    const currentPermission = data?.version === AI_CONSENT_VERSION;
+    tx.set(permission, { granted: currentPermission && data.granted === true,
+      version: AI_CONSENT_VERSION, provider: 'OpenAI',
       notice: AI_CONSENT_NOTICE, updatedAt: now, signupCompletedAt: now,
       signupNotice: SIGNUP_AI_NOTICE, signupNoticeVersion: SIGNUP_AI_VERSION }, { merge: true });
   });

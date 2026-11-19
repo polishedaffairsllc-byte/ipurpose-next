@@ -1,7 +1,7 @@
-import { accountDeletionLock } from '../accountDeletionLock';
+import { firebaseAdmin } from "@/lib/firebaseAdmin";
+import { accountDeletionLock } from '@/lib/accountDeletionLock';
 import { AI_CONSENT_VERSION, CompanionSafetyError } from './companionSafety';
 import { compassRequestRef } from './compassRequests';
-import { firebaseAdmin } from "@/lib/firebaseAdmin";
 import {
   boundCompanionHistory,
   getCompanionModelConfig,
@@ -140,7 +140,7 @@ export async function getCompanionHistory(
   );
 }
 
-export async function saveCompanionTurnWithMessage(options: {
+export async function saveCompanionTurn(options: {
   uid: string;
   conversationId?: string;
   responseMode: ResponseMode;
@@ -149,7 +149,11 @@ export async function saveCompanionTurnWithMessage(options: {
   model: string;
   inferredLens?: "soul" | "systems" | "ai";
   requestId?: string;
-}): Promise<{ conversationId: string; assistantMessageId: string }> {
+}): Promise<string> {
+  return (await saveCompanionTurnWithMessage(options)).conversationId;
+}
+
+export async function saveCompanionTurnWithMessage(options: Parameters<typeof saveCompanionTurn>[0]): Promise<{ conversationId: string; assistantMessageId: string }> {
   const { uid, responseMode: mode, userMessage, assistantMessage, model, inferredLens } = options;
   if (options.conversationId) requireValidConversationId(options.conversationId);
 
@@ -165,10 +169,15 @@ export async function saveCompanionTurnWithMessage(options: {
   const userMessageRef = reference.collection("messages").doc();
   const assistantMessageRef = reference.collection("messages").doc();
   await firebaseAdmin.firestore().runTransaction(async (transaction) => {
-    const db = firebaseAdmin.firestore();
-    const [deleting, profile] = await Promise.all([transaction.get(accountDeletionLock(db, uid)), transaction.get(db.collection('users').doc(uid))]);
-    if (deleting.exists || !profile.exists) throw new CompanionSafetyError('Account deletion is in progress or your profile is unavailable.', 403);
-    const existing = await transaction.get(reference);
+    const [existing, profile, deleting] = await Promise.all([
+      transaction.get(reference),
+      transaction.get(firebaseAdmin.firestore().collection('users').doc(uid)),
+      transaction.get(accountDeletionLock(firebaseAdmin.firestore(), uid)),
+    ]);
+    if (!profile.exists || deleting.exists) throw new CompanionConversationError('Your account is unavailable. Please sign in again.', 409);
+    if (options.conversationId && !existing.exists) {
+      throw new CompanionConversationError("Conversation not found", 404);
+    }
     const requestRef = options.requestId ? compassRequestRef(firebaseAdmin.firestore(), uid, options.requestId) : null;
     if (requestRef) {
       const [request, permission] = await Promise.all([
@@ -177,9 +186,6 @@ export async function saveCompanionTurnWithMessage(options: {
       ]);
       if (request.data()?.status !== 'pending') throw new CompanionSafetyError('The message request is no longer pending.', 409);
       if (permission.data()?.granted !== true || permission.data()?.version !== AI_CONSENT_VERSION) throw new CompanionSafetyError('AI permission was withdrawn. Your draft is kept.', 403);
-    }
-    if (options.conversationId && !existing.exists) {
-      throw new CompanionConversationError("Conversation not found", 404);
     }
 
     const current = existing.exists ? (existing.data() as UnknownRecord) : {};
@@ -206,12 +212,6 @@ export async function saveCompanionTurnWithMessage(options: {
       createdAt: now,
     });
 
-    if (requestRef) transaction.set(requestRef, {
-      status: 'completed', finishedAt: new Date(), reply: {
-        response: assistantMessage, conversationId: reference.id, assistantMessageId: assistantMessageRef.id,
-        responseMode: mode, model, ...(inferredLens ? { inferredLens } : {}),
-      },
-    }, { merge: true });
     transaction.set(assistantMessageRef, {
       role: "assistant",
       content: assistantMessage,
@@ -221,11 +221,13 @@ export async function saveCompanionTurnWithMessage(options: {
       model,
       ...(inferredLens ? { inferredLens } : {}),
     });
+    if (requestRef) transaction.set(requestRef, {
+      status: 'completed', finishedAt: new Date(), reply: {
+        response: assistantMessage, conversationId: reference.id, assistantMessageId: assistantMessageRef.id,
+        responseMode: mode, model, ...(inferredLens ? { inferredLens } : {}),
+      },
+    }, { merge: true });
   });
 
   return { conversationId: reference.id, assistantMessageId: assistantMessageRef.id };
-}
-
-export async function saveCompanionTurn(options: Parameters<typeof saveCompanionTurnWithMessage>[0]): Promise<string> {
-  return (await saveCompanionTurnWithMessage(options)).conversationId;
 }
