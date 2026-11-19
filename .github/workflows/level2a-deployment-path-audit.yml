@@ -1,15 +1,11 @@
 name: Level 2A deployment path audit
 
+# Always report on every pull request, including docs-only changes.
+# A path-filtered workflow cannot safely be made a required status check.
 on:
   pull_request:
-    paths:
-      - '.github/workflows/**'
-      - 'tests/level2a-deployment-path-audit.test.mjs'
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/**'
-      - 'tests/level2a-deployment-path-audit.test.mjs'
 
 permissions:
   contents: read
