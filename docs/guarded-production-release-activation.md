@@ -5,12 +5,12 @@
 ## Architecture
 Codex branch → pull request → GitHub required checks and human approval → protected `main` → **existing Vercel Git integration** → production domain. There must be no competing GitHub Actions production deployment job.
 
-Vercel project `ipurpose-next` is linked to GitHub `polishedaffairsllc-byte/ipurpose-next`. Vercel production history contains successful `main` releases and rollback candidates. GitHub branch metadata returned `protected: false` on 2026-11-18; rulesets list was empty.
+Vercel project `ipurpose-next` is linked to GitHub `polishedaffairsllc-byte/ipurpose-next`. Vercel production history contains successful `main` releases and rollback candidates. GitHub branch metadata returned `protected: false` on 2026-11-18; rulesets list was empty. Rechecked during Level 2A implementation: still `protected: false`, and no rulesets. This is a **hard activation blocker**; do not enable unattended merges or deployments. Vercel's connected project was verified, but Git production-branch configuration has not been independently confirmed.
 
 ## Changes prepared in PR #124
 - Removed the newly introduced duplicate manual Vercel deployment workflow.
 - Added a scheduled read-only homepage availability monitor; GitHub Actions failures should be surfaced by the existing alert process.
-- Existing `.github/workflows/ci.yml` already has an optional-token `Deploy to Vercel` job on `main`. **Remove that job in this PR before merging** to eliminate the older competing deployment path, after confirming Vercel Git production branch is `main`.
+- The PR branch removes the optional-token `Deploy to Vercel` job from `.github/workflows/ci.yml`, eliminating that competing deployment path **if and when this PR is merged**. Do not merge until Vercel Git production branch `main` is independently verified.
 
 ## Repository administrator action required
 1. Open `https://github.com/polishedaffairsllc-byte/ipurpose-next/settings/branches` (or repository Rules → Rulesets).
@@ -31,3 +31,9 @@ Codex may autonomously create branches, implement changes, run tests, and open P
 
 ## Operational response
 The monitor runs twice hourly and checks only HTTP availability, not business transactions. A failed check requires diagnosis and, if caused by a recent deployment, an authorized Vercel rollback. This monitor does not automatically roll back or guarantee functional correctness.
+
+## Level 2A verification status
+- Confirmed: Vercel team project is GitHub-linked to this repository; latest deployment record reports READY and production target.
+- Confirmed: this PR removes the duplicate CI deployment job on its branch, but main still contains it until merge.
+- Not confirmed: enforced protected main, required-check rules, Vercel Git production branch, negative authorization tests, rollback rehearsal.
+- Release automation remains **disabled**. A successful CI run does not override the blockers above.
