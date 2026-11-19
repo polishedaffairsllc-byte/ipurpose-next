@@ -38,7 +38,7 @@ jobs:
             echo "::notice::Not eligible: zero or more than two files"
             exit 0
           fi
-          if ! echo "${response}" | jq -e 'all(.[]; (.status == "added" or .status == "modified") and (.filename | startswith("components/") or startswith("src/components/")) and (test("(?i)(auth|login|signup|account|password|session|token|secret|privacy|consent|payment|billing|stripe|firestore|database|migration|security|admin|api/|middleware|proxy|analytics|tracking|vercel|policy|workflow|release|deploy|permission)") | not) and (.additions <= 150) and (.changes <= 250))' >/dev/null; then
+          if ! echo "${response}" | jq -e 'all(.[]; (.status == "added" or .status == "modified") and (.filename | startswith("components/") or startswith("src/components/")) and (.filename | test("(?i)(auth|login|signup|account|password|session|token|secret|privacy|consent|payment|billing|stripe|firestore|database|migration|security|admin|api/|middleware|proxy|analytics|tracking|vercel|policy|workflow|release|deploy|permission)") | not) and (.additions <= 150) and (.changes <= 250))' >/dev/null; then
             echo "::notice::Not eligible: path, status, or size outside low-risk bounds"
             exit 0
           fi
