@@ -31,7 +31,12 @@ export function useUTMParams(): UTMParams {
     if (typeof window === 'undefined') return;
 
     // Try to read UTMs already captured this session
-    const stored = sessionStorage.getItem(SESSION_KEY);
+    let stored: string | null = null;
+    try {
+      stored = window.sessionStorage.getItem(SESSION_KEY);
+    } catch {
+      // Restricted storage should not prevent attribution on this page.
+    }
     if (stored) {
       try {
         setParams(JSON.parse(stored));
@@ -54,7 +59,11 @@ export function useUTMParams(): UTMParams {
     // Only persist if at least one UTM is present
     const hasUTM = Object.values(captured).some((v) => v !== null);
     if (hasUTM) {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(captured));
+      try {
+        window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(captured));
+      } catch {
+        // The URL is still available to consumers on this page.
+      }
       setParams(captured);
     }
   }, []);
