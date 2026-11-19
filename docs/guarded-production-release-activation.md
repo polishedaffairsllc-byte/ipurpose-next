@@ -46,3 +46,9 @@ The monitor runs twice hourly and checks only HTTP availability, not business tr
 - Vercel's linked project has a READY production deployment from `main` SHA `1f92b56ed560ab62557515e92ea550c5c6701992`; rollback candidates exist. A later READY production deployment has no Git metadata, so **single-path production release is not yet demonstrated**. Investigate manual/CLI production deployments and project Git production-branch settings before activation.
 - **Remaining hard gates:** verify GitHub ruleset enforcement by non-admin negative test; confirm production branch and no competing production deployment mechanisms; exercise safe preview and rollback; implement independently enforced, fail-closed low-risk auto-merge gate; audit logging, kill switch and notifications.
 - Zero required reviews is not a substitute for the independent risk gate. **No unattended merge or deployment authorization is active.**
+
+## Vercel deployment-source investigation — November 18, 2026
+- Deployment `dpl_Ftrgzo89jRjjjQBNdjjsQaDjjdAT` is `source: cli`, `target: production`, `READY`, and has **no aliases**. This is an alternate path to create a production-targeted build, even though it did not take over the public domains.
+- Deployment `dpl_HtEjqmes5KYoRRxKzS3DpohfekGS` is `source: git`, `target: production`, `READY`, with GitHub `main` SHA `1f92b56ed560ab62557515e92ea550c5c6701992` and the production-domain aliases.
+- Conclusion: the Git release path serves public domains in the examined records, but CLI production builds are possible. GitHub rulesets do **not** control Vercel CLI credentials. Inventory and revoke/limit any unused `VERCEL_TOKEN` and Vercel project deployment credentials outside the approved release workflow; verify project permissions before allowing unattended production promotion. Do not revoke tokens blindly: inventory dependencies first.
+- A live rollback was **not** performed; candidate availability is not a rollback rehearsal.
