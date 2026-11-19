@@ -5,7 +5,7 @@ import { Timestamp, type Firestore } from 'firebase-admin/firestore';
 import type { Auth } from 'firebase-admin/auth';
 import { outreachSchema, proposalMetadata, windowStart, type OutreachInput } from '../lib/outreach/model';
 import { PROPOSALS, type Proposal } from '../lib/outreach/registry';
-import { ingestionHandler, outreachAdminHandler } from '../lib/outreach/http';
+import { ingestionHandler, outreachAdminHandler, outreachFilters } from '../lib/outreach/http';
 import { storeOutreachEvent, readOutreach, cleanupOutreachEvents } from '../lib/outreach/service';
 import { sanitizeHistory, historyForFilters } from '../lib/outreach/history';
 import { createOutreachLogger } from '../lib/outreach/client';
@@ -30,7 +30,7 @@ test('registry owns generic metadata and strict schema rejects unknown routes, f
   const data = input(); assert.equal(outreachSchema.safeParse(data).success, true);
   assert.deepEqual(proposalMetadata(data), { proposal_family: 'sdsn', organization: 'SDSN Youth Ghana', recipient_id: 'ghana-jh', deck_variant: 'ghana', event_type: 'page_view' });
   for (const extra of [{ email: 'private@example.com' }, { proposal_id: 'ug-not-live' }, { source_event_name: 'purchase' }, { source_event_name: 'toString' }, { page_path: '/login' }, { slide_number: 1 }, { source_event_name: 'sdsn_slide_view', slide_number: 13 }, { organization: 'arbitrary' }, { full_user_agent: 'browser' }]) assert.equal(outreachSchema.safeParse({ ...data, ...extra }).success, false);
-  for (const proposal of PROPOSALS) for (const [name, type] of Object.entries(proposal.events)) assert.equal(outreachSchema.safeParse(input({ proposal_id: proposal.id, page_path: proposal.pagePath, source_event_name: name, ...(type === 'slide_view' ? { slide_number: 12 } : {}), ...(type === 'deck_interaction' ? { interaction_type: 'progress-jump' } : {}), ...(type === 'cta_click' ? { cta_id: Object.keys(proposal.ctas || {})[0] } : {}) })).success, true);
+  for (const proposal of PROPOSALS) for (const [name, type] of Object.entries(proposal.events)) assert.equal(outreachSchema.safeParse(input({ proposal_id: proposal.id, page_path: proposal.pagePath, source_event_name: name, ...(proposal.family === 'university' ? { outreach_id: 'x'.repeat(43), ...(type === 'section_view' ? { section_id: proposal.sections![0] } : {}), ...(['external_link_click', 'meeting_request_click'].includes(type) ? { destination_id: type === 'meeting_request_click' ? 'conversation' : 'source-0' } : {}) } : {}), ...(type === 'slide_view' ? { slide_number: proposal.slideCount } : {}), ...(type === 'deck_interaction' ? { interaction_type: 'progress-jump' } : {}), ...(type === 'cta_click' ? { cta_id: Object.keys(proposal.ctas || {})[0] } : {}) })).success, true);
 });
 test('ingestion rejects oversized, unknown-field and cross-origin input before storing; preview/debug coerces internal', async () => {
   const stored: OutreachInput[] = []; const handler = ingestionHandler(async data => { stored.push(data); });
@@ -73,6 +73,53 @@ test('registered opaque links are proposal-scoped; arbitrary or expired tokens a
   await storeOutreachEvent(db, input({ outreach_id: token }), 'preview'); assert.equal([...docs.values()][0].outreach_id, undefined);
   docs.set(`proposalOutreachLinks/${hash}`, { enabled: true, proposal_id: 'sdsn-ghana-jh', expiresAt: Timestamp.fromMillis(Date.now() + 10000) });
   await storeOutreachEvent(db, input({ outreach_id: token }), 'preview'); assert.equal([...docs.values()].at(-1)?.outreach_id, hash);
+});
+test('the recorded SDSN smoke-test visit is internal without suppressing other sessions', async () => {
+  const { db } = fakeDb();
+  const smokeTest = input({ session_id: '744ffb6d-6736-4904-9dc4-7b054f162507' });
+  const unrelatedVisit = input();
+  await storeOutreachEvent(db, smokeTest, 'production');
+  await storeOutreachEvent(db, unrelatedVisit, 'production');
+
+  const external = await readOutreach(db, { window: 'today', includeInternal: false }, 'production', now);
+  assert.deepEqual(external.recentEvents.map(event => event.event_id), [unrelatedVisit.event_id]);
+  assert.equal(external.proposals[0].visits, 1);
+  const diagnostics = await readOutreach(db, { window: 'today', includeInternal: true }, 'production', now);
+  assert.equal(diagnostics.recentEvents.find(event => event.event_id === smokeTest.event_id)?.traffic_type, 'internal');
+});
+test('external reports omit recorded automated visits and do not turn raw link access into an open', async () => {
+  const { db, docs } = fakeDb();
+  const [reviewed, visited] = PROPOSALS.filter(proposal => proposal.family === 'university');
+  const record = (proposal: Proposal, overrides: Partial<OutreachInput>) => {
+    const event = input({ proposal_id: proposal.id, page_path: proposal.pagePath, outreach_id: 'a'.repeat(64), source_event_name: 'proposal_page_view', ...overrides });
+    docs.set(`proposalOutreachEvents/production_${event.event_id}`, {
+      ...event, ...proposalMetadata(event), environment: 'production', timestamp: Timestamp.fromDate(now),
+    });
+  };
+  const automatedSession = randomUUID();
+  record(reviewed, { session_id: automatedSession, traffic_classification: 'likely_automated' });
+  record(reviewed, { session_id: automatedSession, traffic_classification: 'likely_automated', source_event_name: 'proposal_deck_complete', sequence: 2, interaction_qualified: true });
+  record(reviewed, { source_event_name: 'proposal_link_access', sequence: 0, traffic_classification: 'unclassified' });
+  record(visited, { traffic_classification: 'unclassified' });
+
+  const report = await readOutreach(db, { window: 'today', includeInternal: false }, 'production', now);
+  assert.deepEqual(report.recentEvents.map(event => [event.proposal_id, event.event_type]).sort(), [[reviewed.id, 'link_access'], [visited.id, 'page_view']].sort());
+  const reviewedSummary = report.proposals.find(row => row.proposal_id === reviewed.id)!;
+  assert.equal(reviewedSummary.status, 'No external activity yet');
+  assert.equal(reviewedSummary.visits, 0);
+  assert.equal(reviewedSummary.completed, false);
+  assert.equal(reviewedSummary.firstVisit, null);
+  assert.equal(reviewedSummary.mostRecentActivity, null);
+  assert.equal(reviewedSummary.mostRecentExternalActivity, null);
+  assert.equal(reviewedSummary.universityMetrics?.rawAccesses, 1);
+  const visitedSummary = report.proposals.find(row => row.proposal_id === visited.id)!;
+  assert.equal(visitedSummary.status, 'Opened');
+  assert.equal(visitedSummary.visits, 1);
+  assert.equal(visitedSummary.mostRecentExternalActivity, now.toISOString());
+
+  const diagnostics = await readOutreach(db, { window: 'today', includeInternal: true, proposalId: reviewed.id }, 'production', now);
+  assert.equal(diagnostics.recentEvents.length, 3);
+  assert.equal(diagnostics.proposals[0].mostRecentExternalActivity, null);
 });
 test('admin endpoint rejects missing, invalid, revoked, disabled and non-admin access; filters are validated', async () => {
   let loads = 0; let actor = { customClaims: { admin: true }, disabled: false }; let claim = true;
@@ -118,4 +165,37 @@ test('another controlled proposal family reuses the same schema and metadata wit
     const event = outreachSchema.parse(input({ proposal_id: fixture.id, page_path: fixture.pagePath, source_event_name: 'brief_overview' }));
     assert.deepEqual(proposalMetadata(event), { proposal_family: fixture.family, organization: fixture.organization, recipient_id: fixture.recipientId, deck_variant: fixture.deckVariant, event_type: 'overview_download' });
   } finally { (PROPOSALS as Proposal[]).pop(); }
+});
+
+test('longer reporting ranges include retained older activity, exclude older/QA/preview records, and reject unsupported ranges', async () => {
+  const current = new Date('2026-11-07T16:00:00Z');
+  const { db, docs } = fakeDb();
+  for (const [days, traffic, environment] of [[10, 'external', 'production'], [45, 'external', 'production'], [100, 'external', 'production'], [181, 'external', 'production'], [10, 'internal', 'production'], [10, 'external', 'preview']] as const) {
+    const event = input({ traffic_type: traffic }); await storeOutreachEvent(db, event, environment);
+    docs.get(`proposalOutreachEvents/${environment}_${event.event_id}`)!.timestamp = Timestamp.fromMillis(current.getTime() - days * 86400000);
+  }
+  for (const [window, count] of [['7d', 0], ['30d', 1], ['90d', 2], ['180d', 3]] as const) {
+    const filters = outreachFilters(new Request(`https://example.com/api/admin/proposal-outreach?window=${window}`));
+    const report = await readOutreach(db, filters, 'production', current);
+    assert.equal(report.recentEvents.length, count); assert.equal(report.proposals[0].visits, count);
+    assert.equal(report.externalOnly, true); assert.equal(report.window, window);
+    assert.equal(report.periodStart, new Date(current.getTime() - Number(window.slice(0,-1)) * 86400000).toISOString());
+  }
+  assert.equal(outreachFilters(new Request('https://example.com/api/admin/proposal-outreach')).window, '30d');
+  for (const window of ['365d', 'all', '0d', '-1d']) assert.throws(() => outreachFilters(new Request(`https://example.com/api/admin/proposal-outreach?window=${window}`)));
+  assert.equal((await readOutreach(db, { window: '30d', includeInternal: true }, 'production', current)).recentEvents.length, 2);
+});
+
+test('historical minute buckets obey longer ranges without mixing unknown traffic into external activity', () => {
+  const current = new Date('2026-11-07T16:00:00Z');
+  const history = sanitizeHistory({ property: 'properties/1', date: '2026-08-01', endDate: '2026-11-07', timezone: 'America/New_York', dimensions: [], truncated: false, rows: [
+    { dateHourMinute: '202610181200', eventName: 'sdsn_page_view', pagePath: '/partnerships/sdsn/ghana-jh', eventCount: 1, 'customEvent:traffic_type': 'external' },
+    { dateHourMinute: '202608011200', eventName: 'sdsn_page_view', pagePath: '/partnerships/sdsn/ghana-jh', eventCount: 1, 'customEvent:traffic_type': 'external' },
+    { dateHourMinute: '202610181200', eventName: 'sdsn_page_view', pagePath: '/partnerships/sdsn/ghana-jh', eventCount: 5 },
+  ] });
+  for (const [window, expected] of [['7d', 0], ['30d', 1], ['90d', 1], ['180d', 2]] as const) {
+    const result = historyForFilters(history, { window, includeInternal: false }, current);
+    assert.ok(result.available); assert.equal(result.rows.length, expected);
+    assert.ok(result.rows.every(row => row.traffic_type === 'external'));
+  }
 });

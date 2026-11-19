@@ -1,13 +1,13 @@
 'use client';
 /* eslint-disable @next/next/no-img-element -- Static srcsets preserve the supplied deck artwork. */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight, Expand, Minimize, Pause, Play, LayoutGrid } from 'lucide-react';
 import type { PresentationSlide } from '@/lib/partnerships/sdsn';
 export type ViewerEvent = 'sdsn_deck_start' | 'sdsn_slide_view' | 'sdsn_deck_interaction' | 'sdsn_deck_complete';
 type EventParams = Record<string, string | number>;
 const normalSizes = '(max-width: 640px) calc(100vw - 24px), (max-width: 1376px) calc(100vw - 96px), 1280px';
-export default function PresentationViewer({ slides, deckTitle, onEvent }: {
-  slides: PresentationSlide[]; deckTitle: string; onEvent: (event: ViewerEvent, params?: EventParams) => void;
+export default function PresentationViewer({ slides, deckTitle, onEvent, renderSlideLinks }: {
+  slides: PresentationSlide[]; renderSlideLinks?: (slideNumber: number) => ReactNode; deckTitle: string; onEvent: (event: ViewerEvent, params?: EventParams) => void;
 }) {
   const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(-1);
@@ -83,7 +83,7 @@ export default function PresentationViewer({ slides, deckTitle, onEvent }: {
       if (e.key === 'Tab') {
         setPlaying(false);
         if (overlay) {
-          const buttons = root.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+          const buttons = root.current?.querySelectorAll<HTMLElement>('button:not(:disabled), a[href]');
           const first = buttons?.[0];
           const last = buttons?.[buttons.length - 1];
           if (e.shiftKey && (document.activeElement === first || document.activeElement === root.current)) { e.preventDefault(); last?.focus(); }
@@ -162,6 +162,7 @@ export default function PresentationViewer({ slides, deckTitle, onEvent }: {
     }}>
       {previous !== null ? <img className="sdsn-slide" src={slides[previous].src} srcSet={slides[previous].srcSet} sizes={sizes} alt="" aria-hidden="true" width={2880} height={1620}/> : null}
       <img ref={imageRef} key={slide.src} className={`sdsn-slide sdsn-current${loaded === index ? ' sdsn-ready' : ''}`} src={slide.src} srcSet={slide.srcSet} sizes={sizes} width={2880} height={1620} alt={slide.alt} fetchPriority={index === 0 ? 'high' : 'auto'} loading="eager" decoding="async" onLoad={() => setLoaded(index)} onError={() => { setImageError(true); setPlaying(false); }}/>
+      {loaded === index && renderSlideLinks ? renderSlideLinks(index + 1) : null}
       {imageError ? <div className="sdsn-image-error" role="alert">This slide could not load. Please use the PDF below or try another slide.</div> : null}
     </div>
     <div className="sdsn-controls">

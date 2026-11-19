@@ -1,0 +1,14 @@
+.slideLink { position:absolute; z-index:4; display:block; min-height:24px; border-radius:6px; }
+.slideLink:hover { outline:2px solid var(--sdsn-gold); outline-offset:2px; }
+.slideLink:focus-visible { outline:3px solid var(--sdsn-gold); outline-offset:3px; box-shadow:0 0 0 5px var(--sdsn-indigo); }
+.notice { margin:24px 0; font-size:14px; line-height:1.6; }
+.emailFallback { width:100%; margin-top:8px; font-size:14px; line-height:1.6; }
+.emailCopyControls { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.emailCopyControls input { flex:1 1 220px; min-width:0; max-width:100%; }
+.emailCopyControls input, .emailCopyControls button { min-height:44px; padding:10px 12px; border:1px solid var(--sdsn-indigo); border-radius:6px; color:var(--sdsn-indigo); background:transparent; font:inherit; }
+.emailCopyControls button { cursor:pointer; }
+.emailFallback .emailCopyControls input:focus-visible, .emailFallback .emailCopyControls button:focus-visible { outline:3px solid var(--sdsn-indigo); outline-offset:3px; }
+.copyStatus { min-height:1.6em; margin-top:6px; }
+
+:global(.university-page .sdsn-segments) { grid-template-columns:repeat(8,minmax(0,1fr)); }
+:global(.university-page .sdsn-contact-copy) { max-width:720px; }

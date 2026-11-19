@@ -1,0 +1,24 @@
+name: Level 2A deployment path audit
+
+# Always report on every pull request, including docs-only changes.
+# A path-filtered workflow cannot safely be made a required status check.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit-deployment-paths:
+    name: Level 2A no duplicate Vercel deployment paths
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test tests/level2a-deployment-path-audit.test.mjs

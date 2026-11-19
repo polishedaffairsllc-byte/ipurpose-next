@@ -1,6 +1,6 @@
 import { getLaunchMeasurementIds } from './config';
 
-type LaunchEvent = 'purpose_check_start' | 'purpose_check_complete' | 'sign_up' | 'clarity_check_start' | 'clarity_check_complete' | 'email_signup';
+type LaunchEvent = 'purpose_check_start' | 'purpose_check_complete' | 'sign_up' | 'clarity_check_start' | 'clarity_check_complete' | 'email_signup' | 'founder_website_click';
 const recorded = new Set<string>();
 const INTERNAL_BROWSER_KEY = 'ipurpose_internal_traffic';
 const QA_BROWSER_KEY = 'ipurpose_qa_traffic';
@@ -28,7 +28,7 @@ function isKnownInternalOrQaBrowser(): boolean {
 }
 
 /** Analytics failure must never turn a successful product action into an error. */
-export function emitLaunchEvent(name: LaunchEvent, key?: string, parameters?: { method: string }): boolean {
+export function emitLaunchEvent(name: LaunchEvent, key?: string, parameters?: Record<string, string | number | boolean>): boolean {
   if (typeof window === 'undefined' || isKnownInternalOrQaBrowser()) return false;
   const measurementIds = getLaunchMeasurementIds();
   if (!measurementIds.length) return false;

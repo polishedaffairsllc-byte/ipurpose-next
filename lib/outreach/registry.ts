@@ -1,19 +1,22 @@
+import { universityProposals } from '@/lib/universities/registry';
 /** Controlled proposal registry. Adding a family requires no new ledger, API, dashboard or MCP tool. */
-export const EVENT_TYPES = ['page_view', 'deck_start', 'slide_view', 'deck_interaction', 'deck_complete', 'pdf_download', 'visit_ipurpose_click', 'contact_click', 'overview_download', 'video_click', 'cta_click'] as const;
+export const EVENT_TYPES = ['page_view', 'deck_start', 'slide_view', 'deck_interaction', 'deck_complete', 'pdf_download', 'visit_ipurpose_click', 'contact_click', 'overview_download', 'video_click', 'cta_click', 'link_access', 'section_view', 'return_visit', 'external_link_click', 'meeting_request_click'] as const;
 export type OutreachEventType = typeof EVENT_TYPES[number];
-export type OutreachMetric = 'highestSlide' | 'completed' | 'pdfDownloaded' | 'visitIpurposeClicked' | 'contactClicked' | 'companionViews' | 'compassClicks' | 'clarityClicks' | 'otherCtaClicks' | 'downstreamEngagement';
+export type OutreachMetric = 'highestSlide' | 'completed' | 'pdfDownloaded' | 'visitIpurposeClicked' | 'contactClicked' | 'companionViews' | 'compassClicks' | 'clarityClicks' | 'otherCtaClicks' | 'downstreamEngagement' | 'rawAccesses' | 'pageLoads' | 'uniqueSessions' | 'repeatVisits' | 'qualifiedVisits' | 'sectionEngagement' | 'meetingRequests' | 'externalLinkClicks';
 export type Proposal = {
   id: string; family: string; organization: string; label: string; recipientId: string;
   deckVariant: string; pagePath: string; slideCount: number;
   events: Readonly<Record<string, OutreachEventType>>; internalStorageKeys?: readonly string[];
   campaign?: string; landingPath?: string; source?: string; medium?: string;
+  institutionId?: string; sections?: readonly string[]; destinations?: Readonly<Record<string, string>>;
   metrics?: readonly OutreachMetric[];
   ctas?: Readonly<Record<string, 'compassClicks' | 'clarityClicks' | 'otherCtaClicks'>>;
   recipients?: Readonly<Record<string, string>>;
 };
-const sdsnEvents = Object.fromEntries(EVENT_TYPES.filter(type => !['overview_download', 'video_click', 'cta_click'].includes(type)).map(type => [`sdsn_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
-const ugEvents = Object.fromEntries(EVENT_TYPES.filter(type => type !== 'cta_click').map(type => [`ug_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
-const knustEvents = Object.fromEntries(EVENT_TYPES.filter(type => type !== 'cta_click').map(type => [`knust_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
+const deckEventTypes = ['page_view', 'deck_start', 'slide_view', 'deck_interaction', 'deck_complete', 'pdf_download', 'visit_ipurpose_click', 'contact_click', 'overview_download', 'video_click', 'cta_click'] as const;
+const sdsnEvents = Object.fromEntries(deckEventTypes.filter(type => !['overview_download', 'video_click', 'cta_click'].includes(type)).map(type => [`sdsn_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
+const ugEvents = Object.fromEntries(deckEventTypes.filter(type => type !== 'cta_click').map(type => [`ug_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
+const knustEvents = Object.fromEntries(deckEventTypes.filter(type => type !== 'cta_click').map(type => [`knust_${type}`, type])) as Readonly<Record<string, OutreachEventType>>;
 export const DECK_METRICS: readonly OutreachMetric[] = ['highestSlide', 'completed', 'pdfDownloaded', 'visitIpurposeClicked', 'contactClicked'];
 export const PROPOSALS: readonly Proposal[] = [
   { id: 'sdsn-ghana-jh', family: 'sdsn', organization: 'SDSN Youth Ghana', label: 'Ghana', recipientId: 'ghana-jh', deckVariant: 'ghana', pagePath: '/partnerships/sdsn/ghana-jh', slideCount: 12, internalStorageKeys: ['sdsn_internal_v1'], events: sdsnEvents },
@@ -38,6 +41,7 @@ export const PROPOSALS: readonly Proposal[] = [
     metrics: ['companionViews', 'compassClicks', 'clarityClicks', 'otherCtaClicks', 'downstreamEngagement'],
     ctas: { hero_explore: 'otherCtaClicks', hero_clarity_check: 'clarityClicks', journey_0: 'clarityClicks', journey_1: 'compassClicks', journey_2: 'otherCtaClicks', journey_3: 'otherCtaClicks', product_0: 'clarityClicks', product_1: 'otherCtaClicks', product_2: 'otherCtaClicks', product_3: 'otherCtaClicks', product_4: 'otherCtaClicks', final_explore: 'otherCtaClicks', final_clarity_check: 'clarityClicks' },
   },
+  ...universityProposals,
 ];
 export const proposalById = (id: string) => PROPOSALS.find(proposal => proposal.id === id);
 export const proposalByPath = (path: string) => PROPOSALS.find(proposal => proposal.pagePath === path);

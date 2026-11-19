@@ -14,11 +14,12 @@ test('actual existing owner feed includes generic outreach in v2; no OAuth or sn
     if (id === '@/lib/firebaseAdmin') return { firebaseAdmin: { firestore: () => db, auth: () => ({ listUsers: async () => ({ users: [] }) }) } };
     if (id === '@/lib/admin-activity/service') return { createActivityService: () => ({ list: async () => ({ rows: [], cursor: null }) }) };
     if (id === '@/lib/launch-metrics/ga4Dashboard') return { getGa4Dashboard: async () => ({}) };
+    if (id === '@/lib/outreach/model') return { DEFAULT_OUTREACH_WINDOW: '30d' };
     if (id === '@/lib/outreach/service') return { readOutreach: async (database, filters) => { assert.equal(database, db); calls.push(filters); return outreach; } };
-    if (id === '@/lib/outreach/history') return { getOutreachHistory: async () => ({ available: true, rows: [] }), historyForFilters: (history, filters) => { assert.equal(filters.includeInternal, false); return history; } };
+    if (id === '@/lib/outreach/history') return { getOutreachHistory: async filters => { assert.equal(filters.window, '30d'); return { available: true, rows: [] }; }, historyForFilters: (history, filters) => { assert.equal(filters.includeInternal, false); return history; } };
     throw new Error('Unexpected boundary ' + id);
   };
   new Function('require', 'module', 'exports', 'process', output)(load, mod, mod.exports, { env: { LAUNCH_METRICS_FEED_TOKEN: 'fixture-only-token' } });
   const response = await mod.exports.GET(new Request('https://example.com/api/admin/launch-metrics-feed', { headers: { authorization: 'Bearer fixture-only-token', 'x-ipurpose-metrics-version': '2' } }));
-  assert.equal(response.status, 200); const data = await response.json(); assert.deepEqual(data.outreach.proposals, outreach.proposals); assert.deepEqual(data.outreach.recentEvents, outreach.recentEvents); assert.deepEqual(calls, [{ window: '7d', includeInternal: false }]); assert.equal(response.headers.get('cache-control'), 'private, no-store');
+  assert.equal(response.status, 200); const data = await response.json(); assert.deepEqual(data.outreach.proposals, outreach.proposals); assert.deepEqual(data.outreach.recentEvents, outreach.recentEvents); assert.deepEqual(calls, [{ window: '30d', includeInternal: false }]); assert.equal(response.headers.get('cache-control'), 'private, no-store');
 });

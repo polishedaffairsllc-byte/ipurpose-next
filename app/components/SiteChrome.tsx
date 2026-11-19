@@ -7,6 +7,7 @@ import VideoBackground from './VideoBackground';
 import PixelInitializer from './PixelInitializer';
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  if (pathname.startsWith('/partnerships/universities/')) return children;
   if (pathname.startsWith('/partnerships/sdsn/') || pathname.startsWith('/partnerships/ug/')) return children;
   return <>
     {pathname !== '/foundhers-stage' && <PixelInitializer />}
