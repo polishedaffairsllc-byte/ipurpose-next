@@ -32,3 +32,45 @@ test('immutable source and trusted CI requirements are present', () => {
   assert.match(source, /\.conclusion == "success"/);
   assert.match(source, /RELEASE NOT AUTHORIZED/);
 });
+
+import { spawnSync } from 'node:child_process';
+
+// Exercise the exact shell block from the trusted workflow, without GitHub
+// credentials or network access. Each case must exit before the first API call.
+function trustedShell() {
+  const marker = '        run: |\n';
+  const index = source.indexOf(marker);
+  assert.notEqual(index, -1, 'trusted workflow must contain a shell run block');
+  const lines = source.slice(index + marker.length).split('\n');
+  return lines.filter(line => line.trim() !== '').map(line => {
+    assert.ok(line.startsWith('          '), 'unexpected shell indentation');
+    return line.slice(10);
+  }).join('\n');
+}
+
+test('actual trusted controller shell rejects disabled and emergency-stop states', () => {
+  const script = trustedShell();
+  for (const [enabled, emergencyStop, reason] of [
+    ['', '', 'disabled or unconfigured'],
+    ['false', 'false', 'disabled or unconfigured'],
+    ['true', '', 'Emergency stop active or unconfigured'],
+    ['true', 'true', 'Emergency stop active or unconfigured'],
+    ['TRUE', 'false', 'disabled or unconfigured'],
+  ]) {
+    const result = spawnSync('bash', ['-c', script], {
+      encoding: 'utf8',
+      timeout: 3000,
+      env: {
+        PATH: process.env.PATH,
+        ENABLED: enabled,
+        EMERGENCY_STOP: emergencyStop,
+        PR_NUMBER: '1',
+        REPOSITORY: 'example/no-network',
+        GH_TOKEN: '',
+      },
+    });
+    assert.equal(result.status, 1, result.stderr);
+    assert.match(result.stdout, new RegExp(reason));
+    assert.doesNotMatch(result.stdout + result.stderr, /Cannot inspect PR|curl:/);
+  }
+});
