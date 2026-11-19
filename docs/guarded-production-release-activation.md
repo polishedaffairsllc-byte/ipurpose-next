@@ -37,3 +37,12 @@ The monitor runs twice hourly and checks only HTTP availability, not business tr
 - Confirmed: this PR removes the duplicate CI deployment job on its branch, but main still contains it until merge.
 - Not confirmed: enforced protected main, required-check rules, Vercel Git production branch, negative authorization tests, rollback rehearsal.
 - Release automation remains **disabled**. A successful CI run does not override the blockers above.
+
+
+## Verification update — November 18, 2026 (after ruleset activation)
+- GitHub ruleset #27598298 (`iPurpose Production Protection`) exists, is active, and targets `~DEFAULT_BRANCH` (currently `main`). The branch API reports `protected: true`.
+- The ruleset requires PRs, strict up-to-date status checks from GitHub Actions for the five named CI checks, blocks non-fast-forward pushes and deletions, has no bypass actors, and requires zero approving reviews.
+- All five required CI checks passed on the latest commit of this draft PR (`b875ccf4abf90e48898e32d011b80790d481f72d`).
+- Vercel's linked project has a READY production deployment from `main` SHA `1f92b56ed560ab62557515e92ea550c5c6701992`; rollback candidates exist. A later READY production deployment has no Git metadata, so **single-path production release is not yet demonstrated**. Investigate manual/CLI production deployments and project Git production-branch settings before activation.
+- **Remaining hard gates:** verify GitHub ruleset enforcement by non-admin negative test; confirm production branch and no competing production deployment mechanisms; exercise safe preview and rollback; implement independently enforced, fail-closed low-risk auto-merge gate; audit logging, kill switch and notifications.
+- Zero required reviews is not a substitute for the independent risk gate. **No unattended merge or deployment authorization is active.**
