@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Redirect, Stack, useSegments } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { useOnboarding } from '../../context/OnboardingContext';
+import { SignupAdmissionGate } from '../../components/SignupAdmissionGate';
+import { acknowledgeSignupDisclosure, getSignupAdmission } from '../../lib/api';
 import { getOnboardingRedirect, type OnboardingRouteKind } from '../../lib/onboarding';
 import { theme } from '../../theme';
 
@@ -9,8 +12,34 @@ export default function AuthenticatedLayout() {
   const { user, loading: authLoading, signOut } = useAuth();
   const { onboarding, loading: onboardingLoading, error, refresh } = useOnboarding();
   const segments = useSegments();
+  const [admissionState, setAdmissionState] = useState<{ uid: string; status: 'checking' | 'required' | 'complete' | 'error' } | null>(null);
+  const [checkVersion, setCheckVersion] = useState(0);
+  // Never reuse a previous user's approval during an account switch.
+  const admission = admissionState && admissionState.uid === user?.uid ? admissionState.status : 'checking';
 
-  if (authLoading || (user && onboardingLoading)) {
+  useEffect(() => {
+    let active = true;
+    if (!user?.uid) {
+      setAdmissionState(null);
+      return () => { active = false; };
+    }
+    const uid = user.uid;
+    setAdmissionState({ uid, status: 'checking' });
+    getSignupAdmission()
+      .then(completed => { if (active) setAdmissionState({ uid, status: completed ? 'complete' : 'required' }); })
+      .catch(() => { if (active) setAdmissionState({ uid, status: 'error' }); });
+    return () => { active = false; };
+  }, [user?.uid, checkVersion]);
+
+  async function finishSignup() {
+    await acknowledgeSignupDisclosure();
+    // The first onboarding fetch may have been blocked before admission.
+    await refresh();
+    if (user?.uid) setAdmissionState({ uid: user.uid, status: 'complete' });
+  }
+
+
+  if (authLoading || (user && admission === 'checking')) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.cream }}>
         <ActivityIndicator color={theme.colors.plum} />
@@ -22,6 +51,20 @@ export default function AuthenticatedLayout() {
     return <Redirect href="/welcome" />;
   }
 
+  if (admission === 'error') {
+    return <SignupAdmissionGate unavailable onComplete={finishSignup}
+      onRetry={() => setCheckVersion(value => value + 1)} />;
+  }
+  if (admission === 'required') {
+    return <SignupAdmissionGate onComplete={finishSignup} />;
+  }
+  if (onboardingLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.cream }}>
+        <ActivityIndicator color={theme.colors.plum} />
+      </View>
+    );
+  }
   if (error || !onboarding) {
     return (
       <View style={styles.errorContainer}>

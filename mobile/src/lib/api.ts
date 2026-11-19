@@ -142,8 +142,37 @@ export async function updateCompanionTimezone(timezone: string): Promise<Compani
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }
-export async function sendMentorMessage(options: { message: string; conversationId?: string; responseMode?: ResponseMode }): Promise<MentorResponse> {
-  const response = await authorizedFetch('/api/ai', { method: 'POST', body: JSON.stringify({ message: options.message, responseMode: options.responseMode || 'balanced', ...(options.conversationId ? { conversationId: options.conversationId } : {}) }) });
+export interface AiConsentState {
+  granted: boolean;
+  version: string;
+  notice: string;
+  provider: string;
+  protocolVersion: number;
+}
+
+/** The server defines the current provider, disclosure and version. Never hardcode a grant. */
+export async function getAiConsent(): Promise<AiConsentState> {
+  return readJson<AiConsentState>(await authorizedFetch('/api/ai/consent', { method: 'GET' }));
+}
+export async function setAiConsent(granted: boolean, version: string): Promise<AiConsentState> {
+  return readJson<AiConsentState>(await authorizedFetch('/api/ai/consent', {
+    method: 'POST', body: JSON.stringify({ granted, version }),
+  }));
+}
+
+/** A stable identifier must be reused when an uncertain request is retried. */
+export function createCompassRequestId(): string {
+  return createClarityRequestId();
+}
+export async function sendMentorMessage(options: { message: string; requestId: string; conversationId?: string; responseMode?: ResponseMode }): Promise<MentorResponse> {
+  const response = await authorizedFetch('/api/ai/v2', {
+    method: 'POST',
+    body: JSON.stringify({
+      message: options.message, requestId: options.requestId,
+      responseMode: options.responseMode || 'balanced',
+      ...(options.conversationId ? { conversationId: options.conversationId } : {}),
+    }),
+  });
   return readJson<MentorResponse>(response);
 }
 
@@ -160,6 +189,23 @@ export async function putPurposeResults(body: import('./purposeCheck').PurposePa
 }
 export async function deletePurposeResults(): Promise<void> {
  await readJson(await authorizedFetch('/api/ai/purpose', { method: 'DELETE' }));
+}
+
+// Must match lib/signup/disclosure.ts. This acknowledges the legacy signup
+// disclosure only; it never grants the separate versioned OpenAI permission.
+const SIGNUP_AI_VERSION = 'compass-openai-2026-10-12';
+
+export async function getSignupAdmission(): Promise<boolean> {
+  const response = await authorizedFetch('/api/auth/complete-signup', { method: 'GET' }, true);
+  return (await readJson<{ completed: boolean }>(response)).completed;
+}
+export async function acknowledgeSignupDisclosure(): Promise<void> {
+  const response = await authorizedFetch('/api/auth/complete-signup', {
+    method: 'POST',
+    body: JSON.stringify({ granted: true, version: SIGNUP_AI_VERSION }),
+  }, true);
+  const result = await readJson<{ completed: boolean }>(response);
+  if (!result.completed) throw new Error('Account setup is incomplete. Please try again.');
 }
 
 export async function refreshEmailStatus(): Promise<boolean> {
