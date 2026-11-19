@@ -19,6 +19,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { BrandHeader } from '../../../components/BrandHeader';
+import { AiDataSharingControls } from '../../../components/AiDataSharingControls';
 import { VisualEnvironmentPicker } from '../../../components/VisualEnvironmentPicker';
 import { useAuth } from '../../../context/AuthContext';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
@@ -440,7 +441,13 @@ export default function AccountScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>4 · ACCOUNT &amp; SECURITY</Text>
+            <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>4 · AI DATA SHARING</Text>
+            <Text style={styles.sectionIntro}>Review the OpenAI provider notice, grant permission, or withdraw it at any time.</Text>
+            <AiDataSharingControls />
+          </View>
+
+          <View style={styles.section}>
+            <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>5 · ACCOUNT &amp; SECURITY</Text>
             {signOutError ? (
               <View style={[styles.errorCard, { backgroundColor: tokens.surfaceTint }]}>
                 <Ionicons color={theme.colors.deepIndigo} name="information-circle-outline" size={18} />
