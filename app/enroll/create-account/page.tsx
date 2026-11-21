@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirebaseAuth } from '@/lib/firebaseClient';
 import { trackSignUp } from '@/lib/analytics';
 import Link from 'next/link';
@@ -29,6 +29,7 @@ export default function CreateAccountPage() {
   const [password, setPassword] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   useEffect(() => {
     const verifySession = async () => {
@@ -73,14 +74,33 @@ export default function CreateAccountPage() {
         throw new Error('Enrollment verification failed');
       }
 
-      // Create Firebase account
+      if (!verification.email || email.trim().toLowerCase() !== verification.email.trim().toLowerCase()) {
+        throw new Error('Please use the same email address you used at checkout.');
+      }
       const auth = getFirebaseAuth();
-      const credential = await createUserWithEmailAndPassword(auth, email, password);
-      trackSignUp('email');
-      const user = credential.user;
+      let user = auth.currentUser;
+      if (!user || user.email?.trim().toLowerCase() !== email.trim().toLowerCase()) {
+        try {
+          const credential = await createUserWithEmailAndPassword(auth, email, password);
+          trackSignUp('email');
+          user = credential.user;
+        } catch (createError: any) {
+          if (createError.code !== 'auth/email-already-in-use') throw createError;
+          user = (await signInWithEmailAndPassword(auth, email, password)).user;
+        }
+      }
+      await user.reload();
+      if (!user.emailVerified) {
+        if (!verificationSent) {
+          await sendEmailVerification(user);
+          setVerificationSent(true);
+        }
+        throw new Error('Check your email for a verification link. After verifying, return here and continue.');
+      }
+
 
       // Create session cookie
-      const idToken = await user.getIdToken();
+      const idToken = await user.getIdToken(true);
       const cookieRes = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -110,7 +130,8 @@ export default function CreateAccountPage() {
       });
 
       if (!userRes.ok) {
-        throw new Error('Failed to create user record');
+        const result = await userRes.json().catch(() => ({}));
+        throw new Error(result.error || 'Failed to create user record');
       }
 
       // Redirect: accelerator buyers go to cohort registration,
@@ -231,7 +252,7 @@ export default function CreateAccountPage() {
                 disabled={submitLoading}
                 className="ipurpose-button-gradient w-full"
               >
-                {submitLoading ? 'Creating Account...' : 'Create Account'}
+                {submitLoading ? 'Please wait...' : verificationSent ? 'I verified my email — continue' : 'Create Account'}
               </button>
             </form>
 
