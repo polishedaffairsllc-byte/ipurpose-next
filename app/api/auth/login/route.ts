@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { deriveFounderContext } from "@/lib/isFounder";
 import { recordAuthEmailStatus } from '@/lib/trust/emailPolicy';
 import crypto from 'crypto';
+import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
 
 // Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
 export const runtime = "nodejs";
@@ -50,7 +51,8 @@ export async function POST(req: Request) {
     try {
       const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
       uid = decoded.uid;
-      await recordAuthEmailStatus(db, await firebaseAdmin.auth().getUser(uid));
+      const authAccount = await firebaseAdmin.auth().getUser(uid);
+      await recordAuthEmailStatus(db, authAccount);
       const userRef = db.collection('users').doc(uid);
       const userDoc = await userRef.get();
       const userData = userDoc.exists ? userDoc.data() : null;
@@ -97,7 +99,7 @@ export async function POST(req: Request) {
       // Reconciliation: migrate any pending entitlements keyed by email hash
       try {
         const email = decoded.email;
-        if (email) {
+        if (email && decoded.email_verified === true && ownsPurchaseEmail(authAccount, email)) {
           const normalized = String(email).trim().toLowerCase();
           const emailHash = crypto.createHash('sha256').update(normalized).digest('hex');
           const pendingRef = db.collection('pending_entitlements').doc(emailHash);
@@ -106,7 +108,7 @@ export async function POST(req: Request) {
             const pending = pendingDoc.data();
             const pendingEntitlements = pending?.entitlements || {};
 
-            if (Object.keys(pendingEntitlements).length > 0) {
+            if (pending?.claimed !== true && Object.keys(pendingEntitlements).length > 0) {
               // Merge pending entitlements onto the canonical user doc
               await userRef.set(
                 {
