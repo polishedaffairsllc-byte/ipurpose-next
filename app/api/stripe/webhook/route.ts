@@ -4,6 +4,7 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { trackServerPurchase } from '@/lib/ga4-server';
 import { sendMetaPurchaseEvent } from '@/lib/meta-capi';
 import crypto from 'crypto';
+import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -161,7 +162,10 @@ export async function POST(request: NextRequest) {
         const usersRef = db.collection('users');
         const querySnapshot = await usersRef.where('email', '==', email).limit(1).get();
 
-        if (!querySnapshot.empty) {
+        // Email in Firestore alone does not establish ownership.
+        const matchingUser = querySnapshot.empty ? null : await firebaseAdmin.auth().getUser(querySnapshot.docs[0].id);
+        const ownsEmail = matchingUser !== null && ownsPurchaseEmail(matchingUser, email);
+        if (!querySnapshot.empty && ownsEmail) {
           const userDoc = querySnapshot.docs[0];
           const uid = userDoc.id;
           await usersRef.doc(uid).set(
