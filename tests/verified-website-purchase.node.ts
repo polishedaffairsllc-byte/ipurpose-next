@@ -1,0 +1,10 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { verifiedWebsitePurchase } from '../lib/verifiedWebsitePurchase';
+const base = { id: 'cs_test_123', status: 'complete', payment_status: 'paid', mode: 'payment', customer: 'cus_123', customer_details: { email: 'Buyer@example.com' }, metadata: { product: 'accelerator', cohort: 'cohort' }, line_items: { data: [{ price: { id: 'price_acc' } }] } };
+const buyer = { email: 'buyer@example.com', emailVerified: true };
+const prices = { accelerator: ['price_acc', 'price_early'] };
+test('accepts the matching verified buyer and configured product', () => assert.equal(verifiedWebsitePurchase(base, buyer, prices)?.product, 'accelerator'));
+test('rejects unverified or different accounts', () => { assert.equal(verifiedWebsitePurchase(base, { ...buyer, emailVerified: false }, prices), null); assert.equal(verifiedWebsitePurchase(base, { ...buyer, email: 'other@example.com' }, prices), null); });
+test('rejects unpaid, wrong mode, and mismatched or missing price', () => { for (const session of [{...base, payment_status:'unpaid'}, {...base, mode:'subscription'}, {...base, line_items:{data:[{price:{id:'wrong'}}]}}, {...base, line_items:null}, {...base, metadata:{product:'unknown'}}]) assert.equal(verifiedWebsitePurchase(session, buyer, prices), null); });
+test('rejects disabled accounts and missing configured prices', () => { assert.equal(verifiedWebsitePurchase(base, {...buyer, disabled:true}, prices), null); assert.equal(verifiedWebsitePurchase(base, buyer, {accelerator:[]}), null); });
