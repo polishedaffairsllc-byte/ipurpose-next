@@ -73,7 +73,9 @@ test('Compass report modal requires a selected reason and keeps details after fa
     },
   }));
   assert.equal(button(tree, 'Submit report').props.disabled, true);
-  await press(tree, 'Inaccurate or misleading');
+  const reasonOption = tree.root.findAllByType('Pressable').find(n => text(n).includes('Inaccurate or misleading'));
+  assert.ok(reasonOption);
+  await act(async () => reasonOption.props.onPress());
   assert.equal(button(tree, 'Submit report').props.disabled, false);
   const input = tree.root.findAllByType('TextInput').find(n => n.props.accessibilityLabel === 'Report details');
   await act(async () => input.props.onChangeText('  Please check  '));
