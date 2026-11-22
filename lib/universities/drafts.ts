@@ -1,4 +1,34 @@
 import type { Institution } from './institutions';
+export type AuthoredUniversityEmail = { subject: string; body: string; html?: string };
+const trackedLinkPlaceholder = '[UNIQUE_TRACKED_PROPOSAL_LINK]';
+const recipientReleasePlaceholder = '{{RECIPIENT_RELEASE_URL}}';
+
+export function authoredUniversityEmail(email: AuthoredUniversityEmail, previewUrl: string | null) {
+  if (typeof email.subject !== 'string' || !email.subject.trim() || /[\r\n]/.test(email.subject) ||
+      typeof email.body !== 'string') throw new Error('Invalid authored university draft.');
+  if (email.html !== undefined) {
+    if (typeof email.html !== 'string' || email.body.split(recipientReleasePlaceholder).length !== 2 ||
+        email.html.split(recipientReleasePlaceholder).length !== 2 ||
+        !email.html.includes(`href="${recipientReleasePlaceholder}"`)) {
+      throw new Error('An HTML university draft requires one recipient release link in both formats.');
+    }
+    return {
+      ...email,
+      body: previewUrl ? email.body.replace(recipientReleasePlaceholder, () => previewUrl) : email.body,
+      html: previewUrl ? email.html.replace(recipientReleasePlaceholder, () => previewUrl) : email.html,
+      kind: 'initial_review_only' as const,
+    };
+  }
+  if (email.body.split(trackedLinkPlaceholder).length !== 2) {
+    throw new Error('An authored university draft requires a subject and one tracked link placeholder.');
+  }
+  return {
+    subject: email.subject,
+    body: previewUrl ? email.body.replace(trackedLinkPlaceholder, () => previewUrl) : email.body,
+    kind: 'initial_review_only' as const,
+  };
+}
+
 /** Plain-text review artifacts only. This module cannot send or schedule mail. */
 export function draftUniversityEmail(institution: Institution, recipientName: string | null, previewUrl: string | null, reviewed?: { addressee: string; context: string; rationale: string }) {
   const greeting = reviewed?.addressee || recipientName || (institution.primary_office ? `${institution.primary_office} team` : `${institution.institution_name} team`);

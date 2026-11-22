@@ -2,6 +2,7 @@ import 'server-only';
 import type { Firestore } from 'firebase-admin/firestore';
 import { universityPreviewEnabled, type UniversityLink } from './links';
 import { presentationFingerprint } from './publication';
+import type { AuthoredUniversityEmail } from './drafts';
 export const PRESENTATION_COLLECTION = 'proposalOutreachPresentations';
 export const ASSET_COLLECTION = 'proposalOutreachAssets';
 export const PRESENTATION_VERSION = 'reconciled-2026-11-07';
@@ -11,6 +12,7 @@ export type UniversityPresentation = {
   slides: { number: number; title: string; body: string; paragraphs: string[] }[];
   assets: Record<string, { id: string; sha256: string; bytes: number; content_type: string }>;
   pdf_filename: string;
+  authored_email?: AuthoredUniversityEmail;
   draft_context?: string; draft_rationale?: string;
   conversation_box?: [number, number, number, number];
 };

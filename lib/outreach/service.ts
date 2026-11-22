@@ -1,5 +1,6 @@
 import 'server-only';
 import { resolveUniversityLink, CONTACT_COLLECTION } from '@/lib/universities/links';
+import { PUBLICATION_COLLECTION } from '@/lib/universities/publication';
 import { proposalById } from './registry';
 import { createHash } from 'node:crypto';
 import { FieldValue, Timestamp, type Firestore } from 'firebase-admin/firestore';
@@ -89,8 +90,20 @@ export async function readOutreach(db: Firestore, filters: OutreachFilters, envi
   rows.sort((a, b) => order.get(a.event_id)! - order.get(b.event_id)! || a.session_id.localeCompare(b.session_id) || a.sequence - b.sequence);
   const recipientOptions: Record<string, { label: string; institution_id: string }> = {};
   try {
-    const contacts = await db.collection(CONTACT_COLLECTION).where('environment', '==', environment).limit(250).get();
-    for (const doc of contacts.docs) { const contact = doc.data(); if ((contact.contact_status !== 'qa_only' || (filters.includeInternal && environment === 'preview')) && typeof contact.institution_id === 'string') recipientOptions[doc.id] = { label: contact.recipient_name || contact.primary_office || 'Unassigned contact', institution_id: contact.institution_id }; }
+    const [contacts, publications] = await Promise.all([
+      db.collection(CONTACT_COLLECTION).limit(250).get(),
+      environment === 'production' ? db.collection(PUBLICATION_COLLECTION).where('environment', '==', 'production').limit(250).get() : null,
+    ]);
+    const publishedContacts = new Map((publications?.docs || []).flatMap(doc => {
+      const publication = doc.data();
+      return publication.enabled === true && publication.review_status === 'approved_for_recipient_access' && publication.expiresAt instanceof Timestamp && publication.expiresAt.toMillis() > now.getTime()
+        ? [[publication.contact_id, publication.institution_id] as const] : [];
+    }));
+    for (const doc of contacts.docs) {
+      const contact = doc.data();
+      const inEnvironment = contact.environment === environment || (environment === 'production' && contact.environment === 'preview' && publishedContacts.get(doc.id) === contact.institution_id);
+      if (inEnvironment && (contact.contact_status !== 'qa_only' || (filters.includeInternal && environment === 'preview')) && typeof contact.institution_id === 'string') recipientOptions[doc.id] = { label: contact.recipient_name || contact.primary_office || 'Unassigned contact', institution_id: contact.institution_id };
+    }
   } catch { /* Existing metrics remain readable if optional contact lookup is unavailable. */ }
   return {
     recipientOptions,

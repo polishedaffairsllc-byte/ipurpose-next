@@ -26,15 +26,15 @@ export default function UniversityReviewClient() {
   }, []);
   const row = data?.rows.find(item => item.institution_id === selected);
   const copy = async (kind: 'draft' | 'link') => {
-    if (!row) return;
+    if (!row || row.email_release_pending) return;
     try {
       if (kind === 'draft' && navigator.clipboard?.write && typeof ClipboardItem !== 'undefined') {
-        await navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([row.email_body], { type: 'text/plain' }), 'text/html': new Blob([universityEmailHtml(row.email_body)], { type: 'text/html' }) })]);
+        await navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([row.email_body], { type: 'text/plain' }), 'text/html': new Blob([row.email_html || universityEmailHtml(row.email_body)], { type: 'text/html' }) })]);
         setCopyStatus('Email draft copied with clickable links.');
       } else {
         if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
         await navigator.clipboard.writeText(kind === 'draft' ? row.email_body : row.email_preview_url || '');
-        setCopyStatus(kind === 'draft' ? 'Email draft copied with complete URLs.' : 'Complete private preview link copied.');
+        setCopyStatus(kind === 'draft' ? 'Email draft copied with complete URLs.' : 'Recipient proposal link copied.');
       }
     } catch {
       if (draft.current) { const range = document.createRange(); range.selectNodeContents(draft.current); const selection = window.getSelection(); selection?.removeAllRanges(); selection?.addRange(range); }
@@ -43,7 +43,7 @@ export default function UniversityReviewClient() {
   };
   return <main className="mx-auto max-w-5xl px-5 py-12 text-deepIndigo">
     <h1 className="text-3xl font-semibold">University outreach review</h1>
-    <p className="my-4">Private draft queue · Each institution page and matching email require separate approval. No sending, scheduling or publication action is available here.</p>
+    <p className="my-4">Review personalized proposals and copy their verified recipient links.</p>
     <a className="underline" href="/admin/launch-metrics">Proposal activity dashboard</a>
     {error && <p role="status" className="my-6">{error}</p>}
     {data && <>
@@ -57,12 +57,14 @@ export default function UniversityReviewClient() {
         <h3 className="mt-6 font-semibold">Contact verification</h3><p>{row.recipient_name || 'Named contact not verified'} · {row.recipient_email || 'Work email not verified'}</p><p>{row.primary_office || 'Responsible office needs confirmation'} · {row.contact_status}</p>
         <a className="break-all underline" href={row.verified_source_url} target="_blank" rel="noopener noreferrer">Verification source</a><p>Checked {row.source_checked_at}</p>
         {row.notes.length > 0 && <ul className="my-4 list-disc pl-5">{row.notes.map((note, i) => <li key={i}>{String(note)}</li>)}</ul>}
+        {row.live_url && <a className="my-5 inline-block rounded bg-deepIndigo px-4 py-3 text-white" href={row.live_url} target="_blank" rel="noopener noreferrer">Open recipient proposal</a>}
         {row.preview_url && <a className="my-5 inline-block rounded bg-deepIndigo px-4 py-3 text-white" href={row.preview_url} target="_blank" rel="noopener noreferrer">Open private proposal preview</a>}
         <p>{row.analytics_status}</p><p className="my-3 break-all text-sm">Tracking identifier: {row.outreach_id || 'Existing outreach preserved'}</p>
         {row.pdf_url && <a className="my-3 block underline" href={row.pdf_url} download>Download complete eight-slide PDF</a>}
         {row.presentation_copy && <details className="my-5"><summary className="cursor-pointer font-semibold">Full eight-slide copy</summary>{row.presentation_copy.map(slide=><section key={slide.number} className="my-4 border-t pt-4"><h3 className="font-semibold">Slide {slide.number} — {slide.title}</h3><p className="my-3 whitespace-pre-wrap leading-relaxed">{slide.body}</p></section>)}</details>}
         <h3 className="mt-6 font-semibold">{row.already_contacted ? 'Optional follow-up draft — prior outreach log required' : 'Email draft — unsent'}</h3>
-        {!row.already_contacted && row.email_preview_url && <><p className="my-3">These drafts use private preview links. The ipurposesoul.com proposal links remain unavailable until publication is approved.</p><div className="my-3 flex flex-wrap gap-3"><button type="button" className="rounded border px-4 py-3" onClick={() => copy('draft')}>Copy email draft</button><button type="button" className="rounded border px-4 py-3" onClick={() => copy('link')}>Copy private preview link</button></div><p role="status" className="my-3">{copyStatus}</p></>}
+        {row.email_release_pending && <p role="status">The recipient link will be available when this personalized proposal is published.</p>}
+        {!row.already_contacted && row.live_url && <><div className="my-3 flex flex-wrap gap-3"><button type="button" className="rounded border px-4 py-3" onClick={() => copy('draft')}>Copy email draft</button><button type="button" className="rounded border px-4 py-3" onClick={() => copy('link')}>Copy recipient link</button></div><p role="status" className="my-3">{copyStatus}</p></>}
         <p className="my-3 font-semibold">Subject: {row.email_subject}</p><pre ref={draft} className="whitespace-pre-wrap break-words font-sans leading-relaxed [overflow-wrap:anywhere]">{universityEmailParts(row.email_body).map((part,i)=>part.href?<a key={i} className="underline" href={part.href} target="_blank" rel="noopener noreferrer">{part.text}</a>:part.text)}</pre>
       </article>}
       <details className="my-8"><summary className="cursor-pointer font-semibold">Archived — excluded from active outreach ({data.archived_rows.length})</summary><p className="my-3">Presentations and history are preserved for reference. These institutions are excluded from the active queue and its CSV export.</p><ul className="list-disc pl-5">{data.archived_rows.map(item=><li key={item.institution_id} className="my-3">{item.institution_name} · excluded from active outreach{item.preview_url && <> · <a className="underline" href={item.preview_url} target="_blank" rel="noopener noreferrer">Private historical presentation</a></>}{item.pdf_url && <> · <a className="underline" href={item.pdf_url} download>Archived PDF</a></>}</li>)}</ul></details>
