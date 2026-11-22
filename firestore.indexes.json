@@ -81,6 +81,34 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "enrollments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "email",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "product",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "enrollments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "stripeCustomerId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "product",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
