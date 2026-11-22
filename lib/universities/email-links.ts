@@ -4,15 +4,19 @@ export function universityEmailPreviewUrl(token: string) {
   if (!/^[A-Za-z0-9_-]{43}$/.test(token)) throw new Error('Invalid private review token.');
   return `${UNIVERSITY_EMAIL_PREVIEW_ORIGIN}/p/${token}?preview=1`;
 }
+export function universityRecipientUrl(token: string) {
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token)) throw new Error('Invalid university recipient token.');
+  return `https://ipurposesoul.com/p/${token}`;
+}
 export function universityEmailParts(body: string): Array<{ text: string; href?: string }> {
   const parts: Array<{ text: string; href?: string }> = [];
-  const pattern = /https:\/\/[^\s]+|iPurpose|Renita Hamilton/g;
+  const pattern = /\[([^\]]+)\]\((https:\/\/[^\s)]+)\)|https:\/\/[^\s]+|iPurpose|Renita Hamilton/g;
   let position = 0;
   for (const match of body.matchAll(pattern)) {
     if (match.index! > position) parts.push({ text: body.slice(position, match.index) });
-    const text = match[0];
-    parts.push({ text, href: text.startsWith('https://') ? text : text === 'iPurpose' ? 'https://ipurposesoul.com' : 'https://www.mshmltn.com' });
-    position = match.index! + text.length;
+    const text = match[1] || match[0];
+    parts.push({ text, href: match[2] || (text.startsWith('https://') ? text : text === 'iPurpose' ? 'https://ipurposesoul.com' : 'https://www.mshmltn.com') });
+    position = match.index! + match[0].length;
   }
   if (position < body.length) parts.push({ text: body.slice(position) });
   return parts;
