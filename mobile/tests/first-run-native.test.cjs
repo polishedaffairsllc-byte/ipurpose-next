@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const { harness } = require('./helpers/native-harness.cjs');
+const { harness, React, render, text, act } = require('./helpers/native-harness.cjs');
 
 function apiHarness() {
   const h = harness();
@@ -71,4 +71,28 @@ test('first-run validation prevents malformed writes even when a user is signed 
   h.mocks.fetch = async url => { calls.push(url); return Response.json({ uid: 'new-user', state: { stage: 'complete' } }); };
   await assert.rejects(api.advanceNativeFirstRun({ stage: 'intro' }), /Invalid first-run state/);
   assert.deepEqual(calls, []);
+});
+
+test('founder-approved chooser holds place after failed save; retries the selected route without AI consent', async () => {
+  const { h } = apiHarness();
+  const Chooser = h.load('components/FirstRunChoiceScreen.tsx').FirstRunChoiceScreen;
+  const saved = []; let failOnce = true;
+  const tree = await render(React.createElement(Chooser, {
+    onSelect: async choice => {
+      saved.push(choice);
+      if (failOnce) throw new Error('Temporary connection issue');
+    },
+  }));
+  const clarity = tree.root.findAllByType('Pressable').find(node => node.props.accessibilityLabel?.startsWith('Clarity Check.'));
+  assert.ok(clarity);
+  assert.match(text(tree.root), /Both remain available later from Home/);
+  await act(async () => clarity.props.onPress());
+  assert.match(text(tree.root), /Temporary connection issue/);
+  failOnce = false;
+  const purpose = tree.root.findAllByType('Pressable').find(node => node.props.accessibilityLabel?.startsWith('Purpose Path.'));
+  assert.ok(purpose);
+  await act(async () => purpose.props.onPress());
+  assert.deepEqual(saved, ['clarity', 'purpose']);
+  assert.doesNotMatch(text(tree.root), /Temporary connection issue/);
+  await act(async () => tree.unmount());
 });
