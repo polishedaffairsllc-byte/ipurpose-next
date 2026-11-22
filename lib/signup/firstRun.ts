@@ -17,6 +17,20 @@ function initialState(user: UserRecord, welcome: boolean): FirstRunRecord {
   return Date.parse(user.metadata.creationTime) < Date.parse(SIGNUP_REQUIRED_FROM)
     ? { stage: 'complete' } : { stage: welcome ? 'choice' : 'welcome' };
 }
+/**
+ * The legacy Welcome-completed flag predates the persisted first-run record.
+ * Use the same effective state in GET and transactional POST validation so a
+ * client never sees "choice" but gets a 409 when advancing to "intro".
+ *
+ * This does not grant AI permission or skip the new-account admission gate.
+ */
+export function reconcileLegacyWelcome(state: FirstRunRecord, profile: unknown): FirstRunRecord {
+  const data = profile && typeof profile === 'object' ? profile as { introVideos?: { hasCompletedWelcome?: unknown } } : {};
+  return state.stage === 'welcome' && data.introVideos?.hasCompletedWelcome === true
+    ? { stage: 'choice' }
+    : state;
+}
+
 export async function getFirstRun(db: Firestore, user: UserRecord): Promise<FirstRunRecord> {
   await requireCompletedSignup(db, user);
   const [saved, profile] = await Promise.all([
@@ -24,7 +38,7 @@ export async function getFirstRun(db: Firestore, user: UserRecord): Promise<Firs
     db.collection('users').doc(user.uid).get(),
   ]);
   const state = saved.exists ? parseFirstRun(saved.data()?.state) : initialState(user, profile.data()?.introVideos?.hasCompletedWelcome === true);
-  return state.stage === 'welcome' && profile.data()?.introVideos?.hasCompletedWelcome === true ? { stage: 'choice' } : state;
+  return reconcileLegacyWelcome(state, profile.data());
 }
 export function canAdvanceFirstRun(prior: FirstRunRecord, next: FirstRunRecord): boolean {
   if (JSON.stringify(prior) === JSON.stringify(next)) return true;
@@ -44,7 +58,10 @@ export async function advanceFirstRun(db: Firestore, user: UserRecord, input: un
     if (deleting.exists) throw new CompanionSafetyError('Account deletion is in progress.', 409);
     const fresh = await verifyIdentity();
     if (fresh.uid !== user.uid || fresh.metadata.creationTime !== user.metadata.creationTime) throw new CompanionSafetyError('Your signed-in identity changed. Please retry.', 409);
-    const prior = saved.exists ? parseFirstRun(saved.data()?.state) : initialState(user, profile.data()?.introVideos?.hasCompletedWelcome === true);
+    const prior = reconcileLegacyWelcome(
+      saved.exists ? parseFirstRun(saved.data()?.state) : initialState(user, profile.data()?.introVideos?.hasCompletedWelcome === true),
+      profile.data(),
+    );
     if (!canAdvanceFirstRun(prior, next)) throw new CompanionSafetyError('Finish the current starting point step before continuing.', 409);
     tx.set(ref, { state: next, updatedAt: new Date() }, { merge: true });
   });
