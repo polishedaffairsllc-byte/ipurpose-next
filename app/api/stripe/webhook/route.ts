@@ -466,6 +466,25 @@ export async function POST(request: NextRequest) {
         console.error('Error sending founder notification:', founderEmailErr);
       }
 
+    } else if (event.type === 'charge.refunded') {
+      const charge = event.data.object as Stripe.Charge;
+      const paymentIntent = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent?.id;
+      if (!paymentIntent) throw new Error('Refund has no payment intent; manual reconciliation required');
+      const stripe = getStripe();
+      const sessions = await stripe.checkout.sessions.list({ payment_intent: paymentIntent, limit: 2 });
+      if (sessions.data.length !== 1 || sessions.has_more) throw new Error('Refund checkout could not be uniquely identified');
+      const order = sessions.data[0];
+      const product = order.metadata?.product || '';
+      const map: Record<string, string> = { starter_pack: 'starterPack', ai_blueprint: 'aiBlueprint', accelerator: 'accelerator' };
+      const key = map[product];
+      if (!key) throw new Error('Refund product needs manual reconciliation');
+      const db = firebaseAdmin.firestore();
+      const orderRef = db.collection('enrollments').doc(order.id);
+      const complete = charge.amount > 0 && charge.amount_refunded >= charge.amount;
+      await orderRef.set({ refundStatus: complete ? 'full_review' : 'partial_review', refundAmount: charge.amount_refunded, updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      // Preserve access until ownership, later purchases and the refund terms can be reconciled.
+      // An order record provides a durable action rather than silently ignoring the refund.
+
     // ── Subscription cancelled / ended ──────────────────────────────────────
     } else if (
       event.type === 'customer.subscription.deleted' ||
@@ -511,15 +530,15 @@ export async function POST(request: NextRequest) {
       const userDoc = snap.docs[0];
       const uid = userDoc.id;
 
-      // Revoke access across all field paths the codebase reads from
+      // Clear only Deepen-specific tier values; preserve independent purchases.
+      const current = userDoc.data() || {};
+      const wasDeepenTier = String(current.entitlement?.tier || '').toUpperCase() === 'DEEPENING';
+      const wasDeepenTopTier = String(current.entitlementTier || '').toUpperCase() === 'DEEPENING';
       await usersRef.doc(uid).set(
         {
-          entitlement: {
-            status: 'cancelled',
-            tier: 'FREE',
-            cancelledAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-          },
-          entitlementTier: 'FREE',
+          ...(wasDeepenTier ? { entitlement: { status: 'cancelled', tier: 'FREE', cancelledAt: firebaseAdmin.firestore.FieldValue.serverTimestamp() } } : {}),
+          entitlements: { deepen: false },
+          ...(wasDeepenTopTier ? { entitlementTier: 'FREE' } : {}),
           membership: {
             status: 'cancelled',
             tier: 'FREE',
