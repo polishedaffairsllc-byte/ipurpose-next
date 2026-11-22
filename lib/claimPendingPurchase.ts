@@ -8,11 +8,24 @@ export async function claimPendingPurchase(db: Firestore, emailHash: string, uid
     const pendingSnap = await tx.get(pendingRef);
     if (!pendingSnap.exists) return false;
     const pending = pendingSnap.data();
-    const entitlements = pending?.entitlements || {};
-    if (pending?.claimed === true || Object.keys(entitlements).length === 0) return false;
+    if (!pending || pending.claimed === true) return false;
+    const { deepen, ...entitlements } = pending.entitlements || {};
+    if (deepen !== true && Object.keys(entitlements).length === 0) return false;
+
     const userSnap = await tx.get(userRef);
-    const existing = userSnap.data()?.entitlements || {};
-    tx.set(userRef, { entitlements: { ...existing, ...entitlements }, updatedAt: timestamp }, { merge: true });
+    const user = userSnap.data();
+    const existing = user?.entitlements || {};
+    const legacySession = pending.product === 'deepen_membership' && Array.isArray(pending.sessions)
+      ? pending.sessions.at(-1)
+      : undefined;
+    const deepenSession = pending.deepenPurchaseSessionId ?? legacySession;
+    const alreadyHasDeepen = existing.deepen === true && user?.deepenPurchaseSessionId;
+    const grantDeepen = deepen === true && !alreadyHasDeepen;
+    tx.set(userRef, {
+      entitlements: { ...existing, ...entitlements, ...(grantDeepen ? { deepen: true } : {}) },
+      ...(grantDeepen && typeof deepenSession === 'string' ? { deepenPurchaseSessionId: deepenSession } : {}),
+      updatedAt: timestamp,
+    }, { merge: true });
     tx.set(pendingRef, { claimed: true, claimedAt: timestamp, claimedByUid: uid }, { merge: true });
     return true;
   });
@@ -26,7 +39,16 @@ export async function recordPendingPurchase(db: Firestore, emailHash: string, or
     const existing = snap.data() || {};
     const sessions: string[] = Array.isArray(existing.sessions) ? existing.sessions : [];
     if (sessions.includes(order.sessionId)) return false;
-    tx.set(ref, {email:order.email, entitlements:{...(existing.entitlements || {}),[order.entitlementKey]:true}, sessions:[...sessions,order.sessionId], product:order.product, cohort:order.cohort, updatedAt:timestamp, claimed:false}, {merge:true});
+    tx.set(ref, {
+      email: order.email,
+      entitlements: { ...(existing.entitlements || {}), [order.entitlementKey]: true },
+      sessions: [...sessions, order.sessionId],
+      product: order.product,
+      cohort: order.cohort,
+      ...(order.entitlementKey === 'deepen' ? { deepenPurchaseSessionId: order.sessionId } : {}),
+      updatedAt: timestamp,
+      claimed: false,
+    }, { merge: true });
     return true;
   });
 }
