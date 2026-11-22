@@ -79,8 +79,8 @@ export async function POST(request: NextRequest) {
         cohort,
         cohortStartDate,
         status: 'paid',
-        createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-      });
+        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
 
       console.log('Enrollment recorded:', sessionId);
 
@@ -233,7 +233,7 @@ export async function POST(request: NextRequest) {
         const firstName = session.customer_details?.name?.split(' ')[0] || '';
 
         if (!resendApiKey) {
-          console.warn('RESEND_API_KEY not configured. Skipping fulfillment email.');
+          throw new Error('Fulfillment email provider is not configured');
         } else if (email) {
           const { Resend } = await import('resend');
           const resend = new Resend(resendApiKey);
@@ -414,12 +414,15 @@ export async function POST(request: NextRequest) {
             to: email,
             subject: emailSubject,
             html: emailHtml,
-          });
-
-          console.log(`${productDisplayName} fulfillment email sent:`, result);
+          }, { idempotencyKey: `purchase/${sessionId}/customer` });
+          if (result.error || !result.data?.id) throw new Error('Fulfillment email was not accepted by provider');
+          await enrollmentRef.set({ fulfillmentEmail: { status: 'accepted', providerId: result.data.id } }, { merge: true });
+          console.log(`${productDisplayName} fulfillment email accepted`);
         }
       } catch (emailErr) {
         console.error('Error sending fulfillment email:', emailErr);
+        await enrollmentRef.set({ fulfillmentEmail: { status: 'needs_retry' } }, { merge: true });
+        throw emailErr;
       }
 
       // Send founder notification email
@@ -469,7 +472,7 @@ export async function POST(request: NextRequest) {
             to: founderEmail,
             subject: `🎉 New Purchase: ${productDisplayName} from ${email}`,
             html: founderEmailHtml,
-          });
+          }, { idempotencyKey: `purchase/${sessionId}/founder` });
 
           console.log('Founder purchase notification sent:', founderResult);
         }
