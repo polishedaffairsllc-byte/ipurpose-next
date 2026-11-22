@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
 import { recordPendingPurchase } from '@/lib/claimPendingPurchase';
 import { reconcileRefund } from '@/lib/reconcileRefund';
+import { reconcileDeepenCancellation } from '@/lib/reconcileDeepenCancellation';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -64,6 +65,15 @@ export async function POST(request: NextRequest) {
       const product = session.metadata?.product || 'accelerator';
       const cohort = session.metadata?.cohort || 'founding-2026';
       const cohortStartDate = session.metadata?.cohortStartDate || '';
+      if (product === 'deepen_membership') {
+        const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
+        if (!subscriptionId) throw new Error('Deepen purchase is missing subscription identity');
+        const currentSubscription = await getStripe().subscriptions.retrieve(subscriptionId);
+        if (['canceled', 'unpaid', 'incomplete_expired'].includes(currentSubscription.status)) {
+          console.warn('Ignoring purchase event for an ended subscription');
+          return NextResponse.json({ received: true });
+        }
+      }
 
       if (!customerId || !email) {
         throw new Error('Paid checkout is missing customer or email');
@@ -489,135 +499,20 @@ export async function POST(request: NextRequest) {
       const complete = charge.amount > 0 && charge.amount_refunded >= charge.amount;
       await reconcileRefund(firebaseAdmin.firestore(), { sessionId:order.id, email, product, entitlementKey:key, amountRefunded:charge.amount_refunded, full:complete }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
 
-    // ── Subscription cancelled / ended ──────────────────────────────────────
-    } else if (
-      event.type === 'customer.subscription.deleted' ||
-      event.type === 'customer.subscription.updated'
-    ) {
-      const subscription = event.data.object as Stripe.Subscription;
-
-      // Only act on subscription.updated if the status is now cancelled/unpaid
-      if (
-        event.type === 'customer.subscription.updated' &&
-        subscription.status !== 'canceled' &&
-        subscription.status !== 'unpaid'
-      ) {
-        return NextResponse.json({ received: true });
-      }
-
-      const customerId = subscription.customer as string;
-
-      if (!customerId) {
-        console.warn('[Unsubscribe] No customerId on subscription event:', subscription.id);
-        return NextResponse.json({ received: true });
-      }
-
-      const db = firebaseAdmin.firestore();
-      const usersRef = db.collection('users');
-
-      // Find the user by stripeCustomerId stored at purchase time
-      const querySnapshot = await usersRef
-        .where('entitlement.stripeCustomerId', '==', customerId)
-        .limit(1)
-        .get();
-
-      // Fallback: search membership.stripeCustomerId
-      const snap = !querySnapshot.empty
-        ? querySnapshot
-        : await usersRef.where('membership.stripeCustomerId', '==', customerId).limit(1).get();
-
-      if (snap.empty) {
-        // Keep unmatched cancellations visible for an operator; do not silently lose them.
-        await db.collection('subscription_reconciliation').doc(subscription.id).set({
-          status: 'needs_review', stripeCustomerId: customerId, subscriptionStatus: subscription.status,
-          updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
-        return NextResponse.json({ received: true });
-      }
-
-      const userDoc = snap.docs[0];
-      const uid = userDoc.id;
-
-      // Clear only Deepen-specific tier values; preserve independent purchases.
-      const current = userDoc.data() || {};
-      const wasDeepenTier = String(current.entitlement?.tier || '').toUpperCase() === 'DEEPENING';
-      const wasDeepenTopTier = String(current.entitlementTier || '').toUpperCase() === 'DEEPENING';
-      await usersRef.doc(uid).set(
-        {
-          ...(wasDeepenTier ? { entitlement: { status: 'cancelled', tier: 'FREE', cancelledAt: firebaseAdmin.firestore.FieldValue.serverTimestamp() } } : {}),
-          entitlements: { deepen: false },
-          ...(wasDeepenTopTier ? { entitlementTier: 'FREE' } : {}),
-          membership: {
-            status: 'cancelled',
-            tier: 'FREE',
-            cancelledAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-          },
-          updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      console.log(`[Unsubscribe] Access revoked for uid=${uid}, customerId=${customerId}`);
-
-      // Optional: send a cancellation confirmation email
-      try {
-        const resendApiKey = process.env.RESEND_API_KEY;
-        const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@ipurposesoul.com';
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipurposesoul.com';
-
-        if (resendApiKey) {
-          const userEmail = userDoc.data()?.email as string | undefined;
-          const firstName = (userDoc.data()?.displayName as string | undefined)?.split(' ')[0] || '';
-
-          if (userEmail) {
-            const { Resend } = await import('resend');
-            const resend = new Resend(resendApiKey);
-
-            await resend.emails.send({
-              from: fromEmail,
-              to: userEmail,
-              subject: `Your iPurpose Deepen Membership has been cancelled`,
-              html: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { margin: 0; padding: 0; background: #f8f6f3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #2A2A2A; }
-    .wrapper { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-    .card { background: #ffffff; border-radius: 16px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(156,136,255,0.08); }
-    .logo { text-align: center; font-size: 28px; font-weight: 700; color: #6B5B95; margin-bottom: 8px; }
-    .tagline { text-align: center; font-size: 14px; color: #9C88FF; font-style: italic; margin-bottom: 32px; }
-    p { font-size: 16px; line-height: 1.7; color: #444; margin: 0 0 16px 0; }
-    .cta { display: inline-block; background: linear-gradient(135deg, #9C88FF, #6B5B95); color: #fff !important; text-decoration: none; padding: 12px 28px; border-radius: 50px; font-weight: 600; font-size: 15px; }
-    .footer { text-align: center; font-size: 12px; color: #999; margin-top: 24px; }
-    .footer a { color: #9C88FF; text-decoration: none; }
-  </style>
-</head>
-<body>
-<div class="wrapper">
-  <div class="card">
-    <div class="logo">iPurpose</div>
-    <div class="tagline">Where Alignment Meets Action</div>
-    <p>Hi${firstName ? ` ${firstName}` : ''},</p>
-    <p>Your Deepen Membership has been cancelled and your access has ended. We're grateful you were part of the community.</p>
-    <p>If you'd like to rejoin in the future, you're always welcome back.</p>
-    <div style="text-align:center; margin: 24px 0;">
-      <a href="${siteUrl}/deepen" class="cta">Rejoin Deepen →</a>
-    </div>
-    <p style="font-size:14px;color:#777;">Questions? Just reply to this email.</p>
-    <p style="font-size:14px;color:#777;">With purpose,<br><strong>Renita Hamilton</strong><br>Founder, iPurpose</p>
-  </div>
-  <div class="footer">© ${new Date().getFullYear()} iPurpose · <a href="${siteUrl}">ipurposesoul.com</a><br><span style="font-size:11px;color:#bbb;">You received this because you were a Deepen member. &nbsp;·&nbsp; <a href="${siteUrl}/api/unsubscribe?email=${encodeURIComponent(userEmail)}" style="color:#bbb;text-decoration:underline;">Unsubscribe</a></span></div>
-</div>
-</body>
-</html>`,
-            });
-
-            console.log(`[Unsubscribe] Cancellation email sent to ${userEmail}`);
-          }
-        }
-      } catch (emailErr) {
-        console.error('[Unsubscribe] Error sending cancellation email:', emailErr);
+    // Verify current Stripe state so an old event cannot cancel a renewed membership.
+    } else if (event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.updated') {
+      const incoming = event.data.object as Stripe.Subscription;
+      const customerId = typeof incoming.customer === 'string' ? incoming.customer : incoming.customer?.id;
+      if (!customerId) throw new Error('Subscription event missing customer');
+      const stripe = getStripe();
+      const current = await stripe.subscriptions.retrieve(incoming.id);
+      if (!['canceled', 'unpaid'].includes(current.status)) return NextResponse.json({ received: true });
+      const other = await stripe.subscriptions.list({ customer: customerId, status: 'all', limit: 100 });
+      const possiblyActive = other.has_more || other.data.some(sub => sub.id !== incoming.id && !['canceled', 'unpaid', 'incomplete_expired'].includes(sub.status));
+      if (possiblyActive) {
+        await firebaseAdmin.firestore().collection('subscription_reconciliation').doc(incoming.id).set({ status:'needs_review', reason:'other_or_paginated_subscriptions', updatedAt:firebaseAdmin.firestore.FieldValue.serverTimestamp() }, {merge:true});
+      } else {
+        await reconcileDeepenCancellation(firebaseAdmin.firestore(), customerId, incoming.id, firebaseAdmin.firestore.FieldValue.serverTimestamp());
       }
     }
 
