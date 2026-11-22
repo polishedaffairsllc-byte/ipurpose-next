@@ -152,3 +152,35 @@ test('a new account without completed Welcome cannot skip straight to the choose
     { status: 409 },
   );
 });
+
+test('existing post-cutoff users with completed Clarity are not forced through a new Welcome journey', async () => {
+  const h = fixture();
+  await h.signup.completeSignup(h.db, h.user, h.input, async () => h.user);
+  const firstRun = h.load('lib/signup/firstRun.ts');
+  const parent = h.db.collection('users').doc(h.user.uid);
+  await parent.set({ compassOnboarding: { status: 'complete' } }, { merge: true });
+  assert.deepEqual(await firstRun.getFirstRun(h.db, h.user), { stage: 'complete' });
+  assert.deepEqual(await firstRun.advanceFirstRun(h.db, h.user, { stage: 'complete' }, async () => h.user), { stage: 'complete' });
+});
+
+test('explicit saved first-run state is not overwritten by the existing-account fallback', async () => {
+  const h = fixture();
+  await h.signup.completeSignup(h.db, h.user, h.input, async () => h.user);
+  const firstRun = h.load('lib/signup/firstRun.ts');
+  const parent = h.db.collection('users').doc(h.user.uid);
+  await parent.set({ compassOnboarding: { status: 'complete' } }, { merge: true });
+  await parent.collection('onboarding').doc('firstRun').set({ state: { stage: 'experience', choice: 'clarity' } });
+  assert.deepEqual(await firstRun.getFirstRun(h.db, h.user), { stage: 'experience', choice: 'clarity' });
+  assert.deepEqual(await firstRun.advanceFirstRun(h.db, h.user, { stage: 'complete', choice: 'clarity' }, async () => h.user),
+    { stage: 'complete', choice: 'clarity' });
+});
+
+test('partial Clarity retains first-run eligibility even with an early archetype', async () => {
+  const h = fixture();
+  await h.signup.completeSignup(h.db, h.user, h.input, async () => h.user);
+  await h.db.collection('users').doc(h.user.uid).set({
+    compassOnboarding: { status: 'in_progress' },
+    archetypePrimary: 'Visionary',
+  }, { merge: true });
+  assert.deepEqual(await h.load('lib/signup/firstRun.ts').getFirstRun(h.db, h.user), { stage: 'welcome' });
+});
