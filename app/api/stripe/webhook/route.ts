@@ -64,8 +64,7 @@ export async function POST(request: NextRequest) {
       const cohortStartDate = session.metadata?.cohortStartDate || '';
 
       if (!customerId || !email) {
-        console.warn('Missing customer or email in session:', sessionId);
-        return NextResponse.json({ received: true });
+        throw new Error('Paid checkout is missing customer or email');
       }
 
       // Write enrollment record to Firestore
@@ -153,7 +152,8 @@ export async function POST(request: NextRequest) {
         'deepen_membership': 'deepen',
       };
 
-      const entitlementKey = PRODUCT_ENTITLEMENT_MAP[product] || product;
+      const entitlementKey = PRODUCT_ENTITLEMENT_MAP[product];
+      if (!entitlementKey) throw new Error('Paid checkout has an unrecognized product');
 
       // Attempt to upsert user entitlement by matching users.email === customer email
       try {
@@ -205,10 +205,12 @@ export async function POST(request: NextRequest) {
             console.log(`pending entitlement (${entitlementKey}) created for email=${email}`);
           } catch (hashErr) {
             console.error('Error creating pending entitlement:', hashErr);
+            throw hashErr;
           }
         }
       } catch (upsertErr) {
         console.error('Error upserting user entitlement:', upsertErr);
+        throw upsertErr;
       }
 
       // Product display names and destination URLs
@@ -453,7 +455,7 @@ export async function POST(request: NextRequest) {
     <div class="highlight">
       <p><strong>Session ID:</strong> <code>${sessionId}</code></p>
     </div>
-    <p>Customer entitlements have been automatically tagged and fulfillment email sent.</p>
+    <p>Review the order in your dashboard to confirm access and email delivery.</p>
   </div>
   <div class="footer">
     <p>iPurpose Purchase Notification</p>
