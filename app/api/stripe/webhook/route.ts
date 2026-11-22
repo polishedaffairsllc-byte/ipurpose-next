@@ -523,7 +523,11 @@ export async function POST(request: NextRequest) {
         : await usersRef.where('membership.stripeCustomerId', '==', customerId).limit(1).get();
 
       if (snap.empty) {
-        console.warn('[Unsubscribe] No user found for customerId:', customerId);
+        // Keep unmatched cancellations visible for an operator; do not silently lose them.
+        await db.collection('subscription_reconciliation').doc(subscription.id).set({
+          status: 'needs_review', stripeCustomerId: customerId, subscriptionStatus: subscription.status,
+          updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
         return NextResponse.json({ received: true });
       }
 
