@@ -5,6 +5,7 @@ import { trackServerPurchase } from '@/lib/ga4-server';
 import { sendMetaPurchaseEvent } from '@/lib/meta-capi';
 import crypto from 'crypto';
 import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
+import { recordPendingPurchase } from '@/lib/claimPendingPurchase';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -185,22 +186,7 @@ export async function POST(request: NextRequest) {
           try {
             const normalized = String(email).trim().toLowerCase();
             const emailHash = crypto.createHash('sha256').update(normalized).digest('hex');
-            const pendingRef = db.collection('pending_entitlements').doc(emailHash);
-
-            await pendingRef.set(
-              {
-                email: normalized,
-                entitlements: {
-                  [entitlementKey]: true,
-                },
-                sessions: firebaseAdmin.firestore.FieldValue.arrayUnion(sessionId),
-                product,
-                cohort,
-                createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-                claimed: false,
-              },
-              { merge: true }
-            );
+            await recordPendingPurchase(db, emailHash, { email: normalized, sessionId, entitlementKey, product, cohort }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
 
             console.log(`pending entitlement (${entitlementKey}) created for email=${email}`);
           } catch (hashErr) {
