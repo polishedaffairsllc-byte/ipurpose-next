@@ -1,4 +1,5 @@
 import { readPurposeProfile, type PurposeProfile } from './purposeCheck';
+import { parseFirstRunState, type FirstRunState } from './firstRun';
 import { CLARITY_LIFECYCLE_COPY } from './clarityLifecycleCopy';
 import { logLaunchEvent } from './analyticsEvents';
 import { auth } from './firebase';
@@ -194,6 +195,39 @@ export async function deletePurposeResults(): Promise<void> {
 // Must match lib/signup/disclosure.ts. This acknowledges the legacy signup
 // disclosure only; it never grants the separate versioned OpenAI permission.
 const SIGNUP_AI_VERSION = 'compass-openai-2026-10-12';
+
+/**
+ * Read the server's persistent first-run stage for the current authenticated user.
+ * Account admission is a distinct prerequisite; no OpenAI grant is involved.
+ */
+export async function getNativeFirstRun(): Promise<FirstRunState> {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('Please sign in to continue.');
+  const response = await authorizedFetch('/api/auth/first-run', { method: 'GET' });
+  const result = await readJson<{ uid: string; state: unknown }>(response);
+  if (auth.currentUser?.uid !== uid || result.uid !== uid) {
+    throw new Error('The signed-in account changed. Please retry.');
+  }
+  return parseFirstRunState(result.state);
+}
+
+/**
+ * The backend authorizes the only valid next stage in a Firestore transaction.
+ * A failed or uncertain write must be retried via a fresh server read.
+ */
+export async function advanceNativeFirstRun(next: FirstRunState): Promise<FirstRunState> {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('Please sign in to continue.');
+  const response = await authorizedFetch('/api/auth/first-run', {
+    method: 'POST',
+    body: JSON.stringify(parseFirstRunState(next)),
+  });
+  const result = await readJson<{ uid: string; state: unknown }>(response);
+  if (auth.currentUser?.uid !== uid || result.uid !== uid) {
+    throw new Error('The signed-in account changed. Please retry.');
+  }
+  return parseFirstRunState(result.state);
+}
 
 export async function getSignupAdmission(): Promise<boolean> {
   const response = await authorizedFetch('/api/auth/complete-signup', { method: 'GET' }, true);
