@@ -3,6 +3,7 @@ import { deriveFounderContext } from "@/lib/isFounder";
 import { recordAuthEmailStatus } from '@/lib/trust/emailPolicy';
 import crypto from 'crypto';
 import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
+import { claimPendingPurchase } from '@/lib/claimPendingPurchase';
 
 // Force Node.js runtime so we can set HttpOnly cookies reliably (not Edge)
 export const runtime = "nodejs";
@@ -102,43 +103,7 @@ export async function POST(req: Request) {
         if (email && decoded.email_verified === true && ownsPurchaseEmail(authAccount, email)) {
           const normalized = String(email).trim().toLowerCase();
           const emailHash = crypto.createHash('sha256').update(normalized).digest('hex');
-          const pendingRef = db.collection('pending_entitlements').doc(emailHash);
-          const pendingDoc = await pendingRef.get();
-          if (pendingDoc.exists) {
-            const pending = pendingDoc.data();
-            const pendingEntitlements = pending?.entitlements || {};
-
-            if (pending?.claimed !== true && Object.keys(pendingEntitlements).length > 0) {
-              // Merge pending entitlements onto the canonical user doc
-              await userRef.set(
-                {
-                  entitlements: {
-                    ...(userData?.entitlements || {}),
-                    ...pendingEntitlements,
-                  },
-                  // If there were recorded sessions, copy the last one
-                  starterPackPurchaseSessionId:
-                    pending && pending.sessions && pending.sessions.length
-                      ? pending.sessions[pending.sessions.length - 1]
-                      : undefined,
-                  updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-                },
-                { merge: true }
-              );
-
-              await pendingRef.set(
-                {
-                  claimed: true,
-                  claimedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-                  claimedByUid: uid,
-                },
-                { merge: true }
-              );
-
-              didClaimEntitlements = true;
-              console.log(`migrated pending entitlements for email=${email} to uid=${uid}`);
-            }
-          }
+          didClaimEntitlements = await claimPendingPurchase(db, emailHash, uid, firebaseAdmin.firestore.FieldValue.serverTimestamp());
         }
       } catch (reconErr) {
         console.error('[LOGIN] Pending entitlement reconciliation failed:', reconErr);
