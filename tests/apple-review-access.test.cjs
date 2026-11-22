@@ -113,3 +113,42 @@ test('old generic grants require renewal and cannot authorize generation or mode
   assert.equal((await send()).status, 403);
   assert.deepEqual([generations, moderations], [1, 2]);
 });
+
+test('legacy Welcome completion is consistently read and advanced without an extra Welcome prompt', async () => {
+  const h = fixture();
+  await h.signup.completeSignup(h.db, h.user, h.input, async () => h.user);
+  const parent = h.db.collection('users').doc(h.user.uid);
+  await parent.set({ introVideos: { hasCompletedWelcome: true } }, { merge: true });
+  await parent.collection('onboarding').doc('firstRun').set({ state: { stage: 'welcome' } });
+  const firstRun = h.load('lib/signup/firstRun.ts');
+  assert.deepEqual(await firstRun.getFirstRun(h.db, h.user), { stage: 'choice' });
+  assert.deepEqual(
+    await firstRun.advanceFirstRun(h.db, h.user, { stage: 'intro', choice: 'purpose' }, async () => h.user),
+    { stage: 'intro', choice: 'purpose' },
+  );
+  assert.deepEqual(await firstRun.getFirstRun(h.db, h.user), { stage: 'intro', choice: 'purpose' });
+  assert.deepEqual(
+    await firstRun.advanceFirstRun(h.db, h.user, { stage: 'intro', choice: 'purpose' }, async () => h.user),
+    { stage: 'intro', choice: 'purpose' },
+  );
+  await firstRun.advanceFirstRun(h.db, h.user, { stage: 'experience', choice: 'purpose' }, async () => h.user);
+  await firstRun.advanceFirstRun(h.db, h.user, { stage: 'complete', choice: 'purpose' }, async () => h.user);
+  assert.deepEqual(await firstRun.getFirstRun(h.db, h.user), { stage: 'complete', choice: 'purpose' });
+});
+
+test('a new account without completed Welcome cannot skip straight to the chooser experience', async () => {
+  const h = fixture();
+  await h.signup.completeSignup(h.db, h.user, h.input, async () => h.user);
+  const firstRun = h.load('lib/signup/firstRun.ts');
+  assert.deepEqual(await firstRun.getFirstRun(h.db, h.user), { stage: 'welcome' });
+  await assert.rejects(
+    firstRun.advanceFirstRun(h.db, h.user, { stage: 'intro', choice: 'clarity' }, async () => h.user),
+    { status: 409 },
+  );
+  await firstRun.advanceFirstRun(h.db, h.user, { stage: 'choice' }, async () => h.user);
+  await firstRun.advanceFirstRun(h.db, h.user, { stage: 'intro', choice: 'clarity' }, async () => h.user);
+  await assert.rejects(
+    firstRun.advanceFirstRun(h.db, h.user, { stage: 'experience', choice: 'purpose' }, async () => h.user),
+    { status: 409 },
+  );
+});
