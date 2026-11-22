@@ -6,6 +6,7 @@ import { sendMetaPurchaseEvent } from '@/lib/meta-capi';
 import crypto from 'crypto';
 import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
 import { recordPendingPurchase } from '@/lib/claimPendingPurchase';
+import { reconcileRefund } from '@/lib/reconcileRefund';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -71,6 +72,11 @@ export async function POST(request: NextRequest) {
       // Write enrollment record to Firestore
       const db = firebaseAdmin.firestore();
       const enrollmentRef = db.collection('enrollments').doc(sessionId);
+      const priorOrder = await enrollmentRef.get();
+      if (String(priorOrder.data()?.refundStatus || '').startsWith('full_')) {
+        console.warn('Ignoring paid event for a fully refunded order');
+        return NextResponse.json({ received: true });
+      }
 
       await enrollmentRef.set({
         checkoutSessionId: sessionId,
@@ -478,12 +484,10 @@ export async function POST(request: NextRequest) {
       const map: Record<string, string> = { starter_pack: 'starterPack', ai_blueprint: 'aiBlueprint', accelerator: 'accelerator' };
       const key = map[product];
       if (!key) throw new Error('Refund product needs manual reconciliation');
-      const db = firebaseAdmin.firestore();
-      const orderRef = db.collection('enrollments').doc(order.id);
+      const email = order.customer_details?.email;
+      if (!email) throw new Error('Refund checkout has no buyer email');
       const complete = charge.amount > 0 && charge.amount_refunded >= charge.amount;
-      await orderRef.set({ refundStatus: complete ? 'full_review' : 'partial_review', refundAmount: charge.amount_refunded, updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-      // Preserve access until ownership, later purchases and the refund terms can be reconciled.
-      // An order record provides a durable action rather than silently ignoring the refund.
+      await reconcileRefund(firebaseAdmin.firestore(), { sessionId:order.id, email, product, entitlementKey:key, amountRefunded:charge.amount_refunded, full:complete }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
 
     // ── Subscription cancelled / ended ──────────────────────────────────────
     } else if (
