@@ -51,7 +51,8 @@ export async function GET(request: NextRequest) {
     const validPriceIds = [
       process.env.STRIPE_PRICE_STARTER_PACK,
       process.env.STRIPE_PRICE_ID_AI_BLUEPRINT,
-      process.env.STRIPE_PRICE_ID_ACCELERATOR,
+      process.env.STRIPE_PRICE_ID_6WEEK,
+      process.env.STRIPE_PRICE_ID_ACCELERATOR_EARLY_BIRD,
     ].filter(Boolean) as string[];
 
     if (validPriceIds.length > 0 && session.line_items) {

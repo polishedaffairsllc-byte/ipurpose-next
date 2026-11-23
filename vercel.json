@@ -1,7 +1,8 @@
 {
   "git": {
     "deploymentEnabled": {
-      "codex/**": false
+      "codex/**": false,
+      "draft/website-purchase-claim-review-20261121": false
     }
   },
   "buildCommand": "npm run build && rm -rf .next/cache",

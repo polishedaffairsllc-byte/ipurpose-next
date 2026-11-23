@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { firebaseAdmin } from './firebaseAdmin';
+import { hasDeepenEntitlement, isDeepenTier } from './deepenEntitlement';
 import { getRequestBearerAuth } from './firebase/requestAuth';
 
 export type EntitlementTier = 'FREE' | 'BASIC_PAID' | 'DEEPENING';
@@ -74,27 +75,20 @@ export async function checkEntitlement(): Promise<EntitlementResult> {
     const userData = userDoc.data();
     const isFounder = userData?.isFounder === true || userData?.role === "founder" || userData?.entitlementTier === "founder";
 
-    let tier: EntitlementTier = 'FREE';
-    const membershipTier = (userData?.membership?.tier as EntitlementTier | undefined) ?? undefined;
-    const entitlementTier = (userData?.entitlementTier as EntitlementTier | undefined) ?? undefined;
-    const legacyTier = (userData?.tier as EntitlementTier | undefined) ?? undefined;
+    const hasDeepen = hasDeepenEntitlement(userData);
+    const deepenRevoked = userData?.entitlements?.deepen === false;
+    const previousTier = [userData?.entitlementTier, userData?.membership?.tier, userData?.tier]
+      .find(candidate => candidate != null && !(deepenRevoked && isDeepenTier(candidate)));
 
     const devFounderUid = process.env.DEV_FOUNDER_UID || 'dev-local-user';
     const isDevFounder = uid === devFounderUid;
-
-    if (isFounder || isDevFounder) {
-      tier = 'DEEPENING';
-    } else if (entitlementTier) {
-      tier = entitlementTier;
-    } else if (membershipTier) {
-      tier = membershipTier;
-    } else if (legacyTier) {
-      tier = legacyTier;
-    }
+    const tier: EntitlementTier = isFounder || isDevFounder || hasDeepen
+      ? 'DEEPENING'
+      : (previousTier as EntitlementTier | undefined) ?? 'FREE';
 
     const entitlementActive = userData?.entitlement?.status === 'active';
     const membershipActive = userData?.membership?.status === 'active';
-    const isEntitled = isFounder || ((tier !== 'FREE') && (entitlementActive || membershipActive));
+    const isEntitled = isFounder || hasDeepen || (tier !== 'FREE' && (entitlementActive || membershipActive));
 
     return { uid, tier, isEntitled };
   } catch (error) {
