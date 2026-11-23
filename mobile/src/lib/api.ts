@@ -1,4 +1,6 @@
 import { readPurposeProfile, type PurposeProfile } from './purposeCheck';
+import { parseFirstRunState, type FirstRunState } from './firstRun';
+import type { IntroKind } from './introVideos';
 import { CLARITY_LIFECYCLE_COPY } from './clarityLifecycleCopy';
 import { logLaunchEvent } from './analyticsEvents';
 import { auth } from './firebase';
@@ -12,15 +14,17 @@ import type {
 
 const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || 'https://ipurposesoul.com').replace(/\/$/, '');
 
-async function authorizedFetch(path: string, init: RequestInit = {}, forceRefresh = false): Promise<Response> {
+async function authorizedFetch(path: string, init: RequestInit = {}, forceRefresh = false, expectedUid?: string): Promise<Response> {
   const user = auth.currentUser;
   if (!user) throw new Error('Please sign in to continue.');
+  if (expectedUid && user.uid !== expectedUid) throw new Error('The signed-in account changed. Please retry.');
   const token = await user.getIdToken(forceRefresh);
+  if (expectedUid && auth.currentUser?.uid !== expectedUid) throw new Error('The signed-in account changed. Please retry.');
   const headers = new Headers(init.headers);
   headers.set('Authorization', `Bearer ${token}`);
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
   const response = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
-  if (response.status === 401 && !forceRefresh) return authorizedFetch(path, init, true);
+  if (response.status === 401 && !forceRefresh) return authorizedFetch(path, init, true, expectedUid);
   return response;
 }
 
@@ -68,13 +72,20 @@ export async function getConversation(conversationId: string): Promise<Companion
   const data = await readJson<{ conversationId: string; messages: CompanionMessage[] }>(response);
   return data.messages || [];
 }
-export async function getCompanionProfile(): Promise<CompanionProfile> {
-  const response = await authorizedFetch('/api/ai/profile', { method: 'GET' });
+export async function getCompanionProfile(expectedUid?: string): Promise<CompanionProfile> {
+  const response = await authorizedFetch('/api/ai/profile', { method: 'GET' }, false, expectedUid);
   const data = await readJson<{ profile: CompanionProfile }>(response);
   return data.profile;
 }
-export async function getOnboardingState(): Promise<OnboardingState> {
-  const response = await authorizedFetch('/api/ai/onboarding', { method: 'GET' });
+export async function markIntroCompleted(kind: IntroKind, uid: string): Promise<CompanionProfile> {
+  const response = await authorizedFetch('/api/ai/profile', {
+    method: 'PATCH', body: JSON.stringify({ completedIntro: kind }),
+  }, false, uid);
+  const data = await readJson<{ profile: CompanionProfile }>(response);
+  return data.profile;
+}
+export async function getOnboardingState(expectedUid?: string): Promise<OnboardingState> {
+  const response = await authorizedFetch('/api/ai/onboarding', { method: 'GET' }, false, expectedUid);
   const data = await readJson<{ onboarding: OnboardingState }>(response);
   return data.onboarding;
 }
@@ -176,6 +187,27 @@ export async function sendMentorMessage(options: { message: string; requestId: s
   return readJson<MentorResponse>(response);
 }
 
+export type AiReportReason = 'unsafe' | 'offensive' | 'inaccurate' | 'other';
+
+/** Reports a saved assistant message by ID. The server resolves and validates its canonical text. */
+export async function reportAiResponse(options: {
+  conversationId: string;
+  messageId: string;
+  reason: AiReportReason;
+  details?: string;
+}): Promise<{ reported: true; reportId: string }> {
+  const response = await authorizedFetch('/api/ai/reports', {
+    method: 'POST',
+    body: JSON.stringify({
+      conversationId: options.conversationId,
+      messageId: options.messageId,
+      reason: options.reason,
+      details: options.details?.trim() || '',
+    }),
+  });
+  return readJson<{ reported: true; reportId: string }>(response);
+}
+
 export async function getPurposeResults(): Promise<{ purposeProfile: PurposeProfile | null; identityType: string | null }> {
  const data = await readJson<{ purposeProfile: unknown; identityType: unknown }>(await authorizedFetch('/api/ai/purpose'));
  const profile = readPurposeProfile(data.purposeProfile);
@@ -194,6 +226,37 @@ export async function deletePurposeResults(): Promise<void> {
 // Must match lib/signup/disclosure.ts. This acknowledges the legacy signup
 // disclosure only; it never grants the separate versioned OpenAI permission.
 const SIGNUP_AI_VERSION = 'compass-openai-2026-10-12';
+
+/**
+ * Read the server's persistent first-run stage for the current authenticated user.
+ * Account admission is a distinct prerequisite; no OpenAI grant is involved.
+ */
+export async function getNativeFirstRun(uid = auth.currentUser?.uid): Promise<FirstRunState> {
+  if (!uid) throw new Error('Please sign in to continue.');
+  const response = await authorizedFetch('/api/auth/first-run', { method: 'GET' }, false, uid);
+  const result = await readJson<{ uid: string; state: unknown }>(response);
+  if (auth.currentUser?.uid !== uid || result.uid !== uid) {
+    throw new Error('The signed-in account changed. Please retry.');
+  }
+  return parseFirstRunState(result.state);
+}
+
+/**
+ * The backend authorizes the only valid next stage in a Firestore transaction.
+ * A failed or uncertain write must be retried via a fresh server read.
+ */
+export async function advanceNativeFirstRun(next: FirstRunState, uid = auth.currentUser?.uid): Promise<FirstRunState> {
+  if (!uid) throw new Error('Please sign in to continue.');
+  const response = await authorizedFetch('/api/auth/first-run', {
+    method: 'POST',
+    body: JSON.stringify(parseFirstRunState(next)),
+  }, false, uid);
+  const result = await readJson<{ uid: string; state: unknown }>(response);
+  if (auth.currentUser?.uid !== uid || result.uid !== uid) {
+    throw new Error('The signed-in account changed. Please retry.');
+  }
+  return parseFirstRunState(result.state);
+}
 
 export async function getSignupAdmission(): Promise<boolean> {
   const response = await authorizedFetch('/api/auth/complete-signup', { method: 'GET' }, true);

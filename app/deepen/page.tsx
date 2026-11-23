@@ -1,33 +1,9 @@
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { firebaseAdmin } from "@/lib/firebaseAdmin";
-import { isFounder as isFounderUser } from "@/lib/isFounder";
+import { getDeepenPageAccess } from "@/lib/deepenPageAccess";
 import Footer from "@/app/components/Footer";
 import DeepenSubscribeButton from "./DeepenSubscribeButton";
 
 export default async function DeepenPage() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("FirebaseSession")?.value ?? null;
-
-  if (!session) {
-    return redirect("/login");
-  }
-
-  let hasAccess = false;
-  try {
-    const decoded = await firebaseAdmin.auth().verifySessionCookie(session, true);
-    const db = firebaseAdmin.firestore();
-    const userDoc = await db.collection("users").doc(decoded.uid).get();
-    const userData = userDoc.data() ?? {};
-    const founderBypass = isFounderUser(decoded, userData);
-
-    // Check if they already have Deepening tier access
-    if (founderBypass || userData?.entitlement?.tier === "DEEPENING") {
-      hasAccess = true;
-    }
-  } catch {
-    return redirect("/login");
-  }
+  const hasAccess = await getDeepenPageAccess();
 
   // If they already have access, show the premium hub (layout provides DeepenNav + Footer)
   if (hasAccess) {

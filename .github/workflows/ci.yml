@@ -58,6 +58,14 @@ jobs:
     name: Install, Lint, Type Check, Build & Test
     runs-on: ubuntu-latest
     needs: verify-secrets
+    # Next.js inlines these values into the browser bundle at build time.
+    env:
+      NEXT_PUBLIC_FIREBASE_API_KEY: ci-firebase-placeholder
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: demo-ipurpose-ci.invalid
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: demo-ipurpose-ci
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: demo-ipurpose-ci.appspot.com
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: '000000000000'
+      NEXT_PUBLIC_FIREBASE_APP_ID: '1:000000000000:web:ci'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

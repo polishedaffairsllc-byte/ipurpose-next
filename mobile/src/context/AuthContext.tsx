@@ -13,6 +13,7 @@ import { auth } from '../lib/firebase';
 import { deleteIPurposeAccount, saveMarketingConsent } from '../lib/api';
 import { logLaunchEvent } from '../lib/analyticsEvents';
 import { logUserActivity } from '../lib/userActivity';
+import { clearPurposeProgress } from '../lib/purposeStorage';
 
 interface AuthContextValue {
   user: User | null;
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const credential = EmailAuthProvider.credential(currentUser.email, password);
       await reauthenticateWithCredential(currentUser, credential);
       await deleteIPurposeAccount();
+      await clearPurposeProgress(currentUser.uid).catch(() => {});
       await firebaseSignOut(auth);
     },
     signIn: async (email, password) => {

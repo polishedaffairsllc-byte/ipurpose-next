@@ -19,8 +19,10 @@ import { BrandHeader } from '../../../components/BrandHeader';
 import { AiDataSharingControls } from '../../../components/AiDataSharingControls';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
+import { ReportResponseModal } from '../../../components/ReportResponseModal';
+import { IntroReplay } from '../../../components/IntroReplay';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
-import { createCompassRequestId, getAiConsent, getConversation, getConversations, sendMentorMessage } from '../../../lib/api';
+import { createCompassRequestId, getAiConsent, getConversation, getConversations, reportAiResponse, sendMentorMessage } from '../../../lib/api';
 import { createActivitySessionId, logUserActivity } from '../../../lib/userActivity';
 import type { CompanionMessage, ConversationSummary } from '../../../types/companion';
 import { theme } from '../../../theme';
@@ -44,6 +46,7 @@ export default function MentorScreen() {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [reportMessage, setReportMessage] = useState<CompanionMessage | null>(null);
   const listRef = useRef<FlatList<CompanionMessage>>(null);
   const compassSession = useRef<{ id: string; startedAt: number } | null>(null);
   const pendingDraft = useRef<{ requestId: string; message: string; conversationId?: string } | null>(null);
@@ -94,6 +97,7 @@ export default function MentorScreen() {
   const loadConversation = useCallback(async (id: string) => {
     setLoadingHistory(true);
     setError(null);
+    setReportMessage(null);
     try {
       const loaded = await getConversation(id);
       setConversationId(id);
@@ -136,6 +140,7 @@ export default function MentorScreen() {
   }, [requestedConversationId]);
 
   function startNewConversation() {
+    setReportMessage(null);
     setConversationId(null);
     setMessages([]);
     setInput('');
@@ -191,6 +196,10 @@ export default function MentorScreen() {
       pendingDraft.current = null;
       setConversationId(result.conversationId);
       setMessages((current) => [...current, localAssistantMessage]);
+      // Replace optimistic IDs with canonical stored message IDs when available.
+      // Reporting uses only canonical assistant IDs owned by this conversation.
+      const persistedMessages = await getConversation(result.conversationId).catch(() => null);
+      if (persistedMessages) setMessages(persistedMessages);
       void logUserActivity({
         type: 'compass_message',
         sessionId: compassSession.current?.id,
@@ -231,6 +240,7 @@ export default function MentorScreen() {
             subtitle="Your space for aligned reflection and action"
             variant="light-background"
           />
+          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowCompass />
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
@@ -318,7 +328,7 @@ export default function MentorScreen() {
                 ref={listRef}
                 data={messages}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <MessageBubble message={item} />}
+                renderItem={({ item }) => <MessageBubble message={item} onReport={setReportMessage} />}
                 contentContainerStyle={styles.messageList}
                 keyboardShouldPersistTaps="handled"
                 onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
@@ -332,6 +342,19 @@ export default function MentorScreen() {
               <Text style={styles.error}>{error}</Text>
             </View>
           ) : null}
+
+          <ReportResponseModal
+            key={reportMessage?.id ?? 'closed-report'}
+            visible={!!reportMessage}
+            onClose={() => setReportMessage(null)}
+            onSubmit={async (reason, details) => {
+              const target = reportMessage;
+              if (!conversationId || !target || target.role !== 'assistant' || target.id.startsWith('local-')) {
+                throw new Error('Please reopen the saved conversation before reporting this response.');
+              }
+              await reportAiResponse({ conversationId, messageId: target.id, reason, details });
+            }}
+          />
 
           {consentLoading ? (
             <View style={styles.consentLoading}><ActivityIndicator accessibilityLabel="Checking AI permission" color={tokens.accentStrong} /></View>

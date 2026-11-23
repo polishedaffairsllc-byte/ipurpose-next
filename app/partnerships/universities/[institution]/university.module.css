@@ -10,5 +10,35 @@
 .emailFallback .emailCopyControls input:focus-visible, .emailFallback .emailCopyControls button:focus-visible { outline:3px solid var(--sdsn-indigo); outline-offset:3px; }
 .copyStatus { min-height:1.6em; margin-top:6px; }
 
-:global(.university-page .sdsn-segments) { grid-template-columns:repeat(8,minmax(0,1fr)); }
-:global(.university-page .sdsn-contact-copy) { max-width:720px; }
+.universityPage :global(.sdsn-segments) { grid-template-columns:repeat(8,minmax(0,1fr)); }
+.universityPage :global(.sdsn-contact-copy) { max-width:720px; }
+
+.slideReader { display: none; }
+
+@media (max-width: 767px) {
+  .slideReader {
+    display: block;
+    margin-block-start: 1rem;
+    min-width: 0;
+    border: 1px solid var(--sdsn-border);
+    border-radius: 12px;
+    background: var(--sdsn-white);
+    color: var(--sdsn-indigo);
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+  :global(.sdsn-is-fullscreen) .slideReader { display: none; }
+  .slideReader summary {
+    display: list-item;
+    min-height: 44px;
+    padding: .625rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .slideReader summary:focus-visible { outline: 3px solid var(--sdsn-indigo); outline-offset: 3px; }
+  .slideReaderText { padding: 0 1rem 1rem; }
+  .slideReaderText h3 { margin: .25rem 0 .75rem; font-size: 1.125rem; line-height: 1.4; }
+  .slideReaderText p + p { margin-block-start: .75rem; }
+}

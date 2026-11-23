@@ -1,4 +1,5 @@
 import type { VisualEnvironmentPreference } from '../lib/visualEnvironment';
+import type { IntroCompletions } from '../lib/introVideos';
 
 export type ResponseMode = 'balanced' | 'reflect' | 'build' | 'expand';
 
@@ -10,6 +11,7 @@ export interface CompanionProfile {
   identityAnchor?: string;
   purposeStatement?: string;
   focusAreas: string[];
+  introVideos?: IntroCompletions;
   visualEnvironmentPreference: VisualEnvironmentPreference;
 }
 

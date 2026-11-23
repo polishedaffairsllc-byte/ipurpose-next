@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import { universityConversation, UNIVERSITY_PARTNERSHIPS_EMAIL } from '@/lib/universities/conversation';
 import styles from './university.module.css';
-export default function UniversityConversationCTA({ institutionName }: { institutionName: string }) {
+export default function UniversityConversationCTA({ institutionName, trackCopy }: { institutionName: string; trackCopy?: boolean }) {
   const address = useRef<HTMLInputElement>(null);
   const [copyStatus, setCopyStatus] = useState('');
   const href = universityConversation(institutionName).href;
@@ -22,7 +22,7 @@ export default function UniversityConversationCTA({ institutionName }: { institu
       <p>If your email app does not open, email us at:</p>
       <div className={styles.emailCopyControls}>
         <input ref={address} type="text" readOnly aria-label="Partnership email address" value={UNIVERSITY_PARTNERSHIPS_EMAIL} onFocus={event => event.currentTarget.select()} />
-        <button type="button" onClick={copy}>Copy email address</button>
+        <button type="button" data-proposal-cta={trackCopy ? 'copy_partnership_email' : undefined} onClick={copy}>Copy email address</button>
       </div>
       <p role="status" aria-live="polite" className={styles.copyStatus}>{copyStatus}</p>
     </div>

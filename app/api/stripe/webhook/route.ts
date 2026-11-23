@@ -4,6 +4,11 @@ import { firebaseAdmin } from '@/lib/firebaseAdmin';
 import { trackServerPurchase } from '@/lib/ga4-server';
 import { sendMetaPurchaseEvent } from '@/lib/meta-capi';
 import crypto from 'crypto';
+import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
+import { recordPendingPurchase } from '@/lib/claimPendingPurchase';
+import { reconcileRefund } from '@/lib/reconcileRefund';
+import { reconcileDeepenCancellation } from '@/lib/reconcileDeepenCancellation';
+import { canGrantWebsiteOrder } from '@/lib/websiteOrder';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -44,8 +49,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (event.livemode === false && (process.env.VERCEL_ENV === 'production' || process.env.STRIPE_SECRET_KEY?.includes('_live_'))) {
+    return NextResponse.json({ error: 'Test events are disabled on this endpoint' }, { status: 400 });
+  }
+
   try {
-    if (event.type === 'checkout.session.completed') {
+    if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
       const session = event.data.object as Stripe.Checkout.Session;
 
       // Verify payment was successful
@@ -56,31 +65,44 @@ export async function POST(request: NextRequest) {
 
       // Extract data
       const customerId = session.customer as string;
-      const email = session.customer_details?.email;
+      const email = session.customer_details?.email?.trim().toLowerCase();
       const sessionId = session.id;
       const product = session.metadata?.product || 'accelerator';
       const cohort = session.metadata?.cohort || 'founding-2026';
       const cohortStartDate = session.metadata?.cohortStartDate || '';
+      const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
+      if (product === 'deepen_membership') {
+        if (!subscriptionId) throw new Error('Deepen purchase is missing subscription identity');
+        const currentSubscription = await getStripe().subscriptions.retrieve(subscriptionId);
+        if (['canceled', 'unpaid', 'incomplete_expired'].includes(currentSubscription.status)) {
+          console.warn('Ignoring purchase event for an ended subscription');
+          return NextResponse.json({ received: true });
+        }
+      }
 
       if (!customerId || !email) {
-        console.warn('Missing customer or email in session:', sessionId);
-        return NextResponse.json({ received: true });
+        throw new Error('Paid checkout is missing customer or email');
       }
 
       // Write enrollment record to Firestore
       const db = firebaseAdmin.firestore();
       const enrollmentRef = db.collection('enrollments').doc(sessionId);
-
-      await enrollmentRef.set({
-        checkoutSessionId: sessionId,
-        stripeCustomerId: customerId,
-        email,
-        product,
-        cohort,
-        cohortStartDate,
-        status: 'paid',
-        createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+      const recorded = await db.runTransaction(async tx => {
+        if (!await canGrantWebsiteOrder(tx, db, sessionId, subscriptionId)) return false;
+        tx.set(enrollmentRef, {
+          checkoutSessionId: sessionId,
+          stripeCustomerId: customerId,
+          ...(subscriptionId ? { stripeSubscriptionId: subscriptionId } : {}),
+          email,
+          product,
+          cohort,
+          cohortStartDate,
+          status: 'paid',
+          updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        return true;
       });
+      if (!recorded) return NextResponse.json({ received: true });
 
       console.log('Enrollment recorded:', sessionId);
 
@@ -152,59 +174,64 @@ export async function POST(request: NextRequest) {
         'deepen_membership': 'deepen',
       };
 
-      const entitlementKey = PRODUCT_ENTITLEMENT_MAP[product] || product;
+      const entitlementKey = PRODUCT_ENTITLEMENT_MAP[product];
+      if (!entitlementKey) throw new Error('Paid checkout has an unrecognized product');
 
       // Attempt to upsert user entitlement by matching users.email === customer email
       try {
         if (!email) throw new Error('No customer email available for entitlement upsert');
 
         const usersRef = db.collection('users');
-        const querySnapshot = await usersRef.where('email', '==', email).limit(1).get();
+        const querySnapshot = await usersRef.where('email', '==', email).limit(2).get();
 
-        if (!querySnapshot.empty) {
+        // Email in Firestore alone does not establish ownership.
+        const matchingUser = querySnapshot.size === 1
+          ? await firebaseAdmin.auth().getUser(querySnapshot.docs[0].id).catch(error => {
+            if (error?.code === 'auth/user-not-found') return null;
+            throw error;
+          })
+          : null;
+        const ownsEmail = matchingUser !== null && ownsPurchaseEmail(matchingUser, email);
+        if (!querySnapshot.empty && ownsEmail) {
           const userDoc = querySnapshot.docs[0];
           const uid = userDoc.id;
-          await usersRef.doc(uid).set(
-            {
+          const granted = await db.runTransaction(async tx => {
+            const [user, canGrant] = await Promise.all([
+              tx.get(userDoc.ref), canGrantWebsiteOrder(tx, db, sessionId, subscriptionId),
+            ]);
+            if (!canGrant || !user.exists) return false;
+            const entitlements = user.get('entitlements') || {};
+            tx.set(userDoc.ref, {
               entitlements: {
-                ...(userDoc.get('entitlements') || {}),
+                ...entitlements,
                 [entitlementKey]: true,
               },
               [`${entitlementKey}PurchaseSessionId`]: sessionId,
               updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-            },
-            { merge: true }
-          );
+            }, { merge: true });
+            return true;
+          });
+          if (!granted) return NextResponse.json({ received: true });
           console.log(`${entitlementKey} entitlement set for uid=${uid}`);
         } else {
           // No matching user found — record a pending entitlement keyed by hashed email
           try {
             const normalized = String(email).trim().toLowerCase();
             const emailHash = crypto.createHash('sha256').update(normalized).digest('hex');
-            const pendingRef = db.collection('pending_entitlements').doc(emailHash);
-
-            await pendingRef.set(
-              {
-                email: normalized,
-                entitlements: {
-                  [entitlementKey]: true,
-                },
-                sessions: firebaseAdmin.firestore.FieldValue.arrayUnion(sessionId),
-                product,
-                cohort,
-                createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-                claimed: false,
-              },
-              { merge: true }
-            );
+            const recorded = await recordPendingPurchase(db, emailHash, { email: normalized, sessionId, entitlementKey, product, cohort, subscriptionId }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
+            if (!recorded && !await db.runTransaction(tx => canGrantWebsiteOrder(tx, db, sessionId, subscriptionId))) {
+              return NextResponse.json({ received: true });
+            }
 
             console.log(`pending entitlement (${entitlementKey}) created for email=${email}`);
           } catch (hashErr) {
             console.error('Error creating pending entitlement:', hashErr);
+            throw hashErr;
           }
         }
       } catch (upsertErr) {
         console.error('Error upserting user entitlement:', upsertErr);
+        throw upsertErr;
       }
 
       // Product display names and destination URLs
@@ -227,7 +254,7 @@ export async function POST(request: NextRequest) {
         const firstName = session.customer_details?.name?.split(' ')[0] || '';
 
         if (!resendApiKey) {
-          console.warn('RESEND_API_KEY not configured. Skipping fulfillment email.');
+          throw new Error('Fulfillment email provider is not configured');
         } else if (email) {
           const { Resend } = await import('resend');
           const resend = new Resend(resendApiKey);
@@ -408,12 +435,15 @@ export async function POST(request: NextRequest) {
             to: email,
             subject: emailSubject,
             html: emailHtml,
-          });
-
-          console.log(`${productDisplayName} fulfillment email sent:`, result);
+          }, { idempotencyKey: `purchase/${sessionId}/customer` });
+          if (result.error || !result.data?.id) throw new Error('Fulfillment email was not accepted by provider');
+          await enrollmentRef.set({ fulfillmentEmail: { status: 'accepted', providerId: result.data.id } }, { merge: true });
+          console.log(`${productDisplayName} fulfillment email accepted`);
         }
       } catch (emailErr) {
         console.error('Error sending fulfillment email:', emailErr);
+        await enrollmentRef.set({ fulfillmentEmail: { status: 'needs_retry' } }, { merge: true });
+        throw emailErr;
       }
 
       // Send founder notification email
@@ -449,7 +479,7 @@ export async function POST(request: NextRequest) {
     <div class="highlight">
       <p><strong>Session ID:</strong> <code>${sessionId}</code></p>
     </div>
-    <p>Customer entitlements have been automatically tagged and fulfillment email sent.</p>
+    <p>Review the order in your dashboard to confirm access and email delivery.</p>
   </div>
   <div class="footer">
     <p>iPurpose Purchase Notification</p>
@@ -463,7 +493,7 @@ export async function POST(request: NextRequest) {
             to: founderEmail,
             subject: `🎉 New Purchase: ${productDisplayName} from ${email}`,
             html: founderEmailHtml,
-          });
+          }, { idempotencyKey: `purchase/${sessionId}/founder` });
 
           console.log('Founder purchase notification sent:', founderResult);
         }
@@ -471,131 +501,37 @@ export async function POST(request: NextRequest) {
         console.error('Error sending founder notification:', founderEmailErr);
       }
 
-    // ── Subscription cancelled / ended ──────────────────────────────────────
-    } else if (
-      event.type === 'customer.subscription.deleted' ||
-      event.type === 'customer.subscription.updated'
-    ) {
-      const subscription = event.data.object as Stripe.Subscription;
+    } else if (event.type === 'charge.refunded') {
+      const charge = event.data.object as Stripe.Charge;
+      const paymentIntent = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent?.id;
+      if (!paymentIntent) throw new Error('Refund has no payment intent; manual reconciliation required');
+      const stripe = getStripe();
+      const sessions = await stripe.checkout.sessions.list({ payment_intent: paymentIntent, limit: 2 });
+      if (sessions.data.length !== 1 || sessions.has_more) throw new Error('Refund checkout could not be uniquely identified');
+      const order = sessions.data[0];
+      const product = order.metadata?.product || '';
+      const map: Record<string, string> = { starter_pack: 'starterPack', ai_blueprint: 'aiBlueprint', accelerator: 'accelerator' };
+      const key = map[product];
+      if (!key) throw new Error('Refund product needs manual reconciliation');
+      const email = order.customer_details?.email;
+      if (!email) throw new Error('Refund checkout has no buyer email');
+      const complete = charge.amount > 0 && charge.amount_refunded >= charge.amount;
+      await reconcileRefund(firebaseAdmin.firestore(), { sessionId:order.id, email, product, entitlementKey:key, amountRefunded:charge.amount_refunded, full:complete }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
 
-      // Only act on subscription.updated if the status is now cancelled/unpaid
-      if (
-        event.type === 'customer.subscription.updated' &&
-        subscription.status !== 'canceled' &&
-        subscription.status !== 'unpaid'
-      ) {
-        return NextResponse.json({ received: true });
-      }
-
-      const customerId = subscription.customer as string;
-
-      if (!customerId) {
-        console.warn('[Unsubscribe] No customerId on subscription event:', subscription.id);
-        return NextResponse.json({ received: true });
-      }
-
-      const db = firebaseAdmin.firestore();
-      const usersRef = db.collection('users');
-
-      // Find the user by stripeCustomerId stored at purchase time
-      const querySnapshot = await usersRef
-        .where('entitlement.stripeCustomerId', '==', customerId)
-        .limit(1)
-        .get();
-
-      // Fallback: search membership.stripeCustomerId
-      const snap = !querySnapshot.empty
-        ? querySnapshot
-        : await usersRef.where('membership.stripeCustomerId', '==', customerId).limit(1).get();
-
-      if (snap.empty) {
-        console.warn('[Unsubscribe] No user found for customerId:', customerId);
-        return NextResponse.json({ received: true });
-      }
-
-      const userDoc = snap.docs[0];
-      const uid = userDoc.id;
-
-      // Revoke access across all field paths the codebase reads from
-      await usersRef.doc(uid).set(
-        {
-          entitlement: {
-            status: 'cancelled',
-            tier: 'FREE',
-            cancelledAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-          },
-          entitlementTier: 'FREE',
-          membership: {
-            status: 'cancelled',
-            tier: 'FREE',
-            cancelledAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-          },
-          updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      console.log(`[Unsubscribe] Access revoked for uid=${uid}, customerId=${customerId}`);
-
-      // Optional: send a cancellation confirmation email
-      try {
-        const resendApiKey = process.env.RESEND_API_KEY;
-        const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@ipurposesoul.com';
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ipurposesoul.com';
-
-        if (resendApiKey) {
-          const userEmail = userDoc.data()?.email as string | undefined;
-          const firstName = (userDoc.data()?.displayName as string | undefined)?.split(' ')[0] || '';
-
-          if (userEmail) {
-            const { Resend } = await import('resend');
-            const resend = new Resend(resendApiKey);
-
-            await resend.emails.send({
-              from: fromEmail,
-              to: userEmail,
-              subject: `Your iPurpose Deepen Membership has been cancelled`,
-              html: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { margin: 0; padding: 0; background: #f8f6f3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #2A2A2A; }
-    .wrapper { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-    .card { background: #ffffff; border-radius: 16px; padding: 40px 32px; box-shadow: 0 4px 24px rgba(156,136,255,0.08); }
-    .logo { text-align: center; font-size: 28px; font-weight: 700; color: #6B5B95; margin-bottom: 8px; }
-    .tagline { text-align: center; font-size: 14px; color: #9C88FF; font-style: italic; margin-bottom: 32px; }
-    p { font-size: 16px; line-height: 1.7; color: #444; margin: 0 0 16px 0; }
-    .cta { display: inline-block; background: linear-gradient(135deg, #9C88FF, #6B5B95); color: #fff !important; text-decoration: none; padding: 12px 28px; border-radius: 50px; font-weight: 600; font-size: 15px; }
-    .footer { text-align: center; font-size: 12px; color: #999; margin-top: 24px; }
-    .footer a { color: #9C88FF; text-decoration: none; }
-  </style>
-</head>
-<body>
-<div class="wrapper">
-  <div class="card">
-    <div class="logo">iPurpose</div>
-    <div class="tagline">Where Alignment Meets Action</div>
-    <p>Hi${firstName ? ` ${firstName}` : ''},</p>
-    <p>Your Deepen Membership has been cancelled and your access has ended. We're grateful you were part of the community.</p>
-    <p>If you'd like to rejoin in the future, you're always welcome back.</p>
-    <div style="text-align:center; margin: 24px 0;">
-      <a href="${siteUrl}/deepen" class="cta">Rejoin Deepen →</a>
-    </div>
-    <p style="font-size:14px;color:#777;">Questions? Just reply to this email.</p>
-    <p style="font-size:14px;color:#777;">With purpose,<br><strong>Renita Hamilton</strong><br>Founder, iPurpose</p>
-  </div>
-  <div class="footer">© ${new Date().getFullYear()} iPurpose · <a href="${siteUrl}">ipurposesoul.com</a><br><span style="font-size:11px;color:#bbb;">You received this because you were a Deepen member. &nbsp;·&nbsp; <a href="${siteUrl}/api/unsubscribe?email=${encodeURIComponent(userEmail)}" style="color:#bbb;text-decoration:underline;">Unsubscribe</a></span></div>
-</div>
-</body>
-</html>`,
-            });
-
-            console.log(`[Unsubscribe] Cancellation email sent to ${userEmail}`);
-          }
-        }
-      } catch (emailErr) {
-        console.error('[Unsubscribe] Error sending cancellation email:', emailErr);
+    // Verify current Stripe state so an old event cannot cancel a renewed membership.
+    } else if (event.type === 'customer.subscription.deleted' || event.type === 'customer.subscription.updated') {
+      const incoming = event.data.object as Stripe.Subscription;
+      const customerId = typeof incoming.customer === 'string' ? incoming.customer : incoming.customer?.id;
+      if (!customerId) throw new Error('Subscription event missing customer');
+      const stripe = getStripe();
+      const current = await stripe.subscriptions.retrieve(incoming.id);
+      if (!['canceled', 'unpaid'].includes(current.status)) return NextResponse.json({ received: true });
+      const other = await stripe.subscriptions.list({ customer: customerId, status: 'all', limit: 100 });
+      const possiblyActive = other.has_more || other.data.some(sub => sub.id !== incoming.id && !['canceled', 'unpaid', 'incomplete_expired'].includes(sub.status));
+      if (possiblyActive) {
+        await firebaseAdmin.firestore().collection('subscription_reconciliation').doc(incoming.id).set({ status:'needs_review', reason:'other_or_paginated_subscriptions', stripeStatus:current.status, updatedAt:firebaseAdmin.firestore.FieldValue.serverTimestamp() }, {merge:true});
+      } else {
+        await reconcileDeepenCancellation(firebaseAdmin.firestore(), customerId, incoming.id, firebaseAdmin.firestore.FieldValue.serverTimestamp(), current.status);
       }
     }
 

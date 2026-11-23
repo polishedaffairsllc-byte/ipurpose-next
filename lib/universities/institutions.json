@@ -1350,5 +1350,370 @@
     "notes": [
       "Supplemental nine-HBCU assignment; original institutions retained."
     ]
+  },
+  {
+    "institution_id": "clayton-state-university",
+    "institution_name": "Clayton State University",
+    "country": "United States",
+    "group": "US-New-5",
+    "priority": 1,
+    "primary_office": "Career and Professional Development",
+    "context": "Clayton State’s Career and Professional Development office emphasizes student self-awareness and career management. Its EDGE initiative connects exploration, development, graduation, and employment, while its Strategic Plan Innovation Grant describes support for student-success and social-mobility pilot projects.",
+    "rationale": "An opt-in iPurpose cohort could test how students make use of reflection, goal-setting, and practical AI-supported planning between existing career-development touchpoints, with staff guiding the questions and referrals.",
+    "sources": [
+      {
+        "url": "https://www.clayton.edu/career/contact-us.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://clayton.edu/academics/academic-initiatives/edge.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://clayton.edu/about/office-of-the-president/innovation-grant",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "clayton-state-university",
+    "proposal_id": "university-clayton-state-university",
+    "page_path": "/partnerships/universities/clayton-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Proposal and email are authored; user review required before publication or sending.",
+      "Any pilot size and deliverables are proposed, not agreed with institution."
+    ],
+    "seed_name": "Clayton State University"
+  },
+  {
+    "institution_id": "university-of-west-georgia",
+    "institution_name": "University of West Georgia",
+    "country": "United States",
+    "group": "US-New-5",
+    "priority": 2,
+    "primary_office": "Office of Career Services",
+    "context": "UWG Career Services supports major and career exploration, internships, graduate-school planning, mentorship, and workshops. The university also describes partnerships with businesses and nonprofits that connect classroom learning with experiential opportunities.",
+    "rationale": "The proposed iPurpose pilot would help a small student group clarify interests, compare options, and prepare thoughtful questions before using existing mentorship, career coaching, and experiential-learning resources.",
+    "sources": [
+      {
+        "url": "https://www.westga.edu/careerservices/",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.westga.edu/community/business.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.westga.edu/student-services/careerservices/staff.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "university-of-west-georgia",
+    "proposal_id": "university-university-of-west-georgia",
+    "page_path": "/partnerships/universities/university-of-west-georgia",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Proposal and email are authored; user review required before publication or sending.",
+      "Any pilot size and deliverables are proposed, not agreed with institution."
+    ],
+    "seed_name": "University of West Georgia"
+  },
+  {
+    "institution_id": "georgia-southern-university",
+    "institution_name": "Georgia Southern University",
+    "country": "United States",
+    "group": "US-New-5",
+    "priority": 3,
+    "primary_office": "Office of Career and Professional Development",
+    "context": "Georgia Southern’s Ready Day 1 Connect Quality Enhancement Plan integrates career competencies with academic learning. Its modules help students explore majors and career paths, connect academic work to competencies, and explain those competencies in professional contexts.",
+    "rationale": "iPurpose would be proposed as a small complementary discovery experience, not another institutional career-assessment system: students reflect on who they are, organize options, and practice communicating one next step to an adviser.",
+    "sources": [
+      {
+        "url": "https://ocpd.georgiasouthern.edu/",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://ocpd.georgiasouthern.edu/channels/qep-ready-day-1-connect/",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://ocpd.georgiasouthern.edu/ready-day-1-connect-modules/",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "georgia-southern-university",
+    "proposal_id": "university-georgia-southern-university",
+    "page_path": "/partnerships/universities/georgia-southern-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Proposal and email are authored; user review required before publication or sending.",
+      "Any pilot size and deliverables are proposed, not agreed with institution."
+    ],
+    "seed_name": "Georgia Southern University"
+  },
+  {
+    "institution_id": "bowie-state-university",
+    "institution_name": "Bowie State University",
+    "country": "United States",
+    "group": "US-New-5",
+    "priority": 4,
+    "primary_office": "Engage Center for Experiential Learning and Career Readiness",
+    "context": "Bowie State’s Engage Center brings experiential learning and career readiness together through personalized success planning, faculty and staff collaboration, and external partnerships. The university’s career development resources include internships, job shadowing, and career counseling.",
+    "rationale": "A small, voluntary iPurpose cohort could support the reflective work behind experiential decisions: understanding strengths and motivation, evaluating possibilities, and preparing for adviser-supported opportunities.",
+    "sources": [
+      {
+        "url": "https://www.bowiestate.edu/about/administration-and-governance/division-of-academic-affairs/engage-center/",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.bowiestate.edu/about/administration-and-governance/division-of-academic-affairs/engage-center/contact_us/contact_us.php",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.bowiestate.edu/academics/career-development-center/",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "bowie-state-university",
+    "proposal_id": "university-bowie-state-university",
+    "page_path": "/partnerships/universities/bowie-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Proposal and email are authored; user review required before publication or sending.",
+      "Any pilot size and deliverables are proposed, not agreed with institution."
+    ],
+    "seed_name": "Bowie State University"
+  },
+  {
+    "institution_id": "fayetteville-state-university",
+    "institution_name": "Fayetteville State University",
+    "country": "United States",
+    "group": "US-New-5",
+    "priority": 5,
+    "primary_office": "Office of Career Services",
+    "context": "Fayetteville State’s Career Services describes a student-centered model of career development involving partnerships, emerging technologies, individual support, and career assessments. The office also operates a peer career-coaching model and has introduced a Career Fair Navigator resource.",
+    "rationale": "iPurpose could offer a small pre-advising reflection-to-action experience that helps students clarify strengths, think through priorities, and prepare for existing career coaching, peer support, and career-fair resources.",
+    "sources": [
+      {
+        "url": "https://www.uncfsu.edu/campus-life/student-services-and-organizations/career-services",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://jobs.uncfsu.edu/postings/28131",
+        "label": "Official university source",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "fayetteville-state-university",
+    "proposal_id": "university-fayetteville-state-university",
+    "page_path": "/partnerships/universities/fayetteville-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Proposal and email are authored; user review required before publication or sending.",
+      "Any pilot size and deliverables are proposed, not agreed with institution."
+    ],
+    "seed_name": "Fayetteville State University"
+  },
+  {
+    "institution_id": "georgia-gwinnett-college",
+    "institution_name": "Georgia Gwinnett College",
+    "country": "United States",
+    "group": "US-Wave-3",
+    "priority": 1,
+    "primary_office": "Career Services",
+    "context": "Georgia Gwinnett College Career Services begins with reflection on interests, strengths, motivations, and temperament. Its student resources include career counseling and coaching, Focus 2 Career, Steppingblocks, workshops, and experiential learning.",
+    "rationale": "An iPurpose discovery cohort could test whether guided reflection, decision routines, and transparent AI-supported exploration help students prepare for — and make more purposeful use of — the career resources GGC already offers.",
+    "sources": [
+      {
+        "url": "https://www.ggc.edu/student-life/student-services/career-services",
+        "label": "Career Services overview",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.ggc.edu/student-life/student-services/career-services/student-career-services",
+        "label": "Student resources",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "georgia-gwinnett-college",
+    "proposal_id": "university-georgia-gwinnett-college",
+    "page_path": "/partnerships/universities/georgia-gwinnett-college",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Draft content and contact sourced from official institution websites.",
+      "User approval required for each proposal and corresponding email before recipient-facing release.",
+      "Recipient-facing URLs and tokens must be created securely by Codex; never reuse Wave 2 tokens."
+    ],
+    "seed_name": "Georgia Gwinnett College"
+  },
+  {
+    "institution_id": "kennesaw-state-university",
+    "institution_name": "Kennesaw State University",
+    "country": "United States",
+    "group": "US-Wave-3",
+    "priority": 2,
+    "primary_office": "Career Planning and Development",
+    "context": "Kennesaw State University’s Career Planning and Development team offers major and career exploration, self-assessment resources, and advising. Its Nest to Next four-year career plan outlines milestones that encourage students to explore interests, gain experience, and make informed choices across college.",
+    "rationale": "iPurpose could offer a short, structured reflection-to-action experience between KSU advising touchpoints, helping students connect personal criteria and competing options to a relevant Nest to Next milestone.",
+    "sources": [
+      {
+        "url": "https://campus.kennesaw.edu/offices-services/careers/career-readiness/index.php",
+        "label": "Nest to Next four-year plan",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://campus.kennesaw.edu/offices-services/careers/students/career-exploration.php",
+        "label": "Career exploration",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "kennesaw-state-university",
+    "proposal_id": "university-kennesaw-state-university",
+    "page_path": "/partnerships/universities/kennesaw-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Draft content and contact sourced from official institution websites.",
+      "User approval required for each proposal and corresponding email before recipient-facing release.",
+      "Recipient-facing URLs and tokens must be created securely by Codex; never reuse Wave 2 tokens."
+    ],
+    "seed_name": "Kennesaw State University"
+  },
+  {
+    "institution_id": "columbus-state-university",
+    "institution_name": "Columbus State University",
+    "country": "United States",
+    "group": "US-Wave-3",
+    "priority": 3,
+    "primary_office": "Center for Career Design / Center for Career Coaching",
+    "context": "Columbus State University’s career center provides coaching and career assessments. Its Cougar Career Connections program connects students with alumni mentors, and the university highlights career competencies and experiential learning as part of its student-development approach.",
+    "rationale": "An iPurpose pilot could strengthen the preparation students do before coaching or mentorship, so they arrive with a clearer sense of strengths, aspirations, and the specific decisions on which they want feedback.",
+    "sources": [
+      {
+        "url": "https://news.columbusstate.edu/posts/new-cougar-career-connections-program-connects-students-with-alumni-mentors/",
+        "label": "Cougar Career Connections",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://careercenter.columbusstate.edu/resources/career-assessments/",
+        "label": "Career assessments",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "columbus-state-university",
+    "proposal_id": "university-columbus-state-university",
+    "page_path": "/partnerships/universities/columbus-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Draft content and contact sourced from official institution websites.",
+      "User approval required for each proposal and corresponding email before recipient-facing release.",
+      "Recipient-facing URLs and tokens must be created securely by Codex; never reuse Wave 2 tokens."
+    ],
+    "seed_name": "Columbus State University"
+  },
+  {
+    "institution_id": "alabama-a-m-university",
+    "institution_name": "Alabama A&M University",
+    "country": "United States",
+    "group": "US-Wave-3",
+    "priority": 4,
+    "primary_office": "Career and Workforce Development",
+    "context": "Alabama A&M University’s Office of Career and Workforce Development supports career counseling, internships, professional preparation, and career-planning decisions. Its resources include Focus 2 Career self-assessment and a year-by-year roadmap; its industry and government cluster encourages collaboration around workforce preparation.",
+    "rationale": "A small iPurpose cohort could complement AAMU’s preparation activities by helping students turn assessment insights and options into specific career questions, weekly actions, and human-reviewed exploration of AI tools.",
+    "sources": [
+      {
+        "url": "https://www.aamu.edu/campus-life/student-support/career-workforce-development/register-with-cds.html",
+        "label": "Focus 2 Career and career roadmap",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.aamu.edu/campus-life/student-support/career-workforce-development/university-business-government-cluster.html",
+        "label": "University Business and Government Cluster",
+        "checked_at": "2026-11-09"
+      },
+      {
+        "url": "https://www.aamu.edu/campus-life/student-support/career-workforce-development/career-counseling.html",
+        "label": "Career counseling",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "alabama-a-m-university",
+    "proposal_id": "university-alabama-a-m-university",
+    "page_path": "/partnerships/universities/alabama-a-m-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Draft content and contact sourced from official institution websites.",
+      "User approval required for each proposal and corresponding email before recipient-facing release.",
+      "Recipient-facing URLs and tokens must be created securely by Codex; never reuse Wave 2 tokens."
+    ],
+    "seed_name": "Alabama A&M University"
+  },
+  {
+    "institution_id": "norfolk-state-university",
+    "institution_name": "Norfolk State University",
+    "country": "United States",
+    "group": "US-Wave-3",
+    "priority": 5,
+    "primary_office": "Career Services",
+    "context": "Norfolk State University Career Services serves students from their first year through doctoral study as well as alumni. It supports identification of skills, interests, and workplace values, offers career planning tools, and provides customizable career-development masterclasses.",
+    "rationale": "iPurpose could test an adviser-aligned reflection-and-action sequence that helps adult students choose which campus resources to use and prepare relevant questions before career appointments or masterclasses.",
+    "sources": [
+      {
+        "url": "https://www.nsu.edu/Campus-Life/Services-and-Resources/Career-Services",
+        "label": "Career Services and customizable masterclasses",
+        "checked_at": "2026-11-09"
+      }
+    ],
+    "page_slug": "norfolk-state-university",
+    "proposal_id": "university-norfolk-state-university",
+    "page_path": "/partnerships/universities/norfolk-state-university",
+    "already_contacted": false,
+    "review_status": "awaiting_user_approval",
+    "publication_status": "preview_only",
+    "needs_research": [],
+    "notes": [
+      "Draft content and contact sourced from official institution websites.",
+      "User approval required for each proposal and corresponding email before recipient-facing release.",
+      "Recipient-facing URLs and tokens must be created securely by Codex; never reuse Wave 2 tokens."
+    ],
+    "seed_name": "Norfolk State University"
   }
 ]
