@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { CompanionMessage } from '../types/companion';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { theme } from '../theme';
 
-export function MessageBubble({ message }: { message: CompanionMessage }) {
+export function MessageBubble({ message, onReport }: { message: CompanionMessage; onReport?: (message: CompanionMessage) => void }) {
   const isUser = message.role === 'user';
   const { tokens } = useVisualEnvironment();
+  // New optimistic assistant replies have local IDs, not stored Firestore IDs.
+  const canReport = !isUser && !!onReport && !message.id.startsWith('local-');
 
   return (
     <View style={[styles.row, isUser ? styles.userRow : styles.mentorRow]}>
@@ -28,6 +30,11 @@ export function MessageBubble({ message }: { message: CompanionMessage }) {
         <Text style={[styles.content, isUser ? styles.userText : styles.mentorText]}>
           {message.content}
         </Text>
+        {canReport ? (
+          <Pressable accessibilityRole="button" accessibilityLabel="Report Compass response" onPress={() => onReport?.(message)} style={styles.reportButton}>
+            <Text style={styles.reportText}>Report response</Text>
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );
@@ -66,6 +73,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
   },
+  reportButton: { alignSelf: 'flex-start', minHeight: 36, justifyContent: 'center', marginTop: 10 },
+  reportText: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 12, textDecorationLine: 'underline' },
   userText: { color: theme.colors.white },
   mentorText: { color: theme.colors.deepIndigo },
 });

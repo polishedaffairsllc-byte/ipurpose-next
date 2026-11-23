@@ -36,7 +36,14 @@ export default function UniversityPresentation({ institution, token, sessionId, 
     if (!state.current?.page) emit('proposal_page_view');
     const observeInput=(event: Event)=>{if(event.isTrusted&&!document.hidden&&state.current)state.current.interacted=true;};
     const onClick=(event: MouseEvent)=>{
-      const anchor=(event.target as Element)?.closest<HTMLAnchorElement>('a[data-proposal-destination]'); if(!anchor)return;
+      const target = event.target as Element;
+      const button = target?.closest<HTMLButtonElement>('button[data-proposal-cta]');
+      if (button?.dataset.proposalCta === 'copy_partnership_email') {
+        observeInput(event);
+        emit('proposal_cta_click', { cta_id: 'copy_partnership_email' });
+        return;
+      }
+      const anchor=target?.closest<HTMLAnchorElement>('a[data-proposal-destination]'); if(!anchor)return;
       observeInput(event); const destination=anchor.dataset.proposalDestination!; const eventId=crypto.randomUUID();
       const slide=Number(anchor.dataset.sourceSlide)||currentSlide.current;
       const name=destination==='pdf'?'proposal_pdf_download':destination==='conversation'?'proposal_meeting_request_click':'proposal_external_link_click';
@@ -54,5 +61,19 @@ export default function UniversityPresentation({ institution, token, sessionId, 
     if(name==='sdsn_slide_view')currentSlide.current=Number(params.slide_number);
     emit(name.replace(/^sdsn_/,'proposal_'),params);
   },[emit]);
-  return <PresentationViewer slides={slides} deckTitle={`iPurpose × ${institution.institution_name} — eight-slide exploratory pilot`} onEvent={onEvent} renderSlideLinks={number=><>{placements.filter(p=>p.slide===number).map(p=><a key={p.destination} className={styles.slideLink} href={`/p/${token}/go/${p.destination}?slide=${number}`} data-proposal-destination={p.destination} data-source-slide={number} target="_blank" rel="noopener noreferrer" aria-label={p.label} style={{left:`${p.box[0]/12.8}%`,top:`${p.box[1]/7.2}%`,width:`${p.box[2]/12.8}%`,height:`${p.box[3]/7.2}%`}}/>)}{number===8&&conversationBox&&<a className={styles.slideLink} href={universityConversation(institution.institution_name).href} data-proposal-destination="conversation" data-source-slide={8} aria-label="Request a Conversation" style={{left:`${conversationBox[0]/12.8}%`,top:`${conversationBox[1]/7.2}%`,width:`${conversationBox[2]/12.8}%`,height:`${conversationBox[3]/7.2}%`}}/>}</>}/>;
+  const renderSlideReader = institution.group === 'US-Wave-3' ? (number: number, pause: () => void) => {
+    const slide = slides[number - 1];
+    return <details
+      className={styles.slideReader}
+      data-slide-reader
+      onToggle={event => { if (event.currentTarget.open) pause(); }}
+    >
+      <summary>Read this slide</summary>
+      <div className={styles.slideReaderText}>
+        <h3>Slide {number}. {slide.title}</h3>
+        {slide.alt.split('\n\n').map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      </div>
+    </details>;
+  } : undefined;
+  return <PresentationViewer renderSlideReader={renderSlideReader} slides={slides} deckTitle={`iPurpose × ${institution.institution_name} — eight-slide exploratory pilot`} onEvent={onEvent} renderSlideLinks={number=><>{placements.filter(p=>p.slide===number).map(p=><a key={p.destination} className={styles.slideLink} href={`/p/${token}/go/${p.destination}?slide=${number}`} data-proposal-destination={p.destination} data-source-slide={number} target="_blank" rel="noopener noreferrer" aria-label={p.label} style={{left:`${p.box[0]/12.8}%`,top:`${p.box[1]/7.2}%`,width:`${p.box[2]/12.8}%`,height:`${p.box[3]/7.2}%`}}/>)}{number===8&&conversationBox&&<a className={styles.slideLink} href={universityConversation(institution.institution_name).href} data-proposal-destination="conversation" data-source-slide={8} aria-label="Request a Conversation" style={{left:`${conversationBox[0]/12.8}%`,top:`${conversationBox[1]/7.2}%`,width:`${conversationBox[2]/12.8}%`,height:`${conversationBox[3]/7.2}%`}}/>}</>}/>;
 }

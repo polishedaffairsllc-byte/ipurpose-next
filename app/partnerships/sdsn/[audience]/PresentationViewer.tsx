@@ -6,8 +6,12 @@ import type { PresentationSlide } from '@/lib/partnerships/sdsn';
 export type ViewerEvent = 'sdsn_deck_start' | 'sdsn_slide_view' | 'sdsn_deck_interaction' | 'sdsn_deck_complete';
 type EventParams = Record<string, string | number>;
 const normalSizes = '(max-width: 640px) calc(100vw - 24px), (max-width: 1376px) calc(100vw - 96px), 1280px';
-export default function PresentationViewer({ slides, deckTitle, onEvent, renderSlideLinks }: {
-  slides: PresentationSlide[]; renderSlideLinks?: (slideNumber: number) => ReactNode; deckTitle: string; onEvent: (event: ViewerEvent, params?: EventParams) => void;
+export default function PresentationViewer({ slides, deckTitle, onEvent, renderSlideLinks, renderSlideReader }: {
+  slides: PresentationSlide[];
+  renderSlideLinks?: (slideNumber: number) => ReactNode;
+  renderSlideReader?: (slideNumber: number, pause: () => void) => ReactNode;
+  deckTitle: string;
+  onEvent: (event: ViewerEvent, params?: EventParams) => void;
 }) {
   const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(-1);
@@ -79,7 +83,7 @@ export default function PresentationViewer({ slides, deckTitle, onEvent, renderS
   }, [overlay]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.altKey || e.ctrlKey || e.metaKey || (e.target instanceof HTMLElement && e.target.closest('input, textarea, select, [contenteditable="true"]'))) return;
+      if (e.altKey || e.ctrlKey || e.metaKey || (e.target instanceof HTMLElement && e.target.closest('input, textarea, select, [contenteditable="true"], [data-slide-reader]'))) return;
       if (e.key === 'Tab') {
         setPlaying(false);
         if (overlay) {
@@ -182,6 +186,7 @@ export default function PresentationViewer({ slides, deckTitle, onEvent, renderS
     </div>
     {thumbnails ? <div id="sdsn-thumbnails" className="sdsn-thumbnails">{slides.map((item, i) => <button key={item.src} type="button" aria-label={`View slide ${i + 1}: ${item.title}`} aria-current={i === index ? 'step' : undefined} onClick={() => go(i, 'thumbnail')}><img src={item.srcSet.split(' ')[0]} alt="" width={160} height={90} loading="lazy"/><span>{i + 1}</span></button>)}</div> : null}
     <div className="sdsn-viewer-note"><span>{playing ? 'Playing at a reading pace' : 'Explore at your own pace'}</span><span className="sdsn-desktop-hint">← → Navigate <span aria-hidden="true">·</span> Space Play / pause <span aria-hidden="true">·</span> F Fullscreen</span><span className="sdsn-mobile-hint">Tap fullscreen for the best view</span></div>
+    {renderSlideReader?.(index + 1, () => setPlaying(false))}
     <p className="sdsn-sr-only" aria-live={playing ? 'off' : 'polite'} aria-atomic="true">Slide {index + 1} of {slides.length}: {slide.title}</p>
   </div>;
 }
