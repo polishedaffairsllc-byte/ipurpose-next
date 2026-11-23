@@ -27,3 +27,20 @@ test('isolated Firestore cancels an unclaimed simulated Deepen order',async()=>{
  assert.equal(await reconcileDeepenCancellation(db,'cus_emulator','sub_emulator',new Date()),'reconciled');
  assert.equal((await db.collection('pending_entitlements').doc(hash(email)).get()).data()?.entitlements.deepen,false);
 });
+
+test('a full refund received before payment permanently blocks a late pending grant', async () => {
+ const email = 'early-refund@example.test';
+ const order = { sessionId: 'cs_early_refund', email, entitlementKey: 'starterPack', product: 'starter_pack', cohort: 'fixture' };
+ assert.equal(await reconcileRefund(db, { ...order, amountRefunded: 2700, full: true }, new Date()), 'full_review');
+ assert.equal(await recordPendingPurchase(db, hash(email), order, new Date()), false);
+ assert.equal(await reconcileRefund(db, { ...order, amountRefunded: 1000, full: false }, new Date()), 'full_review');
+ assert.equal(await claimPendingPurchase(db, hash(email), 'refunded-buyer', new Date()), false);
+});
+
+test('a cancellation before a paid event reserves the subscription against a late grant', async () => {
+ const email = 'early-cancel@example.test';
+ const subscriptionId = 'sub_early_cancel';
+ const order = { sessionId: 'cs_early_cancel', email, entitlementKey: 'deepen', product: 'deepen_membership', cohort: 'fixture', subscriptionId };
+ assert.equal(await reconcileDeepenCancellation(db, 'cus_early_cancel', subscriptionId, new Date()), 'needs_review');
+ assert.equal(await recordPendingPurchase(db, hash(email), order, new Date()), false);
+});

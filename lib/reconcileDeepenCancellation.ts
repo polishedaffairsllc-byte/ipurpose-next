@@ -8,6 +8,7 @@ export async function reconcileDeepenCancellation(
   customerId: string,
   subscriptionId: string,
   timestamp: unknown,
+  stripeStatus = 'canceled',
 ) {
   const orders = db.collection('enrollments')
     .where('stripeCustomerId', '==', customerId)
@@ -18,14 +19,19 @@ export async function reconcileDeepenCancellation(
   return db.runTransaction(async tx => {
     const ordersSnap = await tx.get(orders);
     if (ordersSnap.size !== 1) {
-      tx.set(reviewRef, { status: 'needs_review', reason: 'order_not_unique', stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
+      tx.set(reviewRef, { status: 'needs_review', reason: 'order_not_unique', stripeStatus, stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
       return 'needs_review';
     }
 
     const order = ordersSnap.docs[0];
-    const email = String(order.data().email || '').trim().toLowerCase();
+    const orderData = order.data();
+    if (orderData.stripeSubscriptionId && orderData.stripeSubscriptionId !== subscriptionId) {
+      tx.set(reviewRef, { status: 'needs_review', reason: 'order_subscription_mismatch', stripeStatus, stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
+      return 'needs_review';
+    }
+    const email = String(orderData.email || '').trim().toLowerCase();
     if (!email) {
-      tx.set(reviewRef, { status: 'needs_review', reason: 'missing_email', stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
+      tx.set(reviewRef, { status: 'needs_review', reason: 'missing_email', stripeStatus, stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
       return 'needs_review';
     }
 
@@ -44,7 +50,7 @@ export async function reconcileDeepenCancellation(
         || (pendingMatch && pending?.claimed === true && pending.claimedByUid === user?.id);
 
     if (userSnap.docs.length > 1 || (!userMatch && !pendingMatch)) {
-      tx.set(reviewRef, { status: 'needs_review', reason: 'access_not_unambiguous', stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
+      tx.set(reviewRef, { status: 'needs_review', reason: 'access_not_unambiguous', stripeStatus, stripeCustomerId: customerId, updatedAt: timestamp }, { merge: true });
       return 'needs_review';
     }
 
@@ -73,7 +79,7 @@ export async function reconcileDeepenCancellation(
     }
 
     tx.set(order.ref, { subscriptionStatus: 'cancelled', updatedAt: timestamp }, { merge: true });
-    tx.set(reviewRef, { status: 'reconciled', updatedAt: timestamp }, { merge: true });
+    tx.set(reviewRef, { status: 'reconciled', stripeStatus, updatedAt: timestamp }, { merge: true });
     return 'reconciled';
   });
 }

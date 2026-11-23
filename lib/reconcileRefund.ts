@@ -11,6 +11,7 @@ export async function reconcileRefund(db: Firestore, order: {sessionId:string; e
  return db.runTransaction(async tx=>{
   const [pendingSnap,userSnap,orderSnap,orderMatches]=await Promise.all([tx.get(pendingRef),tx.get(users),tx.get(orderRef),tx.get(orders)]);
   const existing=orderSnap.data();
+  if (!order.full && String(existing?.refundStatus || '').startsWith('full_')) return existing?.refundStatus;
   const pending=pendingSnap.data();
   const matchingOrders=orderMatches.docs;
   // The previous code did not store a complete provenance ledger; never revoke on ambiguous evidence.
@@ -22,7 +23,8 @@ export async function reconcileRefund(db: Firestore, order: {sessionId:string; e
    const userData=user?.data();
    const userMatches=userData?.[`${order.entitlementKey}PurchaseSessionId`]===order.sessionId || userData?.entitlement?.checkoutSessionId===order.sessionId;
    const pendingSessions=Array.isArray(pending?.sessions)?pending.sessions:[];
-   const pendingMatches=pendingSessions.length===1 && pendingSessions[0]===order.sessionId;
+   const pendingMatchId=pending?.purchaseSessionIds?.[order.entitlementKey];
+   const pendingMatches=typeof pendingMatchId==='string' ? pendingMatchId===order.sessionId : pendingSessions.length===1 && pendingSessions[0]===order.sessionId;
    if(userMatches){
     const updated={...(userData.entitlements || {}),[order.entitlementKey]:false};
     const tierMatches=userData.entitlement?.checkoutSessionId===order.sessionId;
@@ -31,7 +33,7 @@ export async function reconcileRefund(db: Firestore, order: {sessionId:string; e
    if(pendingMatches) tx.set(pendingRef,{entitlements:{...(pending?.entitlements || {}),[order.entitlementKey]:false},updatedAt:timestamp},{merge:true});
    if(userMatches||pendingMatches) status='full_reconciled';
   }
-  tx.set(orderRef,{refundStatus:status,refundAmount:order.amountRefunded,updatedAt:timestamp},{merge:true});
+  tx.set(orderRef,{refundStatus:status,refundAmount:Math.max(order.amountRefunded, Number(existing?.refundAmount)||0),updatedAt:timestamp},{merge:true});
   return status;
  });
 }

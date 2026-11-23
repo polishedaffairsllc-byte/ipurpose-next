@@ -8,6 +8,7 @@ import { ownsPurchaseEmail } from '@/lib/purchaseEmailOwnership';
 import { recordPendingPurchase } from '@/lib/claimPendingPurchase';
 import { reconcileRefund } from '@/lib/reconcileRefund';
 import { reconcileDeepenCancellation } from '@/lib/reconcileDeepenCancellation';
+import { canGrantWebsiteOrder } from '@/lib/websiteOrder';
 
 // Force this route to be dynamic (no build-time prerendering)
 export const dynamic = 'force-dynamic';
@@ -48,6 +49,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (event.livemode === false && (process.env.VERCEL_ENV === 'production' || process.env.STRIPE_SECRET_KEY?.includes('_live_'))) {
+    return NextResponse.json({ error: 'Test events are disabled on this endpoint' }, { status: 400 });
+  }
+
   try {
     if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -60,13 +65,13 @@ export async function POST(request: NextRequest) {
 
       // Extract data
       const customerId = session.customer as string;
-      const email = session.customer_details?.email;
+      const email = session.customer_details?.email?.trim().toLowerCase();
       const sessionId = session.id;
       const product = session.metadata?.product || 'accelerator';
       const cohort = session.metadata?.cohort || 'founding-2026';
       const cohortStartDate = session.metadata?.cohortStartDate || '';
+      const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
       if (product === 'deepen_membership') {
-        const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
         if (!subscriptionId) throw new Error('Deepen purchase is missing subscription identity');
         const currentSubscription = await getStripe().subscriptions.retrieve(subscriptionId);
         if (['canceled', 'unpaid', 'incomplete_expired'].includes(currentSubscription.status)) {
@@ -82,22 +87,22 @@ export async function POST(request: NextRequest) {
       // Write enrollment record to Firestore
       const db = firebaseAdmin.firestore();
       const enrollmentRef = db.collection('enrollments').doc(sessionId);
-      const priorOrder = await enrollmentRef.get();
-      if (String(priorOrder.data()?.refundStatus || '').startsWith('full_')) {
-        console.warn('Ignoring paid event for a fully refunded order');
-        return NextResponse.json({ received: true });
-      }
-
-      await enrollmentRef.set({
-        checkoutSessionId: sessionId,
-        stripeCustomerId: customerId,
-        email,
-        product,
-        cohort,
-        cohortStartDate,
-        status: 'paid',
-        updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-      }, { merge: true });
+      const recorded = await db.runTransaction(async tx => {
+        if (!await canGrantWebsiteOrder(tx, db, sessionId, subscriptionId)) return false;
+        tx.set(enrollmentRef, {
+          checkoutSessionId: sessionId,
+          stripeCustomerId: customerId,
+          ...(subscriptionId ? { stripeSubscriptionId: subscriptionId } : {}),
+          email,
+          product,
+          cohort,
+          cohortStartDate,
+          status: 'paid',
+          updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        return true;
+      });
+      if (!recorded) return NextResponse.json({ received: true });
 
       console.log('Enrollment recorded:', sessionId);
 
@@ -177,32 +182,46 @@ export async function POST(request: NextRequest) {
         if (!email) throw new Error('No customer email available for entitlement upsert');
 
         const usersRef = db.collection('users');
-        const querySnapshot = await usersRef.where('email', '==', email).limit(1).get();
+        const querySnapshot = await usersRef.where('email', '==', email).limit(2).get();
 
         // Email in Firestore alone does not establish ownership.
-        const matchingUser = querySnapshot.empty ? null : await firebaseAdmin.auth().getUser(querySnapshot.docs[0].id);
+        const matchingUser = querySnapshot.size === 1
+          ? await firebaseAdmin.auth().getUser(querySnapshot.docs[0].id).catch(error => {
+            if (error?.code === 'auth/user-not-found') return null;
+            throw error;
+          })
+          : null;
         const ownsEmail = matchingUser !== null && ownsPurchaseEmail(matchingUser, email);
         if (!querySnapshot.empty && ownsEmail) {
           const userDoc = querySnapshot.docs[0];
           const uid = userDoc.id;
-          await usersRef.doc(uid).set(
-            {
+          const granted = await db.runTransaction(async tx => {
+            const [user, canGrant] = await Promise.all([
+              tx.get(userDoc.ref), canGrantWebsiteOrder(tx, db, sessionId, subscriptionId),
+            ]);
+            if (!canGrant || !user.exists) return false;
+            const entitlements = user.get('entitlements') || {};
+            tx.set(userDoc.ref, {
               entitlements: {
-                ...(userDoc.get('entitlements') || {}),
+                ...entitlements,
                 [entitlementKey]: true,
               },
               [`${entitlementKey}PurchaseSessionId`]: sessionId,
               updatedAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-            },
-            { merge: true }
-          );
+            }, { merge: true });
+            return true;
+          });
+          if (!granted) return NextResponse.json({ received: true });
           console.log(`${entitlementKey} entitlement set for uid=${uid}`);
         } else {
           // No matching user found — record a pending entitlement keyed by hashed email
           try {
             const normalized = String(email).trim().toLowerCase();
             const emailHash = crypto.createHash('sha256').update(normalized).digest('hex');
-            await recordPendingPurchase(db, emailHash, { email: normalized, sessionId, entitlementKey, product, cohort }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
+            const recorded = await recordPendingPurchase(db, emailHash, { email: normalized, sessionId, entitlementKey, product, cohort, subscriptionId }, firebaseAdmin.firestore.FieldValue.serverTimestamp());
+            if (!recorded && !await db.runTransaction(tx => canGrantWebsiteOrder(tx, db, sessionId, subscriptionId))) {
+              return NextResponse.json({ received: true });
+            }
 
             console.log(`pending entitlement (${entitlementKey}) created for email=${email}`);
           } catch (hashErr) {
@@ -510,9 +529,9 @@ export async function POST(request: NextRequest) {
       const other = await stripe.subscriptions.list({ customer: customerId, status: 'all', limit: 100 });
       const possiblyActive = other.has_more || other.data.some(sub => sub.id !== incoming.id && !['canceled', 'unpaid', 'incomplete_expired'].includes(sub.status));
       if (possiblyActive) {
-        await firebaseAdmin.firestore().collection('subscription_reconciliation').doc(incoming.id).set({ status:'needs_review', reason:'other_or_paginated_subscriptions', updatedAt:firebaseAdmin.firestore.FieldValue.serverTimestamp() }, {merge:true});
+        await firebaseAdmin.firestore().collection('subscription_reconciliation').doc(incoming.id).set({ status:'needs_review', reason:'other_or_paginated_subscriptions', stripeStatus:current.status, updatedAt:firebaseAdmin.firestore.FieldValue.serverTimestamp() }, {merge:true});
       } else {
-        await reconcileDeepenCancellation(firebaseAdmin.firestore(), customerId, incoming.id, firebaseAdmin.firestore.FieldValue.serverTimestamp());
+        await reconcileDeepenCancellation(firebaseAdmin.firestore(), customerId, incoming.id, firebaseAdmin.firestore.FieldValue.serverTimestamp(), current.status);
       }
     }
 
