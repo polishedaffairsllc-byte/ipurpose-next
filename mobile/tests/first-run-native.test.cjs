@@ -33,6 +33,19 @@ test('first-run state rejects malformed stage/choice, extra fields and incomplet
   }
 });
 
+test('first-run routing follows the saved stage without redirecting returning users into setup', () => {
+  const { firstRunRedirect } = harness().load('lib/firstRun.ts');
+  assert.equal(firstRunRedirect({ stage: 'welcome' }, 'index'), '/welcome-video');
+  assert.equal(firstRunRedirect({ stage: 'choice' }, 'welcome-video'), '/starting-point');
+  assert.equal(firstRunRedirect({ stage: 'intro', choice: 'clarity' }, 'starting-point'), '/starting-intro');
+  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'clarity' }, 'starting-intro'), '/onboarding');
+  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'purpose' }, 'onboarding'), '/purpose-path');
+  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'purpose' }, 'purpose-path'), null);
+  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'purpose' }, 'account'), null);
+  assert.equal(firstRunRedirect({ stage: 'complete' }, 'index'), null);
+  assert.equal(firstRunRedirect({ stage: 'complete', choice: 'purpose' }, 'starting-intro'), '/');
+});
+
 test('authenticated first-run GET and POST use only the first-run route and never imply OpenAI permission', async () => {
   const { h, api } = apiHarness();
   const requests = [];

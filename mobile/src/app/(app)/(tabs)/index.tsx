@@ -1,4 +1,6 @@
 import { PurposeSummary } from '../../../components/PurposeSummary';
+import { IntroReplay } from '../../../components/IntroReplay';
+import { useOnboarding } from '../../../context/OnboardingContext';
 // mobile/src/app/(app)/(tabs)/index.tsx
 // PR #35 — visual redesign only. Functional behavior preserved exactly:
 // getCompanionProfile(), getConversations(), formatUpdatedAt(),
@@ -14,7 +16,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { BrandHeader } from '../../../components/BrandHeader';
@@ -60,6 +62,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const { tokens } = useVisualEnvironment();
+  const { onboarding } = useOnboarding();
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState(false);
@@ -183,6 +186,8 @@ export default function HomeScreen() {
           )}
 
           <PurposeSummary atmosphere />
+          <Link href={onboarding?.status === 'complete' ? '/clarity-check' : '/onboarding'} style={styles.journeyLink}>Clarity Check</Link>
+          <Link href="/purpose-path" style={styles.journeyLink}>Purpose Path</Link>
 
           {/* Right Now */}
           {!profileLoading ? (
@@ -233,6 +238,7 @@ export default function HomeScreen() {
               Talk it through in Compass
             </Text>
           </Pressable>
+          <IntroReplay kind="welcome" returnLabel="Return to Home" />
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -240,6 +246,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  journeyLink: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 16, minHeight: 44, paddingVertical: 12, textDecorationLine: 'underline' },
   gradient: {
     flex: 1,
   },

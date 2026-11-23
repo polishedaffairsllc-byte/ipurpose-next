@@ -1,6 +1,7 @@
 import { EmailVerificationControls } from '../../../components/EmailVerificationControls';
 import { PurposeSummary } from '../../../components/PurposeSummary';
 import { PurposeDeletionControl } from '../../../components/PurposeDeletionControl';
+import { IntroReplay } from '../../../components/IntroReplay';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState, type ReactNode } from 'react';
 import {
@@ -502,6 +503,7 @@ export default function AccountScreen() {
             </Pressable>
           </View>
 
+          <IntroReplay kind="welcome" returnLabel="Return to Account" />
           <Text style={styles.privacyNote}>
             Your information is used only to provide your authenticated iPurpose experience.
           </Text>

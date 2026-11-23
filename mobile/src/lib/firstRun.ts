@@ -7,12 +7,27 @@
 export type FirstRunStage = 'welcome' | 'choice' | 'intro' | 'experience' | 'complete';
 export type FirstRunChoice = 'clarity' | 'purpose';
 export type FirstRunState = { stage: FirstRunStage; choice?: FirstRunChoice };
+export type FirstRunRoute = '/welcome-video' | '/starting-point' | '/starting-intro' | '/onboarding' | '/purpose-path' | '/';
 
-export const FIRST_RUN_CHOICES: ReadonlyArray<{
+export function firstRunRedirect(state: FirstRunState, route: string | undefined): FirstRunRoute | null {
+  if (state.stage === 'complete') {
+    return route === 'welcome-video' || route === 'starting-point' || route === 'starting-intro' ? '/' : null;
+  }
+  const target = {
+    welcome: '/welcome-video',
+    choice: '/starting-point',
+    intro: '/starting-intro',
+    experience: state.choice === 'clarity' ? '/onboarding' : '/purpose-path',
+  } as const;
+  const path = target[state.stage];
+  return route === path.slice(1) || route === 'account' ? null : path;
+}
+
+export const FIRST_RUN_CHOICES: readonly {
   value: FirstRunChoice;
   title: string;
   description: string;
-}> = [
+}[] = [
   {
     value: 'clarity',
     title: 'Clarity Check',
@@ -35,7 +50,7 @@ export function parseFirstRunState(input: unknown): FirstRunState {
   const state = input as Record<string, unknown>;
   const stage = state.stage;
   const choice = state.choice;
-  if (!['welcome', 'choice', 'intro', 'experience', 'complete'].includes(String(stage))
+  if (typeof stage !== 'string' || !['welcome', 'choice', 'intro', 'experience', 'complete'].includes(stage)
     || Object.keys(state).some(key => key !== 'stage' && key !== 'choice')
     || (choice !== undefined && choice !== 'clarity' && choice !== 'purpose')
     || ((stage === 'intro' || stage === 'experience') && !choice)

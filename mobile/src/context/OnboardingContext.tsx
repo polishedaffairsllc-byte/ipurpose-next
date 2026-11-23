@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -23,30 +24,23 @@ const OnboardingContext = createContext<OnboardingContextValue | undefined>(unde
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.uid;
-  const [onboarding, setOnboarding] = useState<OnboardingState | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [snapshot, setSnapshot] = useState<{ uid: string; onboarding: OnboardingState | null; error: string | null } | null>(null);
+  const requestNumber = useRef(0);
 
   const refresh = useCallback(async () => {
-    if (!userId) {
-      setOnboarding(null);
-      setError(null);
-      setLoading(false);
-      return null;
-    }
+    const request = ++requestNumber.current;
+    if (!userId) return null;
 
-    setLoading(true);
-    setError(null);
     try {
-      const state = await getOnboardingState();
-      setOnboarding(state);
+      const state = await getOnboardingState(userId);
+      if (request !== requestNumber.current) return null;
+      setSnapshot({ uid: userId, onboarding: state, error: null });
       return state;
     } catch (caught) {
-      setOnboarding(null);
-      setError(caught instanceof Error ? caught.message : 'Unable to load onboarding.');
+      if (request === requestNumber.current) {
+        setSnapshot({ uid: userId, onboarding: null, error: caught instanceof Error ? caught.message : 'Unable to load onboarding.' });
+      }
       return null;
-    } finally {
-      setLoading(false);
     }
   }, [userId]);
 
@@ -55,6 +49,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     void refresh();
   }, [authLoading, refresh]);
 
+  const current = snapshot?.uid === userId ? snapshot : null;
+  const onboarding = current?.onboarding ?? null;
+  const loading = authLoading || (!!userId && !current);
+  const error = current?.error ?? null;
   const value = useMemo<OnboardingContextValue>(
     () => ({ onboarding, loading, error, refresh }),
     [error, loading, onboarding, refresh]

@@ -3,15 +3,16 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-nati
 import { Redirect, Stack, useSegments } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { useOnboarding } from '../../context/OnboardingContext';
+import { FirstRunProvider, useFirstRun } from '../../context/FirstRunContext';
+import { PurposeProvider } from '../../context/PurposeContext';
 import { SignupAdmissionGate } from '../../components/SignupAdmissionGate';
 import { acknowledgeSignupDisclosure, getSignupAdmission } from '../../lib/api';
-import { getOnboardingRedirect, type OnboardingRouteKind } from '../../lib/onboarding';
+import { firstRunRedirect } from '../../lib/firstRun';
 import { theme } from '../../theme';
 
 export default function AuthenticatedLayout() {
-  const { user, loading: authLoading, signOut } = useAuth();
-  const { onboarding, loading: onboardingLoading, error, refresh } = useOnboarding();
-  const segments = useSegments();
+  const { user, loading: authLoading } = useAuth();
+  const { refresh } = useOnboarding();
   const [admissionState, setAdmissionState] = useState<{ uid: string; status: 'checking' | 'required' | 'complete' | 'error' } | null>(null);
   const [checkVersion, setCheckVersion] = useState(0);
   // Never reuse a previous user's approval during an account switch.
@@ -58,19 +59,30 @@ export default function AuthenticatedLayout() {
   if (admission === 'required') {
     return <SignupAdmissionGate onComplete={finishSignup} />;
   }
-  if (onboardingLoading) {
+  return <FirstRunProvider key={user.uid} uid={user.uid}>
+    <PurposeProvider><AdmittedLayout /></PurposeProvider>
+  </FirstRunProvider>;
+}
+
+function AdmittedLayout() {
+  const { signOut } = useAuth();
+  const { onboarding, loading, error, refresh } = useOnboarding();
+  const firstRun = useFirstRun();
+  const leaf = useSegments().at(-1);
+  const openingClarity = leaf === 'onboarding';
+  if (!firstRun.error && (!firstRun.state || (openingClarity && loading))) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.cream }}>
         <ActivityIndicator color={theme.colors.plum} />
       </View>
     );
   }
-  if (error || !onboarding) {
+  if (firstRun.error || (openingClarity && (error || !onboarding))) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorTitle}>We could not load your Compass setup.</Text>
+        <Text style={styles.errorTitle}>We could not load your saved starting point.</Text>
         <Text style={styles.errorBody}>Check your connection, then try again.</Text>
-        <Pressable onPress={() => void refresh()} style={styles.primaryButton}>
+        <Pressable onPress={firstRun.error ? firstRun.retry : () => void refresh()} style={styles.primaryButton}>
           <Text style={styles.primaryButtonText}>Try again</Text>
         </Pressable>
         <Pressable onPress={() => void signOut()} style={styles.secondaryButton}>
@@ -79,17 +91,18 @@ export default function AuthenticatedLayout() {
       </View>
     );
   }
-
-  const leaf = segments.at(-1);
-  const route: OnboardingRouteKind = leaf === 'onboarding'
-    ? 'onboarding'
-    : leaf === 'clarity-check'
-      ? 'clarity-check'
-      : 'other';
-  const redirect = getOnboardingRedirect(onboarding.status, route);
+  if (!firstRun.state) return null;
+  const redirect = firstRunRedirect(firstRun.state, leaf);
   if (redirect) return <Redirect href={redirect} />;
+  if (openingClarity && firstRun.state.stage === 'complete' && onboarding?.status === 'complete') {
+    return <Redirect href="/" />;
+  }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return <Stack screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="welcome-video" options={{ animation: 'fade', gestureEnabled: false }} />
+    <Stack.Screen name="starting-point" options={{ gestureEnabled: false }} />
+    <Stack.Screen name="starting-intro" options={{ gestureEnabled: false }} />
+  </Stack>;
 }
 
 const styles = StyleSheet.create({

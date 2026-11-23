@@ -20,6 +20,7 @@ import { AiDataSharingControls } from '../../../components/AiDataSharingControls
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
 import { ReportResponseModal } from '../../../components/ReportResponseModal';
+import { IntroReplay } from '../../../components/IntroReplay';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { createCompassRequestId, getAiConsent, getConversation, getConversations, reportAiResponse, sendMentorMessage } from '../../../lib/api';
 import { createActivitySessionId, logUserActivity } from '../../../lib/userActivity';
@@ -239,6 +240,7 @@ export default function MentorScreen() {
             subtitle="Your space for aligned reflection and action"
             variant="light-background"
           />
+          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowCompass />
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
