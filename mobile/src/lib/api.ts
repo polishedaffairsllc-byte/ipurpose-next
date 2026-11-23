@@ -176,6 +176,27 @@ export async function sendMentorMessage(options: { message: string; requestId: s
   return readJson<MentorResponse>(response);
 }
 
+export type AiReportReason = 'unsafe' | 'offensive' | 'inaccurate' | 'other';
+
+/** Reports a saved assistant message by ID. The server resolves and validates its canonical text. */
+export async function reportAiResponse(options: {
+  conversationId: string;
+  messageId: string;
+  reason: AiReportReason;
+  details?: string;
+}): Promise<{ reported: true; reportId: string }> {
+  const response = await authorizedFetch('/api/ai/reports', {
+    method: 'POST',
+    body: JSON.stringify({
+      conversationId: options.conversationId,
+      messageId: options.messageId,
+      reason: options.reason,
+      details: options.details?.trim() || '',
+    }),
+  });
+  return readJson<{ reported: true; reportId: string }>(response);
+}
+
 export async function getPurposeResults(): Promise<{ purposeProfile: PurposeProfile | null; identityType: string | null }> {
  const data = await readJson<{ purposeProfile: unknown; identityType: unknown }>(await authorizedFetch('/api/ai/purpose'));
  const profile = readPurposeProfile(data.purposeProfile);

@@ -28,9 +28,9 @@ function memoryDb() {
 }
 function contact(overrides: Partial<ReviewContact> = {}): ReviewContact { return { contact_id: randomUUID(), institution_id: institution.institution_id, recipient_name: null, recipient_email: null, primary_office: institution.primary_office, verified_source_url: institution.sources[0].url, source_checked_at: '2026-11-07', contact_status: 'needs_research', notes: [], ...overrides }; }
 function input(token: string, overrides: Partial<OutreachInput> = {}): OutreachInput { return { event_id: randomUUID(), session_id: randomUUID(), proposal_id: institution.proposal_id, source_event_name: 'proposal_page_view', page_path: institution.page_path, client_timestamp: new Date().toISOString(), sequence: 1, visit_number: 1, traffic_type: 'internal', debug_mode: true, outreach_id: token, ...overrides }; }
-test('50 additive public records contain 48 new proposals, two existing contacted routes and no private contacts', () => {
-  assert.equal(institutions.length, 50); assert.equal(newInstitutions.length,48); assert.equal(institutions.filter(i=>i.country==='Ghana').length,30);
-  assert.equal(institutions.filter(i=>i.already_contacted).length,2); assert.equal(new Set(institutions.map(i=>i.proposal_id)).size,50);
+test('60 additive public records contain 58 new proposals, two existing contacted routes and no private contacts', () => {
+  assert.equal(institutions.length, 60); assert.equal(newInstitutions.length,58); assert.equal(institutions.filter(i=>i.country==='Ghana').length,30);
+  assert.equal(institutions.filter(i=>i.already_contacted).length,2); assert.equal(new Set(institutions.map(i=>i.proposal_id)).size,60);
   assert.equal(institutions.find(i=>i.seed_name==='Wa Technical University')?.institution_name,'Dr Hilla Limann Technical University');
   for(const row of institutions) { assert.equal(row.review_status,'awaiting_user_approval'); assert.equal(Object.hasOwn(row,'recipient_email'),false); for(const source of row.sources) assert.match(source.url,/^https:\/\//); }
   for(const row of newInstitutions) { const text=JSON.stringify(row); assert.doesNotMatch(text,/\b(?:fees?|pricing|waivers?|free|complimentary|subsidized|PDFs?)\b/i); }
@@ -78,16 +78,16 @@ test('scanner classification does not claim human reading; anonymous sessions ar
   const first=anonymousVisit(undefined);assert.equal(first.number,1);assert.deepEqual(anonymousVisit(Buffer.from(JSON.stringify(first)).toString('base64url')),{id:first.id,number:2});assert.equal(anonymousVisit('bad').number,1);
 });
 test('admin review creates unsent drafts with the private presentation and both canonical websites; existing institutions never receive duplicate initial drafts',async()=>{
-  const {db,docs}=memoryDb();await seedReviewContact(db,contact());const review=await universityReview(db,'https://preview.example');assert.equal(review.rows.length,41);assert.equal(review.counts.new,39);
+  const {db,docs}=memoryDb();await seedReviewContact(db,contact());const review=await universityReview(db,'https://preview.example');assert.equal(review.rows.length,51);assert.equal(review.counts.new,49);
   const first=review.rows[0];assert.match(first.preview_url!,/^https:\/\/preview.example\/p\/[\w-]{43}\?preview=1$/);assert.equal(first.sent_status,'unsent');assert.equal(first.live_url,null);assert.equal(first.review_status,'awaiting_user_approval');
   for(const row of newInstitutions){const draft=draftUniversityEmail(row,null,'https://preview.example/p/'+'x'.repeat(43));assert.doesNotMatch(draft.body,/\b(?:fees?|pricing|waivers?|free|complimentary|subsidized|PDFs?)\b/i);assert.equal((draft.body.match(/https:\/\//g)||[]).length,3);assert.match(draft.body,/https:\/\/ipurposesoul.com/);assert.match(draft.body,/https:\/\/www.mshmltn.com/);}
   const existing=review.rows.filter(i=>i.already_contacted);assert.equal(existing.length,2);assert.ok(existing.every(i=>i.email_kind==='follow_up_review_only'&&i.outreach_token===null&&i.sent_status==='already_contacted'));
   assert.equal([...docs].some(([key])=>key.startsWith('emailTasks/')),false);
   assert.match(reviewCsv([{email_body:'=formula'}]),/"'=formula"/);
 });
-test('recipient routes retain token and approved-content checks while admin review stays preview-only',()=>{
+test('recipient routes retain token and approved-content checks while production review requires admin authorization',()=>{
   const page=readFileSync('app/partnerships/universities/[institution]/page.tsx','utf8');assert.match(page,/if \(!token\) notFound/);assert.match(page,/resolveUniversityLink/);assert.match(page,/privatePresentation/);assert.match(page,/UniversityPresentation/);assert.match(page,/Download PDF/);assert.doesNotMatch(page,/one.page overview|\b(?:pricing|waivers?)\b/i);
-  assert.match(readFileSync('lib/universities/review.ts','utf8'),/if \(!universityPreviewEnabled\(\)\) throw/);
+  assert.match(readFileSync('app/api/admin/university-outreach/route.ts','utf8'),/outreachAdminHandler/);
   for(const file of ['app/components/SiteChrome.tsx','app/components/GoogleAds.tsx'])assert.ok(readFileSync(file,'utf8').includes("pathname.startsWith('/partnerships/universities/')"));
   assert.equal(Object.keys(universityEvents).length,12);assert.equal(summarize([],false).find(i=>i.proposal_id===institution.proposal_id)?.visits,0);
 });
@@ -118,24 +118,24 @@ test('private presentation data is recipient-scoped, preview-scoped and complete
 // Supplemental entries are additive: retain the entire approved original roster byte-for-byte.
 test('nine supplemental HBCUs retain all original records and receive separate private proposal identities',()=>{
  const ids=['north-carolina-a-t-state-university','howard-university','florida-a-m-university','xavier-university-of-louisiana','north-carolina-central-university','hampton-university','jackson-state-university','virginia-state-university','southern-university-and-a-m-college'];
- assert.deepEqual(institutions.slice(41).map(i=>i.institution_id),ids);
+ assert.deepEqual(institutions.slice(41,50).map(i=>i.institution_id),ids);
  assert.equal(institutions.filter(i=>i.group==='HBCU').length,20);
  assert.equal(institutions.filter(i=>i.country==='Ghana').length,30);
- assert.equal(new Set(institutions.map(i=>i.page_path)).size,50);
+ assert.equal(new Set(institutions.map(i=>i.page_path)).size,60);
  for(const id of ids){const row=institutions.find(i=>i.institution_id===id)!;assert.equal(row.already_contacted,false);assert.equal(row.publication_status,'preview_only');assert.equal(row.proposal_id,'university-'+id);}
 });
 
 test('replacement reconciliation archives nine Ghana records without deleting their registry/history mappings',async()=>{
- assert.equal(activeInstitutions.length,41);assert.equal(activeInstitutions.filter(i=>i.country==='Ghana').length,21);assert.equal(activeInstitutions.filter(i=>i.group==='HBCU').length,20);
+ assert.equal(activeInstitutions.length,51);assert.equal(activeInstitutions.filter(i=>i.country==='Ghana').length,21);assert.equal(activeInstitutions.filter(i=>i.group==='HBCU').length,20);
  assert.equal(activeInstitutions.filter(i=>!i.already_contacted&&i.country==='Ghana').length,19);
- const {db}=memoryDb();const review=await universityReview(db,'https://preview.example');assert.equal(review.archived_rows.length,9);assert.equal(review.counts.historical_total,50);
+ const {db}=memoryDb();const review=await universityReview(db,'https://preview.example');assert.equal(review.archived_rows.length,9);assert.equal(review.counts.historical_total,60);
  assert.deepEqual(new Set(review.archived_rows.map(i=>i.institution_id)),new Set(archivedInstitutionIds));
  for(const row of review.archived_rows){assert.ok(institutions.some(i=>i.institution_id===row.institution_id));assert.equal(row.campaign_status,'excluded_from_active_outreach');assert.ok(!review.rows.some(i=>i.institution_id===row.institution_id));}
 });
 
-test('all 39 active conversation destinations preserve the approved mailto copy and archived destinations remain unchanged', async()=>{
+test('all 49 active conversation destinations preserve the approved mailto copy and archived destinations remain unchanged', async()=>{
  const {universityConversation,UNIVERSITY_PARTNERSHIPS_EMAIL}=await import('../lib/universities/conversation');
- const active=activeInstitutions.filter(i=>!i.already_contacted);assert.equal(active.length,39);
+ const active=activeInstitutions.filter(i=>!i.already_contacted);assert.equal(active.length,49);
  for(const row of active){
   const approved=universityConversation(row.institution_name),href=universityDestinations(row).conversation,url=new URL(href);
   assert.equal(url.protocol,'mailto:');assert.equal(url.pathname,'partnerships@ipurposesoul.com');assert.equal(UNIVERSITY_PARTNERSHIPS_EMAIL,url.pathname);
@@ -146,12 +146,22 @@ test('all 39 active conversation destinations preserve the approved mailto copy 
  for(const row of institutions.filter(i=>archivedInstitutionIds.includes(i.institution_id as typeof archivedInstitutionIds[number])||i.already_contacted)){const url=new URL(universityDestinations(row).conversation);assert.equal(url.pathname,'renita@ipurposesoul.com');assert.equal(url.searchParams.get('body'),null);}
 });
 
-test('all private email drafts retain full stable preview links and rich-text links preserve approved copy',async()=>{
- const {universityEmailPreviewUrl,UNIVERSITY_EMAIL_PREVIEW_ORIGIN,universityEmailParts,universityEmailHtml}=await import('../lib/universities/email-links');
- const {db}=memoryDb();for(const row of activeInstitutions.filter(i=>!i.already_contacted))await seedReviewContact(db,contact({institution_id:row.institution_id,primary_office:row.primary_office,verified_source_url:row.sources[0].url}));
- const review=await universityReview(db,'https://ipurposesoul.com');const rows=review.rows.filter(r=>!r.already_contacted);assert.equal(rows.length,39);
- for(const row of rows){assert.equal(row.email_preview_url,universityEmailPreviewUrl(row.outreach_token!));assert.equal(new URL(row.email_preview_url!).origin,UNIVERSITY_EMAIL_PREVIEW_ORIGIN);assert.ok(row.email_body.includes(row.email_preview_url!));assert.ok(!row.email_body.includes('https://ipurposesoul.com/p/'));const parts=universityEmailParts(row.email_body);assert.equal(parts.map(p=>p.text).join(''),row.email_body);assert.ok(parts.some(p=>p.href===row.email_preview_url));assert.ok(parts.some(p=>p.text==='iPurpose'&&p.href==='https://ipurposesoul.com'));assert.ok(parts.some(p=>p.text==='Renita Hamilton'&&p.href==='https://www.mshmltn.com'));}
- assert.throws(()=>universityEmailPreviewUrl('invalid'));const html=universityEmailHtml('<script>alert(1)</script> iPurpose');assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));assert.ok(html.includes('href="https://ipurposesoul.com"'));
+test('unpublished drafts withhold recipient links and published personalized drafts use production links',async()=>{
+ const {universityRecipientUrl,universityEmailParts,universityEmailHtml}=await import('../lib/universities/email-links');
+ const {db,docs}=memoryDb();const c=contact();await seedReviewContact(db,c);
+ const link=[...docs.values()].find(row=>row.contact_id===c.contact_id&&row.review_token)!;
+ const token=String(link.review_token);
+ const record={institution_id:institution.institution_id,contact_id:c.contact_id,environment:'preview',content_version:PRESENTATION_VERSION,review_status:'awaiting_user_approval',slides:Array.from({length:8},(_,i)=>({number:i+1,title:`Slide ${i+1}`,body:'Approved copy',paragraphs:['Approved copy','Approved rationale']})),assets:{},authored_email:{subject:'Approved personalized subject',body:'Dear recipient,\n\n[UNIQUE_TRACKED_PROPOSAL_LINK]'}};
+ docs.set(`${PRESENTATION_COLLECTION}/preview_${c.contact_id}`,record);
+ let review=await universityReview(db,'https://preview.example');
+ let row=review.rows.find(row=>row.institution_id===institution.institution_id)!;
+ assert.equal(row.live_url,null);assert.equal(row.email_preview_url,null);assert.equal(row.email_release_pending,true);assert.ok(!row.email_body.includes('preview=1'));
+ docs.set(`${PUBLICATION_COLLECTION}/${tokenHash(token)}`,{environment:'production',enabled:true,review_status:'approved_for_recipient_access',approvedAt:Timestamp.now(),expiresAt:Timestamp.fromMillis(Date.now()+86400000),institution_id:institution.institution_id,contact_id:c.contact_id,proposal_id:institution.proposal_id,campaign_id:link.campaign_id,presentation_id:`preview_${c.contact_id}`,presentation_sha256:presentationFingerprint(record)});
+ review=await universityReview(db,'https://preview.example');row=review.rows.find(row=>row.institution_id===institution.institution_id)!;
+ assert.equal(row.live_url,universityRecipientUrl(token));assert.equal(row.email_release_pending,false);assert.equal((await readOutreach(db,{window:'30d',includeInternal:false},'production')).recipientOptions[c.contact_id]?.institution_id,institution.institution_id);assert.equal(row.email_subject,'Approved personalized subject');assert.ok(row.email_body.includes(row.live_url!));assert.ok(!row.email_body.includes('preview=1'));
+ record.slides[0].body='Unpublished edit';review=await universityReview(db,'https://preview.example');assert.equal(review.rows.find(row=>row.institution_id===institution.institution_id)!.live_url,null);
+ const parts=universityEmailParts(`[iPurpose x University](${universityRecipientUrl(token)})`);assert.equal(parts.length,1);assert.equal(parts[0].href,universityRecipientUrl(token));assert.equal(parts[0].text,'iPurpose x University');
+ assert.throws(()=>universityRecipientUrl('invalid'));const html=universityEmailHtml('<script>alert(1)</script> iPurpose');assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));
 });
 
 test('production requires a separately approved original token and pins its exact recipient presentation',async()=>{
