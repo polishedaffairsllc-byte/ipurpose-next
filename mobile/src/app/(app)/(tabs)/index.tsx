@@ -1,6 +1,7 @@
 import { PurposeSummary } from '../../../components/PurposeSummary';
 import { IntroReplay } from '../../../components/IntroReplay';
 import { useOnboarding } from '../../../context/OnboardingContext';
+import { useFirstRun } from '../../../context/FirstRunContext';
 // mobile/src/app/(app)/(tabs)/index.tsx
 // PR #35 — visual redesign only. Functional behavior preserved exactly:
 // getCompanionProfile(), getConversations(), formatUpdatedAt(),
@@ -63,6 +64,8 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const { tokens } = useVisualEnvironment();
   const { onboarding } = useOnboarding();
+  const { state: firstRun } = useFirstRun();
+  const finishingFirstClarity = firstRun?.stage === 'experience' && firstRun.choice === 'clarity';
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState(false);
@@ -186,7 +189,7 @@ export default function HomeScreen() {
           )}
 
           <PurposeSummary atmosphere />
-          <Link href={onboarding?.status === 'complete' ? '/clarity-check' : '/onboarding'} style={styles.journeyLink}>Clarity Check</Link>
+          <Link href={onboarding?.status === 'complete' && !finishingFirstClarity ? '/clarity-check' : '/onboarding'} style={styles.journeyLink}>Clarity Check</Link>
           <Link href="/purpose-path" style={styles.journeyLink}>Purpose Path</Link>
 
           {/* Right Now */}

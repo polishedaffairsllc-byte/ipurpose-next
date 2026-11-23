@@ -107,7 +107,9 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' }; h.mocks['expo-blur'] = { BlurView: 'BlurView' };
   h.mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
   h.mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
-  h.mocks['../../../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: null }) };
+  const firstRun = { stage: 'experience', choice: 'clarity' };
+  h.mocks['../../../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: { status: 'complete' } }) };
+  h.mocks['../../../context/FirstRunContext'] = { useFirstRun: () => ({ state: firstRun }) };
   h.mocks['expo-router'].Link = 'Link';
   h.mocks['../../../components/VisualEnvironmentPicker'] = { VisualEnvironmentPicker: 'VisualEnvironmentPicker' };
   h.mocks['../../../components/EmailVerificationControls'] = { EmailVerificationControls: 'EmailVerificationControls' };
@@ -117,7 +119,16 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   const provider = h.load('context/PurposeCheckContext.tsx'); h.mocks['../context/PurposeCheckContext'] = provider;
   function Probe() { context = provider.usePurposeCheck(); return null; }
   const Screen = h.load(`app/(app)/(tabs)/${screenName}.tsx`).default;
-  const tree = await render(React.createElement(provider.PurposeCheckProvider, null, React.createElement(Probe), React.createElement(Screen)));
+  const screen = () => React.createElement(provider.PurposeCheckProvider, null,
+    React.createElement(Probe), React.createElement(Screen));
+  const tree = await render(screen());
+  if (screenName === 'index') {
+    const clarityLink = () => tree.root.findAllByType('Link').find(link => text(link) === 'Clarity Check');
+    assert.equal(clarityLink().props.href, '/onboarding');
+    firstRun.stage = 'complete';
+    await act(async () => tree.update(screen()));
+    assert.equal(clarityLink().props.href, '/clarity-check');
+  }
   assert.ok(button(tree, 'Take the Purpose Check'));
   const first = math.buildPurposePayload({ q1: ['explain'], q2: ['learn'], q3: ['learn'], q4: ['young'], q5: ['learn'], q6: ['understand'] }, '', false);
   await act(async () => context.save(first)); assert.ok(button(tree, 'View my full Purpose profile')); assert.ok(text(tree.root).includes(saved.direction));

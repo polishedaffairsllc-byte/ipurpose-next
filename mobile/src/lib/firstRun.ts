@@ -10,14 +10,20 @@ export type FirstRunState = { stage: FirstRunStage; choice?: FirstRunChoice };
 export type FirstRunRoute = '/welcome-video' | '/starting-point' | '/starting-intro' | '/onboarding' | '/purpose-path' | '/';
 
 export function firstRunRedirect(state: FirstRunState, route: string | undefined): FirstRunRoute | null {
+  const openingFirstRunIntro = route === 'welcome-video' || route === 'starting-point' || route === 'starting-intro';
   if (state.stage === 'complete') {
-    return route === 'welcome-video' || route === 'starting-point' || route === 'starting-intro' ? '/' : null;
+    return openingFirstRunIntro ? '/' : null;
+  }
+  if (state.stage === 'experience') {
+    // Continue from the intro into the chosen activity. From there, users can
+    // go Home and resume the activity without marking first run complete.
+    if (!openingFirstRunIntro) return null;
+    return state.choice === 'clarity' ? '/onboarding' : '/purpose-path';
   }
   const target = {
     welcome: '/welcome-video',
     choice: '/starting-point',
     intro: '/starting-intro',
-    experience: state.choice === 'clarity' ? '/onboarding' : '/purpose-path',
   } as const;
   const path = target[state.stage];
   return route === path.slice(1) || route === 'account' ? null : path;

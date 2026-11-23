@@ -144,7 +144,7 @@ export default function PurposePathScreen() {
               )}
               {firstExperience ? resultsReady && !stage ? <>
                 {finishError ? <Text accessibilityRole="alert" style={styles.body}>{finishError}</Text> : null}
-                <Choice centered label="Return to Home" disabled={leaving} onPress={() => void finishFirstExperience()} />
+                <Choice centered label="Finish and return to Home" disabled={leaving} onPress={() => void finishFirstExperience()} />
               </> : null : <>
                 <Choice centered label="Chat with Compass" disabled={leaving} onPress={() => void leave('/mentor')} />
                 <Text style={styles.status}>Choose what to share when you get there. Your reflections stay here.</Text>
@@ -157,7 +157,7 @@ export default function PurposePathScreen() {
         <View style={styles.returnActions}>
           {!firstExperience ? <Choice centered label="Return to Purpose" disabled={leaving} onPress={() => void leave('/purpose')} /> : null}
           <View style={styles.returnRow}>
-            {!firstExperience ? <View style={styles.flex}><Choice centered label="Home" disabled={leaving} onPress={() => void leave('/')} /></View> : null}
+            <View style={styles.flex}><Choice centered label="Home" disabled={leaving} onPress={() => void leave('/')} /></View>
             <View style={styles.flex}><Choice centered label="Account" disabled={leaving} onPress={() => void leave('/account')} /></View>
           </View>
         </View>
