@@ -5,5 +5,5 @@ export const universityProposals: readonly Proposal[] = newInstitutions.map(item
   organization: item.institution_name, label: item.institution_name, recipientId: item.institution_id,
   deckVariant: 'university-presentation', pagePath: item.page_path, slideCount: 8,
   events: universityEvents, sections: universitySections, destinations: universityDestinations(item),
-  ctas: { discuss: 'otherCtaClicks' }, metrics: ['rawAccesses', 'pageLoads', 'uniqueSessions', 'repeatVisits', 'qualifiedVisits', 'highestSlide', 'completed', 'pdfDownloaded', 'meetingRequests', 'externalLinkClicks'],
+  ctas: { discuss: 'otherCtaClicks', ...(item.group === 'US-Wave-3' ? { copy_partnership_email: 'otherCtaClicks' } : {}) }, metrics: ['rawAccesses', 'pageLoads', 'uniqueSessions', 'repeatVisits', 'qualifiedVisits', 'highestSlide', 'completed', 'pdfDownloaded', 'meetingRequests', 'externalLinkClicks'],
 }));
