@@ -106,6 +106,9 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   const api = { getPurposeResults: async () => ({ purposeProfile: saved, identityType: null }), putPurposeResults: async body => (saved = math.generatePurposeProfile(body)), deletePurposeResults: async () => { saved = null; }, getCompanionProfile: async () => ({ focusAreas: [] }), getConversations: async () => [] };
   h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' }; h.mocks['expo-blur'] = { BlurView: 'BlurView' };
   h.mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
+  h.mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
+  h.mocks['../../../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: null }) };
+  h.mocks['expo-router'].Link = 'Link';
   h.mocks['../../../components/VisualEnvironmentPicker'] = { VisualEnvironmentPicker: 'VisualEnvironmentPicker' };
   h.mocks['../../../components/EmailVerificationControls'] = { EmailVerificationControls: 'EmailVerificationControls' };
   h.mocks['./AuthContext'] = h.mocks['../../../context/AuthContext'] = { useAuth: () => ({ user }) };

@@ -1,5 +1,9 @@
 import { ClarityCheckFlow } from '../../components/ClarityCheckFlow';
+import { useFirstRun } from '../../context/FirstRunContext';
 
 export default function OnboardingScreen() {
-  return <ClarityCheckFlow mode="onboarding" />;
+  const { state, advance } = useFirstRun();
+  return <ClarityCheckFlow mode="onboarding" onComplete={state?.stage === 'experience'
+    ? () => advance({ stage: 'complete', choice: 'clarity' })
+    : undefined} />;
 }
