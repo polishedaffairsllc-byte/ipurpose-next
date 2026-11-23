@@ -57,7 +57,7 @@ export function IntroReplay({ kind, returnLabel, autoShowCompass = false }: {
     <Pressable accessibilityRole="button" onPress={() => setMode('replay')}
       style={[styles.button, (kind === 'clarity' || kind === 'purpose') && styles.guidance,
         { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
-      <Text style={styles.label}>{kind === 'welcome' ? 'Replay Welcome' : kind === 'compass' ? 'Replay Compass video' : `About ${INTRO_VIDEOS[kind].label}`}</Text>
+      <Text style={styles.label}>{kind === 'welcome' ? 'Replay Welcome' : `About ${INTRO_VIDEOS[kind].label}`}</Text>
     </Pressable>
     <Modal visible={mode !== null} animationType="fade" onRequestClose={close}>
       {mode ? <IntroVideo kind={kind} replay={mode === 'replay'}

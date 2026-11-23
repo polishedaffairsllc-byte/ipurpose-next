@@ -123,6 +123,7 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
     React.createElement(Probe), React.createElement(Screen));
   const tree = await render(screen());
   if (screenName === 'index') {
+    assert.equal(tree.root.findByType('BrandHeader').props.size, 'hero');
     const clarityLink = () => tree.root.findAllByType('Link').find(link => text(link) === 'Clarity Check');
     assert.equal(clarityLink().props.href, '/onboarding');
     firstRun.stage = 'complete';

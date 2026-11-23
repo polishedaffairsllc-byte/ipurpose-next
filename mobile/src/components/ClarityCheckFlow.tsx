@@ -291,7 +291,7 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
                   <Ionicons color={tokens.atmosphereText} name="chevron-back" size={20} />
                 </Pressable>
               ) : <View style={styles.backPlaceholder} />}
-              <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
+              <BrandHeader subtitle="Soul → Systems → AI" variant="dark-background" />
             </View>
 
             <View style={styles.progressTrack}>

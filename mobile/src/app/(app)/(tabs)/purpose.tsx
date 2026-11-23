@@ -11,6 +11,7 @@ import { logLaunchEvent } from '../../../lib/analyticsEvents';
 import { theme } from '../../../theme';
 import { PurposeButton } from '../../../components/PurposeButton';
 import { IntroReplay } from '../../../components/IntroReplay';
+import { BrandHeader } from '../../../components/BrandHeader';
 export default function PurposeScreen() {
     const { profile, identityType, loading, error, refresh, save } = usePurposeCheck();
     const { tokens } = useVisualEnvironment();
@@ -54,6 +55,7 @@ export default function PurposeScreen() {
     const details = profile ? purposeProfileDetails(profile) : null;
     const pairing = profile ? purposePairing(profile, identityType) : null;
     return <SafeAreaView edges={['top', 'left', 'right']} style={[styles.safe, { backgroundColor: tokens.screenBackground }]}><KeyboardAvoidingView style={styles.safe} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
+ <View style={{ marginBottom: 10 }}><BrandHeader subtitle="Clarity → Purpose → Action" /></View>
  <Text style={[styles.eyebrow, { color: tokens.accentStrong }]}>{purposeCopy.tab}</Text>
  <Text accessibilityRole="header" style={styles.title}>{question ? purposeCopy.progress((step || 0) + 1) : step === 6 ? purposeCopy.reflection : purposeCopy.title}</Text>
  <IntroReplay kind="purpose" returnLabel="Return to Purpose" />

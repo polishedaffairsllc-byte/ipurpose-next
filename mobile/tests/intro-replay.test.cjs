@@ -46,7 +46,7 @@ test('Compass shows once even when dismissed and saving to the account fails', a
   const returning = await render(screen());
   assert.equal(returning.root.findByType('Modal').props.visible, false);
   assert.equal(writes.length, 2, 'The pending account update is retried without showing the video.');
-  await press(returning, 'Replay Compass video');
+  await press(returning, 'About Compass');
   const replay = returning.root.findByType('IntroVideo');
   assert.equal(replay.props.replay, true);
   assert.equal(replay.props.returnLabel, 'Return to Compass');

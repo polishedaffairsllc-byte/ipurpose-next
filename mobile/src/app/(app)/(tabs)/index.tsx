@@ -157,7 +157,7 @@ export default function HomeScreen() {
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
         >
-          <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
+          <BrandHeader size="hero" subtitle="Soul → Systems → AI" variant="dark-background" />
 
           <View style={styles.hero}>
             <Text style={[styles.greeting, { color: tokens.atmosphereText }]}>{greeting}</Text>

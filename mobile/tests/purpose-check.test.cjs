@@ -28,6 +28,7 @@ function harness() {
  mocks['@expo/vector-icons/MaterialCommunityIcons'] = 'MaterialIcon';
  mocks['@react-navigation/elements'] = { PlatformPressable: 'PlatformPressable' };
  mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
+ mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
  return { load, mocks, routes, events, state, native };
 }
 const text = node => typeof node === 'string' ? node : (node.children || []).map(text).join('');

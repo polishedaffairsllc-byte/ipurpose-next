@@ -70,6 +70,7 @@ export default function CreateAccountScreen() {
       body="Your Clarity Check will establish the first layer of context Compass needs to support you well."
       eyebrow="BEGIN YOUR JOURNEY"
       title="Create your account."
+      variant="signup"
     >
       <AuthPanel>
         <Text style={authStyles.label}>FIRST NAME</Text>
