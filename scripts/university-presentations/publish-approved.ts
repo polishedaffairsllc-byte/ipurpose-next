@@ -1,4 +1,4 @@
-/** Operator-only publication of the owner's 39 original scheduled links. Never reads/writes Gmail. */
+/** Operator-only publication of an explicit owner-approved university link manifest. */
 import 'server-only';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -12,7 +12,7 @@ async function main() {
   const [filename, action] = process.argv.slice(2);
   if (!filename || (action && action !== '--publish')) throw new Error('Supply the private approved manifest; omit --publish for validation only.');
   const manifest = JSON.parse(await readFile(filename, 'utf8')) as { approval_reference: string; links: { institution_id: string; original_url: string }[] };
-  if (manifest.approval_reference !== 'owner-approved-issue-101' || !Array.isArray(manifest.links) || manifest.links.length !== 39 || new Set(manifest.links.map(row => row.institution_id)).size !== 39 || new Set(manifest.links.map(row => row.original_url)).size !== 39) throw new Error('Expected exactly 39 unique owner-approved scheduled links.');
+  if (typeof manifest.approval_reference !== 'string' || !manifest.approval_reference.trim() || manifest.approval_reference.length > 200 || !Array.isArray(manifest.links) || manifest.links.length < 1 || manifest.links.length > 250 || new Set(manifest.links.map(row => row.institution_id)).size !== manifest.links.length || new Set(manifest.links.map(row => row.original_url)).size !== manifest.links.length) throw new Error('Expected a nonempty manifest of unique owner-approved university links.');
   const { firebaseAdmin } = await import('@/lib/firebaseAdmin');
   const db = firebaseAdmin.firestore();
   const project = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID, key = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
