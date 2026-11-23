@@ -56,7 +56,7 @@ function makeDraft(
   };
 }
 
-export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
+export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onComplete?: () => Promise<void> }) {
   const { styles, tokens } = useClarityAppearance();
   const router = useRouter();
   const { signOut } = useAuth();
@@ -210,6 +210,7 @@ export function ClarityCheckFlow({ mode }: { mode: FlowMode }) {
       if (nextState?.status !== 'complete') {
         throw new Error('Your answers are safe, but setup could not be confirmed. Please try again.');
       }
+      await onComplete?.();
       router.replace('/');
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'We could not finish setup.');
