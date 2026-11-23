@@ -5,11 +5,13 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 import { FirebaseError } from 'firebase/app';
 import { Redirect, useRouter } from 'expo-router';
 import { AuthPanel, AuthScaffold, authStyles } from '../components/AuthScaffold';
-import { SignupNameSaveError, useAuth } from '../context/AuthContext';
+import { SignupDisclosure } from '../components/SignupDisclosure';
+import { SignupSetupError, useAuth } from '../context/AuthContext';
+import { parseSignupName, SIGNUP_NAME_MAX_LENGTH } from '../lib/profileIdentity';
 import { theme } from '../theme';
 
 function getAccountError(error: unknown): string {
-  if (error instanceof SignupNameSaveError) return error.message;
+  if (error instanceof SignupSetupError) return error.message;
   if (error instanceof FirebaseError) {
     if (error.code === 'auth/email-already-in-use') {
       return 'An account already uses this email. Sign in instead.';
@@ -23,9 +25,11 @@ function getAccountError(error: unknown): string {
 export default function CreateAccountScreen() {
   const router = useRouter();
   const { createAccount, loading, user } = useAuth();
-  const [displayName, setDisplayName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(false);
+  const [disclosureAcknowledged, setDisclosureAcknowledged] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -40,17 +44,22 @@ export default function CreateAccountScreen() {
   if (user) return <Redirect href="/" />;
 
   const normalizedEmail = email.trim();
+  const name = parseSignupName(firstName, lastName);
   const passwordsMatch = password === confirmation;
-  const disabled = !normalizedEmail || password.length < 6 || !passwordsMatch || submitting;
+  const disabled = !name || !normalizedEmail || password.length < 6 || !passwordsMatch || !disclosureAcknowledged || submitting;
 
   async function handleCreateAccount() {
-    if (disabled) return;
+    if (disabled || !name) return;
     setSubmitting(true);
     setError(null);
     try {
-      await createAccount(normalizedEmail, password, marketingOptIn, displayName.trim() || undefined);
+      await createAccount(normalizedEmail, password, {
+        ...name,
+        marketingOptIn,
+        disclosureAcknowledged,
+      });
     } catch (caught) {
-      if (caught instanceof SignupNameSaveError) setAccountCreated(true);
+      if (caught instanceof SignupSetupError) setAccountCreated(true);
       setError(getAccountError(caught));
       setSubmitting(false);
     }
@@ -63,18 +72,29 @@ export default function CreateAccountScreen() {
       title="Create your account."
     >
       <AuthPanel>
-        <Text style={authStyles.label}>NAME (OPTIONAL)</Text>
+        <Text style={authStyles.label}>FIRST NAME</Text>
         <TextInput
-          accessibilityLabel="Name (optional)"
+          accessibilityLabel="First name"
           autoCapitalize="words"
           autoCorrect={false}
-          maxLength={80}
-          onChangeText={setDisplayName}
-          placeholder="What should we call you?"
-          placeholderTextColor="#767A94"
+          editable={!submitting}
+          maxLength={SIGNUP_NAME_MAX_LENGTH}
+          onChangeText={setFirstName}
           style={authStyles.input}
-          textContentType="name"
-          value={displayName}
+          textContentType="givenName"
+          value={firstName}
+        />
+        <Text style={authStyles.label}>LAST NAME</Text>
+        <TextInput
+          accessibilityLabel="Last name"
+          autoCapitalize="words"
+          autoCorrect={false}
+          editable={!submitting}
+          maxLength={SIGNUP_NAME_MAX_LENGTH}
+          onChangeText={setLastName}
+          style={authStyles.input}
+          textContentType="familyName"
+          value={lastName}
         />
         <Text style={authStyles.label}>EMAIL</Text>
         <TextInput
@@ -147,6 +167,8 @@ export default function CreateAccountScreen() {
           <Ionicons name={marketingOptIn ? 'checkbox' : 'square-outline'} size={24} color={theme.colors.champagne} />
           <Text style={styles.consentText}>{CLARITY_LIFECYCLE_COPY.consent}</Text>
         </Pressable>
+        <SignupDisclosure inline acknowledged={disclosureAcknowledged} disabled={submitting}
+          onToggle={() => setDisclosureAcknowledged(value => !value)} />
         {confirmation && !passwordsMatch ? (
           <Text accessibilityRole="alert" style={authStyles.error}>Passwords do not match.</Text>
         ) : error ? (
@@ -154,6 +176,7 @@ export default function CreateAccountScreen() {
         ) : null}
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ disabled, busy: submitting }}
           disabled={disabled}
           onPress={() => void handleCreateAccount()}
           style={({ pressed }) => [

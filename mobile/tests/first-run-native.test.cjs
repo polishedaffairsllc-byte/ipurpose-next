@@ -50,7 +50,7 @@ test('first-run routing opens the chosen activity from the intro and allows Home
   assert.equal(firstRunRedirect({ stage: 'complete', choice: 'purpose' }, 'starting-intro'), '/');
 });
 
-test('Home from a first Purpose Path saves and resumes a draft without completing first run', async () => {
+test('Leaving a first Purpose Path preserves the draft without completing first run', async () => {
   const h = harness();
   const drafts = new Map();
   h.mocks['@react-native-async-storage/async-storage'] = {
@@ -58,20 +58,18 @@ test('Home from a first Purpose Path saves and resumes a draft without completin
     setItem: async (key, value) => { drafts.set(key, value); },
   };
   h.mocks['./AuthContext'] = { useAuth: () => ({ user: { uid: 'new-user' } }) };
-  h.mocks['../../context/VisualEnvironmentContext'] = h.mocks['../context/VisualEnvironmentContext'];
   h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' };
-  h.mocks['../../components/EnvironmentBackground'] = { EnvironmentBackground: 'EnvironmentBackground' };
-  h.mocks['../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
-  h.mocks['expo-router'].useRouter = () => ({ dismissTo: route => h.routes.push(route) });
+  h.mocks['../../../components/EnvironmentBackground'] = { EnvironmentBackground: 'EnvironmentBackground' };
+  h.mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
   const advancement = [];
-  h.mocks['../../context/FirstRunContext'] = {
+  h.mocks['../../../context/FirstRunContext'] = {
     useFirstRun: () => ({
       state: { stage: 'experience', choice: 'purpose' },
       advance: async next => { advancement.push(next); },
     }),
   };
   const { PurposeProvider } = h.load('context/PurposeContext.tsx');
-  const PurposePath = h.load('app/(app)/purpose-path.tsx').default;
+  const PurposePath = h.load('app/(app)/(tabs)/purpose-path.tsx').default;
   const screen = () => React.createElement(PurposeProvider, null, React.createElement(PurposePath));
 
   const tree = await render(screen());
@@ -79,8 +77,7 @@ test('Home from a first Purpose Path saves and resumes a draft without completin
   const input = tree.root.findAllByType('TextInput')[0];
   const draftText = 'I want to mentor new designers.';
   await act(async () => input.props.onChangeText(draftText));
-  await press(tree, 'Home');
-  assert.deepEqual(h.routes, ['/']);
+  assert.equal(tree.root.findByType('IntroReplay').props.kind, 'purpose');
   assert.deepEqual(advancement, []);
   await act(async () => tree.unmount());
 
@@ -119,6 +116,24 @@ test('first-run client rejects a different server UID and account switches durin
     return Response.json({ uid: 'new-user', state: { stage: 'complete' } });
   };
   await assert.rejects(api.getNativeFirstRun(), /signed-in account changed/);
+});
+
+test('signup acknowledgment uses account setup and is bound to the created account', async () => {
+  const { h, api, auth } = apiHarness();
+  const requests = [];
+  h.mocks.fetch = async (url, init) => {
+    requests.push({ url, method: init.method, body: JSON.parse(init.body) });
+    return Response.json({ completed: true });
+  };
+  const name = { firstName: 'Tara', lastName: 'Rivera' };
+  await api.acknowledgeSignupDisclosure('new-user', name);
+  auth.currentUser = { uid: 'different-user', getIdToken: async () => 'other-token' };
+  await assert.rejects(api.acknowledgeSignupDisclosure('new-user'), /signed-in account changed/);
+  assert.deepEqual(requests, [{
+    url: 'https://ipurposesoul.com/api/auth/complete-signup',
+    method: 'POST',
+    body: { granted: true, version: 'compass-openai-2026-10-12', ...name },
+  }]);
 });
 
 test('first-run validation prevents malformed writes even when a user is signed in', async () => {

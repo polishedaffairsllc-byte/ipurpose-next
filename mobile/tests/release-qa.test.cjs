@@ -41,7 +41,7 @@ for (const existing of [false, true]) test(`actual Purpose provider + API + scre
  const qs = h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS; assert.equal(qs.length, 6);
  for (const q of qs) { assert.match(text(tree.root), new RegExp(q.prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))); await press(tree, q.options[0].label); if (q.max > 1) await press(tree, 'Continue'); }
  await press(tree, 'See my Purpose Direction'); assert.equal(writes.length, 1); assert.equal(Object.keys(writes[0].answers).length, 6);
- assert.ok(button(tree, 'Retake the Purpose Check')); assert.equal(button(tree, 'Continue to the Purpose Path').props.disabled, true);
+ assert.ok(button(tree, 'Retake the Purpose Check')); assert.ok(!button(tree, 'Continue to the Purpose Path').props.disabled);
  await act(async () => tree.unmount());
 });
 test('Purpose provider exposes genuine failure and retry recovers to first-time start', async () => {
@@ -92,15 +92,26 @@ test('signup visibility toggles are independent and preserve values, validation,
  const tree = await render(React.createElement(h.load('app/create-account.tsx').default));
  const input = label => tree.root.findAllByType('TextInput').find(n => n.props.accessibilityLabel === label);
  const toggle = async label => { const b = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityLabel === label); assert.ok(b); await act(async () => b.props.onPress()); };
- const box = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'checkbox'); assert.equal(box.props.accessibilityState.checked, false);
+ const [marketing, disclosure] = tree.root.findAllByType('Pressable').filter(n => n.props.accessibilityRole === 'checkbox');
+ assert.equal(marketing.props.accessibilityState.checked, false);
+ assert.equal(disclosure.props.accessibilityState.checked, false);
  assert.equal(input('Password').props.secureTextEntry, true); assert.equal(input('Confirm password').props.secureTextEntry, true);
  await act(async () => { input('Email').props.onChangeText(' person@example.test '); input('Password').props.onChangeText('secret123'); input('Confirm password').props.onChangeText('mismatch'); });
  assert.equal(button(tree, 'Create Account').props.disabled, true);
  await toggle('Show password'); assert.equal(input('Password').props.secureTextEntry, false); assert.equal(input('Confirm password').props.secureTextEntry, true);
  await toggle('Show confirm password'); assert.equal(input('Confirm password').props.secureTextEntry, false); assert.equal(input('Password').props.value, 'secret123');
  await toggle('Hide password'); await toggle('Hide confirm password'); assert.equal(input('Password').props.secureTextEntry, true);
- await act(async () => input('Confirm password').props.onChangeText('secret123')); await press(tree, 'Create Account');
- assert.deepEqual(calls, [['person@example.test', 'secret123', false, undefined]]); await act(async () => tree.unmount());
+ await act(async () => input('Confirm password').props.onChangeText('secret123'));
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => disclosure.props.onPress());
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => input('First name').props.onChangeText('Tara'));
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => input('Last name').props.onChangeText('Rivera'));
+ await press(tree, 'Create Account');
+ assert.deepEqual(calls, [['person@example.test', 'secret123',
+  { firstName: 'Tara', lastName: 'Rivera', disclosureAcknowledged: true, marketingOptIn: false }]]);
+ await act(async () => tree.unmount());
 });
 
 test('Clarity retake reaches every unchanged question, retries with the same attempt ID and displays the server result', async () => {

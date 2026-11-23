@@ -1,5 +1,5 @@
-import { ClarityCheckFlow } from '../../components/ClarityCheckFlow';
-import { useFirstRun } from '../../context/FirstRunContext';
+import { ClarityCheckFlow } from '../../../components/ClarityCheckFlow';
+import { useFirstRun } from '../../../context/FirstRunContext';
 
 export default function OnboardingScreen() {
   const { state, advance } = useFirstRun();

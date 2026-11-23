@@ -4,10 +4,10 @@ import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Tex
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { BrandHeader } from '../../components/BrandHeader';
-import { useVisualEnvironment } from '../../context/VisualEnvironmentContext';
-import { getCompanionProfile, updateCompanionFocusAreas } from '../../lib/api';
-import { theme } from '../../theme';
+import { BrandHeader } from '../../../components/BrandHeader';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
+import { getCompanionProfile, updateCompanionFocusAreas } from '../../../lib/api';
+import { theme } from '../../../theme';
 
 const MAX_FOCUS_LENGTH = 160;
 export default function FocusScreen() {

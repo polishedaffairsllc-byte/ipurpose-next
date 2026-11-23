@@ -4,6 +4,7 @@ import type { IntroKind } from './introVideos';
 import { CLARITY_LIFECYCLE_COPY } from './clarityLifecycleCopy';
 import { logLaunchEvent } from './analyticsEvents';
 import { auth } from './firebase';
+import type { SignupName } from './profileIdentity';
 import type { CompanionMessage, CompanionProfile, ConversationSummary, MentorResponse, ResponseMode } from '../types/companion';
 import type { VisualEnvironmentPreference } from './visualEnvironment';
 import type {
@@ -262,11 +263,11 @@ export async function getSignupAdmission(): Promise<boolean> {
   const response = await authorizedFetch('/api/auth/complete-signup', { method: 'GET' }, true);
   return (await readJson<{ completed: boolean }>(response)).completed;
 }
-export async function acknowledgeSignupDisclosure(): Promise<void> {
+export async function acknowledgeSignupDisclosure(expectedUid?: string, name?: SignupName): Promise<void> {
   const response = await authorizedFetch('/api/auth/complete-signup', {
     method: 'POST',
-    body: JSON.stringify({ granted: true, version: SIGNUP_AI_VERSION }),
-  }, true);
+    body: JSON.stringify({ granted: true, version: SIGNUP_AI_VERSION, ...name }),
+  }, true, expectedUid);
   const result = await readJson<{ completed: boolean }>(response);
   if (!result.completed) throw new Error('Account setup is incomplete. Please try again.');
 }

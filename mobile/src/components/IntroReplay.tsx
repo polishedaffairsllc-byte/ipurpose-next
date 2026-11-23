@@ -55,7 +55,8 @@ export function IntroReplay({ kind, returnLabel, autoShowCompass = false }: {
 
   return <>
     <Pressable accessibilityRole="button" onPress={() => setMode('replay')}
-      style={[styles.button, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
+      style={[styles.button, (kind === 'clarity' || kind === 'purpose') && styles.guidance,
+        { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
       <Text style={styles.label}>{kind === 'welcome' ? 'Replay Welcome' : kind === 'compass' ? 'Replay Compass video' : `About ${INTRO_VIDEOS[kind].label}`}</Text>
     </Pressable>
     <Modal visible={mode !== null} animationType="fade" onRequestClose={close}>
@@ -68,5 +69,6 @@ export function IntroReplay({ kind, returnLabel, autoShowCompass = false }: {
 
 const styles = StyleSheet.create({
   button: { minHeight: 44, borderRadius: 18, borderWidth: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, marginVertical: 6 },
+  guidance: { alignSelf: 'center', borderRadius: 24, paddingHorizontal: 22 },
   label: { color: theme.colors.ink, fontFamily: theme.fonts.body, fontSize: 14 },
 });

@@ -3,6 +3,7 @@ import type { UserRecord } from 'firebase-admin/auth';
 import { accountDeletionLock } from '../accountDeletionLock';
 import { AI_CONSENT_NOTICE, AI_CONSENT_VERSION, CompanionSafetyError } from '../ai/companionSafety';
 import { SIGNUP_AI_ERROR, SIGNUP_AI_NOTICE, SIGNUP_AI_VERSION } from './disclosure';
+import { formatSignupName, parseSignupName } from '../../mobile/src/lib/profileIdentity';
 
 // Fixed release boundary, not a moving deployment-time cutoff. Existing accounts
 // remain usable after withdrawal; only new incomplete registrations are gated.
@@ -18,9 +19,13 @@ export async function requireCompletedSignup(db: Firestore, user: UserRecord) {
 
 /** Complete installed-app signup without treating its generic checkbox as OpenAI permission. */
 export async function completeSignup(db: Firestore, user: UserRecord, input: unknown, verifyIdentity: () => Promise<UserRecord>) {
-  const body = input as { granted?: unknown; version?: unknown } | null;
+  const body = input as { granted?: unknown; version?: unknown; firstName?: unknown; lastName?: unknown } | null;
   if (body?.granted !== true || body.version !== SIGNUP_AI_VERSION) {
     throw new CompanionSafetyError(SIGNUP_AI_ERROR, 400);
+  }
+  const name = parseSignupName(body.firstName, body.lastName);
+  if (!name && (body.firstName !== undefined || body.lastName !== undefined)) {
+    throw new CompanionSafetyError('Enter a valid first and last name.', 400);
   }
   const parent = db.collection('users').doc(user.uid);
   const permission = parent.collection('consents').doc('compassAi');
@@ -37,6 +42,7 @@ export async function completeSignup(db: Firestore, user: UserRecord, input: unk
     if (data?.signupCompletedAt) return;
     const now = new Date();
     tx.set(parent, { ...(profile.exists ? {} : { createdAt: now }),
+      ...(name ? { ...name, displayName: formatSignupName(name) } : {}),
       email: (user.email || '').trim().toLowerCase(), updatedAt: now }, { merge: true });
     // The installed binary supplies this legacy signup version. Only its separate
     // OpenAI disclosure and Allow and Send control may grant the current version.

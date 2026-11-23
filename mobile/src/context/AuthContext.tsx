@@ -12,16 +12,22 @@ import {
   type User,
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { deleteIPurposeAccount, saveMarketingConsent } from '../lib/api';
+import { acknowledgeSignupDisclosure, deleteIPurposeAccount, saveMarketingConsent } from '../lib/api';
 import { logLaunchEvent } from '../lib/analyticsEvents';
 import { logUserActivity } from '../lib/userActivity';
 import { clearPurposeProgress } from '../lib/purposeStorage';
 import { compassIntroStorageKey } from '../lib/introVideos';
+import { formatSignupName, parseSignupName, type SignupName } from '../lib/profileIdentity';
+
+interface SignupOptions extends SignupName {
+  disclosureAcknowledged: boolean;
+  marketingOptIn: boolean;
+}
 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
-  createAccount: (email: string, password: string, marketingOptIn?: boolean, displayName?: string) => Promise<void>;
+  createAccount: (email: string, password: string, options: SignupOptions) => Promise<void>;
   deleteAccount: (password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -29,11 +35,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export class SignupNameSaveError extends Error {
-  constructor() {
-    super('Your account was created. Try again to save your name and finish setup.');
-  }
-}
+export class SignupSetupError extends Error {}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(auth.currentUser);
@@ -53,21 +55,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => ({
     user,
     loading,
-    createAccount: async (email, password, marketingOptIn = false, displayName) => {
+    createAccount: async (email, password, { disclosureAcknowledged, marketingOptIn, firstName, lastName }) => {
+      if (!disclosureAcknowledged) throw new Error('Review the AI-powered features disclosure to continue.');
+      const name = parseSignupName(firstName, lastName);
+      if (!name) throw new Error('Enter your first and last name to continue.');
       if (creatingAccount.current) return;
       creatingAccount.current = true;
       const normalizedEmail = email.trim();
-      const normalizedName = displayName?.trim();
+      const displayName = formatSignupName(name);
       try {
         const pending = pendingSignup.current;
         const account = pending && pending.uid === auth.currentUser?.uid
           && pending.email?.toLowerCase() === normalizedEmail.toLowerCase()
           ? pending : (await createUserWithEmailAndPassword(auth, normalizedEmail, password)).user;
         pendingSignup.current = account;
-        if (normalizedName) {
-          try { await updateProfile(account, { displayName: normalizedName }); }
-          catch { throw new SignupNameSaveError(); }
+        if (account.displayName !== displayName) {
+          try { await updateProfile(account, { displayName }); }
+          catch { throw new SignupSetupError('Your account was created. Try again to save your name and finish setup.'); }
         }
+        try { await acknowledgeSignupDisclosure(account.uid, name); }
+        catch { throw new SignupSetupError('Your account was created. Try again to save your acknowledgment and finish setup.'); }
         pendingSignup.current = null;
         try { await sendEmailVerification(account); }
         catch { /* Account remains usable; Account offers resend/retry. */ }

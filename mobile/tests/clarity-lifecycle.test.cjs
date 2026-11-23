@@ -37,15 +37,24 @@ for (const optIn of [false, true]) test(`marketing checkbox defaults off; create
  h.mocks['../components/AuthScaffold'] = { AuthScaffold: 'AuthScaffold', AuthPanel: 'AuthPanel', authStyles: {} };
  h.mocks['firebase/app'] = { FirebaseError: class FirebaseError extends Error {} };
  const tree = await render(React.createElement(h.load('app/create-account.tsx').default));
- const box = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'checkbox'); assert.equal(box.props.accessibilityState.checked, false);
+ const checkboxes = tree.root.findAllByType('Pressable').filter(n => n.props.accessibilityRole === 'checkbox');
+ const [marketing, disclosure] = checkboxes;
+ assert.equal(marketing.props.accessibilityState.checked, false);
+ assert.equal(disclosure.props.accessibilityState.checked, false);
  const input = label => tree.root.findAllByType('TextInput').find(node => node.props.accessibilityLabel === label);
  await act(async () => {
-  input('Name (optional)').props.onChangeText('  Tara Rivera  ');
+  input('First name').props.onChangeText('  Tara  ');
+  input('Last name').props.onChangeText('  Rivera  ');
   input('Email').props.onChangeText('person@example.test');
   input('Password').props.onChangeText('password');
   input('Confirm password').props.onChangeText('password');
  });
- if (optIn) await act(async () => box.props.onPress());
- await press(tree, 'Create Account'); assert.deepEqual(calls, [['person@example.test', 'password', optIn, 'Tara Rivera']]); assert.equal(h.events.includes('email_signup'), false);
+ if (optIn) await act(async () => marketing.props.onPress());
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => disclosure.props.onPress());
+ await press(tree, 'Create Account');
+ assert.deepEqual(calls, [['person@example.test', 'password',
+  { firstName: 'Tara', lastName: 'Rivera', disclosureAcknowledged: true, marketingOptIn: optIn }]]);
+ assert.equal(h.events.includes('email_signup'), false);
  await act(async () => tree.unmount());
 });

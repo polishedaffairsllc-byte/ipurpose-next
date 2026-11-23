@@ -32,6 +32,9 @@ function harness() {
  }
  const state = { profile: null, identityType: null, loading: false, error: null, refresh: async () => {}, save: async () => {}, clear: async () => {} };
  for (const prefix of ['../', '../../../']) mocks[prefix + 'context/PurposeCheckContext'] = { usePurposeCheck: () => state };
+ mocks['@expo/vector-icons/MaterialCommunityIcons'] = 'MaterialIcon';
+ mocks['@react-navigation/elements'] = { PlatformPressable: 'PlatformPressable' };
+ mocks['./IntroReplay'] = mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
  return { load, mocks, routes, events, activityEvents, state, native };
 }
 const text = node => typeof node === 'string' ? node : (node.children || []).map(text).join('');

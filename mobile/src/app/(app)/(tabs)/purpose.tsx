@@ -10,6 +10,7 @@ import { PURPOSE_QUESTIONS, purposeCopy } from '../../../lib/purposeCheckCopy';
 import { logLaunchEvent } from '../../../lib/analyticsEvents';
 import { theme } from '../../../theme';
 import { PurposeButton } from '../../../components/PurposeButton';
+import { IntroReplay } from '../../../components/IntroReplay';
 export default function PurposeScreen() {
     const { profile, identityType, loading, error, refresh, save } = usePurposeCheck();
     const { tokens } = useVisualEnvironment();
@@ -55,6 +56,7 @@ export default function PurposeScreen() {
     return <SafeAreaView edges={['top', 'left', 'right']} style={[styles.safe, { backgroundColor: tokens.screenBackground }]}><KeyboardAvoidingView style={styles.safe} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
  <Text style={[styles.eyebrow, { color: tokens.accentStrong }]}>{purposeCopy.tab}</Text>
  <Text accessibilityRole="header" style={styles.title}>{question ? purposeCopy.progress((step || 0) + 1) : step === 6 ? purposeCopy.reflection : purposeCopy.title}</Text>
+ <IntroReplay kind="purpose" returnLabel="Return to Purpose" />
  {loading && step === null ? <><ActivityIndicator color={tokens.accentStrong}/><Text style={styles.body}>{purposeCopy.loading}</Text></> : error && step === null ? <><Text accessibilityRole="alert" style={styles.body}>{error}</Text><PurposeButton label={purposeCopy.retry} onPress={() => void refresh()}/></> : question ? <>
  <Text style={styles.question}>{question.prompt}</Text><Text style={styles.body}>{question.max === 1 ? purposeCopy.chooseOne : purposeCopy.chooseTwo}</Text>
  {question.options.map(option => {
@@ -90,8 +92,8 @@ export default function PurposeScreen() {
  <Text style={styles.body}>These patterns are clues, not a fixed label. Purpose can travel across roles and change with your season.</Text>
  {profile.reflectionSaved && profile.reflection ? <><Text style={styles.question}>{purposeCopy.reflectionLabel}</Text><Text style={styles.body}>{profile.reflection}</Text></> : null}
  {pairing ? <Text style={styles.body}>{pairing}</Text> : <PurposeButton label={purposeCopy.clarity} onPress={() => router.push('/clarity-check')}/>}
- <PurposeButton label={purposeCopy.compass} onPress={() => router.push('/mentor')}/><PurposeButton label={purposeCopy.path} disabled/><Text style={styles.body}>{purposeCopy.pathPending}</Text><PurposeButton label={purposeCopy.retake} onPress={begin}/>
- </> : <><Text style={styles.body}>{purposeCopy.intro}</Text><PurposeButton label={purposeCopy.start} onPress={begin}/></>}
+ <PurposeButton label={purposeCopy.compass} onPress={() => router.push('/mentor')}/><PurposeButton label={purposeCopy.path} onPress={() => router.navigate('/purpose-path')}/><PurposeButton label={purposeCopy.retake} onPress={begin}/>
+ </> : <><Text style={styles.body}>{purposeCopy.intro}</Text><PurposeButton label={purposeCopy.start} onPress={begin}/><PurposeButton label="Explore the Purpose Path" onPress={() => router.navigate('/purpose-path')}/></>}
  </ScrollView></KeyboardAvoidingView></SafeAreaView>;
 }
 const styles = StyleSheet.create({ safe: { flex: 1 }, content: { padding: 24, paddingBottom: 44 }, eyebrow: { fontFamily: theme.fonts.body, fontSize: 12, marginBottom: 12 }, title: { fontFamily: theme.fonts.heading, fontSize: 32, lineHeight: 40, color: theme.colors.deepIndigo, marginBottom: 20 }, body: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 24, color: theme.colors.deepIndigo }, question: { fontFamily: theme.fonts.heading, fontSize: 24, lineHeight: 32, color: theme.colors.deepIndigo, marginVertical: 16 }, option: { borderWidth: 1, borderRadius: 18, padding: 16, marginTop: 12, minHeight: 52 }, input: { minHeight: 140, borderRadius: 18, borderWidth: 1, padding: 16, textAlignVertical: 'top', fontFamily: theme.fonts.body, color: theme.colors.deepIndigo, fontSize: 16 }, chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, chip: { borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 }, dim: { opacity: 0.5 } });

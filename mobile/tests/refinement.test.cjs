@@ -138,7 +138,7 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   await act(async () => tree.unmount());
 });
 
-test('actual account creation saves the supplied name before verification and retries a failed name save', async () => {
+test('actual account creation retries a failed name or disclosure save before opening the first-run flow', async () => {
   const h = harness();
   const firebaseAuth = { currentUser: null };
   let observer;
@@ -146,7 +146,9 @@ test('actual account creation saves the supplied name before verification and re
   let creations = 0;
   let consentWrites = 0;
   let failNameSave = true;
+  let failAdmission = true;
   let failSend = false;
+  const admissions = [];
   const verificationNames = [];
   h.mocks['../lib/firebase'] = { auth: firebaseAuth };
   h.mocks['firebase/auth'] = {
@@ -166,25 +168,51 @@ test('actual account creation saves the supplied name before verification and re
       if (failSend) throw { code: 'auth/too-many-requests' };
     },
   };
-  h.mocks['../lib/api'] = { saveMarketingConsent: async () => { consentWrites++; } };
+  h.mocks['../lib/api'] = {
+    acknowledgeSignupDisclosure: async (uid, name) => {
+      admissions.push({ uid, ...name });
+      if (failAdmission) throw new Error('Temporarily offline');
+    },
+    saveMarketingConsent: async () => { consentWrites++; },
+  };
   const auth = h.load('context/AuthContext.tsx'); function Probe() { context = auth.useAuth(); return null; }
   const tree = await render(React.createElement(auth.AuthProvider, null, React.createElement(Probe)));
   await act(async () => assert.rejects(
-    context.createAccount(' Person@Example.test ', 'password', false, '  Tara Rivera  '),
-    auth.SignupNameSaveError,
+    context.createAccount('Person@Example.test', 'password', {
+      firstName: 'Tara', lastName: 'Rivera', disclosureAcknowledged: false, marketingOptIn: true,
+    }),
+    /review the AI-powered features disclosure/i,
+  ));
+  assert.equal(creations, 0);
+  const signup = () => context.createAccount(' Person@Example.test ', 'password', {
+    firstName: '  Tara  ', lastName: ' Rivera ',
+    disclosureAcknowledged: true, marketingOptIn: false,
+  });
+  await act(async () => assert.rejects(
+    signup(), /save your name/,
   ));
   assert.equal(context.user, null);
+  assert.deepEqual(admissions, []);
   assert.deepEqual(verificationNames, []);
   failNameSave = false;
-  await act(async () => context.createAccount('Person@Example.test', 'password', false, '  Tara Rivera  '));
+  await act(async () => assert.rejects(signup(), /save your acknowledgment/));
+  assert.equal(context.user, null);
+  const expectedAdmission = { uid: '1', firstName: 'Tara', lastName: 'Rivera' };
+  assert.deepEqual(admissions, [expectedAdmission]);
+  assert.deepEqual(verificationNames, []);
+  failAdmission = false;
+  await act(async () => signup());
   assert.equal(creations, 1);
+  assert.deepEqual(admissions, [expectedAdmission, expectedAdmission]);
   assert.equal(context.user.email, 'Person@Example.test');
   assert.equal(context.user.displayName, 'Tara Rivera');
   assert.deepEqual(verificationNames, ['Tara Rivera']);
   assert.equal(consentWrites, 0);
   failSend = true;
-  await act(async () => context.createAccount('second@example.test', 'password', true));
-  assert.deepEqual(verificationNames, ['Tara Rivera', null]);
+  await act(async () => context.createAccount('second@example.test', 'password', {
+    firstName: 'Alex', lastName: 'Quinn', disclosureAcknowledged: true, marketingOptIn: true,
+  }));
+  assert.deepEqual(verificationNames, ['Tara Rivera', 'Alex Quinn']);
   assert.equal(consentWrites, 1);
   assert.equal(context.user.emailVerified, false);
   await act(async () => tree.unmount());

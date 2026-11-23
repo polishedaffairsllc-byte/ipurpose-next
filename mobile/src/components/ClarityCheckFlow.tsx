@@ -18,6 +18,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { BrandHeader } from './BrandHeader';
+import { IntroReplay } from './IntroReplay';
 import { useAuth } from '../context/AuthContext';
 import { useOnboarding } from '../context/OnboardingContext';
 import {
@@ -296,6 +297,7 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
             <View style={styles.progressTrack}>
               <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
             </View>
+            <IntroReplay kind="clarity" returnLabel="Return to Clarity Check" />
 
             {step === 0 ? (
               <Intro mode={mode} onBegin={() => void begin()} saving={saving} />

@@ -1,105 +1,104 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { PlatformPressable } from '@react-navigation/elements';
+import { Tabs, usePathname } from 'expo-router';
+import { StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { purposeCopy } from '../../../lib/purposeCheckCopy';
-import { Text, useWindowDimensions } from 'react-native';
-import { Tabs } from 'expo-router';
-import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { trackSupportScreenView } from '../../../lib/analyticsEvents';
+import { purposeCopy } from '../../../lib/purposeCheckCopy';
 import { theme } from '../../../theme';
 
+const primaryTabs = [
+  { name: 'index', path: '/', title: 'Home', icon: 'home-outline', selectedIcon: 'home' },
+  { name: 'clarity-check', path: '/clarity-check', title: 'Clarity Check', materialIcon: 'waves' },
+  { name: 'purpose', path: '/purpose', title: purposeCopy.tab, icon: 'leaf-outline', selectedIcon: 'leaf' },
+  { name: 'mentor', path: '/mentor', title: 'Compass', materialIcon: 'compass-rose' },
+  { name: 'account', path: '/account', title: 'Account', icon: 'person-outline', selectedIcon: 'person' },
+] as const;
+
+// Detail routes keep the tile for their parent selected and remain separately
+// addressable by the existing app links.
+const detailTabs: Record<string, typeof primaryTabs[number]['name']> = {
+  '/anchor': 'index',
+  '/focus': 'index',
+  '/onboarding': 'clarity-check',
+  '/purpose-path': 'purpose',
+  '/timezone': 'account',
+};
+const borderColor = 'rgba(235, 232, 248, 0.26)';
+const inactiveColor = '#E3E0EE';
+
 export default function TabsLayout() {
-  const { tokens } = useVisualEnvironment();
+  const detailTab = detailTabs[usePathname()];
   const insets = useSafeAreaInsets();
   const { fontScale } = useWindowDimensions();
+  const bottom = Math.max(insets.bottom, 8);
 
   return (
-    <Tabs
+    <Tabs backBehavior="history"
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
-        tabBarLabel: ({ color, children }) => <Text numberOfLines={2} style={{ color, fontFamily: theme.fonts.body, fontSize: 10, textAlign: 'center' }}>{children}</Text>,
-        tabBarActiveTintColor: tokens.tabBarActive,
-        tabBarInactiveTintColor: tokens.tabBarInactive,
-        tabBarStyle: {
-          backgroundColor: tokens.tabBarBackground,
-          borderTopColor: tokens.tabBarBorder,
-          borderTopWidth: 1,
-          height: 64 + Math.max(0, fontScale - 1) * 24 + Math.max(insets.bottom, 8),
-          paddingTop: 8,
-          paddingBottom: Math.max(insets.bottom, 8),
-        },
-        tabBarLabelStyle: {
-          fontFamily: theme.fonts.body,
-          fontSize: 10,
-        },
+        tabBarLabelPosition: 'below-icon',
+        tabBarActiveTintColor: theme.colors.salmonPeach,
+        tabBarInactiveTintColor: inactiveColor,
+        tabBarItemStyle: styles.item,
+        tabBarStyle: [styles.bar, {
+          height: 80 + Math.max(0, fontScale - 1) * 24 + bottom,
+          paddingBottom: bottom,
+        }],
       }}
     >
-      <Tabs.Screen
-        name="index"
-        listeners={{ focus: () => trackSupportScreenView('/') }}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? 'home' : 'home-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="clarity-check"
-        listeners={{ focus: () => trackSupportScreenView('/clarity-check') }}
-        options={{
-          title: 'Clarity Check',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? 'navigate-circle' : 'navigate-circle-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="purpose"
-        listeners={{ focus: () => trackSupportScreenView('/purpose') }}
-        options={{ title: purposeCopy.tab, tabBarIcon: ({ color, size, focused }) => <Ionicons name={focused ? 'leaf' : 'leaf-outline'} color={color} size={size}/> }}
-      />
-
-      <Tabs.Screen
-        name="mentor"
-        listeners={{ focus: () => trackSupportScreenView('/mentor') }}
-        options={{
-          title: 'Compass',
-          tabBarActiveTintColor: tokens.accentStrong,
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="account"
-        listeners={{ focus: () => trackSupportScreenView('/account') }}
-        options={{
-          title: 'Account',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? 'person' : 'person-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
+      {primaryTabs.map(tab => {
+        const isDetailParent = detailTab === tab.name;
+        return (
+          <Tabs.Screen key={tab.name} name={tab.name}
+            listeners={{ focus: () => trackSupportScreenView(tab.path) }}
+            options={{
+              title: tab.title,
+              tabBarAccessibilityLabel: tab.title,
+              tabBarLabel: ({ color, children }) => (
+                <Text numberOfLines={2} style={[styles.label, { color: isDetailParent ? theme.colors.salmonPeach : color }]}>
+                  {children}
+                </Text>
+              ),
+              tabBarButton: isDetailParent ? props => (
+                <PlatformPressable {...props} aria-selected accessibilityState={{ ...props.accessibilityState, selected: true }} />
+              ) : undefined,
+              tabBarIcon: ({ color, size, focused }) => 'materialIcon' in tab ? (
+                <MaterialCommunityIcons name={tab.materialIcon} size={size} color={isDetailParent ? theme.colors.salmonPeach : color} />
+              ) : (
+                <Ionicons name={focused || isDetailParent ? tab.selectedIcon : tab.icon} size={size}
+                  color={isDetailParent ? theme.colors.salmonPeach : color} />
+              ),
+            }}
+          />
+        );
+      })}
+      <Tabs.Screen name="anchor" options={{ href: null }} />
+      <Tabs.Screen name="focus" options={{ href: null }} />
+      <Tabs.Screen name="onboarding" options={{ href: null }} />
+      <Tabs.Screen name="purpose-path" options={{ href: null }} />
+      <Tabs.Screen name="timezone" options={{ href: null }} />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  bar: {
+    backgroundColor: '#171B30',
+    borderTopColor: borderColor,
+    borderTopWidth: 1,
+    paddingTop: 7,
+    paddingHorizontal: 3,
+  },
+  item: {
+    borderColor,
+    borderWidth: 1,
+    borderRadius: 15,
+    backgroundColor: '#1E2238',
+    marginHorizontal: 3,
+    paddingVertical: 4,
+  },
+  label: { fontFamily: theme.fonts.body, fontSize: 11, textAlign: 'center' },
+});

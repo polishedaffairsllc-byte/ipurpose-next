@@ -14,14 +14,14 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { BrandHeader } from '../../components/BrandHeader';
-import { useVisualEnvironment } from '../../context/VisualEnvironmentContext';
-import { normalizeIanaTimezone } from '../../lib/timezone';
+import { BrandHeader } from '../../../components/BrandHeader';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
+import { normalizeIanaTimezone } from '../../../lib/timezone';
 import {
   getTimezoneDisplayName,
   searchTimezoneOptions,
-} from '../../lib/timezoneOptions';
-import { theme } from '../../theme';
+} from '../../../lib/timezoneOptions';
+import { theme } from '../../../theme';
 
 export default function TimezoneScreen() {
   const router = useRouter();
