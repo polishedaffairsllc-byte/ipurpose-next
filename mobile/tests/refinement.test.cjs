@@ -138,20 +138,54 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   await act(async () => tree.unmount());
 });
 
-test('actual account creation sends Firebase verification without opting users into marketing', async () => {
-  const h = harness(); let user = null; let sends = 0; let consentWrites = 0; let failSend = false; let context;
-  h.mocks['../lib/firebase'] = { auth: { currentUser: null } };
+test('actual account creation saves the supplied name before verification and retries a failed name save', async () => {
+  const h = harness();
+  const firebaseAuth = { currentUser: null };
+  let observer;
+  let context;
+  let creations = 0;
+  let consentWrites = 0;
+  let failNameSave = true;
+  let failSend = false;
+  const verificationNames = [];
+  h.mocks['../lib/firebase'] = { auth: firebaseAuth };
   h.mocks['firebase/auth'] = {
-    onAuthStateChanged: (_auth, callback) => { callback(user); return () => {}; },
-    createUserWithEmailAndPassword: async (_auth, email) => ({ user: (user = { uid: 'created', email, emailVerified: false }) }),
-    sendEmailVerification: async () => { sends++; if (failSend) throw { code: 'auth/too-many-requests' }; },
+    onAuthStateChanged: (_auth, callback) => { observer = callback; callback(firebaseAuth.currentUser); return () => {}; },
+    createUserWithEmailAndPassword: async (_auth, email) => {
+      const user = { uid: String(++creations), email, emailVerified: false, displayName: null };
+      firebaseAuth.currentUser = user;
+      observer(user);
+      return { user };
+    },
+    updateProfile: async (user, { displayName }) => {
+      if (failNameSave) throw new Error('Temporarily offline');
+      user.displayName = displayName;
+    },
+    sendEmailVerification: async user => {
+      verificationNames.push(user.displayName);
+      if (failSend) throw { code: 'auth/too-many-requests' };
+    },
   };
   h.mocks['../lib/api'] = { saveMarketingConsent: async () => { consentWrites++; } };
   const auth = h.load('context/AuthContext.tsx'); function Probe() { context = auth.useAuth(); return null; }
   const tree = await render(React.createElement(auth.AuthProvider, null, React.createElement(Probe)));
-  await act(async () => context.createAccount(' Person@Example.test ', 'password', false));
-  assert.equal(user.email, 'Person@Example.test'); assert.equal(sends, 1); assert.equal(consentWrites, 0);
-  failSend = true; await act(async () => context.createAccount('second@example.test', 'password', true));
-  assert.equal(sends, 2); assert.equal(consentWrites, 1); assert.equal(user.emailVerified, false);
+  await act(async () => assert.rejects(
+    context.createAccount(' Person@Example.test ', 'password', false, '  Tara Rivera  '),
+    auth.SignupNameSaveError,
+  ));
+  assert.equal(context.user, null);
+  assert.deepEqual(verificationNames, []);
+  failNameSave = false;
+  await act(async () => context.createAccount('Person@Example.test', 'password', false, '  Tara Rivera  '));
+  assert.equal(creations, 1);
+  assert.equal(context.user.email, 'Person@Example.test');
+  assert.equal(context.user.displayName, 'Tara Rivera');
+  assert.deepEqual(verificationNames, ['Tara Rivera']);
+  assert.equal(consentWrites, 0);
+  failSend = true;
+  await act(async () => context.createAccount('second@example.test', 'password', true));
+  assert.deepEqual(verificationNames, ['Tara Rivera', null]);
+  assert.equal(consentWrites, 1);
+  assert.equal(context.user.emailVerified, false);
   await act(async () => tree.unmount());
 });

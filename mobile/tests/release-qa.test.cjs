@@ -100,7 +100,7 @@ test('signup visibility toggles are independent and preserve values, validation,
  await toggle('Show confirm password'); assert.equal(input('Confirm password').props.secureTextEntry, false); assert.equal(input('Password').props.value, 'secret123');
  await toggle('Hide password'); await toggle('Hide confirm password'); assert.equal(input('Password').props.secureTextEntry, true);
  await act(async () => input('Confirm password').props.onChangeText('secret123')); await press(tree, 'Create Account');
- assert.deepEqual(calls, [['person@example.test', 'secret123', false]]); await act(async () => tree.unmount());
+ assert.deepEqual(calls, [['person@example.test', 'secret123', false, undefined]]); await act(async () => tree.unmount());
 });
 
 test('Clarity retake reaches every unchanged question, retries with the same attempt ID and displays the server result', async () => {

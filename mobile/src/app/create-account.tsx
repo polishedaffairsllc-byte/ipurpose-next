@@ -5,10 +5,11 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 import { FirebaseError } from 'firebase/app';
 import { Redirect, useRouter } from 'expo-router';
 import { AuthPanel, AuthScaffold, authStyles } from '../components/AuthScaffold';
-import { useAuth } from '../context/AuthContext';
+import { SignupNameSaveError, useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
 
 function getAccountError(error: unknown): string {
+  if (error instanceof SignupNameSaveError) return error.message;
   if (error instanceof FirebaseError) {
     if (error.code === 'auth/email-already-in-use') {
       return 'An account already uses this email. Sign in instead.';
@@ -22,6 +23,7 @@ function getAccountError(error: unknown): string {
 export default function CreateAccountScreen() {
   const router = useRouter();
   const { createAccount, loading, user } = useAuth();
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [password, setPassword] = useState('');
@@ -29,6 +31,7 @@ export default function CreateAccountScreen() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmationVisible, setConfirmationVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (loading) {
@@ -45,8 +48,9 @@ export default function CreateAccountScreen() {
     setSubmitting(true);
     setError(null);
     try {
-      await createAccount(normalizedEmail, password, marketingOptIn);
+      await createAccount(normalizedEmail, password, marketingOptIn, displayName.trim() || undefined);
     } catch (caught) {
+      if (caught instanceof SignupNameSaveError) setAccountCreated(true);
       setError(getAccountError(caught));
       setSubmitting(false);
     }
@@ -59,11 +63,25 @@ export default function CreateAccountScreen() {
       title="Create your account."
     >
       <AuthPanel>
+        <Text style={authStyles.label}>NAME (OPTIONAL)</Text>
+        <TextInput
+          accessibilityLabel="Name (optional)"
+          autoCapitalize="words"
+          autoCorrect={false}
+          maxLength={80}
+          onChangeText={setDisplayName}
+          placeholder="What should we call you?"
+          placeholderTextColor="#767A94"
+          style={authStyles.input}
+          textContentType="name"
+          value={displayName}
+        />
         <Text style={authStyles.label}>EMAIL</Text>
         <TextInput
           accessibilityLabel="Email"
           autoCapitalize="none"
           autoCorrect={false}
+          editable={!submitting && !accountCreated}
           keyboardType="email-address"
           onChangeText={setEmail}
           placeholder="you@example.com"
@@ -77,6 +95,7 @@ export default function CreateAccountScreen() {
           <TextInput
             accessibilityLabel="Password"
             autoCapitalize="none"
+            editable={!submitting && !accountCreated}
             onChangeText={setPassword}
             placeholder="At least 6 characters"
             placeholderTextColor="#767A94"
@@ -101,6 +120,7 @@ export default function CreateAccountScreen() {
           <TextInput
             accessibilityLabel="Confirm password"
             autoCapitalize="none"
+            editable={!submitting && !accountCreated}
             onChangeText={setConfirmation}
             onSubmitEditing={() => void handleCreateAccount()}
             placeholder="Enter your password again"
@@ -145,7 +165,7 @@ export default function CreateAccountScreen() {
           {submitting ? (
             <ActivityIndicator color={theme.colors.midnightIndigo} />
           ) : (
-            <Text style={authStyles.primaryButtonText}>Create Account</Text>
+            <Text style={authStyles.primaryButtonText}>{accountCreated ? 'Try again' : 'Create Account'}</Text>
           )}
         </Pressable>
         <Pressable

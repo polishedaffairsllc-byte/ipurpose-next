@@ -16,7 +16,7 @@ export const INTRO_VIDEOS = {
 };
 const VIDEO_ASPECT_RATIO = 576 / 704;
 
-export function IntroVideo({ kind, replay = false, returnLabel, onContinue, onContinueForToday }: { kind: IntroKind; replay?: boolean; returnLabel?: string; onContinue: () => Promise<void>; onContinueForToday?: () => void }) {
+export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { kind: IntroKind; replay?: boolean; returnLabel?: string; onContinue: () => Promise<void> }) {
   const intro = INTRO_VIDEOS[kind];
   const active = useRef(true);
   // Register before useVideoPlayer: Expo releases its native shared object in
@@ -141,7 +141,6 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue, onCo
             {!replay ? <Pressable accessibilityRole="button" accessibilityLabel={`Skip ${intro.label.toLowerCase()} video`} disabled={saving} onPress={() => void finish()} style={styles.skip}>
               <Text style={[styles.linkText, { color: theme.colors.muted }]}>Skip</Text>
             </Pressable> : null}
-            {saveError && onContinueForToday ? <Pressable accessibilityRole="button" onPress={onContinueForToday} style={styles.skip}><Text style={[styles.linkText, { color: theme.colors.muted }]}>Continue for today</Text></Pressable> : null}
           </View>
         </Animated.View>
       </SafeAreaView>
