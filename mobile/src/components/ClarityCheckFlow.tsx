@@ -15,9 +15,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { EnvironmentBackground } from './EnvironmentBackground';
 import { useRouter } from 'expo-router';
 import { BrandHeader } from './BrandHeader';
+import { IntroReplay } from './IntroReplay';
 import { useAuth } from '../context/AuthContext';
 import { useOnboarding } from '../context/OnboardingContext';
 import {
@@ -258,16 +259,10 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
     );
   }
 
-  const progress = step === 0 ? 0 : Math.min(1, step / RESULT_STEP);
+  const progress = Math.min(1, step / RESULT_STEP);
 
   return (
-    <LinearGradient
-      colors={tokens.atmosphereGradient.colors}
-      locations={tokens.atmosphereGradient.locations}
-      start={tokens.atmosphereGradient.start}
-      end={tokens.atmosphereGradient.end}
-      style={styles.gradient}
-    >
+    <EnvironmentBackground atmosphere={step !== 0}>
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -290,12 +285,21 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
                   <Ionicons color={tokens.atmosphereText} name="chevron-back" size={20} />
                 </Pressable>
               ) : <View style={styles.backPlaceholder} />}
-              <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
+              <BrandHeader subtitle="Soul → Systems → AI" variant={step === 0 ? "light-background" : "dark-background"} />
             </View>
 
-            <View style={styles.progressTrack}>
-              <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
-            </View>
+            {step > 0 ? (
+              <View
+                accessibilityLabel="Clarity Check progress"
+                accessibilityRole="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(progress * 100)}
+                style={styles.progressTrack}
+              >
+                <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+              </View>
+            ) : null}
 
             {step === 0 ? (
               <Intro mode={mode} onBegin={() => void begin()} saving={saving} />
@@ -352,14 +356,15 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
                 {switchingAccount ? (
                   <ActivityIndicator color={tokens.accent} />
                 ) : (
-                  <Text style={styles.accountSwitchText}>Returning user? Sign in with a different account</Text>
+                  <Text style={[styles.accountSwitchText, step === 0 && { color: theme.colors.ink }]}>Returning user? Sign in with a different account</Text>
                 )}
               </Pressable>
             ) : null}
           </ScrollView>
+          <IntroReplay kind="clarity" returnLabel="Return to Clarity Check" />
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </LinearGradient>
+    </EnvironmentBackground>
   );
 }
 
@@ -591,7 +596,6 @@ function useClarityAppearance() {
 function createStyles(tokens: VisualEnvironmentTokens) {
   return StyleSheet.create({
     flex: { flex: 1 },
-    gradient: { flex: 1 },
     safe: { flex: 1 },
     loadingScreen: {
       alignItems: 'center',
@@ -623,35 +627,35 @@ function createStyles(tokens: VisualEnvironmentTokens) {
     progressFill: { backgroundColor: tokens.accent, height: 4 },
     heroCard: { flex: 1, justifyContent: 'center', minHeight: 560, paddingBottom: 48 },
     eyebrow: {
-      color: tokens.accent,
+      color: tokens.accentStrong,
       fontFamily: theme.fonts.body,
       fontSize: 11,
       letterSpacing: 1.7,
       marginBottom: 12,
     },
     heroTitle: {
-      color: tokens.atmosphereText,
+      color: theme.colors.ink,
       fontFamily: theme.fonts.heading,
       fontSize: 45,
       lineHeight: 52,
     },
     heroBody: {
-      color: tokens.atmosphereTextMuted,
+      color: theme.colors.deepIndigo,
       fontFamily: theme.fonts.body,
       fontSize: 16,
       lineHeight: 25,
       marginTop: 16,
     },
     principleCard: {
-      backgroundColor: tokens.glassCardBackground,
-      borderColor: tokens.glassCardBorder,
+      backgroundColor: tokens.surface,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 20,
       borderWidth: 1,
       marginTop: 26,
       padding: 18,
     },
     principle: {
-      color: tokens.atmosphereText,
+      color: theme.colors.ink,
       fontFamily: theme.fonts.body,
       fontSize: 15,
       lineHeight: 25,

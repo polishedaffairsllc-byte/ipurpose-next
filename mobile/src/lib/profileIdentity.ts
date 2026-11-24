@@ -11,8 +11,8 @@ export function getDisplayName(
 }
 
 export function getGreetingName(
-  profileDisplayName?: string | null,
-  authDisplayName?: string | null,
+  preferredDisplayName?: string | null,
+  fallbackDisplayName?: string | null,
   email?: string | null
 ): string | null {
   const getReliableFirstName = (value?: string | null) => {
@@ -26,7 +26,7 @@ export function getGreetingName(
     return trimmedValue.split(/\s+/)[0];
   };
 
-  const namedCandidate = [profileDisplayName, authDisplayName]
+  const namedCandidate = [preferredDisplayName, fallbackDisplayName]
     .map(getReliableFirstName)
     .find((value) => value !== null);
 
@@ -35,4 +35,24 @@ export function getGreetingName(
   const derivedDisplayName = getDisplayName(undefined, email);
   if (derivedDisplayName === 'iPurpose member') return null;
   return getReliableFirstName(derivedDisplayName);
+}
+export const SIGNUP_NAME_MAX_LENGTH = 80;
+
+export interface SignupName {
+  firstName: string;
+  lastName: string;
+}
+
+export function parseSignupName(first: unknown, last: unknown): SignupName | null {
+  if (typeof first !== 'string' || typeof last !== 'string') return null;
+  const firstName = first.trim();
+  const lastName = last.trim();
+  if (!firstName || !lastName || firstName.length > SIGNUP_NAME_MAX_LENGTH || lastName.length > SIGNUP_NAME_MAX_LENGTH) {
+    return null;
+  }
+  return { firstName, lastName };
+}
+
+export function formatSignupName({ firstName, lastName }: SignupName) {
+  return `${firstName} ${lastName}`;
 }

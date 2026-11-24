@@ -1,6 +1,5 @@
 import { PurposeSummary } from '../../../components/PurposeSummary';
 import { IntroReplay } from '../../../components/IntroReplay';
-import { useOnboarding } from '../../../context/OnboardingContext';
 // mobile/src/app/(app)/(tabs)/index.tsx
 // PR #35 — visual redesign only. Functional behavior preserved exactly:
 // getCompanionProfile(), getConversations(), formatUpdatedAt(),
@@ -16,8 +15,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Link, useFocusEffect, useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
 import { BlurView } from 'expo-blur';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { useAuth } from '../../../context/AuthContext';
@@ -60,9 +59,8 @@ function getTimeOfDayGreeting(): string {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, identity } = useAuth();
   const { tokens } = useVisualEnvironment();
-  const { onboarding } = useOnboarding();
   const [profile, setProfile] = useState<CompanionProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState(false);
@@ -130,9 +128,9 @@ export default function HomeScreen() {
   };
 
   const firstName = getGreetingName(
+    identity?.displayName ?? user?.displayName,
     profile?.displayName,
-    user?.displayName,
-    user?.email
+    identity?.email ?? user?.email
   );
   const greeting = firstName
     ? `${getTimeOfDayGreeting()}, ${firstName}.`
@@ -142,19 +140,13 @@ export default function HomeScreen() {
   const focusAreas = (profile?.focusAreas ?? []).slice(0, 2);
 
   return (
-    <LinearGradient
-      colors={tokens.atmosphereGradient.colors}
-      locations={tokens.atmosphereGradient.locations}
-      start={tokens.atmosphereGradient.start}
-      end={tokens.atmosphereGradient.end}
-      style={styles.gradient}
-    >
+    <EnvironmentBackground atmosphere>
       <SafeAreaView style={styles.safe}>
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
         >
-          <BrandHeader subtitle="Soul → Systems → AI™" variant="dark-background" />
+          <BrandHeader size="hero" subtitle="Soul → Systems → AI" variant="dark-background" />
 
           <View style={styles.hero}>
             <Text style={[styles.greeting, { color: tokens.atmosphereText }]}>{greeting}</Text>
@@ -186,8 +178,6 @@ export default function HomeScreen() {
           )}
 
           <PurposeSummary atmosphere />
-          <Link href={onboarding?.status === 'complete' ? '/clarity-check' : '/onboarding'} style={styles.journeyLink}>Clarity Check</Link>
-          <Link href="/purpose-path" style={styles.journeyLink}>Purpose Path</Link>
 
           {/* Right Now */}
           {!profileLoading ? (
@@ -241,15 +231,11 @@ export default function HomeScreen() {
           <IntroReplay kind="welcome" returnLabel="Return to Home" />
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </EnvironmentBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  journeyLink: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 16, minHeight: 44, paddingVertical: 12, textDecorationLine: 'underline' },
-  gradient: {
-    flex: 1,
-  },
 
   safe: {
     flex: 1,

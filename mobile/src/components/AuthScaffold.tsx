@@ -15,15 +15,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { theme } from '../theme';
 
-const COMPASS_LOGO = require('../../assets/brand/compass-logo.png');
+const COMPASS_LOGO = require('../../assets/release/adaptive-icon-foreground.png');
 const WELCOME_ATMOSPHERE = require('../../assets/brand/welcome-atmosphere.jpg');
 
 interface AuthScaffoldProps {
-  body: string;
+  body?: string;
   children: ReactNode;
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
-  variant?: 'welcome' | 'form';
+  variant?: 'welcome' | 'form' | 'signup';
 }
 
 export function AuthScaffold({
@@ -34,6 +34,7 @@ export function AuthScaffold({
   variant = 'form',
 }: AuthScaffoldProps) {
   const welcome = variant === 'welcome';
+  const signup = variant === 'signup';
 
   return (
     <ImageBackground resizeMode="cover" source={WELCOME_ATMOSPHERE} style={styles.background}>
@@ -57,36 +58,42 @@ export function AuthScaffold({
               showsVerticalScrollIndicator={false}
             >
               <View style={[styles.brand, welcome ? styles.brandWelcome : styles.brandForm]}>
-                <View style={[styles.logoHalo, welcome ? styles.logoHaloWelcome : styles.logoHaloForm]}>
-                  <View style={styles.logoGlow} />
+                {welcome || signup ? (
                   <Image
                     accessibilityLabel="iPurpose Compass logo"
                     resizeMode="contain"
                     source={COMPASS_LOGO}
-                    style={welcome ? styles.logoWelcome : styles.logoForm}
+                    style={styles.largeLogo}
                   />
-                </View>
-                <Text style={[styles.brandTitle, welcome && styles.brandTitleWelcome]}>
-                  iPurpose Compass
+                ) : (
+                  <View style={styles.logoHalo}>
+                    <View style={styles.logoGlow} />
+                    <Image accessibilityLabel="iPurpose Compass logo" resizeMode="contain"
+                      source={COMPASS_LOGO} style={styles.logoForm} />
+                  </View>
+                )}
+                <Text style={[styles.brandTitle, welcome && styles.brandTitleWelcome, signup && styles.brandTitleSignup]}>
+                  {signup ? 'iPurpose' : 'iPurpose Compass'}
                 </Text>
                 <View style={styles.brandRule}>
                   <View style={styles.ruleLine} />
                   <Text style={styles.ruleStar}>✦</Text>
                   <View style={styles.ruleLine} />
                 </View>
+                {signup ? <Text style={styles.signupTagline}>Soul Systems AI</Text> : null}
               </View>
 
               <View style={welcome ? styles.copyWelcome : styles.copyForm}>
-                <Text style={styles.eyebrow}>{eyebrow}</Text>
+                {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
                 <Text accessibilityRole="header" style={[styles.title, welcome && styles.titleWelcome]}>
                   {title}
                 </Text>
-                <Text style={styles.body}>{body}</Text>
+                {body ? <Text style={styles.body}>{body}</Text> : null}
               </View>
 
               {children}
 
-              <Text style={styles.signature}>SOUL  ·  SYSTEMS  ·  AI™</Text>
+              {!signup ? <Text style={styles.signature}>SOUL  ·  SYSTEMS  ·  AI™</Text> : null}
             </ScrollView>
           </KeyboardAvoidingView>
         </SafeAreaView>
@@ -184,6 +191,8 @@ const styles = StyleSheet.create({
   brandWelcome: { marginBottom: 36 },
   brandForm: { marginBottom: 22 },
   logoHalo: {
+    width: 78,
+    height: 78,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderColor: 'rgba(230, 200, 124, 0.42)',
@@ -192,8 +201,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  logoHaloWelcome: { height: 118, width: 118 },
-  logoHaloForm: { height: 78, width: 78 },
   logoGlow: {
     backgroundColor: theme.colors.champagneGlow,
     borderRadius: 999,
@@ -201,7 +208,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '72%',
   },
-  logoWelcome: { height: 96, width: 96 },
+  largeLogo: { height: 186, width: 186 },
   logoForm: { height: 62, width: 62 },
   brandTitle: {
     color: theme.colors.white,
@@ -211,6 +218,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   brandTitleWelcome: { fontSize: 39, lineHeight: 46 },
+  brandTitleSignup: { fontSize: 40, lineHeight: 48 },
+  signupTagline: { color: theme.colors.champagne, fontFamily: theme.fonts.body, fontSize: 12, letterSpacing: 2, marginTop: 10 },
   brandRule: { alignItems: 'center', flexDirection: 'row', gap: 10, marginTop: 10 },
   ruleLine: { backgroundColor: theme.colors.champagne, height: 1, opacity: 0.58, width: 40 },
   ruleStar: { color: theme.colors.champagne, fontSize: 15 },

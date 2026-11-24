@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const { harness, React, render, text, act } = require('./helpers/native-harness.cjs');
+const { harness, React, render, text, act, press } = require('./helpers/native-harness.cjs');
 
 function apiHarness() {
   const h = harness();
@@ -33,17 +33,57 @@ test('first-run state rejects malformed stage/choice, extra fields and incomplet
   }
 });
 
-test('first-run routing follows the saved stage without redirecting returning users into setup', () => {
+test('first-run routing opens the chosen activity from the intro and allows Home while it is in progress', () => {
   const { firstRunRedirect } = harness().load('lib/firstRun.ts');
-  assert.equal(firstRunRedirect({ stage: 'welcome' }, 'index'), '/welcome-video');
+  const home = '(tabs)'; // Expo Router omits the index segment.
+  assert.equal(firstRunRedirect({ stage: 'welcome' }, home), '/welcome-video');
   assert.equal(firstRunRedirect({ stage: 'choice' }, 'welcome-video'), '/starting-point');
   assert.equal(firstRunRedirect({ stage: 'intro', choice: 'clarity' }, 'starting-point'), '/starting-intro');
-  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'clarity' }, 'starting-intro'), '/onboarding');
-  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'purpose' }, 'onboarding'), '/purpose-path');
-  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'purpose' }, 'purpose-path'), null);
-  assert.equal(firstRunRedirect({ stage: 'experience', choice: 'purpose' }, 'account'), null);
-  assert.equal(firstRunRedirect({ stage: 'complete' }, 'index'), null);
+  for (const [choice, activity] of [['clarity', 'onboarding'], ['purpose', 'purpose-path']]) {
+    const inProgress = { stage: 'experience', choice };
+    assert.equal(firstRunRedirect(inProgress, 'starting-intro'), '/' + activity);
+    for (const route of [home, 'account', 'mentor', 'onboarding', 'purpose-path']) {
+      assert.equal(firstRunRedirect(inProgress, route), null, route);
+    }
+  }
+  assert.equal(firstRunRedirect({ stage: 'complete' }, home), null);
   assert.equal(firstRunRedirect({ stage: 'complete', choice: 'purpose' }, 'starting-intro'), '/');
+});
+
+test('Leaving a first Purpose Path preserves the draft without completing first run', async () => {
+  const h = harness();
+  const drafts = new Map();
+  h.mocks['@react-native-async-storage/async-storage'] = {
+    getItem: async key => drafts.get(key) ?? null,
+    setItem: async (key, value) => { drafts.set(key, value); },
+  };
+  h.mocks['./AuthContext'] = { useAuth: () => ({ user: { uid: 'new-user' } }) };
+  h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' };
+  h.mocks['../../../components/EnvironmentBackground'] = { EnvironmentBackground: 'EnvironmentBackground' };
+  h.mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
+  const advancement = [];
+  h.mocks['../../../context/FirstRunContext'] = {
+    useFirstRun: () => ({
+      state: { stage: 'experience', choice: 'purpose' },
+      advance: async next => { advancement.push(next); },
+    }),
+  };
+  const { PurposeProvider } = h.load('context/PurposeContext.tsx');
+  const PurposePath = h.load('app/(app)/(tabs)/purpose-path.tsx').default;
+  const screen = () => React.createElement(PurposeProvider, null, React.createElement(PurposePath));
+
+  const tree = await render(screen());
+  await press(tree, 'Begin Purpose Path');
+  const input = tree.root.findAllByType('TextInput')[0];
+  const draftText = 'I want to mentor new designers.';
+  await act(async () => input.props.onChangeText(draftText));
+  assert.equal(tree.root.findByType('IntroReplay').props.kind, 'purpose');
+  assert.deepEqual(advancement, []);
+  await act(async () => tree.unmount());
+
+  const resumed = await render(screen());
+  assert.equal(resumed.root.findAllByType('TextInput')[0].props.value, draftText);
+  await act(async () => resumed.unmount());
 });
 
 test('authenticated first-run GET and POST use only the first-run route and never imply OpenAI permission', async () => {
@@ -76,6 +116,24 @@ test('first-run client rejects a different server UID and account switches durin
     return Response.json({ uid: 'new-user', state: { stage: 'complete' } });
   };
   await assert.rejects(api.getNativeFirstRun(), /signed-in account changed/);
+});
+
+test('signup acknowledgment uses account setup and is bound to the created account', async () => {
+  const { h, api, auth } = apiHarness();
+  const requests = [];
+  h.mocks.fetch = async (url, init) => {
+    requests.push({ url, method: init.method, body: JSON.parse(init.body) });
+    return Response.json({ completed: true });
+  };
+  const name = { firstName: 'Tara', lastName: 'Rivera' };
+  await api.acknowledgeSignupDisclosure('new-user', name);
+  auth.currentUser = { uid: 'different-user', getIdToken: async () => 'other-token' };
+  await assert.rejects(api.acknowledgeSignupDisclosure('new-user'), /signed-in account changed/);
+  assert.deepEqual(requests, [{
+    url: 'https://ipurposesoul.com/api/auth/complete-signup',
+    method: 'POST',
+    body: { granted: true, version: 'compass-openai-2026-10-12', ...name },
+  }]);
 });
 
 test('first-run validation prevents malformed writes even when a user is signed in', async () => {

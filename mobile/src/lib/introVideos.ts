@@ -8,6 +8,8 @@ export const INTRO_FLAGS = {
 export type IntroKind = keyof typeof INTRO_FLAGS;
 export type IntroCompletions = Partial<Record<typeof INTRO_FLAGS[IntroKind], boolean>>;
 
+export const compassIntroStorageKey = (uid: string) => `ipurpose:compass-intro:v1:${uid}`;
+
 export function isIntroKind(value: unknown): value is IntroKind {
   return typeof value === 'string' && Object.hasOwn(INTRO_FLAGS, value);
 }

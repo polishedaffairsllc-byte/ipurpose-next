@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { EnvironmentBackground } from '../../components/EnvironmentBackground';
-import { BrandHeader } from '../../components/BrandHeader';
+import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
+import { BrandHeader } from '../../../components/BrandHeader';
+import { IntroReplay } from '../../../components/IntroReplay';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { usePurpose } from '../../context/PurposeContext';
-import { useVisualEnvironment } from '../../context/VisualEnvironmentContext';
-import { ACTION_PATHS, draftPurposeStatement, EXPERIMENT_SIGNALS, PURPOSE_STAGES, VALUE_WORDS } from '../../lib/purpose';
-import { theme } from '../../theme';
-import { useFirstRun } from '../../context/FirstRunContext';
+import { usePurpose } from '../../../context/PurposeContext';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
+import { ACTION_PATHS, draftPurposeStatement, EXPERIMENT_SIGNALS, PURPOSE_STAGES, VALUE_WORDS } from '../../../lib/purpose';
+import { theme } from '../../../theme';
+import { useFirstRun } from '../../../context/FirstRunContext';
 
 export default function PurposePathScreen() {
 
@@ -39,17 +40,17 @@ export default function PurposePathScreen() {
   function reflect(key: string, value: string) {
     update({ reflections: { ...progress.reflections, [key]: value } });
   }
-  async function leave(destination: '/' | '/mentor' | '/purpose' | '/account') {
+  async function openCompass() {
     if (leaving) return;
     setLeaving(true);
     try { if (ready) await flush(); }
     catch { /* Keep the draft in the provider for retry; saving must not trap navigation. */ }
-    finally { router.dismissTo(destination); setLeaving(false); }
+    finally { router.navigate('/mentor'); setLeaving(false); }
   }
   async function finishFirstExperience() {
     if (leaving || !resultsReady) return;
     setLeaving(true);
-    try { await flush(); await firstRun.advance({ stage: 'complete', choice: 'purpose' }); router.replace('/'); }
+    try { await flush(); await firstRun.advance({ stage: 'complete', choice: 'purpose' }); router.navigate('/'); }
     catch { setFinishError('Your results are safe, but completion could not be saved. Please try again.'); }
     finally { setLeaving(false); }
   }
@@ -77,7 +78,7 @@ export default function PurposePathScreen() {
 
   return (
     <EnvironmentBackground>
-      <SafeAreaView style={styles.flex}>
+      <SafeAreaView edges={['top', 'left', 'right']} style={styles.flex}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.flex}>
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
           <BrandHeader subtitle="Clarity → Purpose → Action" />
@@ -144,23 +145,16 @@ export default function PurposePathScreen() {
               )}
               {firstExperience ? resultsReady && !stage ? <>
                 {finishError ? <Text accessibilityRole="alert" style={styles.body}>{finishError}</Text> : null}
-                <Choice centered label="Return to Home" disabled={leaving} onPress={() => void finishFirstExperience()} />
+                <Choice centered label="Finish and return to Home" disabled={leaving} onPress={() => void finishFirstExperience()} />
               </> : null : <>
-                <Choice centered label="Chat with Compass" disabled={leaving} onPress={() => void leave('/mentor')} />
+                <Choice centered label="Chat with Compass" disabled={leaving} onPress={() => void openCompass()} />
                 <Text style={styles.status}>Choose what to share when you get there. Your reflections stay here.</Text>
-                <Choice centered label="Save and return to Home" disabled={leaving} onPress={() => void leave('/')} />
               </>}
             </>
           )}
         </ScrollView>
+          <IntroReplay kind="purpose" returnLabel="Return to Purpose Path" />
         </KeyboardAvoidingView>
-        <View style={styles.returnActions}>
-          {!firstExperience ? <Choice centered label="Return to Purpose" disabled={leaving} onPress={() => void leave('/purpose')} /> : null}
-          <View style={styles.returnRow}>
-            {!firstExperience ? <View style={styles.flex}><Choice centered label="Home" disabled={leaving} onPress={() => void leave('/')} /></View> : null}
-            <View style={styles.flex}><Choice centered label="Account" disabled={leaving} onPress={() => void leave('/account')} /></View>
-          </View>
-        </View>
       </SafeAreaView>
     </EnvironmentBackground>
   );
@@ -171,7 +165,6 @@ function Choice({ label, onPress, selected, disabled, centered }: { centered?: b
   return <Pressable accessibilityRole="button" accessibilityState={{ selected: !!selected, disabled: !!disabled }} disabled={disabled} onPress={onPress} style={[styles.choice, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }, selected && { backgroundColor: tokens.surfaceTint, borderColor: tokens.accentStrong, borderWidth: 2 }, disabled && styles.disabled]}><Text style={[styles.link, centered && styles.centeredAction]}>{label}</Text></Pressable>;
 }
 const styles = StyleSheet.create({
-  returnActions: { paddingHorizontal: 20 }, returnRow: { flexDirection: 'row', gap: 8 },
   progressTrack: { height: 6, borderRadius: 999, marginVertical: 14, overflow: 'hidden' },
   flex: { flex: 1 }, container: { padding: 20, paddingBottom: 36 }, title: { fontFamily: theme.fonts.heading, fontSize: 32, lineHeight: 40, textAlign: 'center', color: theme.colors.ink, marginVertical: 16 },
   idea: { fontFamily: theme.fonts.heading, fontSize: 23, lineHeight: 30, color: theme.colors.ink, marginVertical: 10 }, body: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 23, color: theme.colors.ink, marginBottom: 16 },

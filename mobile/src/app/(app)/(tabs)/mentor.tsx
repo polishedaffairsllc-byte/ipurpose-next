@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
+import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { AiDataSharingControls } from '../../../components/AiDataSharingControls';
 import { ConversationList } from '../../../components/ConversationList';
@@ -222,13 +222,7 @@ export default function MentorScreen() {
   }
 
   return (
-    <LinearGradient
-      colors={tokens.screenGradient.colors}
-      locations={tokens.screenGradient.locations}
-      start={tokens.screenGradient.start}
-      end={tokens.screenGradient.end}
-      style={styles.gradient}
-    >
+    <EnvironmentBackground>
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         style={styles.flex}
@@ -240,7 +234,6 @@ export default function MentorScreen() {
             subtitle="Your space for aligned reflection and action"
             variant="light-background"
           />
-          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowCompass />
 
           <View style={styles.introRow}>
             <View style={styles.introCopy}>
@@ -399,15 +392,15 @@ export default function MentorScreen() {
             </Pressable>
           </View>
           ) : null}
+          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowCompass />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
-    </LinearGradient>
+    </EnvironmentBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
   flex: { flex: 1 },
   safe: { flex: 1, backgroundColor: 'transparent' },
   container: { flex: 1, paddingTop: 8, paddingHorizontal: 18 },

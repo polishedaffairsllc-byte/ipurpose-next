@@ -1,9 +1,9 @@
+import { AccountIdentityEditor } from '../../../components/AccountIdentityEditor';
 import { EmailVerificationControls } from '../../../components/EmailVerificationControls';
 import { PurposeSummary } from '../../../components/PurposeSummary';
 import { PurposeDeletionControl } from '../../../components/PurposeDeletionControl';
-import { IntroReplay } from '../../../components/IntroReplay';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useCallback, useState, type ReactNode } from 'react';
+import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -17,7 +17,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { AiDataSharingControls } from '../../../components/AiDataSharingControls';
@@ -51,14 +51,15 @@ function IdentityRow({
   iconBackground,
   label,
   value,
-  trailing,
+  onEdit,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   iconBackground: string;
   label: string;
   value: string;
-  trailing?: ReactNode;
+  onEdit?: () => void;
 }) {
+  const { tokens } = useVisualEnvironment();
   return (
     <View style={styles.infoRow}>
       <View style={[styles.infoIcon, { backgroundColor: iconBackground }]}>
@@ -68,7 +69,11 @@ function IdentityRow({
         <Text style={styles.infoLabel}>{label}</Text>
         <Text selectable style={styles.infoValue}>{value}</Text>
       </View>
-      {trailing}
+      {onEdit ? (
+        <Pressable accessibilityLabel={`Edit ${label.toLowerCase()}`} accessibilityRole="button" onPress={onEdit} style={styles.editButton}>
+          <Text style={[styles.inlineActionText, { color: tokens.accentStrong }]}>Edit</Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -94,8 +99,10 @@ function CompassField({
 
 export default function AccountScreen() {
   const router = useRouter();
-  const { user, deleteAccount, signOut } = useAuth();
+  const { user, identity, deleteAccount, signOut } = useAuth();
   const { tokens, savedTimezone, effectiveTimezone } = useVisualEnvironment();
+  const [editing, setEditing] = useState<'name' | 'email' | null>(null);
+  const [identityFeedback, setIdentityFeedback] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState<string | null>(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -130,14 +137,24 @@ export default function AccountScreen() {
     }, [loadProfile])
   );
 
-  const email = user?.email || 'No email available';
+  const email = identity.email || 'No email available';
   const displayName = getDisplayName(
-    profile?.displayName || user?.displayName,
-    user?.email
+    identity.displayName || profile?.displayName,
+    identity.email
   );
   const initials = getInitials(displayName);
   const provider = getProviderLabel(user?.providerData[0]?.providerId);
   const focusAreas = profile?.focusAreas.slice(0, 2) ?? [];
+
+  function openIdentityEditor(field: 'name' | 'email') {
+    setIdentityFeedback(null);
+    setEditing(field);
+  }
+
+  function finishIdentityEdit(message: string) {
+    setEditing(null);
+    setIdentityFeedback(message);
+  }
 
   async function handleProfileRetry() {
     await loadProfile(() => true);
@@ -197,16 +214,11 @@ export default function AccountScreen() {
   }
 
   return (
-    <LinearGradient
-      colors={tokens.screenGradient.colors}
-      locations={tokens.screenGradient.locations}
-      start={tokens.screenGradient.start}
-      end={tokens.screenGradient.end}
-      style={styles.gradient}
-    >
+    <EnvironmentBackground>
       <SafeAreaView style={styles.safe}>
         <ScrollView
           contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
           <BrandHeader subtitle="What shapes your experience" variant="light-background" />
@@ -240,22 +252,29 @@ export default function AccountScreen() {
                 { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
               ]}
             >
-              {/* Display Name is intentionally read-only in mobile v2. Firebase Auth
-                  and Firestore cannot be updated atomically in the current architecture. */}
               <IdentityRow
                 icon="person-outline"
                 iconBackground={tokens.accentSoft}
                 label="Display Name"
                 value={displayName}
+                onEdit={user && !editing ? () => openIdentityEditor('name') : undefined}
               />
+              {editing === 'name' ? (
+                <AccountIdentityEditor key="name" field="name" value={identity.displayName || profile?.displayName || ''} onClose={() => setEditing(null)} onSave={finishIdentityEdit} />
+              ) : null}
               <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
               <IdentityRow
                 icon="mail-outline"
                 iconBackground={theme.colors.systemsTint}
                 label="Email"
                 value={email}
+                onEdit={user && !editing ? () => openIdentityEditor('email') : undefined}
               />
-              {user ? <EmailVerificationControls key={user.uid} user={user} /> : null}
+              {editing === 'email' ? (
+                <AccountIdentityEditor key="email" field="email" value={email} onClose={() => setEditing(null)} onSave={finishIdentityEdit} />
+              ) : null}
+              {identityFeedback ? <Text accessibilityLiveRegion="polite" style={styles.identityFeedback}>{identityFeedback}</Text> : null}
+              {user ? <EmailVerificationControls key={`${user.uid}:${identity.email}`} user={user} /> : null}
               <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
               <IdentityRow
                 icon="shield-checkmark-outline"
@@ -408,6 +427,8 @@ export default function AccountScreen() {
                 </View>
               </View>
             )}
+            <PurposeSummary />
+            <PurposeDeletionControl />
           </View>
 
           <View style={styles.section}>
@@ -479,9 +500,6 @@ export default function AccountScreen() {
               )}
             </Pressable>
 
-            <PurposeSummary />
-          <PurposeDeletionControl />
-
             <View style={[styles.accountDivider, { backgroundColor: tokens.surfaceBorder }]} />
             <Text style={styles.deleteAccountIntro}>
               Permanently remove your iPurpose profile, Clarity Check results,
@@ -503,7 +521,6 @@ export default function AccountScreen() {
             </Pressable>
           </View>
 
-          <IntroReplay kind="welcome" returnLabel="Return to Account" />
           <Text style={styles.privacyNote}>
             Your information is used only to provide your authenticated iPurpose experience.
           </Text>
@@ -575,12 +592,13 @@ export default function AccountScreen() {
           </KeyboardAvoidingView>
         </Modal>
       </SafeAreaView>
-    </LinearGradient>
+    </EnvironmentBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
+  editButton: { minHeight: 44, paddingHorizontal: 12, justifyContent: 'center' },
+  identityFeedback: { marginTop: 8, color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13, lineHeight: 19 },
   safe: { backgroundColor: 'transparent', flex: 1 },
   container: { paddingBottom: 44, paddingHorizontal: 20, paddingTop: 8 },
   intro: { marginTop: 32 },

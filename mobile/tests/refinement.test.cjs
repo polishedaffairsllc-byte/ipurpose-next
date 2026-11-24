@@ -88,7 +88,9 @@ for (const atmosphere of [false, true]) test(`Purpose summary ${atmosphere ? 'Ho
 test('verification control resends through Firebase, refreshes status/token on return, handles throttling, and does not grant marketing consent', async () => {
   const h = harness(); const user = { uid: 'person', emailVerified: false, getIdToken: async force => { assert.equal(force, true); return 'renewed'; } };
   let sends = 0; let throttle = false; let syncs = 0;
-  h.mocks['firebase/auth'] = { reload: async () => {}, sendEmailVerification: async () => { sends++; if (throttle) throw { code: 'auth/too-many-requests' }; } };
+  const refreshIdentity = async () => {};
+  h.mocks['../context/AuthContext'] = { useAuth: () => ({ identity: user, refreshIdentity }) };
+  h.mocks['firebase/auth'] = { sendEmailVerification: async () => { sends++; if (throttle) throw { code: 'auth/too-many-requests' }; } };
   h.mocks['../lib/api'] = { refreshEmailStatus: async () => { syncs++; return user.emailVerified; } };
   const Component = h.load('components/EmailVerificationControls.tsx').EmailVerificationControls;
   const tree = await render(React.createElement(Component, { user }));
@@ -107,17 +109,27 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' }; h.mocks['expo-blur'] = { BlurView: 'BlurView' };
   h.mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
   h.mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
-  h.mocks['../../../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: null }) };
-  h.mocks['expo-router'].Link = 'Link';
   h.mocks['../../../components/VisualEnvironmentPicker'] = { VisualEnvironmentPicker: 'VisualEnvironmentPicker' };
   h.mocks['../../../components/EmailVerificationControls'] = { EmailVerificationControls: 'EmailVerificationControls' };
-  h.mocks['./AuthContext'] = h.mocks['../../../context/AuthContext'] = { useAuth: () => ({ user }) };
+  h.mocks['./AuthContext'] = h.mocks['../../../context/AuthContext'] = { useAuth: () => ({ user, identity: user }) };
   h.mocks['../lib/api'] = h.mocks['../../../lib/api'] = api;
   const math = h.load('lib/purposeCheck.ts'); let saved = null; let context;
   const provider = h.load('context/PurposeCheckContext.tsx'); h.mocks['../context/PurposeCheckContext'] = provider;
   function Probe() { context = provider.usePurposeCheck(); return null; }
   const Screen = h.load(`app/(app)/(tabs)/${screenName}.tsx`).default;
-  const tree = await render(React.createElement(provider.PurposeCheckProvider, null, React.createElement(Probe), React.createElement(Screen)));
+  const screen = () => React.createElement(provider.PurposeCheckProvider, null,
+    React.createElement(Probe), React.createElement(Screen));
+  const tree = await render(screen());
+  if (screenName === 'index') {
+    assert.equal(tree.root.findByType('BrandHeader').props.size, 'hero');
+    assert.equal(tree.root.findAllByType('Link').length, 0);
+    assert.equal(tree.root.findByType('IntroReplay').props.kind, 'welcome');
+  } else {
+    assert.equal(tree.root.findAllByType('IntroReplay').length, 0);
+    const accountText = text(tree.root);
+    assert.ok(accountText.indexOf('MY COMPASS') < accountText.indexOf('Your Purpose'));
+    assert.ok(accountText.indexOf('Your Purpose') < accountText.indexOf('Sign out'));
+  }
   assert.ok(button(tree, 'Take the Purpose Check'));
   const first = math.buildPurposePayload({ q1: ['explain'], q2: ['learn'], q3: ['learn'], q4: ['young'], q5: ['learn'], q6: ['understand'] }, '', false);
   await act(async () => context.save(first)); assert.ok(button(tree, 'View my full Purpose profile')); assert.ok(text(tree.root).includes(saved.direction));
@@ -127,20 +139,82 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   await act(async () => tree.unmount());
 });
 
-test('actual account creation sends Firebase verification without opting users into marketing', async () => {
-  const h = harness(); let user = null; let sends = 0; let consentWrites = 0; let failSend = false; let context;
-  h.mocks['../lib/firebase'] = { auth: { currentUser: null } };
+test('actual account creation retries a failed name or disclosure save before opening the first-run flow', async () => {
+  const h = harness();
+  const firebaseAuth = { currentUser: null };
+  let observer;
+  let context;
+  let creations = 0;
+  let consentWrites = 0;
+  let failNameSave = true;
+  let failAdmission = true;
+  let failSend = false;
+  const admissions = [];
+  const verificationNames = [];
+  h.mocks['../lib/firebase'] = { auth: firebaseAuth };
   h.mocks['firebase/auth'] = {
-    onAuthStateChanged: (_auth, callback) => { callback(user); return () => {}; },
-    createUserWithEmailAndPassword: async (_auth, email) => ({ user: (user = { uid: 'created', email, emailVerified: false }) }),
-    sendEmailVerification: async () => { sends++; if (failSend) throw { code: 'auth/too-many-requests' }; },
+    onAuthStateChanged: (_auth, callback) => { observer = callback; callback(firebaseAuth.currentUser); return () => {}; },
+    createUserWithEmailAndPassword: async (_auth, email) => {
+      const user = { uid: String(++creations), email, emailVerified: false, displayName: null };
+      firebaseAuth.currentUser = user;
+      observer(user);
+      return { user };
+    },
+    updateProfile: async (user, { displayName }) => {
+      if (failNameSave) throw new Error('Temporarily offline');
+      user.displayName = displayName;
+    },
+    sendEmailVerification: async user => {
+      verificationNames.push(user.displayName);
+      if (failSend) throw { code: 'auth/too-many-requests' };
+    },
   };
-  h.mocks['../lib/api'] = { saveMarketingConsent: async () => { consentWrites++; } };
+  h.mocks['../lib/api'] = {
+    acknowledgeSignupDisclosure: async (uid, name) => {
+      admissions.push({ uid, ...name });
+      if (failAdmission) throw new Error('Temporarily offline');
+    },
+    saveMarketingConsent: async () => { consentWrites++; },
+  };
   const auth = h.load('context/AuthContext.tsx'); function Probe() { context = auth.useAuth(); return null; }
   const tree = await render(React.createElement(auth.AuthProvider, null, React.createElement(Probe)));
-  await act(async () => context.createAccount(' Person@Example.test ', 'password', false));
-  assert.equal(user.email, 'Person@Example.test'); assert.equal(sends, 1); assert.equal(consentWrites, 0);
-  failSend = true; await act(async () => context.createAccount('second@example.test', 'password', true));
-  assert.equal(sends, 2); assert.equal(consentWrites, 1); assert.equal(user.emailVerified, false);
+  await act(async () => assert.rejects(
+    context.createAccount('Person@Example.test', 'password', {
+      firstName: 'Tara', lastName: 'Rivera', disclosureAcknowledged: false, marketingOptIn: true,
+    }),
+    /review the AI-powered features disclosure/i,
+  ));
+  assert.equal(creations, 0);
+  const signup = () => context.createAccount(' Person@Example.test ', 'password', {
+    firstName: '  Tara  ', lastName: ' Rivera ',
+    disclosureAcknowledged: true, marketingOptIn: false,
+  });
+  await act(async () => assert.rejects(
+    signup(), /save your name/,
+  ));
+  assert.equal(context.user, null);
+  assert.deepEqual(admissions, []);
+  assert.deepEqual(verificationNames, []);
+  failNameSave = false;
+  await act(async () => assert.rejects(signup(), /save your acknowledgment/));
+  assert.equal(context.user, null);
+  const expectedAdmission = { uid: '1', firstName: 'Tara', lastName: 'Rivera' };
+  assert.deepEqual(admissions, [expectedAdmission]);
+  assert.deepEqual(verificationNames, []);
+  failAdmission = false;
+  await act(async () => signup());
+  assert.equal(creations, 1);
+  assert.deepEqual(admissions, [expectedAdmission, expectedAdmission]);
+  assert.equal(context.user.email, 'Person@Example.test');
+  assert.equal(context.user.displayName, 'Tara Rivera');
+  assert.deepEqual(verificationNames, ['Tara Rivera']);
+  assert.equal(consentWrites, 0);
+  failSend = true;
+  await act(async () => context.createAccount('second@example.test', 'password', {
+    firstName: 'Alex', lastName: 'Quinn', disclosureAcknowledged: true, marketingOptIn: true,
+  }));
+  assert.deepEqual(verificationNames, ['Tara Rivera', 'Alex Quinn']);
+  assert.equal(consentWrites, 1);
+  assert.equal(context.user.emailVerified, false);
   await act(async () => tree.unmount());
 });

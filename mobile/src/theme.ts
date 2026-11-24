@@ -87,6 +87,7 @@ export const theme = {
 
 export interface VisualEnvironmentTokens {
   label: 'Depth' | 'Renewal' | 'Warmth';
+  background: import('react-native').ImageSourcePropType;
   atmosphereGradient: {
     colors: readonly [string, string, ...string[]];
     locations: readonly [number, number, ...number[]];
@@ -118,6 +119,7 @@ export interface VisualEnvironmentTokens {
   surfaceTint: string;
   profileCardBackground: string;
   tabBarBackground: string;
+  tabBarItemBackground: string;
   tabBarBorder: string;
   tabBarActive: string;
   tabBarInactive: string;
@@ -129,12 +131,18 @@ export const visualEnvironments: Record<
 > = {
   depth: {
     label: 'Depth',
-    atmosphereGradient: theme.homeGradient,
+    background: require('../assets/brand/depth-environment.png'),
+    atmosphereGradient: {
+      colors: ['rgba(15,18,43,0.42)', 'rgba(15,18,43,0.58)', 'rgba(15,18,43,0.92)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
+    },
     screenGradient: {
-      colors: ['#F5F7FA', '#F5F7FA', '#F5F7FA'],
-      locations: [0, 0.55, 1],
-      start: { x: 0.1, y: 0 },
-      end: { x: 0.9, y: 1 },
+      colors: ['rgba(247,240,234,0.42)', 'rgba(247,240,234,0.76)', 'rgba(247,240,234,0.92)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     accent: theme.colors.champagneText,
     accentStrong: theme.colors.lavenderPurple,
@@ -154,24 +162,26 @@ export const visualEnvironments: Record<
     surfaceBorder: theme.colors.line,
     surfaceTint: theme.colors.soulTint,
     profileCardBackground: theme.colors.deepIndigo,
-    tabBarBackground: theme.colors.white,
-    tabBarBorder: theme.colors.line,
-    tabBarActive: theme.colors.lavenderPurple,
-    tabBarInactive: theme.colors.muted,
+    tabBarBackground: '#171B30',
+    tabBarItemBackground: '#1E2238',
+    tabBarBorder: 'rgba(235, 232, 248, 0.26)',
+    tabBarActive: theme.colors.salmonPeach,
+    tabBarInactive: '#E3E0EE',
   },
   renewal: {
     label: 'Renewal',
+    background: require('../assets/brand/renewal-environment.png'),
     atmosphereGradient: {
-      colors: ['#1F2C24', '#35513F', '#5F7A58', '#8FA97C'],
-      locations: [0, 0.35, 0.72, 1],
-      start: { x: 0.15, y: 0 },
-      end: { x: 0.85, y: 1 },
+      colors: ['rgba(27,45,36,0.40)', 'rgba(27,45,36,0.58)', 'rgba(27,45,36,0.94)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     screenGradient: {
-      colors: ['#F5F8F2', '#E8F0E2', '#F5F7FA'],
-      locations: [0, 0.58, 1],
-      start: { x: 0.1, y: 0 },
-      end: { x: 0.9, y: 1 },
+      colors: ['rgba(246,245,232,0.42)', 'rgba(246,245,232,0.76)', 'rgba(246,245,232,0.92)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     accent: '#E5EDCF',
     accentStrong: '#52704A',
@@ -191,24 +201,26 @@ export const visualEnvironments: Record<
     surfaceBorder: '#CAD8C2',
     surfaceTint: '#E7F0DE',
     profileCardBackground: '#35513F',
-    tabBarBackground: '#F5F8F2',
-    tabBarBorder: '#CAD8C2',
-    tabBarActive: '#35513F',
-    tabBarInactive: '#6B7C70',
+    tabBarBackground: '#27392F',
+    tabBarItemBackground: '#354C3D',
+    tabBarBorder: '#818F7B',
+    tabBarActive: '#F0D498',
+    tabBarInactive: '#E4EADD',
   },
   warmth: {
     label: 'Warmth',
+    background: require('../assets/brand/dusk-environment.png'),
     atmosphereGradient: {
-      colors: ['#3A222B', '#6A3940', '#A75E5B', '#D98B78'],
-      locations: [0, 0.34, 0.72, 1],
-      start: { x: 0.15, y: 0 },
-      end: { x: 0.85, y: 1 },
+      colors: ['rgba(19,22,47,0.40)', 'rgba(19,22,47,0.58)', 'rgba(19,22,47,0.94)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     screenGradient: {
-      colors: ['#FFF8F5', '#FCEAE4', '#F5F7FA'],
-      locations: [0, 0.58, 1],
-      start: { x: 0.1, y: 0 },
-      end: { x: 0.9, y: 1 },
+      colors: ['rgba(255,241,235,0.66)', 'rgba(255,241,235,0.83)', 'rgba(255,241,235,0.94)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     accent: '#FFD9B8',
     accentStrong: '#A75E5B',
@@ -228,10 +240,11 @@ export const visualEnvironments: Record<
     surfaceBorder: '#E9CFC8',
     surfaceTint: '#FBE0D8',
     profileCardBackground: '#6A3940',
-    tabBarBackground: '#FFF8F5',
-    tabBarBorder: '#E9CFC8',
-    tabBarActive: '#8E4E50',
-    tabBarInactive: '#8A6D70',
+    tabBarBackground: '#3A222B',
+    tabBarItemBackground: '#502D36',
+    tabBarBorder: '#A38189',
+    tabBarActive: theme.colors.salmonPeach,
+    tabBarInactive: '#FFEAE5',
   },
 };
 

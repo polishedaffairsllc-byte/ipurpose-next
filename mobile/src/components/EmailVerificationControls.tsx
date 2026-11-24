@@ -1,27 +1,26 @@
 import { useCallback, useState } from 'react';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
-import { reload, sendEmailVerification, type User } from 'firebase/auth';
+import { sendEmailVerification, type User } from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useAuth } from '../context/AuthContext';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { refreshEmailStatus } from '../lib/api';
 import { theme } from '../theme';
 
 export function EmailVerificationControls({ user }: { user: User }) {
   const { tokens } = useVisualEnvironment();
-  const [verified, setVerified] = useState(user.emailVerified);
+  const { identity: { emailVerified: verified }, refreshIdentity } = useAuth();
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
   useFocusEffect(useCallback(() => {
-    let active = true;
     const refresh = async () => {
       try {
-        await reload(user);
+        await refreshIdentity();
         await user.getIdToken(true);
         await refreshEmailStatus().catch(() => {});
-        if (active) setVerified(user.emailVerified);
       } catch {
         // The explicit check below offers actionable feedback when offline.
       }
@@ -30,18 +29,17 @@ export function EmailVerificationControls({ user }: { user: User }) {
     const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') void refresh();
     });
-    return () => { active = false; subscription.remove(); };
-  }, [user]));
+    return () => subscription.remove();
+  }, [user, refreshIdentity]));
 
   async function verify(action: 'send' | 'check') {
     if (busy) return;
     setBusy(true);
     setFeedback(null);
     try {
-      await reload(user);
-        await user.getIdToken(true);
-        await refreshEmailStatus().catch(() => {});
-      setVerified(user.emailVerified);
+      await refreshIdentity();
+      await user.getIdToken(true);
+      await refreshEmailStatus().catch(() => {});
       if (user.emailVerified) return;
       if (action === 'send') {
         await sendEmailVerification(user);

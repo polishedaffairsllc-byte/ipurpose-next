@@ -41,7 +41,7 @@ for (const existing of [false, true]) test(`actual Purpose provider + API + scre
  const qs = h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS; assert.equal(qs.length, 6);
  for (const q of qs) { assert.match(text(tree.root), new RegExp(q.prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))); await press(tree, q.options[0].label); if (q.max > 1) await press(tree, 'Continue'); }
  await press(tree, 'See my Purpose Direction'); assert.equal(writes.length, 1); assert.equal(Object.keys(writes[0].answers).length, 6);
- assert.ok(button(tree, 'Retake the Purpose Check')); assert.equal(button(tree, 'Continue to the Purpose Path').props.disabled, true);
+ assert.ok(button(tree, 'Retake the Purpose Check')); assert.ok(!button(tree, 'Continue to the Purpose Path').props.disabled);
  await act(async () => tree.unmount());
 });
 test('Purpose provider exposes genuine failure and retry recovers to first-time start', async () => {
@@ -53,20 +53,37 @@ test('Purpose provider exposes genuine failure and retry recovers to first-time 
  failed = false; await press(tree, 'Try again'); assert.ok(button(tree, 'Take the Purpose Check')); await act(async () => tree.unmount());
 });
 
-test('Account environment saves propagate into mounted Clarity intro/questions and persist on remount through Depth → Renewal → Warmth → Depth', async () => {
+test('Account environment updates guidance, consent and navigation throughout the app and persists on remount', async () => {
  const h = harness(); let saved = { mode: 'manual', manualTheme: 'depth' }; const writes = [];
  h.mocks['./AuthContext'] = { useAuth: () => ({ user: { uid: 'test' }, loading: false }) };
  h.mocks['../context/AuthContext'] = { useAuth: () => ({ signOut: async () => {} }) };
  h.mocks['../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: null, refresh: async () => {} }) };
- h.mocks['../lib/api'] = { getCompanionProfile: async () => ({ visualEnvironmentPreference: saved }), updateVisualEnvironmentPreference: async pref => { saved = pref; writes.push(pref); return { visualEnvironmentPreference: pref }; }, createClarityRequestId: () => 'stable-attempt' };
+ h.mocks['../lib/api'] = { getCompanionProfile: async () => ({ visualEnvironmentPreference: saved }), updateVisualEnvironmentPreference: async pref => { saved = pref; writes.push(pref); return { visualEnvironmentPreference: pref }; }, createClarityRequestId: () => 'stable-attempt',
+   getAiConsent: async () => ({ granted: false, provider: 'OpenAI', notice: 'Sample notice.', version: 'test' }),
+ };
  h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' }; h.mocks['./BrandHeader'] = { BrandHeader: 'BrandHeader' };
- const env = h.load('context/VisualEnvironmentContext.tsx'); h.mocks['../context/VisualEnvironmentContext'] = env;
+ const env = h.load('context/VisualEnvironmentContext.tsx');
+ h.mocks['../context/VisualEnvironmentContext'] = h.mocks['../../../context/VisualEnvironmentContext'] = env;
  const Picker = h.load('components/VisualEnvironmentPicker.tsx').VisualEnvironmentPicker;
  const Flow = h.load('components/ClarityCheckFlow.tsx').ClarityCheckFlow;
- const app = () => React.createElement(env.VisualEnvironmentProvider, null, React.createElement(Picker), React.createElement(Flow, { mode: 'retake' }));
+ const Consent = h.load('components/AiDataSharingControls.tsx').AiDataSharingControls;
+ const Tabs = h.load('app/(app)/(tabs)/_layout.tsx').default;
+ const app = () => React.createElement(env.VisualEnvironmentProvider, null,
+   React.createElement(Picker), React.createElement(Flow, { mode: 'retake' }),
+   React.createElement(Consent), React.createElement(Tabs));
+ const progressBars = tree => tree.root.findAllByType('View').filter(view => view.props.accessibilityRole === 'progressbar');
  let tree = await render(app()); const tokens = h.load('theme.ts').visualEnvironments;
  const check = name => {
-  assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].atmosphereGradient.colors);
+  assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].screenGradient.colors);
+  assert.equal(tree.root.findByType('ImageBackground').props.source, tokens[name].background);
+  assert.equal(progressBars(tree).length, 0);
+  const consent = tree.root.findByType(Consent);
+  assert.equal(consent.findAllByType('View')[0].props.style.at(-1).backgroundColor, tokens[name].surfaceTint);
+  const tabOptions = tree.root.findByType('Tabs').props.screenOptions;
+  assert.equal(tabOptions.tabBarStyle.at(-1).backgroundColor, tokens[name].tabBarBackground);
+  assert.equal(tabOptions.tabBarItemStyle.at(-1).backgroundColor, tokens[name].tabBarItemBackground);
+  assert.equal(tabOptions.tabBarActiveTintColor, tokens[name].tabBarActive);
+  assert.equal(tabOptions.tabBarInactiveTintColor, tokens[name].tabBarInactive);
   const b = button(tree, 'Begin again'); const style = b.props.style({ pressed: false }); assert.equal(style[0].backgroundColor, tokens[name].buttonBackground);
  };
  check('depth');
@@ -78,6 +95,7 @@ test('Account environment saves propagate into mounted Clarity intro/questions a
  }
  assert.deepEqual(writes.map(p => p.manualTheme), ['renewal', 'warmth', 'depth']);
  await press(tree, 'Begin again');
+ assert.ok(progressBars(tree)[0].props['aria-valuenow'] > 0);
  await act(async () => { const context = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'radio' && n.props.accessibilityLabel.startsWith('Renewal.')); context.props.onPress(); });
  await press(tree, 'Use this environment'); assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens.renewal.atmosphereGradient.colors);
  // Theme change does not remount or reset the current assessment question.
@@ -92,15 +110,26 @@ test('signup visibility toggles are independent and preserve values, validation,
  const tree = await render(React.createElement(h.load('app/create-account.tsx').default));
  const input = label => tree.root.findAllByType('TextInput').find(n => n.props.accessibilityLabel === label);
  const toggle = async label => { const b = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityLabel === label); assert.ok(b); await act(async () => b.props.onPress()); };
- const box = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'checkbox'); assert.equal(box.props.accessibilityState.checked, false);
+ const [marketing, disclosure] = tree.root.findAllByType('Pressable').filter(n => n.props.accessibilityRole === 'checkbox');
+ assert.equal(marketing.props.accessibilityState.checked, false);
+ assert.equal(disclosure.props.accessibilityState.checked, false);
  assert.equal(input('Password').props.secureTextEntry, true); assert.equal(input('Confirm password').props.secureTextEntry, true);
  await act(async () => { input('Email').props.onChangeText(' person@example.test '); input('Password').props.onChangeText('secret123'); input('Confirm password').props.onChangeText('mismatch'); });
  assert.equal(button(tree, 'Create Account').props.disabled, true);
  await toggle('Show password'); assert.equal(input('Password').props.secureTextEntry, false); assert.equal(input('Confirm password').props.secureTextEntry, true);
  await toggle('Show confirm password'); assert.equal(input('Confirm password').props.secureTextEntry, false); assert.equal(input('Password').props.value, 'secret123');
  await toggle('Hide password'); await toggle('Hide confirm password'); assert.equal(input('Password').props.secureTextEntry, true);
- await act(async () => input('Confirm password').props.onChangeText('secret123')); await press(tree, 'Create Account');
- assert.deepEqual(calls, [['person@example.test', 'secret123', false]]); await act(async () => tree.unmount());
+ await act(async () => input('Confirm password').props.onChangeText('secret123'));
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => disclosure.props.onPress());
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => input('First name').props.onChangeText('Tara'));
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => input('Last name').props.onChangeText('Rivera'));
+ await press(tree, 'Create Account');
+ assert.deepEqual(calls, [['person@example.test', 'secret123',
+  { firstName: 'Tara', lastName: 'Rivera', disclosureAcknowledged: true, marketingOptIn: false }]]);
+ await act(async () => tree.unmount());
 });
 
 test('Clarity retake reaches every unchanged question, retries with the same attempt ID and displays the server result', async () => {

@@ -49,6 +49,22 @@ test('signup retries preserve current consent, withdrawal, and saved profile', a
   await h.signup.requireCompletedSignup(h.db, h.user);
 });
 
+test('signup stores first and last names independently and accepts legacy clients without those fields', async () => {
+  const h = fixture();
+  const save = input => h.signup.completeSignup(h.db, h.user, { ...h.input, ...input }, async () => h.user);
+  await assert.rejects(save({ firstName: 'Tara' }), { status: 400 });
+  await assert.rejects(save({ firstName: '   ', lastName: 'Rivera' }), { status: 400 });
+  assert.equal(h.db.documents.size, 0);
+  await save({ firstName: '  Tara  ', lastName: ' Rivera ' });
+  const profile = () => h.db.documents.get('users/review-user');
+  assert.equal(profile().firstName, 'Tara');
+  assert.equal(profile().lastName, 'Rivera');
+  assert.equal(profile().displayName, 'Tara Rivera');
+  await save({});
+  assert.equal(profile().lastName, 'Rivera');
+  assert.equal((await h.safety.readAiConsent(h.db, h.user.uid)).granted, false);
+});
+
 test('an account being deleted cannot be recreated by a concurrent signup retry', async () => {
   const h = fixture();
   await h.load('lib/accountDeletionLock.ts').accountDeletionLock(h.db, h.user.uid).set({ startedAt: new Date() });

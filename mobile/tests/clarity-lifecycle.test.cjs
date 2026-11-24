@@ -18,7 +18,7 @@ function harness() {
   const filename = path.resolve(__dirname, '../src', relative); if (cache.has(filename)) return cache.get(filename).exports;
   const module = { exports: {} }; cache.set(filename, module);
   const output = ts.transpileModule(fs.readFileSync(filename, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true, target: ts.ScriptTarget.ES2022 }, fileName: filename }).outputText;
-  function localRequire(id) { if (Object.hasOwn(mocks, id)) return mocks[id]; if (id.startsWith('.')) { const base = path.resolve(path.dirname(filename), id); const file = ['.tsx', '.ts'].map(ext => base + ext).find(fs.existsSync); if (file) return load(path.relative(path.resolve(__dirname, '../src'), file)); } return require(id); }
+  function localRequire(id) { if (Object.hasOwn(mocks, id)) return mocks[id]; if (id.startsWith('.')) { const base = path.resolve(path.dirname(filename), id); if (/\.(png|jpg)$/.test(id) && fs.existsSync(base)) return id; const file = ['.tsx', '.ts'].map(ext => base + ext).find(fs.existsSync); if (file) return load(path.relative(path.resolve(__dirname, '../src'), file)); } return require(id); }
   new Function('require', 'module', 'exports', output)(localRequire, module, module.exports); return module.exports;
  }
  const tokens = load('theme.ts').visualEnvironments.depth;
@@ -37,10 +37,24 @@ for (const optIn of [false, true]) test(`marketing checkbox defaults off; create
  h.mocks['../components/AuthScaffold'] = { AuthScaffold: 'AuthScaffold', AuthPanel: 'AuthPanel', authStyles: {} };
  h.mocks['firebase/app'] = { FirebaseError: class FirebaseError extends Error {} };
  const tree = await render(React.createElement(h.load('app/create-account.tsx').default));
- const box = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'checkbox'); assert.equal(box.props.accessibilityState.checked, false);
- const inputs = tree.root.findAllByType('TextInput');
- await act(async () => { inputs[0].props.onChangeText('person@example.test'); inputs[1].props.onChangeText('password'); inputs[2].props.onChangeText('password'); });
- if (optIn) await act(async () => box.props.onPress());
- await press(tree, 'Create Account'); assert.deepEqual(calls, [['person@example.test', 'password', optIn]]); assert.equal(h.events.includes('email_signup'), false);
+ const checkboxes = tree.root.findAllByType('Pressable').filter(n => n.props.accessibilityRole === 'checkbox');
+ const [marketing, disclosure] = checkboxes;
+ assert.equal(marketing.props.accessibilityState.checked, false);
+ assert.equal(disclosure.props.accessibilityState.checked, false);
+ const input = label => tree.root.findAllByType('TextInput').find(node => node.props.accessibilityLabel === label);
+ await act(async () => {
+  input('First name').props.onChangeText('  Tara  ');
+  input('Last name').props.onChangeText('  Rivera  ');
+  input('Email').props.onChangeText('person@example.test');
+  input('Password').props.onChangeText('password');
+  input('Confirm password').props.onChangeText('password');
+ });
+ if (optIn) await act(async () => marketing.props.onPress());
+ assert.equal(button(tree, 'Create Account').props.disabled, true);
+ await act(async () => disclosure.props.onPress());
+ await press(tree, 'Create Account');
+ assert.deepEqual(calls, [['person@example.test', 'password',
+  { firstName: 'Tara', lastName: 'Rivera', disclosureAcknowledged: true, marketingOptIn: optIn }]]);
+ assert.equal(h.events.includes('email_signup'), false);
  await act(async () => tree.unmount());
 });
