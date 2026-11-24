@@ -55,7 +55,7 @@ export function IntroReplay({ kind, returnLabel, autoShowCompass = false }: {
 
   return <>
     <Pressable accessibilityRole="button" onPress={() => setMode('replay')}
-      style={[styles.button, (kind === 'clarity' || kind === 'purpose') && styles.guidance,
+      style={[styles.button, kind !== 'welcome' && styles.guidance,
         { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
       <Text style={styles.label}>{kind === 'welcome' ? 'Replay Welcome' : `About ${INTRO_VIDEOS[kind].label}`}</Text>
     </Pressable>

@@ -83,7 +83,6 @@ export default function PurposePathScreen() {
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.container}>
           <BrandHeader subtitle="Clarity → Purpose → Action" />
           <Text accessibilityRole="header" style={styles.title}>{stage?.title ?? (firstExperience && resultsReady ? 'Your Purpose Path Results' : 'Your Purpose Path')}</Text>
-          <IntroReplay kind="purpose" returnLabel="Return to Purpose Path" />
           {stage ? <Choice centered label="Back to Purpose Path" disabled={leaving} onPress={() => setStageIndex(null)} /> : null}
           {loading ? <ActivityIndicator color={tokens.accentStrong} /> : !ready ? (
             <View accessibilityRole="alert"><Text style={styles.body}>{error}</Text><Choice label="Try again" onPress={retry} /></View>
@@ -154,6 +153,7 @@ export default function PurposePathScreen() {
             </>
           )}
         </ScrollView>
+          <IntroReplay kind="purpose" returnLabel="Return to Purpose Path" />
         </KeyboardAvoidingView>
       </SafeAreaView>
     </EnvironmentBackground>

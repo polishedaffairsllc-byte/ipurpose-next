@@ -11,8 +11,8 @@ export function getDisplayName(
 }
 
 export function getGreetingName(
-  profileDisplayName?: string | null,
-  authDisplayName?: string | null,
+  preferredDisplayName?: string | null,
+  fallbackDisplayName?: string | null,
   email?: string | null
 ): string | null {
   const getReliableFirstName = (value?: string | null) => {
@@ -26,7 +26,7 @@ export function getGreetingName(
     return trimmedValue.split(/\s+/)[0];
   };
 
-  const namedCandidate = [profileDisplayName, authDisplayName]
+  const namedCandidate = [preferredDisplayName, fallbackDisplayName]
     .map(getReliableFirstName)
     .find((value) => value !== null);
 

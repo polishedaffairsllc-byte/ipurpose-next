@@ -88,7 +88,9 @@ for (const atmosphere of [false, true]) test(`Purpose summary ${atmosphere ? 'Ho
 test('verification control resends through Firebase, refreshes status/token on return, handles throttling, and does not grant marketing consent', async () => {
   const h = harness(); const user = { uid: 'person', emailVerified: false, getIdToken: async force => { assert.equal(force, true); return 'renewed'; } };
   let sends = 0; let throttle = false; let syncs = 0;
-  h.mocks['firebase/auth'] = { reload: async () => {}, sendEmailVerification: async () => { sends++; if (throttle) throw { code: 'auth/too-many-requests' }; } };
+  const refreshIdentity = async () => {};
+  h.mocks['../context/AuthContext'] = { useAuth: () => ({ identity: user, refreshIdentity }) };
+  h.mocks['firebase/auth'] = { sendEmailVerification: async () => { sends++; if (throttle) throw { code: 'auth/too-many-requests' }; } };
   h.mocks['../lib/api'] = { refreshEmailStatus: async () => { syncs++; return user.emailVerified; } };
   const Component = h.load('components/EmailVerificationControls.tsx').EmailVerificationControls;
   const tree = await render(React.createElement(Component, { user }));
@@ -107,13 +109,9 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' }; h.mocks['expo-blur'] = { BlurView: 'BlurView' };
   h.mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
   h.mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
-  const firstRun = { stage: 'experience', choice: 'clarity' };
-  h.mocks['../../../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: { status: 'complete' } }) };
-  h.mocks['../../../context/FirstRunContext'] = { useFirstRun: () => ({ state: firstRun }) };
-  h.mocks['expo-router'].Link = 'Link';
   h.mocks['../../../components/VisualEnvironmentPicker'] = { VisualEnvironmentPicker: 'VisualEnvironmentPicker' };
   h.mocks['../../../components/EmailVerificationControls'] = { EmailVerificationControls: 'EmailVerificationControls' };
-  h.mocks['./AuthContext'] = h.mocks['../../../context/AuthContext'] = { useAuth: () => ({ user }) };
+  h.mocks['./AuthContext'] = h.mocks['../../../context/AuthContext'] = { useAuth: () => ({ user, identity: user }) };
   h.mocks['../lib/api'] = h.mocks['../../../lib/api'] = api;
   const math = h.load('lib/purposeCheck.ts'); let saved = null; let context;
   const provider = h.load('context/PurposeCheckContext.tsx'); h.mocks['../context/PurposeCheckContext'] = provider;
@@ -124,11 +122,13 @@ for (const screenName of ['index', 'account']) test(`actual ${screenName === 'in
   const tree = await render(screen());
   if (screenName === 'index') {
     assert.equal(tree.root.findByType('BrandHeader').props.size, 'hero');
-    const clarityLink = () => tree.root.findAllByType('Link').find(link => text(link) === 'Clarity Check');
-    assert.equal(clarityLink().props.href, '/onboarding');
-    firstRun.stage = 'complete';
-    await act(async () => tree.update(screen()));
-    assert.equal(clarityLink().props.href, '/clarity-check');
+    assert.equal(tree.root.findAllByType('Link').length, 0);
+    assert.equal(tree.root.findByType('IntroReplay').props.kind, 'welcome');
+  } else {
+    assert.equal(tree.root.findAllByType('IntroReplay').length, 0);
+    const accountText = text(tree.root);
+    assert.ok(accountText.indexOf('MY COMPASS') < accountText.indexOf('Your Purpose'));
+    assert.ok(accountText.indexOf('Your Purpose') < accountText.indexOf('Sign out'));
   }
   assert.ok(button(tree, 'Take the Purpose Check'));
   const first = math.buildPurposePayload({ q1: ['explain'], q2: ['learn'], q3: ['learn'], q4: ['young'], q5: ['learn'], q6: ['understand'] }, '', false);

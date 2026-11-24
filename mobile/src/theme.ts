@@ -87,6 +87,7 @@ export const theme = {
 
 export interface VisualEnvironmentTokens {
   label: 'Depth' | 'Renewal' | 'Warmth';
+  background: import('react-native').ImageSourcePropType;
   atmosphereGradient: {
     colors: readonly [string, string, ...string[]];
     locations: readonly [number, number, ...number[]];
@@ -129,12 +130,18 @@ export const visualEnvironments: Record<
 > = {
   depth: {
     label: 'Depth',
-    atmosphereGradient: theme.homeGradient,
+    background: require('../assets/brand/depth-environment.png'),
+    atmosphereGradient: {
+      colors: ['rgba(15,18,43,0.42)', 'rgba(15,18,43,0.58)', 'rgba(15,18,43,0.92)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
+    },
     screenGradient: {
-      colors: ['#F5F7FA', '#F5F7FA', '#F5F7FA'],
-      locations: [0, 0.55, 1],
-      start: { x: 0.1, y: 0 },
-      end: { x: 0.9, y: 1 },
+      colors: ['rgba(247,240,234,0.42)', 'rgba(247,240,234,0.76)', 'rgba(247,240,234,0.92)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     accent: theme.colors.champagneText,
     accentStrong: theme.colors.lavenderPurple,
@@ -161,17 +168,18 @@ export const visualEnvironments: Record<
   },
   renewal: {
     label: 'Renewal',
+    background: require('../assets/brand/renewal-environment.png'),
     atmosphereGradient: {
-      colors: ['#1F2C24', '#35513F', '#5F7A58', '#8FA97C'],
-      locations: [0, 0.35, 0.72, 1],
-      start: { x: 0.15, y: 0 },
-      end: { x: 0.85, y: 1 },
+      colors: ['rgba(27,45,36,0.40)', 'rgba(27,45,36,0.58)', 'rgba(27,45,36,0.94)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     screenGradient: {
-      colors: ['#F5F8F2', '#E8F0E2', '#F5F7FA'],
-      locations: [0, 0.58, 1],
-      start: { x: 0.1, y: 0 },
-      end: { x: 0.9, y: 1 },
+      colors: ['rgba(246,245,232,0.42)', 'rgba(246,245,232,0.76)', 'rgba(246,245,232,0.92)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     accent: '#E5EDCF',
     accentStrong: '#52704A',
@@ -198,17 +206,18 @@ export const visualEnvironments: Record<
   },
   warmth: {
     label: 'Warmth',
+    background: require('../assets/brand/dusk-environment.png'),
     atmosphereGradient: {
-      colors: ['#3A222B', '#6A3940', '#A75E5B', '#D98B78'],
-      locations: [0, 0.34, 0.72, 1],
-      start: { x: 0.15, y: 0 },
-      end: { x: 0.85, y: 1 },
+      colors: ['rgba(19,22,47,0.40)', 'rgba(19,22,47,0.58)', 'rgba(19,22,47,0.94)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     screenGradient: {
-      colors: ['#FFF8F5', '#FCEAE4', '#F5F7FA'],
-      locations: [0, 0.58, 1],
-      start: { x: 0.1, y: 0 },
-      end: { x: 0.9, y: 1 },
+      colors: ['rgba(255,241,235,0.66)', 'rgba(255,241,235,0.83)', 'rgba(255,241,235,0.94)'],
+      locations: [0, 0.45, 1],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
     },
     accent: '#FFD9B8',
     accentStrong: '#A75E5B',

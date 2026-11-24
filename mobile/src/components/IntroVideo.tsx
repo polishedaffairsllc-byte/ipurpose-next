@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, ActivityIndicator, AppState, Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, Animated, ActivityIndicator, AppState, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { EnvironmentBackground } from './EnvironmentBackground';
@@ -54,9 +54,13 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
     video.staysActiveInBackground = false;
   });
   const [status, setStatus] = useState(player.status);
+  const [playing, setPlaying] = useState(player.playing);
 
   useEffect(() => {
     const statusSubscription = player.addListener('statusChange', (event) => { if (active.current) setStatus(event.status); });
+    const playingSubscription = player.addListener('playingChange', ({ isPlaying }) => {
+      if (active.current) setPlaying(isPlaying);
+    });
     const endSubscription = player.addListener('playToEnd', () => {
       if (!active.current) return;
       setEnded(true);
@@ -72,6 +76,7 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
     });
     return () => {
       statusSubscription.remove();
+      playingSubscription.remove();
       endSubscription.remove();
       appSubscription.remove();
     };
@@ -82,6 +87,15 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
     if (active.current && !endedRef.current && AppState.currentState === 'active') player.play();
     return () => { focused.current = false; if (active.current) player.pause(); };
   }, [player]));
+
+  // On web the view can mount after the modal opens. Wait for the actual
+  // media element to report readiness before retrying an early play request.
+  useEffect(() => {
+    if (Platform.OS === 'web' && status === 'readyToPlay' && !player.playing && focused.current
+      && !endedRef.current && !finishing.current && AppState.currentState === 'active') {
+      player.play();
+    }
+  }, [player, status]);
 
   const finish = async () => {
     if (!active.current || finishing.current) return;
@@ -117,6 +131,7 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
               style={styles.flex}
               contentFit="contain"
               nativeControls={false}
+              playsInline
               allowsFullscreen={false}
               allowsPictureInPicture={false}
               surfaceType="textureView"
@@ -129,6 +144,11 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
             {status === 'loading' ? <View pointerEvents="none" style={styles.loading}><ActivityIndicator color={tokens.accentStrong} /></View> : null}
           </View>
           {status === 'error' ? <Text accessibilityRole="alert" style={[styles.message, { color: theme.colors.ink }]}>This video could not play. You can still continue.</Text> : null}
+          {status === 'readyToPlay' && !playing && !ended && !saving ? (
+            <Pressable accessibilityRole="button" onPress={() => player.play()} style={styles.replay}>
+              <Text style={[styles.linkText, { color: tokens.accentStrong }]}>Play video</Text>
+            </Pressable>
+          ) : null}
           {ended ? <Pressable accessibilityRole="button" onPress={() => { if (!active.current) return; player.currentTime = 0; endedRef.current = false; setEnded(false); player.play(); if (kind === 'clarity') Animated.timing(endCardOpacity, { toValue: 0, duration: reduceMotion.current ? 0 : 350, useNativeDriver: true }).start(); }} style={styles.replay}>
             <Text style={[styles.linkText, { color: tokens.accentStrong }]}>Replay video</Text>
           </Pressable> : null}

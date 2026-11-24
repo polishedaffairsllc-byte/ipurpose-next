@@ -66,7 +66,8 @@ test('Account environment saves propagate into mounted Clarity intro/questions a
  const app = () => React.createElement(env.VisualEnvironmentProvider, null, React.createElement(Picker), React.createElement(Flow, { mode: 'retake' }));
  let tree = await render(app()); const tokens = h.load('theme.ts').visualEnvironments;
  const check = name => {
-  assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].atmosphereGradient.colors);
+  assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].screenGradient.colors);
+  assert.equal(tree.root.findByType('ImageBackground').props.source, tokens[name].background);
   const b = button(tree, 'Begin again'); const style = b.props.style({ pressed: false }); assert.equal(style[0].backgroundColor, tokens[name].buttonBackground);
  };
  check('depth');

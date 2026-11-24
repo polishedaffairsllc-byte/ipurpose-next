@@ -12,7 +12,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
 import { useRouter } from 'expo-router';
 import { BrandHeader } from '../../../components/BrandHeader';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
@@ -78,13 +78,7 @@ export default function TimezoneScreen() {
   }
 
   return (
-    <LinearGradient
-      colors={tokens.screenGradient.colors}
-      locations={tokens.screenGradient.locations}
-      start={tokens.screenGradient.start}
-      end={tokens.screenGradient.end}
-      style={styles.gradient}
-    >
+    <EnvironmentBackground>
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -271,12 +265,11 @@ export default function TimezoneScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </LinearGradient>
+    </EnvironmentBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
   safe: { backgroundColor: 'transparent', flex: 1 },
   flex: { flex: 1 },
   container: { paddingBottom: 40, paddingHorizontal: 20, paddingTop: 8 },

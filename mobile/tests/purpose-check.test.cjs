@@ -18,7 +18,7 @@ function harness() {
   const filename = path.resolve(__dirname, '../src', relative); if (cache.has(filename)) return cache.get(filename).exports;
   const module = { exports: {} }; cache.set(filename, module);
   const output = ts.transpileModule(fs.readFileSync(filename, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true, target: ts.ScriptTarget.ES2022 }, fileName: filename }).outputText;
-  function localRequire(id) { if (Object.hasOwn(mocks, id)) return mocks[id]; if (id.startsWith('.')) { const base = path.resolve(path.dirname(filename), id); const file = ['.tsx', '.ts'].map(ext => base + ext).find(fs.existsSync); if (file) return load(path.relative(path.resolve(__dirname, '../src'), file)); } return require(id); }
+  function localRequire(id) { if (Object.hasOwn(mocks, id)) return mocks[id]; if (id.startsWith('.')) { const base = path.resolve(path.dirname(filename), id); if (/\.(png|jpg)$/.test(id) && fs.existsSync(base)) return id; const file = ['.tsx', '.ts'].map(ext => base + ext).find(fs.existsSync); if (file) return load(path.relative(path.resolve(__dirname, '../src'), file)); } return require(id); }
   new Function('require', 'module', 'exports', output)(localRequire, module, module.exports); return module.exports;
  }
  const tokens = load('theme.ts').visualEnvironments.depth;
@@ -28,6 +28,7 @@ function harness() {
  mocks['@expo/vector-icons/MaterialCommunityIcons'] = 'MaterialIcon';
  mocks['@react-navigation/elements'] = { PlatformPressable: 'PlatformPressable' };
  mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
+ mocks['../../../components/EnvironmentBackground'] = { EnvironmentBackground: 'EnvironmentBackground' };
  mocks['../../../components/BrandHeader'] = { BrandHeader: 'BrandHeader' };
  return { load, mocks, routes, events, state, native };
 }
@@ -80,6 +81,8 @@ test('five tabs retain required order and keep Purpose selected on Purpose Path'
  assert.deepEqual(screens.filter(screen => screen.options.href !== null).map(screen => screen.name),
   ['index', 'clarity-check', 'purpose', 'mentor', 'account']);
  assert.equal(screens.find(screen => screen.name === 'purpose-path').options.href, null);
+ const compassEmblem = screens.find(screen => screen.name === 'mentor').options.tabBarIcon({ color: 'white', size: 24 });
+ assert.match(compassEmblem.props.source, /compass-tab-silhouette\.png$/);
  const purposeButton = screens.find(screen => screen.name === 'purpose').options.tabBarButton({});
  assert.equal(purposeButton.props.accessibilityState.selected, true);
  const style = tree.root.findByType('Tabs').props.screenOptions.tabBarStyle.at(-1);

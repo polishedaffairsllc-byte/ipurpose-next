@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { PlatformPressable } from '@react-navigation/elements';
 import { Tabs, usePathname } from 'expo-router';
-import { StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { Image, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackSupportScreenView } from '../../../lib/analyticsEvents';
 import { purposeCopy } from '../../../lib/purposeCheckCopy';
@@ -12,7 +12,7 @@ const primaryTabs = [
   { name: 'index', path: '/', title: 'Home', icon: 'home-outline', selectedIcon: 'home' },
   { name: 'clarity-check', path: '/clarity-check', title: 'Clarity Check', materialIcon: 'waves' },
   { name: 'purpose', path: '/purpose', title: purposeCopy.tab, icon: 'leaf-outline', selectedIcon: 'leaf' },
-  { name: 'mentor', path: '/mentor', title: 'Compass', materialIcon: 'compass-rose' },
+  { name: 'mentor', path: '/mentor', title: 'Compass', logo: true },
   { name: 'account', path: '/account', title: 'Account', icon: 'person-outline', selectedIcon: 'person' },
 ] as const;
 
@@ -65,7 +65,10 @@ export default function TabsLayout() {
               tabBarButton: isDetailParent ? props => (
                 <PlatformPressable {...props} aria-selected accessibilityState={{ ...props.accessibilityState, selected: true }} />
               ) : undefined,
-              tabBarIcon: ({ color, size, focused }) => 'materialIcon' in tab ? (
+              tabBarIcon: ({ color, size, focused }) => 'logo' in tab ? (
+                <Image accessible={false} source={require('../../../../assets/brand/compass-tab-silhouette.png')}
+                  resizeMode="contain" style={{ width: size, height: size, tintColor: color }} />
+              ) : 'materialIcon' in tab ? (
                 <MaterialCommunityIcons name={tab.materialIcon} size={size} color={isDetailParent ? theme.colors.salmonPeach : color} />
               ) : (
                 <Ionicons name={focused || isDetailParent ? tab.selectedIcon : tab.icon} size={size}
