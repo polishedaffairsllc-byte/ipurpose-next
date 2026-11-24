@@ -20,7 +20,6 @@ export default function WelcomeScreen() {
   return (
     <AuthScaffold
       body="A grounded companion for finding clarity, building what supports you, and moving with intention."
-      eyebrow="YOUR SOUL · YOUR SYSTEMS · YOUR NORTH"
       title="Welcome, Beautiful Soul"
       variant="welcome"
     >
