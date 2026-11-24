@@ -292,7 +292,9 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
               <View
                 accessibilityLabel="Clarity Check progress"
                 accessibilityRole="progressbar"
-                accessibilityValue={{ min: 0, max: 100, now: Math.round(progress * 100) }}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(progress * 100)}
                 style={styles.progressTrack}
               >
                 <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />

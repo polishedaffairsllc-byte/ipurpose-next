@@ -95,7 +95,7 @@ test('Account environment updates guidance, consent and navigation throughout th
  }
  assert.deepEqual(writes.map(p => p.manualTheme), ['renewal', 'warmth', 'depth']);
  await press(tree, 'Begin again');
- assert.ok(progressBars(tree)[0].props.accessibilityValue.now > 0);
+ assert.ok(progressBars(tree)[0].props['aria-valuenow'] > 0);
  await act(async () => { const context = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'radio' && n.props.accessibilityLabel.startsWith('Renewal.')); context.props.onPress(); });
  await press(tree, 'Use this environment'); assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens.renewal.atmosphereGradient.colors);
  // Theme change does not remount or reset the current assessment question.
