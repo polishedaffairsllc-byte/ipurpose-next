@@ -19,9 +19,9 @@ const COMPASS_LOGO = require('../../assets/release/adaptive-icon-foreground.png'
 const WELCOME_ATMOSPHERE = require('../../assets/brand/welcome-atmosphere.jpg');
 
 interface AuthScaffoldProps {
-  body: string;
+  body?: string;
   children: ReactNode;
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   variant?: 'welcome' | 'form' | 'signup';
 }
@@ -84,11 +84,11 @@ export function AuthScaffold({
               </View>
 
               <View style={welcome ? styles.copyWelcome : styles.copyForm}>
-                <Text style={styles.eyebrow}>{eyebrow}</Text>
+                {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
                 <Text accessibilityRole="header" style={[styles.title, welcome && styles.titleWelcome]}>
                   {title}
                 </Text>
-                <Text style={styles.body}>{body}</Text>
+                {body ? <Text style={styles.body}>{body}</Text> : null}
               </View>
 
               {children}

@@ -67,8 +67,6 @@ export default function CreateAccountScreen() {
 
   return (
     <AuthScaffold
-      body="Your Clarity Check will establish the first layer of context Compass needs to support you well."
-      eyebrow="BEGIN YOUR JOURNEY"
       title="Create your account."
       variant="signup"
     >
