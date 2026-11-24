@@ -134,7 +134,7 @@ test('mobile offers Firebase account creation from sign in', async () => {
 
   assert.match(authSource, /createUserWithEmailAndPassword/);
   assert.match(signInSource, /router\.push\('\/create-account'\)/);
-  assert.match(createAccountSource, /await createAccount\(normalizedEmail, password, marketingOptIn\)/);
+  assert.match(createAccountSource, /await createAccount\(normalizedEmail, password, \{\s*\.\.\.name,\s*marketingOptIn,\s*disclosureAcknowledged,\s*\}\)/);
   assert.match(createAccountSource, /<Redirect href="\/" \/>/);
 });
 
@@ -171,12 +171,10 @@ test('mobile tab order keeps Clarity Check permanently visible', async () => {
     readFile(new URL('../mobile/src/app/(app)/(tabs)/_layout.tsx', import.meta.url), 'utf8'),
     readFile(new URL('../mobile/src/app/(app)/(tabs)/clarity-check.tsx', import.meta.url), 'utf8'),
   ]);
-  const home = layoutSource.indexOf('name="index"');
-  const clarity = layoutSource.indexOf('name="clarity-check"');
-  const compass = layoutSource.indexOf('name="mentor"');
-  const account = layoutSource.indexOf('name="account"');
-
-  assert.ok(home >= 0 && clarity > home && compass > clarity && account > compass);
+  const primaryTabs = layoutSource.match(/const primaryTabs = \[([\s\S]*?)\] as const;/);
+  assert.ok(primaryTabs, 'The layout declares its visible tabs');
+  const visibleRoutes = Array.from(primaryTabs[1].matchAll(/name: '([^']+)'/g), ([, route]) => route);
+  assert.deepEqual(visibleRoutes, ['index', 'clarity-check', 'purpose', 'mentor', 'account']);
   assert.match(clarityTabSource, /<ClarityCheckFlow mode="retake" \/>/);
 });
 
