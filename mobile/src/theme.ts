@@ -119,6 +119,7 @@ export interface VisualEnvironmentTokens {
   surfaceTint: string;
   profileCardBackground: string;
   tabBarBackground: string;
+  tabBarItemBackground: string;
   tabBarBorder: string;
   tabBarActive: string;
   tabBarInactive: string;
@@ -161,10 +162,11 @@ export const visualEnvironments: Record<
     surfaceBorder: theme.colors.line,
     surfaceTint: theme.colors.soulTint,
     profileCardBackground: theme.colors.deepIndigo,
-    tabBarBackground: theme.colors.white,
-    tabBarBorder: theme.colors.line,
-    tabBarActive: theme.colors.lavenderPurple,
-    tabBarInactive: theme.colors.muted,
+    tabBarBackground: '#171B30',
+    tabBarItemBackground: '#1E2238',
+    tabBarBorder: 'rgba(235, 232, 248, 0.26)',
+    tabBarActive: theme.colors.salmonPeach,
+    tabBarInactive: '#E3E0EE',
   },
   renewal: {
     label: 'Renewal',
@@ -199,10 +201,11 @@ export const visualEnvironments: Record<
     surfaceBorder: '#CAD8C2',
     surfaceTint: '#E7F0DE',
     profileCardBackground: '#35513F',
-    tabBarBackground: '#F5F8F2',
-    tabBarBorder: '#CAD8C2',
-    tabBarActive: '#35513F',
-    tabBarInactive: '#6B7C70',
+    tabBarBackground: '#27392F',
+    tabBarItemBackground: '#354C3D',
+    tabBarBorder: '#818F7B',
+    tabBarActive: '#F0D498',
+    tabBarInactive: '#E4EADD',
   },
   warmth: {
     label: 'Warmth',
@@ -237,10 +240,11 @@ export const visualEnvironments: Record<
     surfaceBorder: '#E9CFC8',
     surfaceTint: '#FBE0D8',
     profileCardBackground: '#6A3940',
-    tabBarBackground: '#FFF8F5',
-    tabBarBorder: '#E9CFC8',
-    tabBarActive: '#8E4E50',
-    tabBarInactive: '#8A6D70',
+    tabBarBackground: '#3A222B',
+    tabBarItemBackground: '#502D36',
+    tabBarBorder: '#A38189',
+    tabBarActive: theme.colors.salmonPeach,
+    tabBarInactive: '#FFEAE5',
   },
 };
 

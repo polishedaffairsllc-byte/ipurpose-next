@@ -53,21 +53,37 @@ test('Purpose provider exposes genuine failure and retry recovers to first-time 
  failed = false; await press(tree, 'Try again'); assert.ok(button(tree, 'Take the Purpose Check')); await act(async () => tree.unmount());
 });
 
-test('Account environment saves propagate into mounted Clarity intro/questions and persist on remount through Depth → Renewal → Warmth → Depth', async () => {
+test('Account environment updates guidance, consent and navigation throughout the app and persists on remount', async () => {
  const h = harness(); let saved = { mode: 'manual', manualTheme: 'depth' }; const writes = [];
  h.mocks['./AuthContext'] = { useAuth: () => ({ user: { uid: 'test' }, loading: false }) };
  h.mocks['../context/AuthContext'] = { useAuth: () => ({ signOut: async () => {} }) };
  h.mocks['../context/OnboardingContext'] = { useOnboarding: () => ({ onboarding: null, refresh: async () => {} }) };
- h.mocks['../lib/api'] = { getCompanionProfile: async () => ({ visualEnvironmentPreference: saved }), updateVisualEnvironmentPreference: async pref => { saved = pref; writes.push(pref); return { visualEnvironmentPreference: pref }; }, createClarityRequestId: () => 'stable-attempt' };
+ h.mocks['../lib/api'] = { getCompanionProfile: async () => ({ visualEnvironmentPreference: saved }), updateVisualEnvironmentPreference: async pref => { saved = pref; writes.push(pref); return { visualEnvironmentPreference: pref }; }, createClarityRequestId: () => 'stable-attempt',
+   getAiConsent: async () => ({ granted: false, provider: 'OpenAI', notice: 'Sample notice.', version: 'test' }),
+ };
  h.mocks['expo-linear-gradient'] = { LinearGradient: 'LinearGradient' }; h.mocks['./BrandHeader'] = { BrandHeader: 'BrandHeader' };
- const env = h.load('context/VisualEnvironmentContext.tsx'); h.mocks['../context/VisualEnvironmentContext'] = env;
+ const env = h.load('context/VisualEnvironmentContext.tsx');
+ h.mocks['../context/VisualEnvironmentContext'] = h.mocks['../../../context/VisualEnvironmentContext'] = env;
  const Picker = h.load('components/VisualEnvironmentPicker.tsx').VisualEnvironmentPicker;
  const Flow = h.load('components/ClarityCheckFlow.tsx').ClarityCheckFlow;
- const app = () => React.createElement(env.VisualEnvironmentProvider, null, React.createElement(Picker), React.createElement(Flow, { mode: 'retake' }));
+ const Consent = h.load('components/AiDataSharingControls.tsx').AiDataSharingControls;
+ const Tabs = h.load('app/(app)/(tabs)/_layout.tsx').default;
+ const app = () => React.createElement(env.VisualEnvironmentProvider, null,
+   React.createElement(Picker), React.createElement(Flow, { mode: 'retake' }),
+   React.createElement(Consent), React.createElement(Tabs));
+ const progressBars = tree => tree.root.findAllByType('View').filter(view => view.props.accessibilityRole === 'progressbar');
  let tree = await render(app()); const tokens = h.load('theme.ts').visualEnvironments;
  const check = name => {
   assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].screenGradient.colors);
   assert.equal(tree.root.findByType('ImageBackground').props.source, tokens[name].background);
+  assert.equal(progressBars(tree).length, 0);
+  const consent = tree.root.findByType(Consent);
+  assert.equal(consent.findAllByType('View')[0].props.style.at(-1).backgroundColor, tokens[name].surfaceTint);
+  const tabOptions = tree.root.findByType('Tabs').props.screenOptions;
+  assert.equal(tabOptions.tabBarStyle.at(-1).backgroundColor, tokens[name].tabBarBackground);
+  assert.equal(tabOptions.tabBarItemStyle.at(-1).backgroundColor, tokens[name].tabBarItemBackground);
+  assert.equal(tabOptions.tabBarActiveTintColor, tokens[name].tabBarActive);
+  assert.equal(tabOptions.tabBarInactiveTintColor, tokens[name].tabBarInactive);
   const b = button(tree, 'Begin again'); const style = b.props.style({ pressed: false }); assert.equal(style[0].backgroundColor, tokens[name].buttonBackground);
  };
  check('depth');
@@ -79,6 +95,7 @@ test('Account environment saves propagate into mounted Clarity intro/questions a
  }
  assert.deepEqual(writes.map(p => p.manualTheme), ['renewal', 'warmth', 'depth']);
  await press(tree, 'Begin again');
+ assert.ok(progressBars(tree)[0].props.accessibilityValue.now > 0);
  await act(async () => { const context = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'radio' && n.props.accessibilityLabel.startsWith('Renewal.')); context.props.onPress(); });
  await press(tree, 'Use this environment'); assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens.renewal.atmosphereGradient.colors);
  // Theme change does not remount or reset the current assessment question.

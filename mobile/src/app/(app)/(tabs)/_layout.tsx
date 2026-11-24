@@ -4,6 +4,7 @@ import { PlatformPressable } from '@react-navigation/elements';
 import { Tabs, usePathname } from 'expo-router';
 import { Image, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { trackSupportScreenView } from '../../../lib/analyticsEvents';
 import { purposeCopy } from '../../../lib/purposeCheckCopy';
 import { theme } from '../../../theme';
@@ -25,10 +26,9 @@ const detailTabs: Record<string, typeof primaryTabs[number]['name']> = {
   '/purpose-path': 'purpose',
   '/timezone': 'account',
 };
-const borderColor = 'rgba(235, 232, 248, 0.26)';
-const inactiveColor = '#E3E0EE';
 
 export default function TabsLayout() {
+  const { tokens } = useVisualEnvironment();
   const detailTab = detailTabs[usePathname()];
   const insets = useSafeAreaInsets();
   const { fontScale } = useWindowDimensions();
@@ -40,10 +40,12 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarLabelPosition: 'below-icon',
-        tabBarActiveTintColor: theme.colors.salmonPeach,
-        tabBarInactiveTintColor: inactiveColor,
-        tabBarItemStyle: styles.item,
+        tabBarActiveTintColor: tokens.tabBarActive,
+        tabBarInactiveTintColor: tokens.tabBarInactive,
+        tabBarItemStyle: [styles.item, { backgroundColor: tokens.tabBarItemBackground, borderColor: tokens.tabBarBorder }],
         tabBarStyle: [styles.bar, {
+          backgroundColor: tokens.tabBarBackground,
+          borderTopColor: tokens.tabBarBorder,
           height: 80 + Math.max(0, fontScale - 1) * 24 + bottom,
           paddingBottom: bottom,
         }],
@@ -58,7 +60,7 @@ export default function TabsLayout() {
               title: tab.title,
               tabBarAccessibilityLabel: tab.title,
               tabBarLabel: ({ color, children }) => (
-                <Text numberOfLines={2} style={[styles.label, { color: isDetailParent ? theme.colors.salmonPeach : color }]}>
+                <Text numberOfLines={2} style={[styles.label, { color: isDetailParent ? tokens.tabBarActive : color }]}>
                   {children}
                 </Text>
               ),
@@ -69,10 +71,10 @@ export default function TabsLayout() {
                 <Image accessible={false} source={require('../../../../assets/brand/compass-tab-silhouette.png')}
                   resizeMode="contain" style={{ width: size, height: size, tintColor: color }} />
               ) : 'materialIcon' in tab ? (
-                <MaterialCommunityIcons name={tab.materialIcon} size={size} color={isDetailParent ? theme.colors.salmonPeach : color} />
+                <MaterialCommunityIcons name={tab.materialIcon} size={size} color={isDetailParent ? tokens.tabBarActive : color} />
               ) : (
                 <Ionicons name={focused || isDetailParent ? tab.selectedIcon : tab.icon} size={size}
-                  color={isDetailParent ? theme.colors.salmonPeach : color} />
+                  color={isDetailParent ? tokens.tabBarActive : color} />
               ),
             }}
           />
@@ -89,17 +91,13 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: '#171B30',
-    borderTopColor: borderColor,
     borderTopWidth: 1,
     paddingTop: 7,
     paddingHorizontal: 3,
   },
   item: {
-    borderColor,
     borderWidth: 1,
     borderRadius: 15,
-    backgroundColor: '#1E2238',
     marginHorizontal: 3,
     paddingVertical: 4,
   },

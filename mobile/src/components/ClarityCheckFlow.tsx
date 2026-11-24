@@ -259,7 +259,7 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
     );
   }
 
-  const progress = step === 0 ? 0 : Math.min(1, step / RESULT_STEP);
+  const progress = Math.min(1, step / RESULT_STEP);
 
   return (
     <EnvironmentBackground atmosphere={step !== 0}>
@@ -288,9 +288,16 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
               <BrandHeader subtitle="Soul → Systems → AI" variant={step === 0 ? "light-background" : "dark-background"} />
             </View>
 
-            <View style={[styles.progressTrack, step === 0 && { backgroundColor: tokens.surface }]}>
-              <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
-            </View>
+            {step > 0 ? (
+              <View
+                accessibilityLabel="Clarity Check progress"
+                accessibilityRole="progressbar"
+                accessibilityValue={{ min: 0, max: 100, now: Math.round(progress * 100) }}
+                style={styles.progressTrack}
+              >
+                <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
+              </View>
+            ) : null}
 
             {step === 0 ? (
               <Intro mode={mode} onBegin={() => void begin()} saving={saving} />
