@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   heroTitle: { fontSize: 40, lineHeight: 48, textAlign: 'center' },
   trademark: { fontFamily: 'System', fontSize: 10 },
   titleOnDark: { color: theme.colors.textOnDark },
-  titleOnLight: { color: theme.colors.deepIndigo },
+  titleOnLight: { color: theme.colors.midnightIndigo },
   subtitle: { fontFamily: 'System', fontSize: 12, letterSpacing: 0.6, marginTop: 6 },
-  subtitleOnLight: { color: theme.colors.deepIndigo },
+  subtitleOnLight: { color: theme.colors.midnightIndigo },
 });

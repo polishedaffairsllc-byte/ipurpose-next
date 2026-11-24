@@ -392,7 +392,7 @@ export default function MentorScreen() {
             </Pressable>
           </View>
           ) : null}
-          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowCompass />
+          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowOnFirstVisit />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

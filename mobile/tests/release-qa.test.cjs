@@ -77,6 +77,7 @@ test('Account environment updates guidance, consent and navigation throughout th
   assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].screenGradient.colors);
   assert.equal(tree.root.findByType('ImageBackground').props.source, tokens[name].background);
   assert.equal(progressBars(tree).length, 0);
+  assert.equal(tree.root.findByType('IntroReplay').props.autoShowOnFirstVisit, true);
   const consent = tree.root.findByType(Consent);
   assert.equal(consent.findAllByType('View')[0].props.style.at(-1).backgroundColor, tokens[name].surfaceTint);
   const tabOptions = tree.root.findByType('Tabs').props.screenOptions;
@@ -96,6 +97,7 @@ test('Account environment updates guidance, consent and navigation throughout th
  assert.deepEqual(writes.map(p => p.manualTheme), ['renewal', 'warmth', 'depth']);
  await press(tree, 'Begin again');
  assert.ok(progressBars(tree)[0].props['aria-valuenow'] > 0);
+ assert.equal(tree.root.findByType('IntroReplay').props.autoShowOnFirstVisit, false);
  await act(async () => { const context = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'radio' && n.props.accessibilityLabel.startsWith('Renewal.')); context.props.onPress(); });
  await press(tree, 'Use this environment'); assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens.renewal.atmosphereGradient.colors);
  // Theme change does not remount or reset the current assessment question.

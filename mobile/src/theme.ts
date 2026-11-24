@@ -156,7 +156,7 @@ export const visualEnvironments: Record<
     glassPillBackground: theme.colors.glassPillBg,
     glassPillBorder: theme.colors.glassPillBorder,
     buttonBackground: theme.colors.lavenderPurple,
-    buttonText: theme.colors.white,
+    buttonText: theme.colors.midnightIndigo,
     screenBackground: theme.colors.cream,
     surface: theme.colors.white,
     surfaceBorder: theme.colors.line,
