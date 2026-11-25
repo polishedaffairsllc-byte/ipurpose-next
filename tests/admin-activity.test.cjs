@@ -147,6 +147,21 @@ test('owner, self, custom-claim admins and protected profiles cannot be purged',
   const h = harness({ 'users/test-user': { email: 'test@example.com', admin: true } });
   await assert.rejects(h.service.preview('admin', target), /cannot be purged/); assert.deepEqual(h.writes, []);
 });
+test('App Review protection blocks linked previews and a purge prepared before protection', async () => {
+  const h = harness();
+  const preview = await h.service.preview('admin', target);
+  h.users.get('test-user').customClaims = { protectFromTestCleanup: true };
+  for (const protectedTarget of [target, { kind: 'leads', id: 'lead-a' }]) {
+    const response = await h.request({ action: 'preview', target: protectedTarget });
+    assert.equal(response.status, 403);
+    assert.match((await response.json()).error, /App Review account is protected/);
+  }
+  const response = await h.request({
+    action: 'purge', target, fingerprint: preview.fingerprint, confirmation: preview.confirmation,
+  });
+  assert.equal(response.status, 403);
+  assert.deepEqual(h.writes, []);
+});
 test('anonymous checks are previewed individually without inventing an email/account', async () => {
   const h = harness(); const p = await h.service.preview('admin', { kind: 'clarity', id: 'anonymous' });
   assert.equal(p.uid, null); assert.equal(p.email, null); assert.equal(p.records.length, 1);

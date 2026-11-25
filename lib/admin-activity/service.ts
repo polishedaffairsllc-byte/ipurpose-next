@@ -31,6 +31,9 @@ function protectedData(data: Record<string, unknown> | undefined) {
   return data?.admin === true || data?.isFounder === true || ['admin', 'founder'].includes(String(data?.role)) || data?.entitlementTier === 'founder';
 }
 export function assertPurgeAllowed(actorUid: string, uid: string | null, email: string | null, user?: UserRecord, profile?: Record<string, unknown>) {
+  if (user?.customClaims?.protectFromTestCleanup === true) {
+    throw new ActivityError(403, 'This App Review account is protected from test-account cleanup.');
+  }
   const owners = ['mshmltn@gmail.com', 'renita@ipurposesoul.com', process.env.FOUNDER_EMAIL].map(normalized);
   if ((uid && uid === actorUid) || (email && owners.includes(email)) || (normalized(profile?.email) && owners.includes(normalized(profile?.email))) || protectedData(user?.customClaims) || protectedData(profile)) {
     throw new ActivityError(403, 'Your own account and administrator/founder accounts cannot be purged.');
