@@ -51,7 +51,7 @@ export default function PrivacyPage() {
 
         <p>{"Service providers supporting these features include Firebase for authentication and data storage, our hosting provider for requests, our email delivery provider for service communications, and our AI service provider for Compass responses. We provide information to these providers as needed to perform those services. We do not sell Purpose answers, reflections, Compass conversation history or email verification information."}</p>
 
-        <p>We require all third parties that receive personal data from iPurpose to provide the same or equal data protection as described in this policy and required by Apple's App Review Guidelines. These protections include confidentiality, appropriate security safeguards, and use limited to providing the contracted service.</p>
+        <p>We require all third parties that receive personal data from iPurpose to provide the same or equal data protection as described in this policy and required by Apple&apos;s App Review Guidelines. These protections include confidentiality, appropriate security safeguards, and use limited to providing the contracted service.</p>
 
         <h2>OpenAI and AI data sharing</h2>
         <p>Compass uses OpenAI to generate replies and check content safety. During registration, we ask you to acknowledge the AI-powered features disclosure. OpenAI sharing remains off. Before sending a Compass message, you can choose Allow OpenAI data sharing or Decline / Not now. Clarity Check and Purpose Path remain available if you decline. To revoke permission, open AI Data Sharing in Account and choose Withdraw AI permission.</p>

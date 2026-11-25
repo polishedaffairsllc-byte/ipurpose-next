@@ -164,7 +164,7 @@ export const aiDataSharingContent = [
   },
   {
     "kind": "paragraph",
-    "content": "In **Account**, open **AI Data Sharing** to review your choice. If sharing is allowed, choose **Withdraw AI permission** to stop new AI requests."
+    "content": "In **Account**, open **AI Data Sharing** to review your choice. If sharing is allowed, choose **Withdraw AI permission**."
   },
   {
     "kind": "paragraph",
