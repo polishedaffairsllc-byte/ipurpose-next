@@ -10,7 +10,11 @@ export const aiDataSharingContent = [
   },
   {
     "kind": "paragraph",
-    "content": "Before your first Compass message is sent, the app identifies OpenAI, describes the information shared, and asks you to choose Allow and Send. Account setup alone does not enable sharing with OpenAI. You can decline and use the other app features."
+    "content": "On Create your account, the AI-powered features section identifies OpenAI and explains what may be shared. To create your account, check **I have reviewed the AI-powered features disclosure above.** and tap **Create Account**. That checkbox acknowledges the disclosure. OpenAI sharing remains off after registration."
+  },
+  {
+    "kind": "paragraph",
+    "content": "In Compass, **AI data-sharing permission** explains what is shared and names OpenAI. Choose **Allow OpenAI data sharing** to give permission before sending a Compass message, or **Decline / Not now** to leave sharing off. You can use other features, including Clarity Check and Purpose Path, without allowing sharing."
   },
   {
     "kind": "h2",
@@ -128,7 +132,7 @@ export const aiDataSharingContent = [
   },
   {
     "kind": "paragraph",
-    "content": "Checking the AI consent box during signup does not itself send your profile, assessment results or messages to the AI service."
+    "content": "Registration and acknowledgment of the disclosure leave OpenAI sharing off. Choosing Allow OpenAI data sharing saves your permission. Compass sends information only when you then use an AI feature that makes a request."
   },
   {
     "kind": "paragraph",
@@ -160,7 +164,7 @@ export const aiDataSharingContent = [
   },
   {
     "kind": "paragraph",
-    "content": "You may later review or withdraw AI permission through Account."
+    "content": "In **Account**, open **AI Data Sharing** to review your choice. If sharing is allowed, choose **Withdraw AI permission**."
   },
   {
     "kind": "paragraph",
