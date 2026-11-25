@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useMemo, useCallback, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Modal, Pressable, StyleSheet, Text } from 'react-native';
 import { useFocusEffect } from 'expo-router';
@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { getCompanionProfile, markIntroCompleted } from '../lib/api';
 import { INTRO_FLAGS, introStorageKey, type IntroKind } from '../lib/introVideos';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 export function IntroReplay({ kind, returnLabel, autoShowOnFirstVisit = false }: {
   kind: IntroKind;
@@ -16,6 +16,7 @@ export function IntroReplay({ kind, returnLabel, autoShowOnFirstVisit = false }:
 }) {
   const { user } = useAuth();
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [mode, setMode] = useState<'first' | 'replay' | null>(null);
   const shownThisSession = useRef(new Set<string>());
   const uid = user?.uid;
@@ -67,8 +68,8 @@ export function IntroReplay({ kind, returnLabel, autoShowOnFirstVisit = false }:
   </>;
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   button: { minHeight: 44, borderRadius: 18, borderWidth: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, marginVertical: 6 },
   guidance: { alignSelf: 'center', borderRadius: 24, paddingHorizontal: 22 },
-  label: { color: theme.colors.midnightIndigo, fontFamily: theme.fonts.body, fontSize: 14 },
+  label: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.button },
 });

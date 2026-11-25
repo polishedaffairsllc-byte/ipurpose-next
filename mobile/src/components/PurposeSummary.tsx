@@ -12,7 +12,7 @@ export function PurposeSummary({ atmosphere = false }: { atmosphere?: boolean })
   const router = useRouter();
   useFocusEffect(useCallback(() => { void refresh(); }, [refresh]));
   const details = profile ? purposeProfileDetails(profile) : null;
-  const color = atmosphere ? tokens.atmosphereText : theme.colors.deepIndigo;
+  const color = atmosphere ? tokens.atmosphereText : tokens.screenText;
   return <View style={[styles.card, { backgroundColor: atmosphere ? tokens.glassCardBackground : tokens.surface, borderColor: atmosphere ? tokens.glassCardBorder : tokens.surfaceBorder }]}>
     <Text accessibilityRole="header" style={[styles.heading, { color }]}>Your Purpose</Text>
     {loading ? <ActivityIndicator accessibilityLabel="Loading your Purpose results" color={tokens.accentStrong} /> : error ? <>
@@ -29,4 +29,4 @@ export function PurposeSummary({ atmosphere = false }: { atmosphere?: boolean })
     </>}
   </View>;
 }
-const styles = StyleSheet.create({ card: { padding: 20, borderRadius: 22, borderWidth: 1, marginBottom: 18 }, heading: { fontFamily: theme.fonts.heading, fontSize: 22, lineHeight: 30, marginBottom: 10 }, body: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 24, marginBottom: 6 }, link: { minHeight: 48, justifyContent: 'center', paddingVertical: 10 } });
+const styles = StyleSheet.create({ card: { padding: 20, borderRadius: 22, borderWidth: 1, marginBottom: 18 }, heading: { fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle, marginBottom: 10 }, body: { fontFamily: theme.fonts.body, ...theme.typography.body, marginBottom: 6 }, link: { minHeight: 48, justifyContent: 'center', paddingVertical: 10 } });

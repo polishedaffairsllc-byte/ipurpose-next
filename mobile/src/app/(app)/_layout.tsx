@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
   errorTitle: {
     color: theme.colors.ink,
     fontFamily: theme.fonts.heading,
-    fontSize: 28,
+    ...theme.typography.question,
     textAlign: 'center',
   },
   errorBody: {
     color: theme.colors.muted,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.body,
     marginTop: 10,
     textAlign: 'center',
   },
@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: theme.colors.white,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.button,
   },
   secondaryButton: { marginTop: 16, padding: 10 },
   secondaryButtonText: {
     color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
 });

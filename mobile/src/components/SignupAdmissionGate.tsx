@@ -58,11 +58,11 @@ export function SignupAdmissionGate({ onComplete, onRetry, unavailable }: {
 const styles = StyleSheet.create({
   screen: { flexGrow: 1, backgroundColor: theme.colors.cream, justifyContent: 'center', padding: 22 },
   card: { backgroundColor: theme.colors.white, borderColor: theme.colors.line, borderWidth: 1, borderRadius: 20, padding: 22, gap: 14 },
-  eyebrow: { fontFamily: theme.fonts.body, color: theme.colors.lavenderPurple, fontSize: 12, letterSpacing: 1 },
-  title: { fontFamily: theme.fonts.heading, color: theme.colors.deepIndigo, fontSize: 28 },
-  copy: { fontFamily: theme.fonts.body, color: theme.colors.deepIndigo, fontSize: 14, lineHeight: 21 },
+  eyebrow: { fontFamily: theme.fonts.body, color: theme.colors.ink, ...theme.typography.label, letterSpacing: 1 },
+  title: { fontFamily: theme.fonts.heading, color: theme.colors.ink, ...theme.typography.question },
+  copy: { fontFamily: theme.fonts.body, color: theme.colors.ink, ...theme.typography.body },
   primary: { backgroundColor: theme.colors.deepIndigo, padding: 15, borderRadius: 14, alignItems: 'center', minHeight: 50 },
-  primaryText: { fontFamily: theme.fonts.body, color: theme.colors.white, fontSize: 15 },
+  primaryText: { fontFamily: theme.fonts.body, color: theme.colors.white, ...theme.typography.button },
   disabled: { opacity: 0.45 },
-  error: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13 },
+  error: { color: theme.colors.ink, fontFamily: theme.fonts.body, ...theme.typography.supporting },
 });

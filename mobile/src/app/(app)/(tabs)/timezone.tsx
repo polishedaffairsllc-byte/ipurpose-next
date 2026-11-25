@@ -21,7 +21,7 @@ import {
   getTimezoneDisplayName,
   searchTimezoneOptions,
 } from '../../../lib/timezoneOptions';
-import { theme } from '../../../theme';
+import { theme, type VisualEnvironmentTokens } from '../../../theme';
 
 export default function TimezoneScreen() {
   const router = useRouter();
@@ -33,6 +33,7 @@ export default function TimezoneScreen() {
     loading,
     confirmTimezone,
   } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [timezone, setTimezone] = useState(effectiveTimezone);
   const [search, setSearch] = useState('');
   const [edited, setEdited] = useState(false);
@@ -103,7 +104,7 @@ export default function TimezoneScreen() {
                 ]}
               >
                 <Ionicons
-                  color={theme.colors.deepIndigo}
+                  color={tokens.screenText}
                   name="chevron-back"
                   size={20}
                 />
@@ -142,7 +143,7 @@ export default function TimezoneScreen() {
                   setError(null);
                 }}
                 placeholder="Try Caracas, Venezuela, or London"
-                placeholderTextColor={theme.colors.muted}
+                placeholderTextColor={tokens.screenTextMuted}
                 returnKeyType="search"
                 style={[
                   styles.input,
@@ -269,7 +270,7 @@ export default function TimezoneScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   safe: { backgroundColor: 'transparent', flex: 1 },
   flex: { flex: 1 },
   container: { paddingBottom: 40, paddingHorizontal: 20, paddingTop: 8 },
@@ -286,22 +287,20 @@ const styles = StyleSheet.create({
   intro: { marginTop: 34 },
   eyebrow: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     fontWeight: '700',
     letterSpacing: 1.4,
   },
   title: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
-    fontSize: 34,
-    lineHeight: 41,
+    ...theme.typography.screenTitle,
     marginTop: 8,
   },
   body: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 23,
+    ...theme.typography.body,
     marginTop: 10,
   },
   card: {
@@ -311,27 +310,26 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   label: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 1.1,
   },
   input: {
     borderRadius: 16,
     borderWidth: 1,
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.input,
     marginTop: 9,
     minHeight: 52,
     paddingHorizontal: 14,
     paddingVertical: 13,
   },
   hint: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
-    lineHeight: 17,
+    ...theme.typography.supporting,
     marginTop: 7,
   },
   results: {
@@ -350,34 +348,33 @@ const styles = StyleSheet.create({
   },
   resultCopy: { flex: 1 },
   resultCity: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.body,
   },
   resultCountry: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
+    ...theme.typography.supporting,
     marginTop: 2,
   },
   noResults: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 18,
+    ...theme.typography.supporting,
     padding: 14,
   },
   selectionLabel: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     fontWeight: '700',
     letterSpacing: 1.1,
     marginTop: 18,
   },
   selectionValue: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.body,
     marginTop: 5,
   },
   deviceChoice: {
@@ -398,34 +395,31 @@ const styles = StyleSheet.create({
   },
   deviceCopy: { flex: 1 },
   deviceLabel: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
+    ...theme.typography.supporting,
   },
   deviceValue: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
+    ...theme.typography.supporting,
     marginTop: 3,
   },
   savedNote: {
     fontFamily: theme.fonts.body,
-    fontSize: 11,
-    lineHeight: 17,
+    ...theme.typography.supporting,
     marginTop: 14,
   },
   fallbackNote: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
-    lineHeight: 17,
+    ...theme.typography.supporting,
     marginTop: 14,
   },
   error: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 18,
+    ...theme.typography.supporting,
     marginTop: 12,
   },
   saveButton: {
@@ -440,6 +434,6 @@ const styles = StyleSheet.create({
   saveButtonDisabled: { opacity: 0.48 },
   saveButtonText: {
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
 });

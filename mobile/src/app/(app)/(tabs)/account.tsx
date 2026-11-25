@@ -3,7 +3,7 @@ import { EmailVerificationControls } from '../../../components/EmailVerification
 import { PurposeSummary } from '../../../components/PurposeSummary';
 import { PurposeDeletionControl } from '../../../components/PurposeDeletionControl';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useCallback, useState } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -26,7 +26,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { getCompanionProfile } from '../../../lib/api';
 import { getDisplayName } from '../../../lib/profileIdentity';
-import { theme } from '../../../theme';
+import { theme, type VisualEnvironmentTokens } from '../../../theme';
 import type { CompanionProfile } from '../../../types/companion';
 
 const PROFILE_ERROR_MESSAGE =
@@ -60,10 +60,11 @@ function IdentityRow({
   onEdit?: () => void;
 }) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   return (
     <View style={styles.infoRow}>
       <View style={[styles.infoIcon, { backgroundColor: iconBackground }]}>
-        <Ionicons color={theme.colors.deepIndigo} name={icon} size={19} />
+        <Ionicons color={tokens.screenText} name={icon} size={19} />
       </View>
       <View style={styles.infoCopy}>
         <Text style={styles.infoLabel}>{label}</Text>
@@ -87,6 +88,8 @@ function CompassField({
   value?: string;
   emptyCopy: string;
 }) {
+  const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   return (
     <View style={styles.compassField}>
       <Text style={styles.compassFieldLabel}>{label}</Text>
@@ -101,6 +104,7 @@ export default function AccountScreen() {
   const router = useRouter();
   const { user, identity, deleteAccount, signOut } = useAuth();
   const { tokens, savedTimezone, effectiveTimezone } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [editing, setEditing] = useState<'name' | 'email' | null>(null);
   const [identityFeedback, setIdentityFeedback] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
@@ -232,7 +236,7 @@ export default function AccountScreen() {
             </Text>
           </View>
 
-          <View style={[styles.profileCard, { backgroundColor: tokens.profileCardBackground }]}>
+          <View style={[styles.profileCard, { backgroundColor: tokens.surfaceTint, borderColor: tokens.surfaceBorder }]}>
             <View style={[styles.avatar, { backgroundColor: tokens.accentSoft }]}>
               <Text accessibilityLabel={`${displayName} initials`} style={styles.avatarText}>
                 {initials}
@@ -265,7 +269,7 @@ export default function AccountScreen() {
               <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
               <IdentityRow
                 icon="mail-outline"
-                iconBackground={theme.colors.systemsTint}
+                iconBackground={tokens.accentSoft}
                 label="Email"
                 value={email}
                 onEdit={user && !editing ? () => openIdentityEditor('email') : undefined}
@@ -278,7 +282,7 @@ export default function AccountScreen() {
               <View style={[styles.divider, { backgroundColor: tokens.surfaceBorder }]} />
               <IdentityRow
                 icon="shield-checkmark-outline"
-                iconBackground={theme.colors.aiTint}
+                iconBackground={tokens.accentSoft}
                 label="Sign-in method"
                 value={provider}
               />
@@ -308,7 +312,7 @@ export default function AccountScreen() {
                   { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
                 ]}
               >
-                <Ionicons color={theme.colors.deepIndigo} name="cloud-offline-outline" size={21} />
+                <Ionicons color={tokens.screenText} name="cloud-offline-outline" size={21} />
                 <Text style={styles.statusCardText}>{profileError}</Text>
                 <Pressable
                   accessibilityLabel="Retry loading My Compass"
@@ -472,7 +476,7 @@ export default function AccountScreen() {
             <Text style={[styles.sectionLabel, { color: tokens.accentStrong }]}>5 · ACCOUNT &amp; SECURITY</Text>
             {signOutError ? (
               <View style={[styles.errorCard, { backgroundColor: tokens.surfaceTint }]}>
-                <Ionicons color={theme.colors.deepIndigo} name="information-circle-outline" size={18} />
+                <Ionicons color={tokens.screenText} name="information-circle-outline" size={18} />
                 <Text style={styles.errorText}>{signOutError}</Text>
               </View>
             ) : null}
@@ -494,7 +498,7 @@ export default function AccountScreen() {
                 <ActivityIndicator color={theme.colors.deepIndigo} />
               ) : (
                 <>
-                  <Ionicons color={theme.colors.deepIndigo} name="log-out-outline" size={20} />
+                  <Ionicons color={tokens.screenText} name="log-out-outline" size={20} />
                   <Text style={styles.signOutText}>Sign out</Text>
                 </>
               )}
@@ -516,7 +520,7 @@ export default function AccountScreen() {
                 (pressed || signingOut || deletingAccount) && styles.pressed,
               ]}
             >
-              <Ionicons color={theme.colors.deepIndigo} name="trash-outline" size={20} />
+              <Ionicons color={tokens.screenText} name="trash-outline" size={20} />
               <Text style={styles.deleteAccountText}>Delete account</Text>
             </Pressable>
           </View>
@@ -542,7 +546,7 @@ export default function AccountScreen() {
               style={[styles.deleteModal, { backgroundColor: tokens.surface }]}
             >
               <View style={[styles.deleteModalIcon, { backgroundColor: tokens.surfaceTint }]}>
-                <Ionicons color={theme.colors.deepIndigo} name="warning-outline" size={25} />
+                <Ionicons color={tokens.screenText} name="warning-outline" size={25} />
               </View>
               <Text style={styles.deleteModalTitle}>Delete your account?</Text>
               <Text style={styles.deleteModalBody}>
@@ -556,7 +560,7 @@ export default function AccountScreen() {
                 editable={!deletingAccount}
                 onChangeText={setDeletePassword}
                 placeholder="Password"
-                placeholderTextColor={theme.colors.muted}
+                placeholderTextColor={tokens.screenTextMuted}
                 secureTextEntry
                 style={[styles.deletePasswordInput, { borderColor: tokens.surfaceBorder }]}
                 value={deletePassword}
@@ -596,33 +600,32 @@ export default function AccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   editButton: { minHeight: 44, paddingHorizontal: 12, justifyContent: 'center' },
-  identityFeedback: { marginTop: 8, color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13, lineHeight: 19 },
+  identityFeedback: { marginTop: 8, color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
   safe: { backgroundColor: 'transparent', flex: 1 },
   container: { paddingBottom: 44, paddingHorizontal: 20, paddingTop: 8 },
-  intro: { marginTop: 32 },
+  intro: { marginTop: 28 },
   eyebrow: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     fontWeight: '700',
     letterSpacing: 1.4,
   },
   title: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
-    fontSize: 32,
-    lineHeight: 39,
+    ...theme.typography.screenTitle,
     marginTop: 8,
   },
   introBody: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 23,
+    ...theme.typography.body,
     marginTop: 9,
   },
   profileCard: {
+    borderWidth: 1,
     alignItems: 'center',
     borderRadius: 26,
     flexDirection: 'row',
@@ -638,36 +641,33 @@ const styles = StyleSheet.create({
     width: 56,
   },
   avatarText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
     fontSize: 22,
   },
   profileCopy: { flex: 1 },
   profileName: {
-    color: theme.colors.white,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
-    fontSize: 24,
-    lineHeight: 29,
+    ...theme.typography.sectionTitle,
   },
   profileEmail: {
-    color: theme.colors.lightMistGray,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 19,
+    ...theme.typography.supporting,
     marginTop: 3,
   },
   section: { marginTop: 32 },
   sectionLabel: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     fontWeight: '700',
     letterSpacing: 1.3,
   },
   sectionIntro: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 20,
+    ...theme.typography.supporting,
     marginBottom: 14,
     marginTop: 7,
   },
@@ -694,17 +694,16 @@ const styles = StyleSheet.create({
   },
   infoCopy: { flex: 1 },
   infoLabel: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 0.7,
     textTransform: 'uppercase',
   },
   infoValue: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 20,
+    ...theme.typography.body,
     marginTop: 3,
   },
   divider: { height: StyleSheet.hairlineWidth },
@@ -717,9 +716,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   statusText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 9,
+    ...theme.typography.label,
   },
   statusCard: {
     alignItems: 'center',
@@ -730,10 +729,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   statusCardText: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 20,
+    ...theme.typography.supporting,
     textAlign: 'center',
   },
   retryButton: {
@@ -743,37 +741,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
   },
-  retryText: { fontFamily: theme.fonts.body, fontSize: 12 },
+  retryText: { fontFamily: theme.fonts.body, ...theme.typography.button },
   compassField: { paddingVertical: 17 },
   compassFieldLabel: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
   compassFieldValue: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
-    fontSize: 19,
-    lineHeight: 26,
+    ...theme.typography.sectionTitle,
     marginTop: 7,
   },
   compassFieldEmpty: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
+    ...theme.typography.supporting,
     fontStyle: 'italic',
-    lineHeight: 20,
     marginTop: 7,
   },
   focusBlock: { paddingBottom: 18, paddingTop: 17 },
   clarityCheckBlock: { paddingTop: 17 },
   clarityCheckCopy: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 20,
+    ...theme.typography.supporting,
     marginTop: 7,
   },
   focusAreas: { gap: 8, marginTop: 10 },
@@ -785,10 +780,9 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   focusChipText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 17,
+    ...theme.typography.supporting,
   },
   inlineAction: {
     alignItems: 'center',
@@ -801,7 +795,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingVertical: 9,
   },
-  inlineActionText: { fontFamily: theme.fonts.body, fontSize: 12 },
+  inlineActionText: { fontFamily: theme.fonts.body, ...theme.typography.button },
   timezoneCard: {
     alignItems: 'center',
     borderRadius: 22,
@@ -820,20 +814,20 @@ const styles = StyleSheet.create({
   },
   timezoneCopy: { flex: 1 },
   timezoneLabel: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
-    fontSize: 18,
+    ...theme.typography.sectionTitle,
   },
   timezoneValue: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
+    ...theme.typography.body,
     marginTop: 4,
   },
   timezoneSource: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.supporting,
     marginTop: 3,
   },
   errorCard: {
@@ -845,11 +839,10 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   errorText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     flex: 1,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 18,
+    ...theme.typography.supporting,
   },
   signOutButton: {
     alignItems: 'center',
@@ -863,16 +856,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   signOutText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
   accountDivider: { height: StyleSheet.hairlineWidth, marginTop: 22 },
   deleteAccountIntro: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 18,
+    ...theme.typography.supporting,
     marginTop: 18,
   },
   deleteAccountButton: {
@@ -887,9 +879,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   deleteAccountText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
   modalBackdrop: {
     alignItems: 'center',
@@ -913,24 +905,23 @@ const styles = StyleSheet.create({
     width: 50,
   },
   deleteModalTitle: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.heading,
-    fontSize: 25,
+    ...theme.typography.sectionTitle,
     marginTop: 16,
     textAlign: 'center',
   },
   deleteModalBody: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 20,
+    ...theme.typography.body,
     marginTop: 10,
     textAlign: 'center',
   },
   deletePasswordLabel: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
+    ...theme.typography.label,
     letterSpacing: 0.5,
     marginTop: 22,
     textTransform: 'uppercase',
@@ -938,18 +929,17 @@ const styles = StyleSheet.create({
   deletePasswordInput: {
     borderRadius: 16,
     borderWidth: 1,
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.input,
     marginTop: 8,
     minHeight: 52,
     paddingHorizontal: 14,
   },
   deleteError: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 18,
+    ...theme.typography.supporting,
     marginTop: 10,
   },
   confirmDeleteButton: {
@@ -964,20 +954,19 @@ const styles = StyleSheet.create({
   confirmDeleteText: {
     color: theme.colors.white,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
   cancelDeleteButton: { alignItems: 'center', marginTop: 10, padding: 12 },
   cancelDeleteText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
   pressed: { opacity: 0.72 },
   privacyNote: {
-    color: theme.colors.muted,
+    color: tokens.screenTextMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
-    lineHeight: 17,
+    ...theme.typography.supporting,
     marginTop: 28,
     textAlign: 'center',
   },

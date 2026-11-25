@@ -141,6 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         clearPurposeProgress(currentUser.uid),
         AsyncStorage.removeItem(introStorageKey('compass', currentUser.uid)),
         AsyncStorage.removeItem(introStorageKey('clarity', currentUser.uid)),
+        AsyncStorage.removeItem(introStorageKey('purpose', currentUser.uid)),
       ]);
       await firebaseSignOut(auth);
     },

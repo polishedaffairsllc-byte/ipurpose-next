@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { SIGNUP_NAME_MAX_LENGTH } from '../lib/profileIdentity';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 type Field = 'name' | 'email';
 const MAX_DISPLAY_NAME_LENGTH = SIGNUP_NAME_MAX_LENGTH * 2 + 1;
@@ -21,6 +21,7 @@ export function AccountIdentityEditor({
 }) {
   const { user, identity, updateDisplayName, requestEmailChange } = useAuth();
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [draft, setDraft] = useState(field === 'name' ? value : '');
   const [password, setPassword] = useState('');
   const [saving, setSaving] = useState(false);
@@ -133,11 +134,11 @@ export function AccountIdentityEditor({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   form: { gap: 8, paddingVertical: 12 },
-  label: { fontFamily: theme.fonts.body, fontSize: 15, color: theme.colors.deepIndigo },
-  input: { minHeight: 44, fontFamily: theme.fonts.body, fontSize: 16, color: theme.colors.deepIndigo, borderRadius: 12, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 },
-  hint: { fontFamily: theme.fonts.body, fontSize: 13, lineHeight: 19, color: theme.colors.deepIndigo },
+  label: { fontFamily: theme.fonts.body, ...theme.typography.button, color: tokens.screenText },
+  input: { minHeight: 44, fontFamily: theme.fonts.body, ...theme.typography.input, color: tokens.screenText, borderRadius: 12, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 },
+  hint: { fontFamily: theme.fonts.body, ...theme.typography.supporting, color: tokens.screenText },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   button: { minHeight: 44, borderRadius: 12, justifyContent: 'center', paddingHorizontal: 14, paddingVertical: 8 },
 });

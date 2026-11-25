@@ -64,9 +64,9 @@ function GlassSection({ label, value, prominent = false }: { label: string; valu
 const styles = StyleSheet.create({
   gradient: { flex: 1 }, safe: { flex: 1 }, container: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 36 },
   topRow: { flexDirection: 'row', alignItems: 'center', gap: 12 }, backButton: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.glassPillBg, borderWidth: 1, borderColor: theme.colors.glassPillBorder },
-  hero: { marginTop: 30, marginBottom: 20 }, kicker: { fontFamily: theme.fonts.body, fontSize: 10, letterSpacing: 1.2, color: theme.colors.champagneText },
-  title: { fontFamily: theme.fonts.heading, fontSize: 30, lineHeight: 37, color: theme.colors.textOnDark, marginTop: 7 },
+  hero: { marginTop: 30, marginBottom: 20 }, kicker: { fontFamily: theme.fonts.body, ...theme.typography.label, letterSpacing: 1.2, color: theme.colors.champagneText },
+  title: { fontFamily: theme.fonts.heading, ...theme.typography.screenTitle, color: theme.colors.textOnDark, marginTop: 7 },
   card: { borderRadius: 20, borderWidth: 1, borderColor: theme.colors.glassCardBorder, backgroundColor: theme.colors.glassCardBg, padding: 18, marginBottom: 14, overflow: 'hidden' },
-  prominent: { fontFamily: theme.fonts.heading, fontSize: 28, color: theme.colors.textOnDark, marginTop: 8 },
-  body: { fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 22, color: theme.colors.textOnDarkMuted, marginTop: 8 },
+  prominent: { fontFamily: theme.fonts.heading, ...theme.typography.question, color: theme.colors.textOnDark, marginTop: 8 },
+  body: { fontFamily: theme.fonts.body, ...theme.typography.body, color: theme.colors.textOnDarkMuted, marginTop: 8 },
 });

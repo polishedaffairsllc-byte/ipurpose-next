@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { ConversationSummary } from '../types/companion';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { formatConversationDate } from '../lib/conversationDate';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 interface Props {
   conversations: ConversationSummary[];
@@ -22,6 +23,7 @@ export function ConversationList({
   hideNew = false,
 }: Props) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
 
   if (!conversations.length && hideNew) return null;
 
@@ -105,7 +107,7 @@ export function ConversationList({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   wrap: { marginHorizontal: -18 },
   content: { paddingHorizontal: 18, gap: 8 },
   chip: {
@@ -119,14 +121,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   chipText: {
-    color: theme.colors.deepIndigo,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
+    ...theme.typography.supporting,
   },
   dateText: {
-    color: theme.colors.lavenderPurple,
+    color: tokens.screenText,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
+    ...theme.typography.supporting,
     letterSpacing: 0.35,
     marginBottom: 4,
   },

@@ -16,18 +16,18 @@ export function MessageBubble({ message, onReport }: { message: CompanionMessage
           styles.bubble,
           isUser
             ? [styles.userBubble, { backgroundColor: tokens.profileCardBackground }]
-            : [styles.mentorBubble, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }],
+            : [styles.mentorBubble, { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder }],
         ]}
       >
         <Text
           style={[
             styles.label,
-            isUser ? styles.userText : { color: tokens.accentStrong },
+            isUser ? styles.userText : { color: tokens.accent },
           ]}
         >
           {isUser ? 'You' : 'iPurpose Compass'}
         </Text>
-        <Text style={[styles.content, isUser ? styles.userText : styles.mentorText]}>
+        <Text style={[styles.content, styles.userText]}>
           {message.content}
         </Text>
         {canReport ? (
@@ -63,18 +63,16 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 0.5,
     marginBottom: 5,
     textTransform: 'uppercase',
   },
   content: {
     fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 22,
+    ...theme.typography.body,
   },
   reportButton: { alignSelf: 'flex-start', minHeight: 36, justifyContent: 'center', marginTop: 10 },
-  reportText: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 12, textDecorationLine: 'underline' },
+  reportText: { color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, ...theme.typography.supporting, textDecorationLine: 'underline' },
   userText: { color: theme.colors.white },
-  mentorText: { color: theme.colors.deepIndigo },
 });

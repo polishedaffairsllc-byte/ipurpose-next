@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { sendEmailVerification, type User } from 'firebase/auth';
@@ -6,10 +6,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from '../context/AuthContext';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { refreshEmailStatus } from '../lib/api';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 export function EmailVerificationControls({ user }: { user: User }) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const { identity: { emailVerified: verified }, refreshIdentity } = useAuth();
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
@@ -61,7 +62,7 @@ export function EmailVerificationControls({ user }: { user: User }) {
   return (
     <View style={styles.container}>
       <View style={[styles.badge, { backgroundColor: tokens.surfaceTint }]}>
-        <Ionicons color={verified ? theme.colors.sageGreen : theme.colors.muted} name={verified ? 'checkmark-circle' : 'ellipse-outline'} size={14} />
+        <Ionicons color={verified ? theme.colors.sageGreen : tokens.screenTextMuted} name={verified ? 'checkmark-circle' : 'ellipse-outline'} size={14} />
         <Text accessibilityLiveRegion="polite" style={styles.status}>{verified ? 'Verified' : 'Not verified'}</Text>
       </View>
       {!verified ? (
@@ -81,12 +82,12 @@ export function EmailVerificationControls({ user }: { user: User }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   container: { marginTop: 8 },
   badge: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', borderRadius: 999, gap: 4, paddingHorizontal: 8, paddingVertical: 5 },
-  status: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 12 },
+  status: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
   actions: { gap: 8, marginTop: 8 },
   button: { minHeight: 44, justifyContent: 'center', padding: 10, borderRadius: 14, backgroundColor: theme.colors.soulTint },
-  actionText: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 12 },
-  feedback: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 12, lineHeight: 18, marginTop: 8 },
+  actionText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
+  feedback: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting, marginTop: 8 },
 });

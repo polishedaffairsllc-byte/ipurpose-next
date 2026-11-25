@@ -26,6 +26,7 @@ function harness() {
  const state = { profile: null, identityType: null, loading: false, error: null, refresh: async () => {}, save: async () => {}, clear: async () => {} };
  for (const prefix of ['../', '../../../']) mocks[prefix + 'context/PurposeCheckContext'] = { usePurposeCheck: () => state };
  mocks['@expo/vector-icons/MaterialCommunityIcons'] = 'MaterialIcon';
+ mocks['expo-status-bar'] = { StatusBar: 'StatusBar' };
  mocks['@react-navigation/elements'] = { PlatformPressable: 'PlatformPressable' };
  mocks['../../../components/IntroReplay'] = { IntroReplay: 'IntroReplay' };
  mocks['../../../components/EnvironmentBackground'] = { EnvironmentBackground: 'EnvironmentBackground' };
@@ -40,7 +41,11 @@ async function answerAll(h, tree) { const { PURPOSE_QUESTIONS } = h.load('lib/pu
 for (const saveReflection of [false, true]) test(`actual six-question flow sends reflection only when save is ${saveReflection}`, async () => {
  const h = harness(); const writes = []; h.state.save = async body => { writes.push(body); h.state.profile = h.load('lib/purposeCheck.ts').generatePurposeProfile(body); };
  const Screen = h.load('app/(app)/(tabs)/purpose.tsx').default; const tree = await render(React.createElement(Screen));
+ const headings = () => tree.root.findAllByType('Text').filter(node => node.props.accessibilityRole === 'header').map(text);
+ assert.deepEqual(headings(), ['Purpose']);
  await press(tree, 'Take the Purpose Check');
+ assert.deepEqual(headings(), ['Purpose']);
+ assert.match(text(tree.root), /Question 1 of 6/);
  assert.equal(button(tree, 'Continue').props.disabled, true);
  const q1 = h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS[0];
  await press(tree, q1.options[0].label); await press(tree, q1.options[1].label);
@@ -87,7 +92,8 @@ test('five tabs retain required order and keep Purpose selected on Purpose Path'
  assert.equal(purposeButton.props.accessibilityState.selected, true);
  const style = tree.root.findByType('Tabs').props.screenOptions.tabBarStyle.at(-1);
  assert.equal(style.paddingBottom, 34);
- assert.equal(style.height, 114);
+ assert.equal(style.height, 116);
+ assert.equal(tree.root.findByType('StatusBar').props.style, 'dark');
  await act(async () => tree.unmount());
 });
 test('Purpose provider prevents late previous-account results and stale refresh after deletion', async () => {

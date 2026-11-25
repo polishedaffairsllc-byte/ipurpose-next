@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Animated, ActivityIndicator, AppState, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -6,7 +6,7 @@ import { EnvironmentBackground } from './EnvironmentBackground';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import type { IntroKind } from '../lib/introVideos';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 export const INTRO_VIDEOS = {
   welcome: { source: require('../../assets/onboarding/welcome.mp4'), title: 'Welcome to\niPurpose Compass™', label: 'Welcome' },
@@ -26,6 +26,7 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
     return () => { active.current = false; };
   }, []);
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const opacity = useRef(new Animated.Value(0)).current;
   const endCardOpacity = useRef(new Animated.Value(0)).current;
   const reduceMotion = useRef(false);
@@ -168,18 +169,18 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   flex: { flex: 1 },
   content: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 16 },
-  title: { color: theme.colors.midnightIndigo, fontFamily: theme.fonts.heading, fontSize: 28, lineHeight: 34, textAlign: 'center' },
+  title: { color: tokens.screenText, fontFamily: theme.fonts.heading, ...theme.typography.question, textAlign: 'center' },
   videoContainer: { borderRadius: 26, borderWidth: 1, overflow: 'hidden' },
   loading: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center' },
   endCard: { padding: 24, gap: 20 },
   actions: { width: '100%', maxWidth: 468, alignSelf: 'center', flexShrink: 0, paddingHorizontal: 24, paddingBottom: 12, gap: 4 },
   continue: { minHeight: 52, borderRadius: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 14 },
-  continueText: { fontFamily: 'System', fontSize: 16, fontWeight: '600', textAlign: 'center' },
+  continueText: { fontFamily: theme.fonts.body, ...theme.typography.button, textAlign: 'center' },
   skip: { minHeight: 44, padding: 12, alignItems: 'center', justifyContent: 'center' },
   replay: { minHeight: 44, paddingHorizontal: 20, justifyContent: 'center' },
-  linkText: { color: theme.colors.midnightIndigo, fontFamily: 'System', fontSize: 15, fontWeight: '600', textAlign: 'center' },
-  message: { color: theme.colors.midnightIndigo, fontFamily: 'System', fontSize: 14, lineHeight: 20, textAlign: 'center', maxWidth: 420 },
+  linkText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting, textAlign: 'center', textDecorationLine: 'underline' },
+  message: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting, textAlign: 'center', maxWidth: 420 },
 });

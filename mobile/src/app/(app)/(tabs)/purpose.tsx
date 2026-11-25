@@ -1,5 +1,5 @@
 import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
-import { useCallback, useRef, useState } from 'react';
+import { useMemo, useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -9,13 +9,15 @@ import { buildPurposePayload, emptyPurposeAnswers, purposePairing } from '../../
 import { purposeProfileDetails } from '../../../lib/purposeProfiles';
 import { PURPOSE_QUESTIONS, purposeCopy } from '../../../lib/purposeCheckCopy';
 import { logLaunchEvent } from '../../../lib/analyticsEvents';
-import { theme } from '../../../theme';
+import { theme, type VisualEnvironmentTokens } from '../../../theme';
 import { PurposeButton } from '../../../components/PurposeButton';
 import { IntroReplay } from '../../../components/IntroReplay';
 import { BrandHeader } from '../../../components/BrandHeader';
+import { JourneyHeading } from '../../../components/JourneyHeading';
 export default function PurposeScreen() {
     const { profile, identityType, loading, error, refresh, save } = usePurposeCheck();
     const { tokens } = useVisualEnvironment();
+    const styles = useMemo(() => createStyles(tokens), [tokens]);
     const router = useRouter();
     const [step, setStep] = useState<number | null>(null);
     const [answers, setAnswers] = useState(emptyPurposeAnswers);
@@ -52,15 +54,29 @@ export default function PurposeScreen() {
             setSaving(false);
         }
     };
-    const question = step !== null && step < 6 ? PURPOSE_QUESTIONS[step] : null;
+    const question = step !== null ? PURPOSE_QUESTIONS[step] : undefined;
+    const questionNumber = (step ?? 0) + 1;
     const details = profile ? purposeProfileDetails(profile) : null;
     const pairing = profile ? purposePairing(profile, identityType) : null;
     return <EnvironmentBackground><SafeAreaView edges={['top', 'left', 'right']} style={styles.safe}><KeyboardAvoidingView style={styles.safe} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>
- <View style={{ marginBottom: 10 }}><BrandHeader subtitle="Clarity → Purpose → Action" /></View>
- <Text style={[styles.eyebrow, { color: tokens.accentStrong }]}>{purposeCopy.tab}</Text>
- <Text accessibilityRole="header" style={styles.title}>{question ? purposeCopy.progress((step || 0) + 1) : step === 6 ? purposeCopy.reflection : purposeCopy.title}</Text>
+ <BrandHeader subtitle="Clarity → Purpose → Action" />
+ <JourneyHeading title={purposeCopy.tab} subtitle={step === null && !profile ? purposeCopy.title : undefined} />
  {loading && step === null ? <><ActivityIndicator color={tokens.accentStrong}/><Text style={styles.body}>{purposeCopy.loading}</Text></> : error && step === null ? <><Text accessibilityRole="alert" style={styles.body}>{error}</Text><PurposeButton label={purposeCopy.retry} onPress={() => void refresh()}/></> : question ? <>
- <Text style={styles.question}>{question.prompt}</Text><Text style={styles.body}>{question.max === 1 ? purposeCopy.chooseOne : purposeCopy.chooseTwo}</Text>
+ <View style={styles.progressRow}>
+   <View
+     accessibilityLabel="Purpose Check progress"
+     accessibilityRole="progressbar"
+     aria-valuemin={0}
+     aria-valuemax={PURPOSE_QUESTIONS.length}
+     aria-valuenow={questionNumber}
+     style={styles.progressTrack}
+   >
+     <View style={[styles.progressFill, { width: `${(questionNumber / PURPOSE_QUESTIONS.length) * 100}%` }]} />
+   </View>
+   <Text style={styles.progressLabel}>{purposeCopy.progress(questionNumber)}</Text>
+ </View>
+ <View style={styles.questionCard}>
+ <Text style={[styles.question, styles.questionPrompt]}>{question.prompt}</Text><Text style={styles.body}>{question.max === 1 ? purposeCopy.chooseOne : purposeCopy.chooseTwo}</Text>
  {question.options.map(option => {
                 const selected = answers[question.id].includes(option.id);
                 const disabled = !selected && question.max === 2 && answers[question.id].length >= 2;
@@ -75,11 +91,13 @@ export default function PurposeScreen() {
                     answerDraft.current = nextAnswers;
                     setAnswers(nextAnswers);
                     if ((question.max === 1 || !removing) && nextSelection.length === question.max) move((step || 0) + 1);
-                }} style={[styles.option, { backgroundColor: selected ? tokens.accentSoft : tokens.surface, borderColor: selected ? tokens.accentStrong : tokens.surfaceBorder }, disabled && styles.dim]}><Text style={styles.body}>{selected ? '✓ ' : ''}{option.label}</Text></Pressable>;
+                }} style={[styles.option, { backgroundColor: selected ? tokens.accentSoft : tokens.surfaceTint, borderColor: selected ? tokens.accentStrong : tokens.surfaceBorder }, disabled && styles.dim]}><Text style={styles.body}>{selected ? '✓ ' : ''}{option.label}</Text></Pressable>;
             })}
+ </View>
  <PurposeButton label={purposeCopy.next} disabled={!answers[question.id].length} onPress={() => move((step || 0) + 1)}/>
  <PurposeButton label={step === 0 ? purposeCopy.cancel : purposeCopy.back} onPress={() => step === 0 ? (currentStep.current = null, setStep(null)) : move((step || 0) - 1)}/>
  </> : step === 6 ? <>
+ <Text style={styles.reflectionPrompt}>{purposeCopy.reflection}</Text>
  <TextInput accessibilityLabel={purposeCopy.reflection} multiline maxLength={2000} editable={!saving} value={reflection} onChangeText={setReflection} style={[styles.input, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}/>
  <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: saveReflection, disabled: saving }} disabled={saving} onPress={() => setSaveReflection(!saveReflection)} style={[styles.option, { borderColor: tokens.surfaceBorder, backgroundColor: tokens.surface }]}><Text style={styles.body}>{saveReflection ? '☑ ' : '☐ '}{purposeCopy.reflectionSave}</Text></Pressable>
  <Text style={styles.body}>{purposeCopy.reflectionHelper}</Text>{saveError ? <Text accessibilityRole="alert" style={styles.body}>{saveError}</Text> : null}
@@ -97,7 +115,22 @@ export default function PurposeScreen() {
  <PurposeButton label={purposeCopy.compass} onPress={() => router.push('/mentor')}/><PurposeButton label={purposeCopy.path} onPress={() => router.navigate('/purpose-path')}/><PurposeButton label={purposeCopy.retake} onPress={begin}/>
  </> : <><Text style={styles.body}>{purposeCopy.intro}</Text><PurposeButton label={purposeCopy.start} onPress={begin}/><PurposeButton label="Explore the Purpose Path" onPress={() => router.navigate('/purpose-path')}/></>}
  </ScrollView>
- <IntroReplay kind="purpose" returnLabel="Return to Purpose" />
+ <IntroReplay kind="purpose" returnLabel="Return to Purpose" autoShowOnFirstVisit={step === null} />
  </KeyboardAvoidingView></SafeAreaView></EnvironmentBackground>;
 }
-const styles = StyleSheet.create({ safe: { flex: 1 }, content: { padding: 24, paddingBottom: 44 }, eyebrow: { fontFamily: theme.fonts.body, fontSize: 12, marginBottom: 12 }, title: { fontFamily: theme.fonts.heading, fontSize: 32, lineHeight: 40, color: theme.colors.deepIndigo, marginBottom: 20 }, body: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 24, color: theme.colors.deepIndigo }, question: { fontFamily: theme.fonts.heading, fontSize: 24, lineHeight: 32, color: theme.colors.deepIndigo, marginVertical: 16 }, option: { borderWidth: 1, borderRadius: 18, padding: 16, marginTop: 12, minHeight: 52 }, input: { minHeight: 140, borderRadius: 18, borderWidth: 1, padding: 16, textAlignVertical: 'top', fontFamily: theme.fonts.body, color: theme.colors.deepIndigo, fontSize: 16 }, chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, chip: { borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 }, dim: { opacity: 0.5 } });
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({ safe: { flex: 1 }, content: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 44 },
+    progressRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 },
+    progressTrack: { flex: 1, height: 6, borderRadius: 999, overflow: 'hidden', backgroundColor: tokens.surfaceTint },
+    progressFill: { height: 6, borderRadius: 999, backgroundColor: tokens.accentStrong },
+    progressLabel: { fontFamily: theme.fonts.body, ...theme.typography.label, color: tokens.screenTextMuted },
+    questionCard: { borderRadius: 22, borderWidth: 1, borderColor: tokens.surfaceBorder, backgroundColor: tokens.surface, padding: 16 },
+    body: { fontFamily: theme.fonts.body, ...theme.typography.body, color: tokens.screenText },
+    question: { fontFamily: theme.fonts.heading, ...theme.typography.question, color: tokens.screenText, marginVertical: 16 },
+    questionPrompt: { marginBottom: 8, marginTop: 4 },
+    reflectionPrompt: { fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle, color: tokens.screenText, marginBottom: 12 },
+    option: { borderWidth: 1, borderRadius: 18, padding: 16, marginTop: 12, minHeight: 52 },
+    input: { minHeight: 140, borderRadius: 18, borderWidth: 1, padding: 16, textAlignVertical: 'top', fontFamily: theme.fonts.body, color: tokens.screenText, ...theme.typography.input },
+    chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+    chip: { borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
+    dim: { opacity: 0.5 },
+});

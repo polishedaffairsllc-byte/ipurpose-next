@@ -47,7 +47,7 @@ export default function SignInScreen() {
           keyboardType="email-address"
           onChangeText={setEmail}
           placeholder="you@example.com"
-          placeholderTextColor="#767A94"
+          placeholderTextColor={theme.colors.muted}
           style={authStyles.input}
           textContentType="emailAddress"
           value={email}
@@ -58,7 +58,7 @@ export default function SignInScreen() {
           onChangeText={setPassword}
           onSubmitEditing={() => void handleSignIn()}
           placeholder="Your password"
-          placeholderTextColor="#767A94"
+          placeholderTextColor={theme.colors.muted}
           secureTextEntry
           style={authStyles.input}
           textContentType="password"
