@@ -153,6 +153,7 @@ export default function HomeScreen() {
             <Text style={[styles.heroSubtitle, { color: tokens.atmosphereTextMuted }]}>
               Stay aligned. Follow your north.
             </Text>
+            <View style={[styles.greetingRule, { backgroundColor: tokens.accent }]} />
           </View>
 
           {/* Your Anchor */}
@@ -254,17 +255,19 @@ const styles = StyleSheet.create({
 
   greeting: {
     fontFamily: theme.fonts.heading,
-    fontSize: 40,
-    lineHeight: 48,
+    ...theme.typography.display,
+    textAlign: 'center',
     color: theme.colors.textOnDark,
   },
 
   heroSubtitle: {
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.body,
+    textAlign: 'center',
     color: theme.colors.textOnDarkMuted,
     marginTop: 6,
   },
+  greetingRule: { alignSelf: 'center', height: 1, marginTop: 16, opacity: 0.7, width: 84 },
 
   glassCard: {
     borderRadius: 20,
@@ -284,7 +287,7 @@ const styles = StyleSheet.create({
 
   eyebrow: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 1.2,
     color: theme.colors.champagneText,
     marginBottom: 6,
@@ -292,7 +295,7 @@ const styles = StyleSheet.create({
 
   eyebrowStandalone: {
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 1.2,
     color: theme.colors.champagneText,
     marginBottom: 10,
@@ -300,27 +303,26 @@ const styles = StyleSheet.create({
 
   anchorName: {
     fontFamily: theme.fonts.heading,
-    fontSize: 22,
+    ...theme.typography.sectionTitle,
     color: theme.colors.textOnDark,
   },
 
   anchorDescription: {
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 19,
+    ...theme.typography.body,
     color: theme.colors.textOnDarkMuted,
     marginTop: 6,
   },
 
   emptyText: {
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.body,
     color: theme.colors.textOnDarkMuted,
   },
 
   emptyTextSmall: {
     fontFamily: theme.fonts.body,
-    fontSize: 13,
+    ...theme.typography.supporting,
     color: theme.colors.textOnDarkFaint,
   },
 
@@ -345,7 +347,7 @@ const styles = StyleSheet.create({
 
   pillText: {
     fontFamily: theme.fonts.body,
-    fontSize: 13,
+    ...theme.typography.button,
     color: theme.colors.textOnDark,
   },
 
@@ -355,21 +357,21 @@ const styles = StyleSheet.create({
 
   journeyTitle: {
     fontFamily: theme.fonts.heading,
-    fontSize: 19,
+    ...theme.typography.sectionTitle,
     color: theme.colors.textOnDark,
     marginTop: 2,
   },
 
   journeyMeta: {
     fontFamily: theme.fonts.body,
-    fontSize: 12,
+    ...theme.typography.supporting,
     color: theme.colors.textOnDarkFaint,
     marginTop: 6,
   },
 
   cardHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   interactivePressed: { opacity: 0.72 },
-  focusEmptyTitle: { fontFamily: theme.fonts.heading, fontSize: 19, color: theme.colors.textOnDark, marginBottom: 5 },
+  focusEmptyTitle: { fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle, color: theme.colors.textOnDark, marginBottom: 5 },
 
   primaryButton: {
     borderRadius: 18,
@@ -383,7 +385,7 @@ const styles = StyleSheet.create({
 
   primaryButtonText: {
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.button,
     color: theme.colors.textOnDark,
   },
 });

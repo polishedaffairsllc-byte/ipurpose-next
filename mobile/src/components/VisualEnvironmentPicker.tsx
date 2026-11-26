@@ -16,7 +16,7 @@ const MANUAL_ENVIRONMENTS: {
 }[] = [
   { name: 'depth', label: 'Depth', description: 'Indigo, violet, and champagne' },
   { name: 'renewal', label: 'Renewal', description: 'Sage, botanical green, and mist' },
-  { name: 'warmth', label: 'Warmth', description: 'Salmon, peach, and dusk' },
+  { name: 'warmth', label: 'Warmth', description: 'Midnight, peach, and dusk florals' },
 ];
 
 function isSamePreference(
@@ -80,8 +80,8 @@ export function VisualEnvironmentPicker() {
         { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
       ]}
     >
-      <Text style={styles.title}>Visual Environment</Text>
-      <Text style={styles.intro}>
+      <Text style={[styles.title, { color: tokens.screenText }]}>Visual Environment</Text>
+      <Text style={[styles.intro, { color: tokens.screenTextMuted }]}>
         Choose the atmosphere that supports you. Your content and Compass stay the same.
       </Text>
 
@@ -114,7 +114,7 @@ export function VisualEnvironmentPicker() {
         ))}
       </View>
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={[styles.error, { color: tokens.screenText }]}>{error}</Text> : null}
 
       <Pressable
         accessibilityRole="button"
@@ -154,6 +154,7 @@ function EnvironmentOption({
   surfaceTint: string;
   onPress: () => void;
 }) {
+  const { tokens } = useVisualEnvironment();
   return (
     <Pressable
       accessibilityRole="radio"
@@ -162,16 +163,17 @@ function EnvironmentOption({
       onPress={onPress}
       style={({ pressed }) => [
         styles.option,
+        { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
         selected && { backgroundColor: surfaceTint, borderColor: accent },
         pressed && styles.optionPressed,
       ]}
     >
-      <View style={[styles.radio, selected && { borderColor: accent }]}>
+      <View style={[styles.radio, { borderColor: selected ? accent : tokens.screenTextMuted }]}>
         {selected ? <View style={[styles.radioDot, { backgroundColor: accent }]} /> : null}
       </View>
       <View style={styles.optionCopy}>
-        <Text style={styles.optionLabel}>{label}</Text>
-        <Text style={styles.optionDescription}>{description}</Text>
+        <Text style={[styles.optionLabel, { color: tokens.screenText }]}>{label}</Text>
+        <Text style={[styles.optionDescription, { color: tokens.screenTextMuted }]}>{description}</Text>
       </View>
       {selected ? <Ionicons name="checkmark" size={18} color={accent} /> : null}
     </Pressable>
@@ -185,16 +187,14 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   title: {
-    color: theme.colors.deepIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.heading,
-    fontSize: 22,
-    lineHeight: 28,
+    ...theme.typography.sectionTitle,
   },
   intro: {
     color: theme.colors.muted,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 20,
+    ...theme.typography.body,
     marginTop: 6,
   },
   options: { gap: 9, marginTop: 16 },
@@ -223,15 +223,14 @@ const styles = StyleSheet.create({
   radioDot: { borderRadius: 5, height: 10, width: 10 },
   optionCopy: { flex: 1 },
   optionLabel: {
-    color: theme.colors.deepIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.body,
   },
   optionDescription: {
     color: theme.colors.muted,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
-    lineHeight: 16,
+    ...theme.typography.supporting,
     marginTop: 2,
   },
   confirmButton: {
@@ -245,13 +244,12 @@ const styles = StyleSheet.create({
   confirmButtonDisabled: { opacity: 0.5 },
   confirmButtonText: {
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.button,
   },
   error: {
-    color: theme.colors.deepIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 18,
+    ...theme.typography.supporting,
     marginTop: 12,
   },
 });

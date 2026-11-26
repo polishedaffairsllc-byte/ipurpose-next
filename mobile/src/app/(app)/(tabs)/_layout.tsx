@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { PlatformPressable } from '@react-navigation/elements';
 import { Tabs, usePathname } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { Image, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
@@ -29,24 +30,30 @@ const detailTabs: Record<string, typeof primaryTabs[number]['name']> = {
 
 export default function TabsLayout() {
   const { tokens } = useVisualEnvironment();
-  const detailTab = detailTabs[usePathname()];
+  const pathname = usePathname();
+  const detailTab = detailTabs[pathname];
   const insets = useSafeAreaInsets();
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, width } = useWindowDimensions();
+  const compact = width < 360;
   const bottom = Math.max(insets.bottom, 8);
+  const darkStatusBarBackground = tokens.darkScreen || pathname === '/' || pathname === '/mentor' || detailTab === 'index';
 
   return (
+    <>
+    <StatusBar style={darkStatusBarBackground ? 'light' : 'dark'} />
     <Tabs backBehavior="history"
       screenOptions={{
         headerShown: false,
+        sceneStyle: styles.scene,
         tabBarHideOnKeyboard: true,
         tabBarLabelPosition: 'below-icon',
         tabBarActiveTintColor: tokens.tabBarActive,
         tabBarInactiveTintColor: tokens.tabBarInactive,
-        tabBarItemStyle: [styles.item, { backgroundColor: tokens.tabBarItemBackground, borderColor: tokens.tabBarBorder }],
+        tabBarItemStyle: [styles.item, compact && styles.compactItem, { backgroundColor: tokens.tabBarItemBackground, borderColor: tokens.tabBarBorder }],
         tabBarStyle: [styles.bar, {
           backgroundColor: tokens.tabBarBackground,
           borderTopColor: tokens.tabBarBorder,
-          height: 80 + Math.max(0, fontScale - 1) * 24 + bottom,
+          height: 82 + Math.max(0, fontScale - 1) * 34 + bottom,
           paddingBottom: bottom,
         }],
       }}
@@ -64,8 +71,12 @@ export default function TabsLayout() {
                   {children}
                 </Text>
               ),
-              tabBarButton: isDetailParent ? props => (
-                <PlatformPressable {...props} aria-selected accessibilityState={{ ...props.accessibilityState, selected: true }} />
+              tabBarButton: isDetailParent || compact ? props => (
+                <PlatformPressable
+                  {...props}
+                  style={[props.style, compact && styles.compactButton]}
+                  {...(isDetailParent && { 'aria-selected': true, accessibilityState: { ...props.accessibilityState, selected: true } })}
+                />
               ) : undefined,
               tabBarIcon: ({ color, size, focused }) => 'logo' in tab ? (
                 <Image accessible={false} source={require('../../../../assets/brand/compass-tab-silhouette.png')}
@@ -86,10 +97,12 @@ export default function TabsLayout() {
       <Tabs.Screen name="purpose-path" options={{ href: null }} />
       <Tabs.Screen name="timezone" options={{ href: null }} />
     </Tabs>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  scene: { overflow: 'hidden' },
   bar: {
     borderTopWidth: 1,
     paddingTop: 7,
@@ -101,5 +114,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     paddingVertical: 4,
   },
-  label: { fontFamily: theme.fonts.body, fontSize: 11, textAlign: 'center' },
+  compactItem: { marginHorizontal: 1, paddingHorizontal: 1 },
+  compactButton: { paddingHorizontal: 1 },
+  label: { fontFamily: theme.fonts.body, ...theme.typography.tab, textAlign: 'center' },
 });

@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 import type { AiReportReason } from '../lib/api';
 
 const REASONS: { value: AiReportReason; label: string }[] = [
@@ -22,6 +22,7 @@ export function ReportResponseModal({
   onSubmit: (reason: AiReportReason, details: string) => Promise<void>;
 }) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [reason, setReason] = useState<AiReportReason | null>(null);
   const [details, setDetails] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +91,7 @@ export function ReportResponseModal({
                   multiline
                   onChangeText={setDetails}
                   placeholder="Tell us what concerned you."
-                  placeholderTextColor={theme.colors.muted}
+                  placeholderTextColor={tokens.screenTextMuted}
                   style={[styles.input, { borderColor: tokens.surfaceBorder }]}
                   value={details}
                 />
@@ -116,20 +117,20 @@ export function ReportResponseModal({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   backdrop: { flex: 1, justifyContent: 'center', padding: 22, backgroundColor: 'rgba(27,29,51,0.62)' },
   sheet: { borderRadius: 22, borderWidth: 1, maxHeight: '86%', overflow: 'hidden' },
   content: { padding: 23, gap: 11 },
-  heading: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.heading, fontSize: 25, lineHeight: 31 },
-  copy: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 21 },
+  heading: { color: tokens.screenText, fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle },
+  copy: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.body },
   option: { borderWidth: 1, padding: 13, borderRadius: 12 },
-  optionText: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 14 },
-  detailLabel: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, marginTop: 4, fontSize: 13 },
-  input: { minHeight: 90, textAlignVertical: 'top', borderWidth: 1, borderRadius: 12, color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 14, padding: 12 },
+  optionText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.body },
+  detailLabel: { color: tokens.screenText, fontFamily: theme.fonts.body, marginTop: 4, ...theme.typography.supporting },
+  input: { minHeight: 90, textAlignVertical: 'top', borderWidth: 1, borderRadius: 12, color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.input, padding: 12 },
   primary: { minHeight: 45, alignItems: 'center', justifyContent: 'center', borderRadius: 12, padding: 12, marginTop: 7 },
-  primaryText: { fontFamily: theme.fonts.body, fontSize: 14, fontWeight: '600' },
+  primaryText: { fontFamily: theme.fonts.body, ...theme.typography.button, fontWeight: '600' },
   secondary: { minHeight: 40, justifyContent: 'center', alignItems: 'center' },
-  secondaryText: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 14 },
+  secondaryText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.button },
   disabled: { opacity: 0.48 },
-  error: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13 },
+  error: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
 });

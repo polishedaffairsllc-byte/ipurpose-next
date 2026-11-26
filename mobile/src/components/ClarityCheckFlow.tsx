@@ -18,6 +18,7 @@ import {
 import { EnvironmentBackground } from './EnvironmentBackground';
 import { useRouter } from 'expo-router';
 import { BrandHeader } from './BrandHeader';
+import { JourneyHeading } from './JourneyHeading';
 import { IntroReplay } from './IntroReplay';
 import { useAuth } from '../context/AuthContext';
 import { useOnboarding } from '../context/OnboardingContext';
@@ -72,6 +73,7 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
   const [saving, setSaving] = useState(false);
   const [switchingAccount, setSwitchingAccount] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const scroll = useRef<ScrollView>(null);
   const analyticsAttempt = useRef(createClarityAttempt(logLaunchEvent));
   const freshResult = useRef(false);
   const requestId = useRef(createClarityRequestId());
@@ -94,6 +96,10 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
     // Count only after a fresh, successful result is actually rendered.
     if (step === RESULT_STEP && freshResult.current && result) analyticsAttempt.current.result(result);
   }, [result, step]);
+
+  useEffect(() => {
+    scroll.current?.scrollTo({ y: 0, animated: false });
+  }, [step]);
 
   const focusAreas = [firstFocus, secondFocus]
     .map((value) => value.trim())
@@ -262,13 +268,14 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
   const progress = Math.min(1, step / RESULT_STEP);
 
   return (
-    <EnvironmentBackground atmosphere={step !== 0}>
+    <EnvironmentBackground>
       <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.flex}
         >
           <ScrollView
+            ref={scroll}
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
@@ -282,11 +289,16 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
                   onPress={() => void goBack()}
                   style={styles.backButton}
                 >
-                  <Ionicons color={tokens.atmosphereText} name="chevron-back" size={20} />
+                  <Ionicons color={tokens.screenText} name="chevron-back" size={20} />
                 </Pressable>
               ) : <View style={styles.backPlaceholder} />}
-              <BrandHeader subtitle="Soul → Systems → AI" variant={step === 0 ? "light-background" : "dark-background"} />
+              <BrandHeader subtitle="Soul → Systems → AI" />
             </View>
+
+            <JourneyHeading
+              title="Clarity Check"
+              subtitle={step === 0 ? (mode === 'retake' ? 'Check in with where you are now.' : 'Find your north.') : undefined}
+            />
 
             {step > 0 ? (
               <View
@@ -356,12 +368,12 @@ export function ClarityCheckFlow({ mode, onComplete }: { mode: FlowMode; onCompl
                 {switchingAccount ? (
                   <ActivityIndicator color={tokens.accent} />
                 ) : (
-                  <Text style={[styles.accountSwitchText, step === 0 && { color: theme.colors.ink }]}>Returning user? Sign in with a different account</Text>
+                  <Text style={styles.accountSwitchText}>Returning user? Sign in with a different account</Text>
                 )}
               </Pressable>
             ) : null}
           </ScrollView>
-          <IntroReplay kind="clarity" returnLabel="Return to Clarity Check" />
+          <IntroReplay kind="clarity" returnLabel="Return to Clarity Check" autoShowOnFirstVisit={mode === 'retake' && step === 0} />
         </KeyboardAvoidingView>
       </SafeAreaView>
     </EnvironmentBackground>
@@ -372,8 +384,6 @@ function Intro({ mode, onBegin, saving }: { mode: FlowMode; onBegin: () => void;
   const { styles } = useClarityAppearance();
   return (
     <View style={styles.heroCard}>
-      <Text style={styles.eyebrow}>{mode === 'retake' ? 'CLARITY CHECK' : 'WELCOME TO IPURPOSE'}</Text>
-      <Text style={styles.heroTitle}>{mode === 'retake' ? 'Check in with where you are now.' : 'Find your north.'}</Text>
       <Text style={styles.heroBody}>
         A short reflection will help Compass understand what feels clear, what needs movement,
         and what deserves your attention right now.
@@ -482,7 +492,7 @@ function FocusQuestion({
   saving: boolean;
   second: string;
 }) {
-  const { styles } = useClarityAppearance();
+  const { styles, tokens } = useClarityAppearance();
   return (
     <View style={styles.card}>
       <Text style={styles.eyebrow}>RIGHT NOW</Text>
@@ -494,7 +504,7 @@ function FocusQuestion({
         multiline
         onChangeText={onFirstChange}
         placeholder="Name what needs clarity or movement"
-        placeholderTextColor={theme.colors.muted}
+        placeholderTextColor={tokens.screenTextMuted}
         style={styles.input}
         value={first}
       />
@@ -504,7 +514,7 @@ function FocusQuestion({
         multiline
         onChangeText={onSecondChange}
         placeholder="Add a second focus if it helps"
-        placeholderTextColor={theme.colors.muted}
+        placeholderTextColor={tokens.screenTextMuted}
         style={styles.input}
         value={second}
       />
@@ -604,11 +614,11 @@ function createStyles(tokens: VisualEnvironmentTokens) {
       justifyContent: 'center',
     },
     container: { flexGrow: 1, paddingBottom: 40, paddingHorizontal: 20, paddingTop: 8 },
-    headerRow: { alignItems: 'center', flexDirection: 'row', gap: 12 },
+    headerRow: { alignItems: 'center', flexDirection: 'row-reverse', justifyContent: 'space-between', gap: 12 },
     backButton: {
       alignItems: 'center',
-      backgroundColor: tokens.glassPillBackground,
-      borderColor: tokens.glassPillBorder,
+      backgroundColor: tokens.surfaceTint,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 22,
       borderWidth: 1,
       height: 44,
@@ -617,91 +627,80 @@ function createStyles(tokens: VisualEnvironmentTokens) {
     },
     backPlaceholder: { width: 44 },
     progressTrack: {
-      backgroundColor: tokens.glassPillBackground,
+      backgroundColor: tokens.surfaceTint,
       borderRadius: 999,
       height: 4,
-      marginBottom: 28,
-      marginTop: 22,
+      marginBottom: 18,
       overflow: 'hidden',
     },
-    progressFill: { backgroundColor: tokens.accent, height: 4 },
-    heroCard: { flex: 1, justifyContent: 'center', minHeight: 560, paddingBottom: 48 },
+    progressFill: { backgroundColor: tokens.accentStrong, height: 4 },
+    heroCard: { flex: 1 },
     eyebrow: {
       color: tokens.accentStrong,
       fontFamily: theme.fonts.body,
-      fontSize: 11,
-      letterSpacing: 1.7,
+      ...theme.typography.label,
+      letterSpacing: 1.3,
       marginBottom: 12,
     },
-    heroTitle: {
-      color: theme.colors.ink,
-      fontFamily: theme.fonts.heading,
-      fontSize: 45,
-      lineHeight: 52,
-    },
     heroBody: {
-      color: theme.colors.deepIndigo,
+      color: tokens.screenText,
       fontFamily: theme.fonts.body,
-      fontSize: 16,
-      lineHeight: 25,
-      marginTop: 16,
+      ...theme.typography.body,
     },
     principleCard: {
       backgroundColor: tokens.surface,
       borderColor: tokens.surfaceBorder,
       borderRadius: 20,
       borderWidth: 1,
-      marginTop: 26,
+      marginTop: 18,
       padding: 18,
     },
     principle: {
-      color: theme.colors.ink,
+      color: tokens.screenText,
       fontFamily: theme.fonts.body,
-      fontSize: 15,
-      lineHeight: 25,
+      ...theme.typography.body,
     },
     card: {
-      backgroundColor: tokens.glassCardDeepBackground,
-      borderColor: tokens.glassCardBorder,
+      backgroundColor: tokens.surface,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 24,
       borderWidth: 1,
       padding: 22,
     },
     cardTitle: {
-      color: tokens.atmosphereText,
+      color: tokens.screenText,
       fontFamily: theme.fonts.heading,
-      fontSize: 30,
-      lineHeight: 38,
+      ...theme.typography.question,
     },
     cardBody: {
-      color: tokens.atmosphereTextMuted,
+      color: tokens.screenText,
       fontFamily: theme.fonts.body,
-      fontSize: 14,
-      lineHeight: 22,
+      ...theme.typography.body,
       marginTop: 10,
     },
     scaleLabels: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 34 },
-    scaleLabel: { color: tokens.atmosphereTextFaint, fontFamily: theme.fonts.body, fontSize: 11 },
-    scaleRow: { flexDirection: 'row', gap: 9, justifyContent: 'space-between', marginTop: 10 },
+    scaleLabel: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
+    scaleRow: { flexDirection: 'row', gap: 4, justifyContent: 'space-between', marginTop: 10 },
     scaleButton: {
       alignItems: 'center',
-      backgroundColor: tokens.glassPillBackground,
-      borderColor: tokens.glassPillBorder,
+      backgroundColor: tokens.surfaceTint,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 24,
       borderWidth: 1,
+      flex: 1,
       height: 48,
       justifyContent: 'center',
-      width: 48,
+      maxWidth: 48,
     },
-    selectedScaleButton: { backgroundColor: tokens.accentStrong, borderColor: tokens.accentStrong },
-    scaleNumber: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 16 },
-    selectedScaleNumber: { fontWeight: '700' },
+    selectedScaleButton: { backgroundColor: tokens.buttonBackground, borderColor: tokens.buttonBackground },
+    scaleNumber: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.button },
+    selectedScaleNumber: { color: tokens.buttonText, fontWeight: '700' },
     savingIndicator: { marginTop: 20 },
     options: { gap: 11, marginTop: 24 },
     option: {
       alignItems: 'center',
-      backgroundColor: tokens.glassPillBackground,
-      borderColor: tokens.glassPillBorder,
+      backgroundColor: tokens.surfaceTint,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 16,
       borderWidth: 1,
       flexDirection: 'row',
@@ -711,19 +710,19 @@ function createStyles(tokens: VisualEnvironmentTokens) {
     selectedOption: { borderColor: tokens.accent },
     optionMark: {
       alignItems: 'center',
-      backgroundColor: tokens.profileCardBackground,
+      backgroundColor: tokens.accentSoft,
       borderRadius: 17,
       height: 34,
       justifyContent: 'center',
       width: 34,
     },
     selectedOptionMark: { backgroundColor: tokens.buttonBackground },
-    optionMarkText: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 13 },
-    optionText: { color: tokens.atmosphereText, flex: 1, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 20 },
+    optionMarkText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.label },
+    optionText: { color: tokens.screenText, flex: 1, fontFamily: theme.fonts.body, ...theme.typography.body },
     inputLabel: {
-      color: tokens.accent,
+      color: tokens.accentStrong,
       fontFamily: theme.fonts.body,
-      fontSize: 10,
+      ...theme.typography.label,
       letterSpacing: 1.2,
       marginBottom: 8,
       marginTop: 24,
@@ -733,10 +732,9 @@ function createStyles(tokens: VisualEnvironmentTokens) {
       borderColor: tokens.surfaceBorder,
       borderRadius: 16,
       borderWidth: 1,
-      color: theme.colors.ink,
+      color: tokens.screenText,
       fontFamily: theme.fonts.body,
-      fontSize: 15,
-      lineHeight: 22,
+      ...theme.typography.input,
       minHeight: 72,
       padding: 14,
       textAlignVertical: 'top',
@@ -751,7 +749,7 @@ function createStyles(tokens: VisualEnvironmentTokens) {
       paddingHorizontal: 18,
     },
     primaryButtonPressed: { opacity: 0.62 },
-    primaryButtonText: { color: tokens.buttonText, fontFamily: theme.fonts.body, fontSize: 16 },
+    primaryButtonText: { color: tokens.buttonText, fontFamily: theme.fonts.body, ...theme.typography.button },
     accountSwitchButton: {
       alignItems: 'center',
       minHeight: 44,
@@ -762,44 +760,44 @@ function createStyles(tokens: VisualEnvironmentTokens) {
     },
     accountSwitchButtonPressed: { opacity: 0.62 },
     accountSwitchText: {
-      color: tokens.atmosphereText,
+      color: tokens.screenText,
       fontFamily: theme.fonts.body,
-      fontSize: 14,
+      ...theme.typography.supporting,
       textAlign: 'center',
       textDecorationLine: 'underline',
     },
     errorCard: {
-      backgroundColor: 'rgba(252, 196, 183, 0.16)',
+      backgroundColor: tokens.surface,
       borderColor: theme.colors.salmonPeach,
       borderRadius: 16,
       borderWidth: 1,
       marginTop: 16,
       padding: 14,
     },
-    errorText: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 20 },
-    errorHint: { color: tokens.atmosphereTextMuted, fontFamily: theme.fonts.body, fontSize: 12, marginTop: 5 },
-    resultType: { color: tokens.atmosphereText, fontFamily: theme.fonts.heading, fontSize: 42 },
-    resultSummary: { color: tokens.atmosphereTextMuted, fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 24, marginTop: 12 },
+    errorText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
+    errorHint: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting, marginTop: 5 },
+    resultType: { color: tokens.screenText, fontFamily: theme.fonts.heading, ...theme.typography.display },
+    resultSummary: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.body, marginTop: 12 },
     scoreGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 24 },
     scoreCard: {
-      backgroundColor: tokens.glassPillBackground,
-      borderColor: tokens.glassPillBorder,
+      backgroundColor: tokens.surfaceTint,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 16,
       borderWidth: 1,
       minHeight: 96,
       padding: 13,
       width: '48%',
     },
-    scoreValue: { color: tokens.accent, fontFamily: theme.fonts.heading, fontSize: 28 },
-    scoreLabel: { color: tokens.atmosphereTextMuted, fontFamily: theme.fonts.body, fontSize: 11, lineHeight: 16 },
+    scoreValue: { color: tokens.accentStrong, fontFamily: theme.fonts.heading, ...theme.typography.question },
+    scoreLabel: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
     nextStepCard: {
-      backgroundColor: tokens.glassCardBackground,
-      borderColor: tokens.glassCardBorder,
+      backgroundColor: tokens.surfaceTint,
+      borderColor: tokens.surfaceBorder,
       borderRadius: 18,
       borderWidth: 1,
       marginTop: 22,
       padding: 16,
     },
-    nextStepText: { color: tokens.atmosphereText, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 22 },
+    nextStepText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.body },
   });
 }

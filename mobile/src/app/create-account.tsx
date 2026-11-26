@@ -104,7 +104,7 @@ export default function CreateAccountScreen() {
           keyboardType="email-address"
           onChangeText={setEmail}
           placeholder="you@example.com"
-          placeholderTextColor="#767A94"
+          placeholderTextColor={theme.colors.muted}
           style={authStyles.input}
           textContentType="emailAddress"
           value={email}
@@ -117,7 +117,7 @@ export default function CreateAccountScreen() {
             editable={!submitting && !accountCreated}
             onChangeText={setPassword}
             placeholder="At least 6 characters"
-            placeholderTextColor="#767A94"
+            placeholderTextColor={theme.colors.muted}
             secureTextEntry={!passwordVisible}
             style={[authStyles.input, styles.passwordInput]}
             textContentType="newPassword"
@@ -143,7 +143,7 @@ export default function CreateAccountScreen() {
             onChangeText={setConfirmation}
             onSubmitEditing={() => void handleCreateAccount()}
             placeholder="Enter your password again"
-            placeholderTextColor="#767A94"
+            placeholderTextColor={theme.colors.muted}
             secureTextEntry={!confirmationVisible}
             style={[authStyles.input, styles.passwordInput]}
             textContentType="newPassword"
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   passwordInput: { paddingRight: 60 },
   visibilityButton: { position: 'absolute', right: 4, top: 0, bottom: 0, minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
   consentRow: { flexDirection: 'row', gap: 10, paddingVertical: 14, alignItems: 'flex-start' },
-  consentText: { flex: 1, color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 21 },
+  consentText: { flex: 1, color: theme.colors.textOnDarkMuted, fontFamily: theme.fonts.body, ...theme.typography.body },
   loading: {
     alignItems: 'center',
     backgroundColor: theme.colors.midnightIndigo,

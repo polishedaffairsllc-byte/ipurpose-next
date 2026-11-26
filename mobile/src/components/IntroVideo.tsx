@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Animated, ActivityIndicator, AppState, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -6,7 +6,7 @@ import { EnvironmentBackground } from './EnvironmentBackground';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import type { IntroKind } from '../lib/introVideos';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 export const INTRO_VIDEOS = {
   welcome: { source: require('../../assets/onboarding/welcome.mp4'), title: 'Welcome to\niPurpose Compass™', label: 'Welcome' },
@@ -26,6 +26,7 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
     return () => { active.current = false; };
   }, []);
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const opacity = useRef(new Animated.Value(0)).current;
   const endCardOpacity = useRef(new Animated.Value(0)).current;
   const reduceMotion = useRef(false);
@@ -123,7 +124,7 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
         {saving ? <View pointerEvents="none" accessibilityLabel="Continuing" style={[styles.loading, { zIndex: 1 }]}><ActivityIndicator color={tokens.accentStrong} /></View> : null}
         <Animated.View style={[styles.flex, { opacity }]}><ScrollView style={styles.flex} contentContainerStyle={styles.content}>
           <Image accessibilityLabel="iPurpose logo" source={require('../../assets/release/adaptive-icon-foreground.png')} resizeMode="contain" style={{ width: 44, height: 44 }} />
-          <Text style={[styles.title, { color: theme.colors.ink }]}>{intro.title}</Text>
+          <Text style={styles.title}>{intro.title}</Text>
           <View style={[styles.videoContainer, { width: videoWidth, height: videoWidth / VIDEO_ASPECT_RATIO, backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
             <VideoView
               accessibilityLabel={`iPurpose Compass ${intro.label} video`}
@@ -139,27 +140,27 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
             />
             {kind === 'clarity' ? <Animated.View pointerEvents="none" accessibilityLabel="Clarity Check introduction complete" accessibilityElementsHidden={!ended} importantForAccessibility={ended ? 'auto' : 'no-hide-descendants'} style={[styles.loading, styles.endCard, { backgroundColor: tokens.screenBackground, opacity: endCardOpacity }]}>
               <Image accessibilityLabel="iPurpose logo" source={require('../../assets/release/adaptive-icon-foreground.png')} resizeMode="contain" style={{ width: 80, height: 80 }} />
-              <Text style={[styles.title, { color: theme.colors.ink }]}>Ready when you are.</Text>
+              <Text style={styles.title}>Ready when you are.</Text>
             </Animated.View> : null}
             {status === 'loading' ? <View pointerEvents="none" style={styles.loading}><ActivityIndicator color={tokens.accentStrong} /></View> : null}
           </View>
-          {status === 'error' ? <Text accessibilityRole="alert" style={[styles.message, { color: theme.colors.ink }]}>This video could not play. You can still continue.</Text> : null}
+          {status === 'error' ? <Text accessibilityRole="alert" style={styles.message}>This video could not play. You can still continue.</Text> : null}
           {status === 'readyToPlay' && !playing && !ended && !saving ? (
             <Pressable accessibilityRole="button" onPress={() => player.play()} style={styles.replay}>
-              <Text style={[styles.linkText, { color: tokens.accentStrong }]}>Play video</Text>
+              <Text style={styles.linkText}>Play video</Text>
             </Pressable>
           ) : null}
           {ended ? <Pressable accessibilityRole="button" onPress={() => { if (!active.current) return; player.currentTime = 0; endedRef.current = false; setEnded(false); player.play(); if (kind === 'clarity') Animated.timing(endCardOpacity, { toValue: 0, duration: reduceMotion.current ? 0 : 350, useNativeDriver: true }).start(); }} style={styles.replay}>
-            <Text style={[styles.linkText, { color: tokens.accentStrong }]}>Replay video</Text>
+            <Text style={styles.linkText}>Replay video</Text>
           </Pressable> : null}
-          {saveError ? <Text accessibilityRole="alert" style={[styles.message, { color: theme.colors.ink }]}>{saveError}</Text> : null}
+          {saveError ? <Text accessibilityRole="alert" style={styles.message}>{saveError}</Text> : null}
         </ScrollView>
           <View style={styles.actions}>
             <Pressable accessibilityRole="button" accessibilityLabel={returnLabel || `Continue to ${kind === 'welcome' ? 'app' : intro.label}`} accessibilityState={{ disabled: saving, busy: saving }} disabled={saving} onPress={() => void finish()} style={({ pressed }) => [styles.continue, { backgroundColor: tokens.buttonBackground, opacity: pressed || saving ? 0.75 : 1 }]}>
               {saving ? <ActivityIndicator color={tokens.buttonText} /> : <Text style={[styles.continueText, { color: tokens.buttonText }]}>{returnLabel || 'Continue'}</Text>}
             </Pressable>
             {!replay ? <Pressable accessibilityRole="button" accessibilityLabel={`Skip ${intro.label.toLowerCase()} video`} disabled={saving} onPress={() => void finish()} style={styles.skip}>
-              <Text style={[styles.linkText, { color: theme.colors.muted }]}>Skip</Text>
+              <Text style={styles.linkText}>Skip</Text>
             </Pressable> : null}
           </View>
         </Animated.View>
@@ -168,18 +169,18 @@ export function IntroVideo({ kind, replay = false, returnLabel, onContinue }: { 
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   flex: { flex: 1 },
   content: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 16 },
-  title: { fontFamily: theme.fonts.heading, fontSize: 28, lineHeight: 34, textAlign: 'center' },
+  title: { color: tokens.screenText, fontFamily: theme.fonts.heading, ...theme.typography.question, textAlign: 'center' },
   videoContainer: { borderRadius: 26, borderWidth: 1, overflow: 'hidden' },
   loading: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center' },
   endCard: { padding: 24, gap: 20 },
   actions: { width: '100%', maxWidth: 468, alignSelf: 'center', flexShrink: 0, paddingHorizontal: 24, paddingBottom: 12, gap: 4 },
   continue: { minHeight: 52, borderRadius: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 14 },
-  continueText: { fontFamily: 'System', fontSize: 16, fontWeight: '600', textAlign: 'center' },
+  continueText: { fontFamily: theme.fonts.body, ...theme.typography.button, textAlign: 'center' },
   skip: { minHeight: 44, padding: 12, alignItems: 'center', justifyContent: 'center' },
   replay: { minHeight: 44, paddingHorizontal: 20, justifyContent: 'center' },
-  linkText: { fontFamily: 'System', fontSize: 14, textAlign: 'center' },
-  message: { fontFamily: 'System', fontSize: 14, lineHeight: 20, textAlign: 'center', maxWidth: 420 },
+  linkText: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting, textAlign: 'center', textDecorationLine: 'underline' },
+  message: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting, textAlign: 'center', maxWidth: 420 },
 });

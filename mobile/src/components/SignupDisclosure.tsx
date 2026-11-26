@@ -10,8 +10,8 @@ export function SignupDisclosure({ acknowledged, disabled, onToggle, inline = fa
   onToggle: () => void;
   inline?: boolean;
 }) {
-  const textColor = inline ? theme.colors.textOnDarkMuted : theme.colors.deepIndigo;
-  const accentColor = inline ? theme.colors.champagne : theme.colors.lavenderPurple;
+  const textColor = inline ? theme.colors.textOnDarkMuted : theme.colors.ink;
+  const accentColor = inline ? theme.colors.champagne : theme.colors.ink;
 
   return (
     <View style={[styles.section, inline && styles.inline]}>
@@ -45,8 +45,8 @@ export function SignupDisclosure({ acknowledged, disabled, onToggle, inline = fa
 const styles = StyleSheet.create({
   section: { gap: 10 },
   inline: { borderTopWidth: 1, borderTopColor: 'rgba(255, 255, 255, 0.28)', paddingTop: 16, marginBottom: 9 },
-  heading: { color: theme.colors.champagne, fontFamily: theme.fonts.heading, fontSize: 23 },
-  copy: { fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 21 },
+  heading: { color: theme.colors.champagne, fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle },
+  copy: { fontFamily: theme.fonts.body, ...theme.typography.body },
   checkbox: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 6, minHeight: 44 },
   checkboxLabel: { flex: 1 },
   links: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 14 },

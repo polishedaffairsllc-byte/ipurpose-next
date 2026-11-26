@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { FIRST_RUN_CHOICES, FIRST_RUN_CHOICE_NOTE, type FirstRunChoice } from '../lib/firstRun';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 /**
  * The founder-approved starting-point chooser.
@@ -17,6 +17,7 @@ export function FirstRunChoiceScreen({
   onSelect: (choice: FirstRunChoice) => Promise<void>;
 }) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [savingChoice, setSavingChoice] = useState<FirstRunChoice | null>(null);
   const [error, setError] = useState<string | null>(null);
   const lock = useRef(false);
@@ -70,17 +71,17 @@ export function FirstRunChoiceScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   safe: { flex: 1 },
   content: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 32, paddingBottom: 32 },
-  eyebrow: { fontFamily: theme.fonts.body, fontSize: 11, letterSpacing: 1.5 },
-  title: { fontFamily: theme.fonts.heading, fontSize: 29, lineHeight: 36, color: theme.colors.deepIndigo, marginTop: 13 },
-  description: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 23, color: theme.colors.deepIndigo, marginTop: 12 },
+  eyebrow: { fontFamily: theme.fonts.body, ...theme.typography.label, letterSpacing: 1.5 },
+  title: { fontFamily: theme.fonts.heading, ...theme.typography.screenTitle, color: tokens.screenText, marginTop: 13 },
+  description: { fontFamily: theme.fonts.body, ...theme.typography.body, color: tokens.screenText, marginTop: 12 },
   options: { gap: 14, marginTop: 30 },
   card: { borderRadius: 20, borderWidth: 1, paddingHorizontal: 22, paddingVertical: 22, minHeight: 125, gap: 9 },
-  cardTitle: { fontFamily: theme.fonts.heading, fontSize: 23, color: theme.colors.deepIndigo },
-  cardDescription: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 23, color: theme.colors.deepIndigo },
-  note: { marginTop: 26, color: theme.colors.muted, fontFamily: theme.fonts.body, fontSize: 13, textAlign: 'center' },
-  error: { marginTop: 18, color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 14 },
+  cardTitle: { fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle, color: tokens.screenText },
+  cardDescription: { fontFamily: theme.fonts.body, ...theme.typography.body, color: tokens.screenText },
+  note: { marginTop: 26, color: tokens.screenTextMuted, fontFamily: theme.fonts.body, ...theme.typography.supporting, textAlign: 'center' },
+  error: { marginTop: 18, color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
   pressed: { opacity: 0.8 },
 });

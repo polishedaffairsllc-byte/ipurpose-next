@@ -1,13 +1,14 @@
-import { useCallback, useState } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useVisualEnvironment } from '../context/VisualEnvironmentContext';
 import { getAiConsent, setAiConsent, type AiConsentState } from '../lib/api';
-import { theme } from '../theme';
+import { theme, type VisualEnvironmentTokens } from '../theme';
 
 /** Displays the versioned, provider-specific notice BEFORE enabling Compass requests. */
 export function AiDataSharingControls({ onChange }: { onChange?: (granted: boolean) => void }) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const [consent, setConsent] = useState<AiConsentState | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -54,7 +55,7 @@ export function AiDataSharingControls({ onChange }: { onChange?: (granted: boole
     }
   }
 
-  const accentColor = tokens.profileCardBackground;
+  const accentColor = tokens.accentStrong;
   const secondaryStyle = [styles.secondary, { backgroundColor: tokens.surface, borderColor: accentColor }];
   const secondaryTextStyle = [styles.secondaryText, { color: accentColor }];
 
@@ -81,7 +82,7 @@ export function AiDataSharingControls({ onChange }: { onChange?: (granted: boole
             </Pressable>
           ) : (
             <View style={styles.actions}>
-              <Pressable accessibilityRole="button" disabled={saving} onPress={() => void choose(true)} style={[styles.primary, { backgroundColor: accentColor }]}>
+              <Pressable accessibilityRole="button" disabled={saving} onPress={() => void choose(true)} style={[styles.primary, { backgroundColor: tokens.buttonBackground }]}>
                 <Text style={styles.primaryText}>{saving ? 'Saving…' : 'Allow OpenAI data sharing'}</Text>
               </Pressable>
               <Pressable accessibilityRole="button" disabled={saving} onPress={() => void choose(false)} style={secondaryStyle}>
@@ -101,18 +102,18 @@ export function AiDataSharingControls({ onChange }: { onChange?: (granted: boole
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   card: { borderWidth: 1, borderRadius: 16, padding: 14, gap: 9 },
-  heading: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.heading, fontSize: 20 },
-  provider: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13 },
+  heading: { color: tokens.screenText, fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle },
+  provider: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
   noticeBox: { maxHeight: 176, borderRadius: 12, padding: 10 },
-  notice: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13, lineHeight: 19 },
-  link: { fontFamily: theme.fonts.body, textDecorationLine: 'underline', fontSize: 13 },
+  notice: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.body },
+  link: { fontFamily: theme.fonts.body, textDecorationLine: 'underline', ...theme.typography.supporting },
   actions: { gap: 8 },
   primary: { padding: 12, borderRadius: 12, alignItems: 'center' },
-  primaryText: { color: theme.colors.white, fontFamily: theme.fonts.body, fontSize: 14 },
+  primaryText: { color: tokens.buttonText, fontFamily: theme.fonts.body, ...theme.typography.button },
   secondary: { borderWidth: 1, padding: 12, borderRadius: 12, alignItems: 'center' },
-  secondaryText: { fontFamily: theme.fonts.body, fontSize: 14 },
-  caption: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 12, lineHeight: 17 },
-  error: { color: theme.colors.deepIndigo, fontFamily: theme.fonts.body, fontSize: 13 },
+  secondaryText: { fontFamily: theme.fonts.body, ...theme.typography.button },
+  caption: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
+  error: { color: tokens.screenText, fontFamily: theme.fonts.body, ...theme.typography.supporting },
 });

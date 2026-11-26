@@ -8,9 +8,18 @@ export function EnvironmentBackground({ children, atmosphere = false }: { childr
   const { tokens } = useVisualEnvironment();
   const gradient = atmosphere ? tokens.atmosphereGradient : tokens.screenGradient;
   return (
-    <ImageBackground source={tokens.background} resizeMode="cover" style={[styles.flex, { backgroundColor: tokens.screenBackground }]}>
+    <ImageBackground
+      source={tokens.background}
+      resizeMode="cover"
+      imageStyle={styles.art}
+      style={[styles.canvas, { backgroundColor: atmosphere ? tokens.tabBarBackground : tokens.screenBackground }]}
+    >
       <LinearGradient {...gradient} style={styles.flex}>{children}</LinearGradient>
     </ImageBackground>
   );
 }
-const styles = StyleSheet.create({ flex: { flex: 1 } });
+const styles = StyleSheet.create({
+  canvas: { flex: 1, overflow: 'hidden' },
+  art: { width: '100%', height: '100%' },
+  flex: { flex: 1 },
+});

@@ -18,7 +18,7 @@ import { acknowledgeSignupDisclosure, deleteIPurposeAccount, saveMarketingConsen
 import { logLaunchEvent } from '../lib/analyticsEvents';
 import { logUserActivity } from '../lib/userActivity';
 import { clearPurposeProgress } from '../lib/purposeStorage';
-import { compassIntroStorageKey } from '../lib/introVideos';
+import { introStorageKey } from '../lib/introVideos';
 import { formatSignupName, parseSignupName, type SignupName } from '../lib/profileIdentity';
 
 interface SignupOptions extends SignupName {
@@ -139,7 +139,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await deleteIPurposeAccount();
       await Promise.allSettled([
         clearPurposeProgress(currentUser.uid),
-        AsyncStorage.removeItem(compassIntroStorageKey(currentUser.uid)),
+        AsyncStorage.removeItem(introStorageKey('compass', currentUser.uid)),
+        AsyncStorage.removeItem(introStorageKey('clarity', currentUser.uid)),
+        AsyncStorage.removeItem(introStorageKey('purpose', currentUser.uid)),
       ]);
       await firebaseSignOut(auth);
     },

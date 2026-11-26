@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
@@ -8,13 +8,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePurpose } from '../../../context/PurposeContext';
 import { useVisualEnvironment } from '../../../context/VisualEnvironmentContext';
 import { ACTION_PATHS, draftPurposeStatement, EXPERIMENT_SIGNALS, PURPOSE_STAGES, VALUE_WORDS } from '../../../lib/purpose';
-import { theme } from '../../../theme';
+import { theme, type VisualEnvironmentTokens } from '../../../theme';
 import { useFirstRun } from '../../../context/FirstRunContext';
 
 export default function PurposePathScreen() {
 
   const router = useRouter();
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   const { progress, loading, ready, saving, error, update, flush, retry } = usePurpose();
   const firstRun = useFirstRun();
   const firstExperience = firstRun.state?.stage === 'experience' && firstRun.state.choice === 'purpose';
@@ -100,7 +101,7 @@ export default function PurposePathScreen() {
                   {stage.fields.map((field) => (
                     <View key={field.key} style={styles.field}>
                       <Text style={styles.label}>{field.label}</Text>
-                      <TextInput accessibilityLabel={field.label} multiline textAlignVertical="top" maxLength={field.key === 'ownValue' ? 60 : field.key === 'mission' ? 1200 : 300} value={progress.reflections[field.key] ?? ''} onChangeText={(value) => reflect(field.key, value)} placeholder={'placeholder' in field ? field.placeholder : 'A few words are enough'} placeholderTextColor={theme.colors.muted} style={styles.input} editable={!leaving} />
+                      <TextInput accessibilityLabel={field.label} multiline textAlignVertical="top" maxLength={field.key === 'ownValue' ? 60 : field.key === 'mission' ? 1200 : 300} value={progress.reflections[field.key] ?? ''} onChangeText={(value) => reflect(field.key, value)} placeholder={'placeholder' in field ? field.placeholder : 'A few words are enough'} placeholderTextColor={tokens.screenTextMuted} style={styles.input} editable={!leaving} />
                     </View>
                   ))}
                   {stageIndex === 1 ? (
@@ -162,15 +163,16 @@ export default function PurposePathScreen() {
 
 function Choice({ label, onPress, selected, disabled, centered }: { centered?: boolean; label: string; onPress: () => void; selected?: boolean; disabled?: boolean }) {
   const { tokens } = useVisualEnvironment();
+  const styles = useMemo(() => createStyles(tokens), [tokens]);
   return <Pressable accessibilityRole="button" accessibilityState={{ selected: !!selected, disabled: !!disabled }} disabled={disabled} onPress={onPress} style={[styles.choice, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }, selected && { backgroundColor: tokens.surfaceTint, borderColor: tokens.accentStrong, borderWidth: 2 }, disabled && styles.disabled]}><Text style={[styles.link, centered && styles.centeredAction]}>{label}</Text></Pressable>;
 }
-const styles = StyleSheet.create({
+const createStyles = (tokens: VisualEnvironmentTokens) => StyleSheet.create({
   progressTrack: { height: 6, borderRadius: 999, marginVertical: 14, overflow: 'hidden' },
-  flex: { flex: 1 }, container: { padding: 20, paddingBottom: 36 }, title: { fontFamily: theme.fonts.heading, fontSize: 32, lineHeight: 40, textAlign: 'center', color: theme.colors.ink, marginVertical: 16 },
-  idea: { fontFamily: theme.fonts.heading, fontSize: 23, lineHeight: 30, color: theme.colors.ink, marginVertical: 10 }, body: { fontFamily: theme.fonts.body, fontSize: 15, lineHeight: 23, color: theme.colors.ink, marginBottom: 16 },
-  status: { fontFamily: theme.fonts.body, fontSize: 12, lineHeight: 19, color: theme.colors.muted, marginVertical: 10 }, field: { marginBottom: 18 }, label: { fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 22, color: theme.colors.ink, marginBottom: 8 },
-  input: { minHeight: 100, backgroundColor: theme.colors.white, borderColor: theme.colors.muted, borderWidth: 1, borderRadius: 14, padding: 14, fontFamily: theme.fonts.body, fontSize: 16, lineHeight: 24, color: theme.colors.ink },
-  choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 }, choice: { borderWidth: 1, borderColor: theme.colors.muted, borderRadius: 14, padding: 14, minHeight: 48, marginBottom: 8 }, selected: { backgroundColor: theme.colors.line, borderColor: theme.colors.plum }, link: { fontFamily: theme.fonts.body, fontSize: 14, lineHeight: 21, color: theme.colors.ink },
+  flex: { flex: 1 }, container: { padding: 20, paddingBottom: 36 }, title: { fontFamily: theme.fonts.heading, ...theme.typography.screenTitle, textAlign: 'center', color: tokens.screenText, marginVertical: 16 },
+  idea: { fontFamily: theme.fonts.heading, ...theme.typography.sectionTitle, color: tokens.screenText, marginVertical: 10 }, body: { fontFamily: theme.fonts.body, ...theme.typography.body, color: tokens.screenText, marginBottom: 16 },
+  status: { fontFamily: theme.fonts.body, ...theme.typography.supporting, color: tokens.screenTextMuted, marginVertical: 10 }, field: { marginBottom: 18 }, label: { fontFamily: theme.fonts.body, ...theme.typography.body, color: tokens.screenText, marginBottom: 8 },
+  input: { minHeight: 100, backgroundColor: tokens.surface, borderColor: theme.colors.muted, borderWidth: 1, borderRadius: 14, padding: 14, fontFamily: theme.fonts.body, ...theme.typography.input, color: tokens.screenText },
+  choices: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 }, choice: { borderWidth: 1, borderColor: theme.colors.muted, borderRadius: 14, padding: 14, minHeight: 48, marginBottom: 8 }, selected: { backgroundColor: theme.colors.line, borderColor: theme.colors.plum }, link: { fontFamily: theme.fonts.body, ...theme.typography.button, color: tokens.screenText },
   centeredAction: { textAlign: 'center' },
-  secondary: { paddingVertical: 14, minHeight: 48 }, primary: { borderRadius: 16, padding: 16, minHeight: 52, alignItems: 'center', marginVertical: 14 }, primaryText: { fontFamily: theme.fonts.body, fontSize: 16 }, disabled: { opacity: 0.5 }, card: { backgroundColor: theme.colors.white, borderRadius: 16, padding: 16, marginVertical: 14 },
+  secondary: { paddingVertical: 14, minHeight: 48 }, primary: { borderRadius: 16, padding: 16, minHeight: 52, alignItems: 'center', marginVertical: 14 }, primaryText: { fontFamily: theme.fonts.body, ...theme.typography.button }, disabled: { opacity: 0.5 }, card: { backgroundColor: tokens.surface, borderRadius: 16, padding: 16, marginVertical: 14 },
 });

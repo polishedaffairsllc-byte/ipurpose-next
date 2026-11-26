@@ -17,9 +17,9 @@ export function BrandHeader({
   variant = 'light-background',
   size = 'compact',
 }: BrandHeaderProps) {
-  const onDarkBackground = variant === 'dark-background';
   const hero = size === 'hero';
   const { tokens } = useVisualEnvironment();
+  const onDarkBackground = variant === 'dark-background' || tokens.darkScreen;
 
   return (
     <View style={[styles.row, hero && styles.heroRow]}>
@@ -30,7 +30,7 @@ export function BrandHeader({
           style={[
             styles.title,
             hero && styles.heroTitle,
-            onDarkBackground ? styles.titleOnDark : styles.titleOnLight,
+            { color: onDarkBackground ? tokens.atmosphereText : tokens.screenText },
           ]}
         >
           iPurpose Compass<Text style={styles.trademark}>™</Text>
@@ -39,7 +39,7 @@ export function BrandHeader({
           <Text
             style={[
               styles.subtitle,
-              onDarkBackground ? { color: tokens.atmosphereTextMuted } : styles.subtitleOnLight,
+              { color: onDarkBackground ? tokens.atmosphereTextMuted : tokens.screenTextMuted },
             ]}
           >
             {subtitle}
@@ -57,11 +57,8 @@ const styles = StyleSheet.create({
   heroImage: { width: 116, height: 116 },
   wordmark: { flexShrink: 1 },
   heroWordmark: { alignItems: 'center' },
-  title: { fontFamily: theme.fonts.heading, fontSize: 17 },
-  heroTitle: { fontSize: 40, lineHeight: 48, textAlign: 'center' },
+  title: { fontFamily: theme.fonts.heading, ...theme.typography.brandTitle },
+  heroTitle: { ...theme.typography.display, textAlign: 'center' },
   trademark: { fontFamily: 'System', fontSize: 10 },
-  titleOnDark: { color: theme.colors.textOnDark },
-  titleOnLight: { color: theme.colors.deepIndigo },
-  subtitle: { fontFamily: 'System', fontSize: 12, letterSpacing: 0.6, marginTop: 6 },
-  subtitleOnLight: { color: theme.colors.deepIndigo },
+  subtitle: { fontFamily: theme.fonts.body, ...theme.typography.supporting, marginTop: 4 },
 });

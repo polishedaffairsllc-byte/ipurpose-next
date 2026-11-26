@@ -2,6 +2,33 @@ const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const { harness, React, act, render, press, button, text } = require('./helpers/native-harness.cjs');
 
+function luminance(hex) {
+ const channels = hex.slice(1).match(/../g).map(channel => parseInt(channel, 16) / 255);
+ const [red, green, blue] = channels.map(channel => channel <= 0.04045
+  ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4);
+ return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+test('guided cards, primary buttons and navigation labels have readable contrast in every environment', () => {
+ const { visualEnvironments } = harness().load('theme.ts');
+ for (const tokens of Object.values(visualEnvironments)) {
+  const pairs = [
+   ['guided card', tokens.screenText, tokens.surface],
+   ['guided supporting text', tokens.screenTextMuted, tokens.surfaceTint],
+   ['guided accent', tokens.accentStrong, tokens.surfaceTint],
+   ['primary button', tokens.buttonText, tokens.buttonBackground],
+   ['selected tab', tokens.tabBarActive, tokens.tabBarItemBackground],
+   ['unselected tab', tokens.tabBarInactive, tokens.tabBarItemBackground],
+  ];
+  for (const [label, foreground, background] of pairs) {
+   const textLight = luminance(foreground);
+   const surfaceLight = luminance(background);
+   const ratio = (Math.max(textLight, surfaceLight) + 0.05) / (Math.min(textLight, surfaceLight) + 0.05);
+   assert.ok(ratio >= 4.5, `${tokens.label} ${label} contrast is ${ratio.toFixed(2)}:1`);
+  }
+ }
+});
+
 function apiHarness() {
  const h = harness(); const refreshes = [];
  h.mocks['./analyticsEvents'] = { logLaunchEvent: () => {} };
@@ -37,7 +64,9 @@ for (const existing of [false, true]) test(`actual Purpose provider + API + scre
  const Screen = h.load('app/(app)/(tabs)/purpose.tsx').default;
  const tree = await render(React.createElement(context.PurposeCheckProvider, null, React.createElement(Screen)));
  assert.doesNotMatch(text(tree.root), /could not be loaded/);
+ assert.equal(tree.root.findByType('IntroReplay').props.autoShowOnFirstVisit, true);
  await press(tree, existing ? 'Retake the Purpose Check' : 'Take the Purpose Check');
+ assert.equal(tree.root.findByType('IntroReplay').props.autoShowOnFirstVisit, false);
  const qs = h.load('lib/purposeCheckCopy.ts').PURPOSE_QUESTIONS; assert.equal(qs.length, 6);
  for (const q of qs) { assert.match(text(tree.root), new RegExp(q.prompt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))); await press(tree, q.options[0].label); if (q.max > 1) await press(tree, 'Continue'); }
  await press(tree, 'See my Purpose Direction'); assert.equal(writes.length, 1); assert.equal(Object.keys(writes[0].answers).length, 6);
@@ -76,7 +105,9 @@ test('Account environment updates guidance, consent and navigation throughout th
  const check = name => {
   assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens[name].screenGradient.colors);
   assert.equal(tree.root.findByType('ImageBackground').props.source, tokens[name].background);
+  assert.equal(tree.root.findByType('ImageBackground').props.imageStyle.height, '100%');
   assert.equal(progressBars(tree).length, 0);
+  assert.equal(tree.root.findByType('IntroReplay').props.autoShowOnFirstVisit, true);
   const consent = tree.root.findByType(Consent);
   assert.equal(consent.findAllByType('View')[0].props.style.at(-1).backgroundColor, tokens[name].surfaceTint);
   const tabOptions = tree.root.findByType('Tabs').props.screenOptions;
@@ -96,8 +127,9 @@ test('Account environment updates guidance, consent and navigation throughout th
  assert.deepEqual(writes.map(p => p.manualTheme), ['renewal', 'warmth', 'depth']);
  await press(tree, 'Begin again');
  assert.ok(progressBars(tree)[0].props['aria-valuenow'] > 0);
+ assert.equal(tree.root.findByType('IntroReplay').props.autoShowOnFirstVisit, false);
  await act(async () => { const context = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityRole === 'radio' && n.props.accessibilityLabel.startsWith('Renewal.')); context.props.onPress(); });
- await press(tree, 'Use this environment'); assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens.renewal.atmosphereGradient.colors);
+ await press(tree, 'Use this environment'); assert.deepEqual(tree.root.findByType('LinearGradient').props.colors, tokens.renewal.screenGradient.colors);
  // Theme change does not remount or reset the current assessment question.
  assert.match(text(tree.root), /CLARITY · 1 OF/); await act(async () => tree.unmount());
 });
@@ -140,8 +172,11 @@ test('Clarity retake reaches every unchanged question, retries with the same att
  const result = { success: true, submissionId: 'saved', identityType: 'Visionary', resultSummary: 'Approved server summary', nextStep: 'Approved server next step', scores: { internalClarity: 8, readinessForSupport: 8, frictionBetweenInsightAndAction: 8, integrationAndMomentum: 4, totalScore: 28 } };
  h.mocks['../lib/api'] = { createClarityRequestId: () => `attempt-${++nextId}`, submitClarityCheck: async body => { submissions.push(body); if (submissions.length === 1) throw new Error('Temporary request failure'); return result; } };
  const tree = await render(React.createElement(h.load('components/ClarityCheckFlow.tsx').ClarityCheckFlow, { mode: 'retake' }));
+ const headings = () => tree.root.findAllByType('Text').filter(node => node.props.accessibilityRole === 'header').map(text);
+ assert.deepEqual(headings(), ['Clarity Check']);
  const { CLARITY_QUESTIONS, IDENTITY_QUESTIONS } = h.load('lib/onboarding.ts');
  await press(tree, 'Begin again');
+ assert.deepEqual(headings(), ['Clarity Check']);
  for (const question of CLARITY_QUESTIONS) {
   assert.ok(text(tree.root).includes(question)); const choice = tree.root.findAllByType('Pressable').find(n => n.props.accessibilityLabel === '4 out of 5');
   await act(async () => choice.props.onPress());

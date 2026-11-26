@@ -57,14 +57,13 @@ const styles = StyleSheet.create({
   panelTitle: {
     color: theme.colors.white,
     fontFamily: theme.fonts.heading,
-    fontSize: 24,
+    ...theme.typography.sectionTitle,
     textAlign: 'center',
   },
   panelBody: {
     color: theme.colors.textOnDarkMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 21,
+    ...theme.typography.body,
     marginTop: 7,
     textAlign: 'center',
   },

@@ -114,7 +114,7 @@ export const authStyles = StyleSheet.create({
   label: {
     color: theme.colors.champagneText,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
+    ...theme.typography.label,
     letterSpacing: 1.1,
     marginBottom: 7,
     marginTop: 5,
@@ -124,9 +124,9 @@ export const authStyles = StyleSheet.create({
     borderColor: 'rgba(230, 200, 124, 0.32)',
     borderRadius: 15,
     borderWidth: 1,
-    color: theme.colors.midnightIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 16,
+    ...theme.typography.input,
     marginBottom: 14,
     paddingHorizontal: 15,
     paddingVertical: 14,
@@ -134,8 +134,7 @@ export const authStyles = StyleSheet.create({
   error: {
     color: theme.colors.salmonPeach,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 19,
+    ...theme.typography.supporting,
     marginBottom: 10,
   },
   primaryButton: {
@@ -148,9 +147,9 @@ export const authStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   primaryButtonText: {
-    color: theme.colors.midnightIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 16,
+    ...theme.typography.button,
   },
   secondaryButton: {
     alignItems: 'center',
@@ -166,7 +165,7 @@ export const authStyles = StyleSheet.create({
   secondaryButtonText: {
     color: theme.colors.white,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
+    ...theme.typography.button,
   },
   buttonDisabled: { opacity: 0.5 },
   buttonPressed: { opacity: 0.78 },
@@ -174,7 +173,7 @@ export const authStyles = StyleSheet.create({
   textLinkText: {
     color: theme.colors.textOnDarkMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.supporting,
     textDecorationLine: 'underline',
   },
 });
@@ -213,13 +212,13 @@ const styles = StyleSheet.create({
   brandTitle: {
     color: theme.colors.white,
     fontFamily: theme.fonts.heading,
-    fontSize: 30,
+    ...theme.typography.question,
     marginTop: 14,
     textAlign: 'center',
   },
-  brandTitleWelcome: { fontSize: 39, lineHeight: 46 },
-  brandTitleSignup: { fontSize: 40, lineHeight: 48 },
-  signupTagline: { color: theme.colors.champagne, fontFamily: theme.fonts.body, fontSize: 12, letterSpacing: 2, marginTop: 10 },
+  brandTitleWelcome: { ...theme.typography.display },
+  brandTitleSignup: { ...theme.typography.display },
+  signupTagline: { color: theme.colors.champagne, fontFamily: theme.fonts.body, ...theme.typography.label, letterSpacing: 2, marginTop: 10 },
   brandRule: { alignItems: 'center', flexDirection: 'row', gap: 10, marginTop: 10 },
   ruleLine: { backgroundColor: theme.colors.champagne, height: 1, opacity: 0.58, width: 40 },
   ruleStar: { color: theme.colors.champagne, fontSize: 15 },
@@ -228,7 +227,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     color: theme.colors.champagne,
     fontFamily: theme.fonts.body,
-    fontSize: 11,
+    ...theme.typography.label,
     letterSpacing: 2,
     marginBottom: 10,
     textAlign: 'center',
@@ -236,16 +235,14 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.white,
     fontFamily: theme.fonts.heading,
-    fontSize: 31,
-    lineHeight: 38,
+    ...theme.typography.screenTitle,
     textAlign: 'center',
   },
-  titleWelcome: { fontSize: 34, lineHeight: 42 },
+  titleWelcome: { ...theme.typography.screenTitle },
   body: {
     color: theme.colors.textOnDarkMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 15,
-    lineHeight: 23,
+    ...theme.typography.body,
     marginTop: 9,
     textAlign: 'center',
   },
@@ -260,7 +257,7 @@ const styles = StyleSheet.create({
   signature: {
     color: theme.colors.textOnDarkFaint,
     fontFamily: theme.fonts.body,
-    fontSize: 9,
+    ...theme.typography.label,
     letterSpacing: 2.2,
     marginTop: 22,
     textAlign: 'center',

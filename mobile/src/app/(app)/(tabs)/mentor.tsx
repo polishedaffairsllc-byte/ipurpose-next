@@ -8,6 +8,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -16,6 +17,7 @@ import {
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { EnvironmentBackground } from '../../../components/EnvironmentBackground';
 import { BrandHeader } from '../../../components/BrandHeader';
+import { JourneyHeading } from '../../../components/JourneyHeading';
 import { AiDataSharingControls } from '../../../components/AiDataSharingControls';
 import { ConversationList } from '../../../components/ConversationList';
 import { MessageBubble } from '../../../components/MessageBubble';
@@ -221,8 +223,16 @@ export default function MentorScreen() {
     }
   }
 
+  const permission = consentLoading ? (
+    <View style={styles.consentLoading}>
+      <ActivityIndicator accessibilityLabel="Checking AI permission" color={tokens.accentStrong} />
+    </View>
+  ) : !consentGranted ? (
+    <AiDataSharingControls onChange={setConsentGranted} />
+  ) : null;
+
   return (
-    <EnvironmentBackground>
+    <EnvironmentBackground atmosphere>
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         style={styles.flex}
@@ -232,57 +242,49 @@ export default function MentorScreen() {
         <View style={styles.container}>
           <BrandHeader
             subtitle="Your space for aligned reflection and action"
-            variant="light-background"
+            variant="dark-background"
           />
 
-          <View style={styles.introRow}>
-            <View style={styles.introCopy}>
-              <Text
-                style={[
-                  styles.kicker,
-                  {
-                    backgroundColor: tokens.buttonBackground,
-                    borderColor: tokens.accentStrong,
-                    color: tokens.buttonText,
-                  },
-                ]}
-              >
-                COMPASS
-              </Text>
-              <Text style={styles.screenTitle}>Think it through here.</Text>
-            </View>
+          <JourneyHeading title="Compass" subtitle="Think it through here." atmosphere />
 
+          <View style={styles.conversationBar}>
+            <View style={styles.conversations}>
+              <ConversationList
+                conversations={conversations}
+                selectedId={conversationId}
+                disabled={sending || loadingHistory}
+                onNew={startNewConversation}
+                onSelect={loadConversation}
+                hideNew
+              />
+            </View>
             <Pressable
               onPress={startNewConversation}
               disabled={sending || loadingHistory}
+              accessibilityRole="button"
+              accessibilityLabel="Start a new conversation"
               style={[styles.newButton, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}
             >
-              <Ionicons name="add" size={18} color={theme.colors.deepIndigo} />
-              <Text style={styles.newButtonText}>New</Text>
+              <Ionicons name="add" size={18} color={tokens.screenText} />
+              <Text style={[styles.newButtonText, { color: tokens.screenText }]}>New</Text>
             </Pressable>
           </View>
 
-          <View style={styles.conversations}>
-            <ConversationList
-              conversations={conversations}
-              selectedId={conversationId}
-              disabled={sending || loadingHistory}
-              onNew={startNewConversation}
-              onSelect={loadConversation}
-              hideNew
-            />
-          </View>
-
-          <View style={[styles.chat, { backgroundColor: tokens.surfaceTint, borderColor: tokens.surfaceBorder }]}>
+          <View style={[styles.chat, { backgroundColor: tokens.glassCardDeepBackground, borderColor: tokens.glassCardBorder }]}>
             {loadingHistory ? (
               <View style={styles.center}>
-                <ActivityIndicator color={tokens.accentStrong} />
+                <ActivityIndicator color={tokens.accent} />
                 <Text style={styles.muted}>Loading your conversation…</Text>
               </View>
             ) : messages.length === 0 ? (
-              <View style={styles.empty}>
-                <View style={[styles.emptyMark, { backgroundColor: tokens.accentSoft }]}>
-                  <Ionicons name="sparkles-outline" size={22} color={tokens.accentStrong} />
+              <ScrollView
+                contentContainerStyle={permission ? styles.permission : styles.empty}
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled
+              >
+                {permission ?? <>
+                <View style={[styles.emptyMark, { backgroundColor: tokens.glassPillBackground }]}>
+                  <Ionicons name="sparkles-outline" size={22} color={tokens.accent} />
                 </View>
 
                 <Text style={styles.emptyTitle}>What are you thinking through?</Text>
@@ -298,9 +300,7 @@ export default function MentorScreen() {
                       onPress={() => setInput(starter.prompt)}
                       style={[
                         styles.starter,
-                        index === 0 && styles.soulStarter,
-                        index === 1 && styles.systemsStarter,
-                        index === 2 && styles.aiStarter,
+                        { backgroundColor: tokens.glassPillBackground, borderColor: tokens.glassPillBorder },
                       ]}
                     >
                       <Text style={styles.starterLabel}>{starter.label}</Text>
@@ -311,17 +311,19 @@ export default function MentorScreen() {
                             ? 'Structure the next step'
                             : 'Decide where AI can help'}
                       </Text>
-                      <Ionicons name="arrow-forward" size={17} color={theme.colors.deepIndigo} />
+                      <Ionicons name="arrow-forward" size={17} color={tokens.accent} />
                     </Pressable>
                   ))}
                 </View>
-              </View>
+                </>}
+              </ScrollView>
             ) : (
               <FlatList
                 ref={listRef}
                 data={messages}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => <MessageBubble message={item} onReport={setReportMessage} />}
+                ListFooterComponent={permission}
                 contentContainerStyle={styles.messageList}
                 keyboardShouldPersistTaps="handled"
                 onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
@@ -349,14 +351,8 @@ export default function MentorScreen() {
             }}
           />
 
-          {consentLoading ? (
-            <View style={styles.consentLoading}><ActivityIndicator accessibilityLabel="Checking AI permission" color={tokens.accentStrong} /></View>
-          ) : !consentGranted ? (
-            <AiDataSharingControls onChange={setConsentGranted} />
-          ) : null}
-
           {consentGranted && !consentLoading ? (
-          <View style={[styles.composer, { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder }]}>
+          <View style={styles.composer}>
             <TextInput
               value={input}
               onChangeText={setInput}
@@ -367,7 +363,6 @@ export default function MentorScreen() {
               editable={!sending && !loadingHistory}
               style={[
                 styles.input,
-                { backgroundColor: tokens.surface, borderColor: tokens.surfaceBorder },
               ]}
             />
 
@@ -392,7 +387,7 @@ export default function MentorScreen() {
             </Pressable>
           </View>
           ) : null}
-          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowCompass />
+          <IntroReplay kind="compass" returnLabel="Return to Compass" autoShowOnFirstVisit />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -403,36 +398,15 @@ export default function MentorScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   safe: { flex: 1, backgroundColor: 'transparent' },
-  container: { flex: 1, paddingTop: 8, paddingHorizontal: 18 },
-  introRow: {
+  container: { flex: 1, paddingTop: 8, paddingHorizontal: 20 },
+  conversationBar: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     gap: 12,
-    marginTop: 20,
-  },
-  introCopy: { flex: 1 },
-  kicker: {
-    alignSelf: 'flex-start',
-    borderRadius: 999,
-    borderWidth: 1,
-    color: theme.colors.lavenderPurple,
-    fontFamily: theme.fonts.body,
-    fontSize: 10,
-    letterSpacing: 1.4,
-    overflow: 'hidden',
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-  },
-  screenTitle: {
-    color: theme.colors.deepIndigo,
-    fontFamily: theme.fonts.heading,
-    fontSize: 24,
-    lineHeight: 30,
-    marginTop: 2,
+    marginBottom: 12,
   },
   newButton: {
-    minHeight: 38,
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -444,11 +418,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   newButtonText: {
-    color: theme.colors.deepIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
+    ...theme.typography.button,
   },
-  conversations: { marginTop: 12, marginBottom: 12 },
+  conversations: { flex: 1, minWidth: 0 },
   chat: {
     flex: 1,
     backgroundColor: theme.colors.white,
@@ -460,12 +434,12 @@ const styles = StyleSheet.create({
   messageList: { paddingHorizontal: 14, paddingTop: 18, paddingBottom: 22 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
   muted: {
-    color: theme.colors.muted,
+    color: theme.colors.textOnDarkMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
+    ...theme.typography.body,
   },
   empty: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 22,
     paddingVertical: 24,
@@ -481,17 +455,15 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   emptyTitle: {
-    color: theme.colors.deepIndigo,
+    color: theme.colors.textOnDark,
     fontFamily: theme.fonts.heading,
-    fontSize: 25,
-    lineHeight: 31,
+    ...theme.typography.sectionTitle,
     textAlign: 'center',
   },
   emptyBody: {
-    color: theme.colors.muted,
+    color: theme.colors.textOnDarkMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 21,
+    ...theme.typography.body,
     textAlign: 'center',
     marginTop: 8,
   },
@@ -502,26 +474,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     borderRadius: 18,
+    borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 11,
   },
-  soulStarter: { backgroundColor: theme.colors.soulTint },
-  systemsStarter: { backgroundColor: theme.colors.systemsTint },
-  aiStarter: { backgroundColor: theme.colors.aiTint },
   starterLabel: {
-    minWidth: 52,
-    color: theme.colors.lavenderPurple,
+    minWidth: 60,
+    flexShrink: 1,
+    color: theme.colors.textOnDarkMuted,
     fontFamily: theme.fonts.body,
-    fontSize: 10,
+    ...theme.typography.label,
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
   starterPrompt: {
     flex: 1,
-    color: theme.colors.deepIndigo,
+    color: theme.colors.textOnDark,
     fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 18,
+    ...theme.typography.body,
   },
   errorCard: {
     flexDirection: 'row',
@@ -535,12 +505,12 @@ const styles = StyleSheet.create({
   },
   error: {
     flex: 1,
-    color: theme.colors.deepIndigo,
+    color: theme.colors.ink,
     fontFamily: theme.fonts.body,
-    fontSize: 12,
-    lineHeight: 17,
+    ...theme.typography.supporting,
   },
   consentLoading: { paddingVertical: 12, alignItems: 'center' },
+  permission: { padding: 12 },
   composer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -557,11 +527,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 13,
     paddingBottom: 12,
-    color: theme.colors.deepIndigo,
+    color: theme.colors.ink,
     backgroundColor: theme.colors.white,
     fontFamily: theme.fonts.body,
-    fontSize: 14,
-    lineHeight: 20,
+    ...theme.typography.input,
   },
   send: {
     width: 50,
